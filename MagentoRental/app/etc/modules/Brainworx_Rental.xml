@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+<!--  /**
+      * for now we're telling the system that
+      * this module is just local, it's not a core
+      * or community module and resides in
+      * app/code/local.
+      */
+-->
+    <modules>
+        <Brainworx_Rental>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Brainworx_Rental>
+        <!-- 
+        <Brainworx_RentalPay>  
+            <active>true</active>
+            <codePool>local</codePool>  
+        </Brainworx_RentalPay>  
+        -->
+    </modules>
+</config>

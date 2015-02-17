@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Brainworx_Rental>
+            <version>0.1.0</version>    <!-- Version number of your module -->
+        </Brainworx_Rental>
+    </modules>
+	<admin>
+		<routers>
+		<!--configure our module to use the admin frontend-->
+		  <adminhtml>
+			<args>
+			  <modules>
+				<Brainworx_Rental before="Mage_Adminhtml">Brainworx_Rental</Brainworx_Rental>
+			  </modules>
+			</args>
+		  </adminhtml>		
+		</routers>
+	 </admin>
+	<global>
+		<models>
+				<!--
+                Unique identifier in the model's node.
+                By convention, we put the module's name in lowercase.
+            	-->
+				<rental>
+					<!--
+	                    The path to our models directory, with directory
+	                    separators replaced by underscores
+	                -->
+					<class>Brainworx_Rental_Model</class>
+					<resourceModel>rental_resource</resourceModel>
+				</rental>
+				<rental_resource>
+					<class>Brainworx_Rental_Model_Resource</class>
+					<entities>
+						<rentedItem>
+							<table>rental_renteditem</table>
+						</rentedItem>
+					</entities>
+				</rental_resource>
+		</models>
+		<resources>
+            <rental_setup>
+                <setup>
+                    <module>Brainworx_Rental</module>
+                    <class>Brainworx_Rental_Model_Resource_Setup</class>
+                </setup>
+            </rental_setup>
+		</resources>
+		<blocks>
+			<rental>
+				<class>Brainworx_Rental_Block</class>
+			</rental>
+		</blocks>
+		<helpers>
+			<rental>
+				<class>Brainworx_Rental_Helper</class>
+			</rental>
+		</helpers>
+		 <!-- Defining an event observer -->
+        <events>
+            <!-- The code of the event we want to observe -->
+             <checkout_cart_product_add_after>
+                <!-- Defining an observer for this event -->
+                <observers>
+                    <!--
+                        Unique identifier within the
+                        sales_order_place_after node.
+                        By convention, we write the module's
+                        name in lowercase.
+                    -->
+                    <rental>
+                        <!-- The model to be instantiated: 
+                        maps to 
+                        Model class as found in config <model> brainworx/rental/model
+                        brainworx/rental/model/observer.php 
+                        brainworx_rental/observer - geeft include(Mage/Brainworx/Rental/Model/Observer.php):
+                        rental/observer - geeft correct mapping
+                        -->
+                        <class>rental/observer</class> 
+                        <!-- The method of the class to be called -->
+                        <method>addDiscountToRental</method>
+                        <!-- The type of class to instantiate -->
+                        <type>singleton</type>
+                    </rental>
+                </observers>
+            </checkout_cart_product_add_after>
+            <!-- event after sale -->
+            <sales_order_place_after><!--sales_order_save_commit_after / sales_order_save_after / sales_order_place_after -->
+                <!-- Defining an observer for this event -->
+                <observers>
+                    <!--
+                        Unique identifier within the
+                        sales_order_place_after node.
+                        By convention, we write the module's
+                        name in lowercase.
+                    -->
+                    <rental>
+                        <!-- The model to be instantiated: 
+                        maps to 
+                        Model class as found in config <model> brainworx/rental/model
+                        brainworx/rental/model/observer.php 
+                        brainworx_rental/observer - geeft include(Mage/Brainworx/Rental/Model/Observer.php):
+                        rental/observer - geeft correct mapping
+                        -->
+                        <class>rental/observer</class> 
+                        <!-- The method of the class to be called -->
+                        <method>checkNewRental</method>
+                        <!-- The type of class to instantiate -->
+                        <type>singleton</type>
+                    </rental>
+                </observers>
+            </sales_order_place_after>
+        </events>
+	</global>
+	 <adminhtml>
+        <layout>
+          <updates>
+            <rental>
+              <file>rental.xml</file>
+            </rental>
+          </updates>
+        </layout>
+        <translate>
+	        <modules>
+	            <rental>
+	                <files>
+	                    <default>Brainworx_Rental.csv</default>
+	                </files>
+	            </rental>
+	       </modules>
+		</translate>
+		<events>
+			 <!-- event triggered before load of a module admin page, we will use it to add/remove buttons-->
+             <adminhtml_widget_container_html_before>
+	            <observers>
+	                <rental>
+	                    <class>rental/observer</class>	                    
+	                    <method>adminhtmlWidgetContainerHtmlBefore</method>
+	                    <type>singleton</type>
+	                </rental>
+	            </observers>
+	        </adminhtml_widget_container_html_before>
+	        
+           
+		</events>
+     </adminhtml>
+</config>

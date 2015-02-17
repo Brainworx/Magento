@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <design>
+            <groups>
+                <admin translate="label">
+                    <label>Admin Theme</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <fields>
+                        <theme translate="label comment">
+                            <label>Admin theme name</label>
+                            <comment>Override default admin theme.</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                        </theme>
+                    </fields>
+                </admin>
+            </groups>
+        </design>
+    </sections>
+</config>

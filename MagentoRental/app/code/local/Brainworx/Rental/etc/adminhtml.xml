@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<menu>
+        <rental translate="title" module="rental">
+            <title>Rental</title>
+            <sort_order>10</sort_order>
+            <!--action>adminhtml/rental</action-->
+            <depends>
+                <module>Brainworx_Rental</module>
+            </depends>
+            <children>
+                <renteditem>
+                    <title>Rented items</title>
+                    <sort_order>1</sort_order>
+                    <action>adminhtml/rental/index</action>
+					 <!--adminhtml will be replaced by admin due to the route config of adminhtml in app/code/core/Mage/Adminhtml/etc/config.xml-->
+					 <!--rental for controllername-->
+					 <!--index is action method in the RentalController-->
+                </renteditem>
+            </children>
+        </rental>
+    </menu>
+
+<!--Access Control List-->
+	<acl>
+        <resources>
+            <admin>
+                <children>                
+                    <rental translate="title" module="rental">
+                        <title>Top Level Rental Menu Item</title>
+                        <sort_order>1</sort_order>
+                        <children>
+                            <renteditem>
+                                <title>Rental Menu Item</title>
+                            </renteditem>
+                        </children>
+                    </rental>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>
