@@ -1,0 +1,119 @@
+<?php
+class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controller_Action {
+	public function indexAction() {
+		$this->_title ( $this->__ ( 'Commission' ) )->_title ( $this->__ ( 'SalesCommission' ) );
+		$this->loadLayout ();
+		$this->_setActiveMenu ( 'hearedfrom/salescommission' );
+		
+		$this->renderLayout ();
+	}
+	public function newAction() {
+		// $this->_forward('edit');
+		Mage::Log ( "New hearedfrom item button clicked - no action" );
+	}
+	/**
+	 * Edit rentalitem after selection in grid.
+	 */
+	public function editAction() {
+		Mage::Log ( "edit action start" );
+		$id = $this->getRequest ()->getParam ( 'id', null );
+		$model = Mage::getModel ( 'hearedfrom/salesCommission' );
+		if ($id) {
+			$model->load ( ( int ) $id );
+			if ($model->getEntityId ()) {
+				$data = Mage::getSingleton ( 'adminhtml/session' )->getFormData ( true );
+				if ($data) {
+					Mage::Log ( 'setting model' );
+					$model->setData ( $data )->setEntityId ( $id );
+				}
+			} else {
+				Mage::getSingleton ( 'adminhtml/session' )->addError ( Mage::helper ( 'hearedfrom' )->__ ( 'Commission does not exist' ) );
+				$this->_redirect ( '*/*/' );
+			}
+		}
+		// register the rental_data object to retrieve it and fill the form later
+		Mage::register ( 'hearedfrom_data', $model );
+		
+		$this->_title ( $this->__ ( 'Hearedfrom' ) )->_title ( $this->__ ( 'Edit Salescommission' ) );
+		$this->loadLayout ();
+		$this->getLayout ()->getBlock ( 'head' )->setCanLoadExtJs ( true );
+		$this->renderLayout ();
+		
+		Mage::Log ( "edit action completed" );
+	}
+	public function saveAction() {
+		if ($data = $this->getRequest ()->getPost ()) {
+			$model = Mage::getModel ( 'hearedfrom/salesCommission' );
+			$id = $this->getRequest ()->getParam ( 'id' );
+			
+			foreach ( $data as $key => $value ) {
+				if (is_array ( $value )) {
+					$data [$key] = implode ( ',', $this->getRequest ()->getParam ( $key ) );
+				}
+			}
+			
+			if ($id) {
+				$model->load ( $id );
+			}
+			$model->setData ( $data );
+			
+			Mage::getSingleton ( 'adminhtml/session' )->setFormData ( $data );
+			try {
+				if ($id) {
+					$model->setEntityId ( $id );
+				}
+				$model->save ();
+				
+				if (! $model->getEntityId ()) {
+					Mage::throwException ( Mage::helper ( 'hearedfrom' )->__ ( 'Error saving salescommission' ) );
+				}
+				
+				Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( Mage::helper ( 'hearedfrom' )->__ ( 'Salescommision was successfully saved.' ) );
+				
+				Mage::getSingleton ( 'adminhtml/session' )->setFormData ( false );
+				
+				// The following line decides if it is a "save" or "save and continue"
+				if ($this->getRequest ()->getParam ( 'back' )) {
+					$this->_redirect ( '*/*/edit', array (
+							'id' => $model->getEntityId () 
+					) );
+				} else {
+					$this->_redirect ( '*/*/' );
+				}
+			} catch ( Exception $e ) {
+				Mage::getSingleton ( 'adminhtml/session' )->addError ( $e->getMessage () );
+				if ($model && $model->getId ()) {
+					$this->_redirect ( '*/*/edit', array (
+							'id' => $model->getEntityId () 
+					) );
+				} else {
+					$this->_redirect ( '*/*/' );
+				}
+			}
+			
+			return;
+		}
+		Mage::getSingleton ( 'adminhtml/session' )->addError ( Mage::helper ( 'hearedfrom' )->__ ( 'No data found to save' ) );
+		$this->_redirect ( '*/*/' );
+	}
+	public function deleteAction() {
+		if ($id = $this->getRequest ()->getParam ( 'id' )) {
+			try {
+				$model = Mage::getModel ( 'hearedfrom/salesCommission' );
+				$model->setEntityId ( $id );
+				$model->delete ();
+				Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( Mage::helper ( 'hearedfrom' )->__ ( 'The salescommission has been deleted.' ) );
+				$this->_redirect ( '*/*/' );
+				return;
+			} catch ( Exception $e ) {
+				Mage::getSingleton ( 'adminhtml/session' )->addError ( $e->getMessage () );
+				$this->_redirect ( '*/*/edit', array (
+						'id' => $this->getRequest ()->getParam ( 'id' ) 
+				) );
+				return;
+			}
+		}
+		Mage::getSingleton ( 'adminhtml/session' )->addError ( Mage::helper ( 'adminhtml' )->__ ( 'Unable to find the salescommission to delete.' ) );
+		$this->_redirect ( '*/*/' );
+	}
+}

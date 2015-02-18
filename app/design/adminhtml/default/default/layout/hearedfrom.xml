@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--app/design/adminhtml/default/default/layout/hearedfrom.xml-->
+<layout>
+	<!--reference to your module/controller/action-->
+   <adminhtml_hearedfrom_index>
+        <reference name="content">
+		<!--reference to block element in Block-->
+            <block type="hearedfrom/adminhtml_hearedfrom" name="hearedfrom" />
+        </reference>
+    </adminhtml_hearedfrom_index>
+</layout>

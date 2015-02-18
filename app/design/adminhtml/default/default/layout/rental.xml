@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--app/design/adminhtml/default/default/layout/rental.xml-->
+<layout>
+	<!--reference to your module/controller/action-->
+   <adminhtml_rental_index>
+        <reference name="content">
+		<!--reference to block element in Block-->
+            <block type="rental/adminhtml_rental" name="rental" />
+        </reference>
+    </adminhtml_rental_index>
+     <adminhtml_rental_edit>
+        <reference name="content">
+            <block type="rental/adminhtml_rental_edit" name="rental_edit" />
+        </reference>
+    </adminhtml_rental_edit>
+</layout>
