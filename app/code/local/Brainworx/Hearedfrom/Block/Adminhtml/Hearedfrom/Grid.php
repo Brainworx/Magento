@@ -63,8 +63,11 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         $this->addColumn('user_nm', array(
         		'header'    => Mage::helper('hearedfrom')->__('Seller'),
         		'align'     =>'left',
+        		'width'     => '100px',
         		'index'     => 'user_nm',
-        		'filter_index' => 'force.user_nm'
+        		'filter_index' => 'force.user_nm',
+        		'type'  => 'options',
+        		'options'	=>  Mage::getModel('hearedfrom/salesForce')->getUserNames(),
         ));
 //         $this->addColumn('increment_id', array(
 //         		'header'    => Mage::helper('hearedfrom')->__('Bestelling #'),
@@ -73,7 +76,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
 //         		'index'     => 'increment_id'
 //         ));
         $this->addColumn('orig_order_id', array(
-        		'header'    => Mage::helper('hearedfrom')->__('Bestelling #'),
+        		'header'    => Mage::helper('hearedfrom')->__('Order #'),
         		'align'     =>'left',
         		'width'     => '50px',
         		'index'     => 'orig_order_id'
@@ -82,22 +85,29 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         		'header'    => Mage::helper('hearedfrom')->__('Type'),
         		'align'     =>'left',
         		'width'     => '10px',
-        		'index'     => 'type'
+        		'index'     => 'type',
+        		'type'  => 'options',
+        		'options'	=>  Mage::getModel('hearedfrom/salesCommission')->getTypes(),
         ));
         $this->addColumn('net_amount', array(
         		'header'    => Mage::helper('hearedfrom')->__('Amount ex VAT'),
         		'align'     =>'left',
         		'width'     => '25px',
-        		'index'     => 'net_amount'
+        		'index'     => 'net_amount',
+        		'type'		=> 'price',
+        		'currency_code' => Mage::app()->getStore(0)->getBaseCurrency()->getCode(),
+        		
         ));
         $this->addColumn('brut_amount', array(
         		'header'    => Mage::helper('hearedfrom')->__('Amount invl VAT'),
         		'align'     =>'left',
         		'width'     => '25px',
-        		'index'     => 'brut_amount'
+        		'index'     => 'brut_amount',
+        		'type'		=> 'price',
+        		'currency_code' => Mage::app()->getStore(0)->getBaseCurrency()->getCode(),
         ));
         $this->addColumn('create_dt', array(
-        		'header'    => Mage::helper('hearedfrom')->__('Registered'),
+        		'header'    => Mage::helper('hearedfrom')->__('Date'),
         		'align'     =>'right',
         		'width'     => '50px',
         		'index'     => 'create_dt',

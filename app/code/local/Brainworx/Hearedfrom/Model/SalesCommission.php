@@ -7,41 +7,18 @@ class Brainworx_Hearedfrom_Model_SalesCommission extends Mage_Core_Model_Abstrac
     	parent::_construct();
         $this->_init('hearedfrom/salesCommission');
     }
-//     /**
-//      * Prepare list of available order ids to use in dropdown filter options for the grid
-//      * @return multitype:NULL
-//      */
-//     public function getOrderIds() {
+    /**
+     * Prepare list of available types for dropdown filter options for the grid
+     * @return multitype:NULL
+     */
+    public function getTypes() {
     
-//     	$orderArray = array();
-//     	foreach($this->getCollection() as $rental){
-//     		$orderArray[$rental->getOrigOrderId()] = $rental->getOrigOrderId();
-    
-//     	}
-//     	return $orderArray;
-    
-//     }
-//     /**
-//      * Prepare the list of increment id's for the admin grid filter <bestelling #>
-//      * @return multitype:mixed
-//      */
-//     public function getIncrementIds() {
-    
-//     	$collection = $this->getCollection();
-//     	$select = $collection->getSelect();
-//     	$resource = Mage::getSingleton('core/resource');
-//     	$select->join(
-//     			array('order' => $resource->getTableName('sales/order')),
-//     			'main_table.orig_order_id = order.entity_id',
-//     			array('increment_id')
-//     	);
-    	 
-//     	$orderArray = array();
-//     	foreach($collection as $order){
-//     		$orderArray[$order->getData('increment_id')] = $order->getData('increment_id');
-    
-//     	}
-//     	return $orderArray;
-    
-//     }
+    	$array = array();
+    	$i = 0;
+    	foreach($this->getCollection()->addFieldToSelect("type")->distinct(true) as $comm){
+    		$array[$i] = $comm->getType();
+    		$i = $i+1;
+    	}
+    	return $array;
+    }
 }
