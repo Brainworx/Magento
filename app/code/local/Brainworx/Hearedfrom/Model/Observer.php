@@ -65,12 +65,14 @@ class Brainworx_Hearedfrom_Model_Observer
 						$newsalescomm->setData('orig_order_id',$order->getEntityId());
 						//$newsalescomm->setData('inv_id', $invoice->getIncrementId()); //doesn't exist at this point
 						$newsalescomm->setData('order_item_id', $item->getOrderItemId());
-						$type = "S";
+						$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
 						$product = Mage::getModel('catalog/product')->load($item->getProductId());
 						foreach($product->getCategoryIds() as $cat){
 							Mage::Log("cat:" .$cat);
-							if($cat == 56){
-								$type = "R";
+							if($cat == 
+							Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text')){
+				
+								$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
 								break;
 							}
 						}

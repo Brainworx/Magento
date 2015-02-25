@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!-- file to get rid of security notification when admin page is fetching app/etc/local.xml  -->
+<layout>
+    <default>
+        <remove name="notification_security" />
+        <remove name="notification_survey" />
+    </default>
+</layout>

@@ -27,7 +27,6 @@ class Brainworx_Rental_Model_Observer
 			Mage::Log("Guest: " .$order->getBillingAddress()->getLastname());
 		}
 		else {
-			//$customer = Mage::getModel('customer/customer')->load($order->getCustomerId());
 			Mage::Log("Known customer: " .$order->getCustomerId());
 		}
 		//Check tax record
@@ -41,15 +40,14 @@ class Brainworx_Rental_Model_Observer
 		{
 			foreach($item->getProduct()->getCategoryIds() as $cat){
 				Mage::Log("cat:" .$cat);
-				if($cat == 56){
+				if($cat ==
+				  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text')){
 					$count++;
 					//saving new rental line to be invoiced monthly
 					try{
 						$newrentalitem = Mage::getModel('rental/rentedItem');
 		
 						$newrentalitem->setData('orig_order_id',$order->getEntityId());
-// 							Mage::Log('order:' . $order->getEntityId());
-// 							Mage::Log($newrentalitem->getData('orig_order_id'));
 						$newrentalitem->setData('order_item_id',$item->getItemId());
 						$newrentalitem->setData('quantity',$item->getQtyOrdered());// nr of items - not days
 						$newrentalitem->setStartDt(date("Y-m-d"));
@@ -167,8 +165,9 @@ class Brainworx_Rental_Model_Observer
 				$item = $item->getParentItem();
 			}
 			$notice = 0;
+			$catrental = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
 			foreach($observer->getProduct()->getCategoryIds() as $cat){
-				if($cat == 56){
+				if($cat == $catrental){
 					$item->setCustomPrice(0);
 					$item->setOriginalCustomPrice(0);
 					$item->getProduct()->setIsSuperMode(true);

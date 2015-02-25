@@ -58,7 +58,7 @@ $table2 = $installer->getConnection()->newTable($installer->getTable('hearedfrom
 ), 'Item Id')
 ->addColumn('type', Varien_Db_Ddl_Table::TYPE_VARCHAR, null, array(
 		'unsigned' => true,
-), 'Sale Type') //Sale = S Rental = R
+), 'Sale Type') //Via custom var
 ->addColumn('net_amount', Varien_Db_Ddl_Table::TYPE_DECIMAL, '12,4', array(
 		'unsigned' => true,'nullable' => true,
 ), 'Amount Ex Vat')
