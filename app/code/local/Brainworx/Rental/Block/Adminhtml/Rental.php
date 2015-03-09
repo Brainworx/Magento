@@ -8,12 +8,10 @@ class Brainworx_Rental_Block_Adminhtml_Rental extends Mage_Adminhtml_Block_Widge
         $this->_controller = 'adminhtml_rental';
 		$this->_blockGroup = 'rental';
         $this->_headerText = Mage::helper('rental')->__('Rental Manager');
-        
         $this->_addButton('invoicer', array(
         		'label' => Mage::helper('rental')->__('Maak maandfacturen.'),
         		'onclick'   => "confirmSetLocation('De maandelijkse facturen aanmaken?', '{$this->getUrl('*/*/createInvoices')}')",
         ));
-        
         parent::__construct();
 
         //remove the Add button as by default it is usually visible

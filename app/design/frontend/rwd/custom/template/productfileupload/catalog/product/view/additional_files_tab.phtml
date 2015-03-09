@@ -1,0 +1,12 @@
+<?php $additionalFiles = $this->getAdditionalFiles(); ?>
+<?php if($additionalFiles['totalRecords'] > 0) { ?>    
+        <ol class="additional_files_list">
+            <?php $fi = 1 ;?>
+            <?php foreach($additionalFiles['items'] as $egfile) { ?>
+                <li>
+                    <span><a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'productfileupload/' . $egfile['filename'] ?>" target="_blank"><?php echo $egfile['filename']?></a></span>
+                </li>
+                <?php $fi++; ?>
+            <?php } ?>
+        </ol>
+<?php } ?>

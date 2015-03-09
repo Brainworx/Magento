@@ -4,7 +4,6 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 		$this->_title ( $this->__ ( 'Rental' ) )->_title ( $this->__ ( 'RentedItems' ) );
 		$this->loadLayout ();
 		$this->_setActiveMenu ( 'rental/renteditem' );
-		
 		$this->renderLayout ();
 	}
 	public function newAction() {

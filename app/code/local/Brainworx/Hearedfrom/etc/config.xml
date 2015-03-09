@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Brainworx_Hearedfrom>
-			<version>0.1.4</version>    <!-- Version number of your module -->
+			<version>0.1.5</version>    <!-- Version number of your module -->
 		</Brainworx_Hearedfrom>
 	</modules>
 	<admin>

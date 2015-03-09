@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<layout>
+    <catalog_product_view>
+        <reference name="product.info.additional">
+            <block type="productfileupload/catalog_product_view_additional" name="product_additional_files" before="product_tag_list">
+	        	<action method="setTemplate"><template>productfileupload/catalog/product/view/additional_files.phtml</template></action>
+            </block>
+        </reference>
+         <reference name="product.info.tab">
+            <block type="productfileupload/catalog_product_view_additional" name="product_additional_files" as="additional_files" 
+            template="productfileupload/catalog/product/view/additional_files_tab.phtml">
+                <action method="addToParentGroup"><group>detailed_info</group></action>
+                <action method="setTitle" translate="value"><value>Additional Files</value></action>
+            </block>
+    	</reference>
+    </catalog_product_view>
+</layout>

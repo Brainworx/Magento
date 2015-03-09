@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+	<config>
+		<acl>
+			<resources>
+				<admin>
+					<children>
+					<!-- map to url: admin/system -->
+						<system>
+							<children>
+								<config>
+									<children>
+										<productfileupload_general translate="title" module="productfileupload">
+										<!-- title shows up in permissions admin -->
+											<title>Product Additional Files</title>
+											<sort_order>10</sort_order>
+										</productfileupload_general>
+									</children>
+								</config>
+							</children>
+						</system>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+	</config>

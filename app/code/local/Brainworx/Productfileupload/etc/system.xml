@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<config>
+	<!-- add a new tab in the system > configuration -->
+	  <tabs>
+	  	<!-- identifyer to this tab: name tab product_additional_files is arbitrary must be unique -->
+	  	<!-- module defines which module this tab belongs to -->
+	  	<!--label: name to use for the tab -->
+	  	<!-- sort-order: determines tab position in left navigation -->
+		<productfileupload_config translate="label" module="productfileupload">
+            <label>Product Additional Files</label> 
+            <sort_order>450</sort_order>
+        </productfileupload_config>
+	  </tabs>
+	  <sections>
+		<productfileupload_general  translate="label" module="productfileupload">                    
+			<label>General</label>
+			<tab>productfileupload_config</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>10</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>   
+			<groups>
+				<productfileupload_info translate="label">
+					<label>General Settings</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>10</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<jquery_enable translate="label">
+							<label>Add jQuery Library File</label>
+							<frontend_type>select</frontend_type>
+							<!--  add a source model class of your model or from mage adminhtml/system_config_source_yesno -->
+							<source_model>productfileupload/options</source_model>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<comment>Add jQuery library file if jQuery library is not added before in adminhtml.</comment>
+						</jquery_enable>
+					</fields>
+				</productfileupload_info>
+			</groups>         
+		</productfileupload_general>
+	  </sections>
+</config>

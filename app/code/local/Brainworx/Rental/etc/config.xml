@@ -39,6 +39,12 @@
 						</rentedItem>
 					</entities>
 				</rental_resource>
+				<!-- update invoice -->
+				 <sales>
+			        <rewrite>                    
+			            <order_pdf_invoice>Brainworx_Rental_Model_Invoice</order_pdf_invoice>
+			        </rewrite>
+			    </sales>
 		</models>
 		<resources>
             <rental_setup>
