@@ -85,7 +85,7 @@
 
             <block type="core/text_list" name="after_body_start" as="after_body_start" translate="label">
                 <label>Page Top</label>
-                <!-- Moved cookie notice to top -->
+                <!--Brainworx Moved cookie notice to top -->
                 <block type="page/html_cookieNotice" name="global_cookie_notice" as ="global_cookie_notice" template="page/html/cookienotice.phtml" before="-" />
             </block>
 
