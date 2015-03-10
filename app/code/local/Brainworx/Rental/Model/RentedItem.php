@@ -44,4 +44,31 @@ class Brainworx_Rental_Model_RentedItem extends Mage_Core_Model_Abstract
     	return $orderArray;
     
     }
+    /**
+     * Update the stock level for the product of this rentedItem.
+     * To be used when a rentedItem has been returned.
+     * @param unknown $newQuantity
+     */
+   	public function updateStock(){
+   		try{
+	   		 $item = Mage::getModel("sales/order_item")->load($this->getOrderItemId());
+	   		 $productId = $item->getProductId();
+	   		 
+	   		 $stockItem = Mage::getModel('cataloginventory/stock_item')->loadByProduct($productId);
+	   		 $stockItemId = $stockItem->getId();
+	   		 $stockQty = $this->getQuantity() + $stockItem->getQty();
+	   		    		 
+	   		 $stockItem->setData('qty', $stockQty);
+	   		 $stockItem->setData('is_in_stock',1);		 
+	   		 
+	   		 $stockItem->save();
+	   		 
+	   		 Mage::getSingleton('cataloginventory/stock_status')->updateStatus($productId);
+	   		 
+   		}catch ( Exception $e ) {
+			Mage::getSingleton ( 'adminhtml/session' )->addError ( $e->getMessage () );
+			return;
+		}
+   	
+   	}
 }

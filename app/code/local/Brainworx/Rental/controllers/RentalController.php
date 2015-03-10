@@ -131,6 +131,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					$rentalModel = Mage::getModel ( 'rental/rentedItem' )->load($rentalId);
 					$rentalModel->setEndDt(date("Y-m-d"));
 					$rentalModel->save();
+					$rentalModel->updateStock();
 				}
 				Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( Mage::helper ( 'rental' )->__ ( '%d verhuuritem(s) werden vandaag beeindigd.', count ( $rentalIds ) ) );
 			} catch ( Exception $e ) {
