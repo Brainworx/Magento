@@ -319,8 +319,6 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					$qtys [$oitem->getId ()] = $oitem->getQtyOrdered()-$oitem->getQtyInvoiced();
                 }
 			}
-			//TODO check tax record + create if not existing
-			//TODO loop over items and update or add tax_item records
 			
 			//set totals on the order - add them to previous set totals
 			$order->setSubtotal($order->getSubtotal() + $grandTotal);
@@ -359,8 +357,12 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					. ' automatisch verwerkt.', false );
 				
 			$history->setIsCustomerNotified ( true );
+			
+			$sendInvoiceEmailAuto = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('ASEND_INV_ML')->getValue('text');
 				
-			$invoice->sendEmail ( true, '' ); // set this to false to not send the invoice via email
+			if($sendInvoiceEmailAuto == 'Y'){
+				$invoice->sendEmail ( true, '' ); // set this to false to not send the invoice via email
+			}
 				
 			$invoice->setCreatedAt($invoiceDt);
 			$invoice->setUpdatedAt(new DateTime('NOW'));

@@ -48,7 +48,6 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
         ));
         $fieldset->addField('customer_id', 'text', array(
         		'label'     => Mage::helper('rental')->__('Klant #'),
-        		'class'     => 'required-entry',
         		'readonly' => true,
         		'name'      => 'customer_id'
         ));

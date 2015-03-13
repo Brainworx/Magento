@@ -1,0 +1,44 @@
+<!--@subject Welcome, {{var customer.name}}! @-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"htmlescape var=$customer.name":"Customer Name",
+"store url=\"customer/account/\"":"Customer Account Url",
+"var customer.email":"Customer Email",
+"htmlescape var=$customer.password":"Customer Password"}
+@-->
+
+<!--@styles
+@-->
+
+{{template config_path="design/email/header"}}
+{{inlinecss file="email-inline.css"}}
+
+<table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td class="action-content">
+            <h1>Welkom op {{var store.getFrontendName()}}.</h1>
+           <p>Om in te loggen op de site klik <a href="{{store url="customer/account/"}}">Login</a> of <a href="{{store url="customer/account/"}}">Mijn Account</a> bovenaan elke pagina, en voer je email en wachtwoord in.</p>
+           <p class="highlighted-text">
+               Gebruik onderstaande gevens wanneer deze gevraagd worden:<br/>
+               <strong>Email:</strong> {{var customer.email}}<br/>
+               <strong>wachtwoord/wachtwoord:</strong> {{htmlescape var=$customer.password}}
+           </p>
+            <p>Na inloggen zal je volgende zaken kunnen:</p>
+            <ul>
+                <li>Sneller aankopen doen</li>
+                <li>Opvolgen van je bestellingen</li>
+                <li>Je account informatie aanpassen</li>
+                <li>Je wachtwoord wijzigen</li>
+                <li>Alternatieve verzendaddressen beheren</li>
+            </ul>
+            <p>
+                Aanzel niet om ons te contacteren indien je vragen hebt. Via email 
+                <a href="mailto:{{var store_email}}">{{var store_email}}</a>
+                {{depend store_phone}} of telefoon <a href="tel:{{var phone}}">{{var store_phone}}</a>{{/depend}}.
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer"}}

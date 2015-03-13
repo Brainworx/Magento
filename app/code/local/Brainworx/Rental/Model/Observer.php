@@ -72,10 +72,11 @@ class Brainworx_Rental_Model_Observer
 									'main_table.tax_calculation_rule_id = rule.tax_calculation_rule_id',
 									array('priority','position')
 							);
+							$custTaxClassID = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CUST_TAX_ID')->getValue('text');
 							$taxCollection->addFieldToFilter(
 									array('customer_tax_class_id'),
 									array(
-											array('eq'=>9)) //TODO update customer tax class from real customer
+											array('eq'=>$custTaxClassID)) //TODO update customer tax class from real customer
 							)->addFieldToFilter(
 									array('product_tax_class_id'),
 									array(
@@ -115,6 +116,7 @@ class Brainworx_Rental_Model_Observer
 									}
 								}
 							}
+								
 							//load data for sale tax item
 							$data = array(
 									'item_id'       => $item->getItemId(),
@@ -137,7 +139,8 @@ class Brainworx_Rental_Model_Observer
 		}
 		if($count > 0){
 			//add comment which will be sent to the customer
-			$order->addStatusToHistory($order->getStatus(), 'Verhuurartikels zullen vanaf de 1ste maand gefactureerd worden.', true);
+			//TODO add translation Mage::helper('sales')->__('Invoice Date ')
+			$order->addStatusToHistory($order->getStatus(), 'Verhuurartikels worden aangerekend per dag en maandelijks gefactureerd.', true);
 			$order->save();
 		}
 		Mage::Log("Sale done: nr rental items : " . $count);
@@ -177,7 +180,8 @@ class Brainworx_Rental_Model_Observer
 				}
 			}
 			if($notice > 0){
-				Mage::getSingleton('core/session')->addNotice('De prijs van je verhuurartikel werd op 0 gezet, je betaald deze pas na 1 maand.');
+				//TODO add translation Mage::helper('sales')->__('Invoice Date ')
+				Mage::getSingleton('core/session')->addNotice('De prijs van je verhuurartikel werd op 0 gezet, je betaald deze binnen de 10 dagen na ontvangst maandelijkse factuur.');
 			}
 		}catch(Exception $e){
 			Mage::log($e->getMessage());
