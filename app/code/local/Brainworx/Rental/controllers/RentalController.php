@@ -255,10 +255,12 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 							'main_table.tax_calculation_rate_id = rate.tax_calculation_rate_id',
 							array('code')
 					);
+					$custTaxClassID = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CUST_TAX_ID')->getValue('text');
+						
 					$taxCollection->addFieldToFilter(
 							array('customer_tax_class_id'),
 							array(
-									array('eq'=>9)) //TODO update customer tax class from real customer
+									array('eq'=>$custTaxClassID)) //TODO update customer tax class from real customer
 					)->addFieldToFilter(
 							array('product_tax_class_id'),
 							array(
