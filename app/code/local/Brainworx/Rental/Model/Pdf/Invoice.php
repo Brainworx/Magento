@@ -60,6 +60,60 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$this->_afterGetPdf();
 		return $pdf;
 	}
+	/**
+	 * overridde Insert totals to pdf page to round the total
+	 *
+	 * @param  Zend_Pdf_Page $page
+	 * @param  Mage_Sales_Model_Abstract $source
+	 * @return Zend_Pdf_Page
+	 */
+	protected function insertTotals($page, $source){
+		$order = $source->getOrder();
+		$totals = $this->_getTotalsList($source);
+		$lineBlock = array(
+				'lines'  => array(),
+				'height' => 15
+		);
+		foreach ($totals as $total) {
+			$total->setOrder($order)
+			->setSource($source);
+	
+			if ($total->canDisplay()) {
+				$total->setFontSize(10);
+				//hierin komt label BE-04(6.0000%): t array 7 title BE-06 percent 6.0000 amount en label bE06(6.0000%)
+				//Mage_Sales_Model_Order_Pdf_Total_Default
+				//public function getFullTaxInfo()
+				foreach ($total->getTotalsForDisplay() as $totalData) {
+					$lineBlock['lines'][] = array(
+							array(
+									'text'      => $totalData['label'],
+									'feed'      => 475,
+									'align'     => 'right',
+									'font_size' => $totalData['font_size'],
+									'font'      => 'bold'
+							),
+							array(
+									'text'      => $totalData['amount'],
+									'feed'      => 565,
+									'align'     => 'right',
+									'font_size' => $totalData['font_size'],
+									'font'      => 'bold'
+							),
+					);
+				}
+			}
+		}
+	
+		$this->y -= 20;
+		$page = $this->drawLineBlocks($page, array($lineBlock));
+		return $page;
+	}
+	
+	/**
+	 * insert the invoice date in at the top of the page
+	 * @param Zend_Pdf_Page $page
+	 * @param unknown $text
+	 */
 	public function insertInvoiceDate(Zend_Pdf_Page $page, $text)
 	{
 		$page->setFillColor(new Zend_Pdf_Color_GrayScale(1));

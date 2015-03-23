@@ -46,6 +46,16 @@
 			        </rewrite>
 			    </sales>
 		</models>
+		
+		<!-- update totals section on pdf -->
+		 <pdf>
+            <totals>
+                <grand_total>
+                    <model>rental/pdf_total</model>
+                </grand_total>
+            </totals>
+        </pdf>
+       
 		<resources>
             <rental_setup>
                 <setup>
