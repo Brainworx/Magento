@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!--SHE: update invoice email -->
 
 <layout version="0.1.0">
 
@@ -263,8 +262,7 @@ Email layouts section
 
     <sales_email_order_invoice_items>
         <block type="sales/order_email_invoice_items" name="items" template="email/order/invoice/items.phtml">
-            <!-- test block order_email_items_default ==> order_default -->
-            <action method="addItemRender"><type>default</type><block>sales/order_email_items_order_default</block><template>email/order/items/invoice/default.phtml</template></action>
+            <action method="addItemRender"><type>default</type><block>sales/order_email_items_default</block><template>email/order/items/invoice/default.phtml</template></action>
             <action method="addItemRender"><type>grouped</type><block>sales/order_email_items_order_grouped</block><template>email/order/items/invoice/default.phtml</template></action>
             <block type="core/template" name="invoice_totals_wrapper" as="invoice_totals" template="email/order/totals/wrapper.phtml">
                 <block type="sales/order_invoice_totals" name="invoice_totals" template="sales/order/totals.phtml">
