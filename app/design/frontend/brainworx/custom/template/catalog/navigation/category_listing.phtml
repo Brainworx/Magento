@@ -1,0 +1,26 @@
+<?php $_maincategorylisting=$this->getCurrentCategory()?>
+<?php $_categories=$this->getCurrentChildCategories()?>
+<div class="subcat-listing">
+<?php foreach ($_categories as $_pcategory):?>
+	<?php if($_pcategory->getIsActive()): ?>
+	<?php $_children = $_pcategory->getChildrenCategories(); ?>
+	<?php foreach ($_children as $_category):?>
+		<?php if($_category->getIsActive()): ?>
+		<?php $cur_category=Mage::getModel('catalog/category')->load($_category->getId()); ?>
+		<?php $layer = Mage::getSingleton('catalog/layer'); ?>
+		<?php $layer->setCurrentCategory($cur_category); ?>
+		<?php if($_imageUrl=$this->getCurrentCategory()->getImageUrl()):?>
+			<div class="floated_img">
+			<a href="<?php echo $this->getCategoryUrl($_category) ?>" title="<?php echo $this->htmlEscape($_category->getName()) ?>">
+			<img src="<?php echo $_imageUrl ?>" width="auto" alt="<?php echo $this->htmlEscape($_category->getName()) ?>" />
+			</a>
+			<h3><?php echo $this->htmlEscape($_pcategory->getName() . ' ' .$_category->getName()) ?></h3>
+			</div>
+			<?php endif; ?>
+		<?php endif; ?>
+	<?php endforeach; ?>
+	<?php endif; ?>
+<?php endforeach; ?>
+<!-- </ul> -->
+</div>
+<?php $layer->setCurrentCategory($_maincategorylisting); ?>
