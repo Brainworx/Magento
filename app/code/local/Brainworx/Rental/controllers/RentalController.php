@@ -210,7 +210,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					}			
 					//count days for rental
 					$interval = $startrental->diff($endrental);
-					$qty_to_invoice = $interval->days;
+					$qty_to_invoice = 1 + $interval->days;
 					$comment = $comment . "<br>*".$rental->getQuantity()." x " . Mage::getModel ( 'catalog/product' )->load ($item->getProductId())->getSku() 
 					. " - ".$qty_to_invoice." dagen - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d") ;
 					$qty_to_invoice = $qty_to_invoice * $rental->getQuantity();
