@@ -28,7 +28,7 @@
                 <children>                
                     <hearedfrom translate="title" module="hearedfrom">
                         <title>Top Level Hearedfrom Menu Item</title>
-                        <sort_order>1</sort_order>
+                        <sort_order>25</sort_order>
                         <children>
                             <salesCommission>
                                 <title>Commission Menu Item</title>

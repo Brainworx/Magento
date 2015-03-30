@@ -180,8 +180,7 @@ class Brainworx_Rental_Model_Observer
 				}
 			}
 			if($notice > 0){
-				//TODO add translation Mage::helper('sales')->__('Invoice Date ')
-				Mage::getSingleton('core/session')->addNotice('De prijs van je verhuurartikel werd op 0 gezet, je betaald deze binnen de 10 dagen na ontvangst maandelijkse factuur.');
+				Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('The price of your rental article has been set to 0, you will pay for this article within 10 days after receiving the monthly invoice.'));
 			}
 		}catch(Exception $e){
 			Mage::log($e->getMessage());
