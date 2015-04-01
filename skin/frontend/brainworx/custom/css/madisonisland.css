@@ -354,3 +354,7 @@ body .promos > li {
     float: left;
     margin: 5px;
 }
+img.cat_img
+{
+	width: 75%;
+}

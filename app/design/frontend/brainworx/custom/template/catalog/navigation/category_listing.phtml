@@ -13,9 +13,9 @@
 		<?php if($_imageUrl=$this->getCurrentCategory()->getImageUrl()):?>
 			<div class="floated_img">
 			<a href="<?php echo $this->getCategoryUrl($_category) ?>" title="<?php echo $this->htmlEscape($_category->getName()) ?>">
-			<img src="<?php echo $_imageUrl ?>" width="auto" alt="<?php echo $this->htmlEscape($_category->getName()) ?>" />
+			<img class="cat_img" src="<?php echo $_imageUrl ?>" alt="<?php echo $this->htmlEscape($_category->getName()) ?>" />
 			</a>
-			<h3><?php echo $this->htmlEscape($_pcategory->getName() . ' ' .$_category->getName()) ?></h3>
+			<h3><?php echo $this->htmlEscape($_pcategory->getName()) . '<br/>' . $this->htmlEscape($_category->getName()) ?></h3>
 			</div>
 			<?php endif; ?>
 		<?php endif; ?>

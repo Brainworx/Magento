@@ -202,6 +202,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 						}
 					}else{
 						$startrental = new Datetime($rentalToInvoice->getLastInvDt());
+						$startrental->add(new DateInterval('P1D'));
 					}
 					if($rentalToInvoice->getEndDt() != null && $rentalToInvoice->getEndDt() < $invoiceDt){
 						$endrental = new DateTime($rentalToInvoice->getEndDt());

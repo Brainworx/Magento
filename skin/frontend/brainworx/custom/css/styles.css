@@ -8803,13 +8803,14 @@ div.paypal-logo span > img {
 .slideshow-container {
   position: relative;
   display: block;
-  width: 75%;/*changed SHE*/
+  width: 100%;
   margin: 10px 0;
   border: 1px solid #ededed;
+  text-align: center;
 }
 .slideshow-container .slideshow {
   width: 100%;
-  padding: 0;
+  padding: 25px; /*she updated*/
   position: relative;
   margin: 0;
   border: 10px solid #FFFFFF;
@@ -10602,4 +10603,8 @@ div.calendar table td.button {
 {
     float: left;
     margin: 5px;
+}
+img.cat_img
+{
+	width: 75%;
 }
