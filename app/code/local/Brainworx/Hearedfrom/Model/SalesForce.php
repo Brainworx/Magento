@@ -15,8 +15,10 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
      */
     public function getUserNames(){
     	$userArray = array();
-    	foreach($this->getCollection()->getSelect()->order('user_nm')as $user){
-    		$userArray[$user->getEntityId()] = $user->getUserNm();    
+    	$i = 0;
+    	foreach($this->getCollection()->addFieldToSelect("user_nm") as $usr){
+    		$userArray[$i] = $usr->getUserNm();
+    		$i = $i+1;
     	}
     	return $userArray;
     }

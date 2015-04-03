@@ -113,6 +113,10 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         		'index'     => 'create_dt',
         		'type'		=> 'date',
         ));    
+        
+        //Add exort options on admin panel
+        $this->addExportType('*/*/exportCsv', Mage::helper('hearedfrom')->__('CSV'));
+        $this->addExportType('*/*/exportExcel', Mage::helper('hearedfrom')->__('Excel XML'));
 		
         return parent::_prepareColumns();
     }    

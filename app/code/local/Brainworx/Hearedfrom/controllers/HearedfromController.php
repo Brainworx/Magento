@@ -116,4 +116,28 @@ class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controlle
 		Mage::getSingleton ( 'adminhtml/session' )->addError ( Mage::helper ( 'adminhtml' )->__ ( 'Unable to find the salescommission to delete.' ) );
 		$this->_redirect ( '*/*/' );
 	}
+	/**
+	 * Export order grid to CSV format
+	 */
+	public function exportCsvAction()
+	{
+		$fileName   = 'commission.csv';
+		$grid       = $this->getLayout()->createBlock('hearedfrom/adminhtml_hearedfrom_grid');
+		$this->_prepareDownloadResponse($fileName, $grid->getCsvFile());
+	}
+	
+	/**
+	 *  Export order grid to Excel XML format
+	 */
+	public function exportExcelAction()
+	{
+		$fileName   = 'commission.xml';
+		$grid       = $this->getLayout()->createBlock('hearedfrom/adminhtml_hearedfrom_grid');
+		$this->_prepareDownloadResponse($fileName, $grid->getExcelFile($fileName));
+	}
+	
+	protected function _sendUploadResponse($fileName, $content, $contentType='application/octet-stream')
+	{
+		$this->_prepareDownloadResponse($fileName, $content, $contentType);
+	}
 }
