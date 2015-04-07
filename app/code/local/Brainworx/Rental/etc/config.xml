@@ -75,14 +75,14 @@
 			</rental>
 		</helpers>
 		 <!-- Defining an event observer -->
-        <events>
-            <!-- The code of the event we want to observe -->
-             <checkout_cart_product_add_after>
-                <!-- Defining an observer for this event -->
+        <events>            
+            <sales_quote_product_add_after>
+            <!-- we use this event and not checkout_cat_product_add_after as the latter one is not triggered for adding linked articles with a product -->
+             <!-- Defining an observer for this event -->
                 <observers>
                     <!--
                         Unique identifier within the
-                        sales_order_place_after node.
+                        sales_quote_product_add_after node.
                         By convention, we write the module's
                         name in lowercase.
                     -->
@@ -101,7 +101,7 @@
                         <type>singleton</type>
                     </rental>
                 </observers>
-            </checkout_cart_product_add_after>
+            </sales_quote_product_add_after>
             <!-- event after sale -->
             <sales_order_place_after><!--sales_order_save_commit_after / sales_order_save_after / sales_order_place_after -->
                 <!-- Defining an observer for this event -->

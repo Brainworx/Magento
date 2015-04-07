@@ -154,22 +154,22 @@ class Brainworx_Rental_Model_Observer
 		
 	}
 	/**
-	 * Observer method configured for checkout_cart_product_add_after
+	 * Observer method configured for sales_quote_product_add_after
 	 * After adding a rental item the price will be set to 0 as rental items will be monthly invoiced after the first month.
 	 */
 	public function addDiscountToRental(Varien_Event_Observer $observer)
 	{
 		try{
-			Mage::log('Checkout add product after event occurred');
+			Mage::log('sales_quote_product_add_after event occurred');
 			
-			/* @var $item Mage_Sales_Model_Quote_Item */
-			$item = $observer->getQuoteItem();
+			$items = $observer->getItems();
+			$item = $items[0];
 			if ($item->getParentItem()) {
 				$item = $item->getParentItem();
 			}
 			$notice = 0;
 			$catrental = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
-			foreach($observer->getProduct()->getCategoryIds() as $cat){
+			foreach($item->getProduct()->getCategoryIds() as $cat){
 				if($cat == $catrental){
 					$item->setCustomPrice(0);
 					$item->setOriginalCustomPrice(0);
