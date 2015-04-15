@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <!--
 SHE: update moved cookies notice to top
+SHE: added facebook sharing on top
 -->
 <layout version="0.1.0">
     <!--
@@ -81,6 +82,11 @@ SHE: update moved cookies notice to top
                     <label>Page Header</label>
                     <action method="setElementClass"><value>top-container</value></action>
                 </block>
+                <!-- SHE Add sharing on facebook CMS block -->
+				<block type="cms/block" name="facebook">
+					<action method="setBlockId"><block_id>facebook</block_id></action>
+				</block>
+				<!-- Add CMS block -->
                 <block type="page/html_welcome" name="welcome" as="welcome"/>
             </block>
 
