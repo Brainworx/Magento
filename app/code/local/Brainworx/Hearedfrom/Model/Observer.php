@@ -72,7 +72,7 @@ class Brainworx_Hearedfrom_Model_Observer
 							if($cat == 
 							Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text')){
 				
-								$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
+								$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_RENT')->getValue('text');
 								break;
 							}
 						}
