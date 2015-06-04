@@ -151,12 +151,18 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			Mage::Log ( "creating invoices - " + $invoiceDt );
 			// select orders to invoice sorted by order id - exclude already invoiced 
 			$rentalsToInvoice = Mage::getModel ( 'rental/rentedItem' )->getCollection ()
-			->addFieldToFilter(
+			->addFieldToFilter( //last inv dt null or -2 month or sooner 
 					array('last_inv_dt','last_inv_dt'),
 					array(
 							array('to'=>date('Y-m-d', strtotime('last day of -2 month'))),
 							array('null' => true))
 					)
+			->addFieldToFilter( //end_dt null or after last invoice date which is -2 month
+					array('end_dt','end_dt'),
+					array(
+							array('gt'=>date('Y-m-d', strtotime('last day of -2 month'))),
+							array('null' => true))
+			)
 			->addFieldToFilter(
 					array('start_dt'),
 					array(
