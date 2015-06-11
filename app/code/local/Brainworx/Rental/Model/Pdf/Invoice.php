@@ -54,6 +54,24 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			if ($invoice->getStoreId()) {
 				Mage::app()->getLocale()->revert();
 			}
+			
+			//Add invoice comments to pdf
+			$this->_setFontRegular($page, 10);
+			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.25));//0.25
+			$order = $invoice->getOrder();
+			$orderComment = "";
+			foreach ($invoice->getCommentsCollection() as $comment) {
+	             $orderComment = $orderComment . $comment->getComment();
+	             $orderComment = $orderComment . "<br>";
+	        }
+	        $comments = explode("<br>",$orderComment);
+	        $h = $this->y - 20;
+	        foreach($comments as $c){
+				$page->drawText($c, 50, $h, 'UTF-8');
+				$h = $h - 10;
+	        }
+			//end add comment
+			
 			/*SHE add footer*/
 			$this->insertFooter($page, $invoice->getStore());
 		}
@@ -106,6 +124,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 	
 		$this->y -= 20;
 		$page = $this->drawLineBlocks($page, array($lineBlock));
+		
 		return $page;
 	}
 	
