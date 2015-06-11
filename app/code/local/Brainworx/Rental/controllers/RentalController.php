@@ -160,6 +160,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			->addFieldToFilter( //end_dt null or after last invoice date which is -2 month
 					array('end_dt','end_dt'),
 					array(
+							//TODO check 'gt'=>'last_inv_dt' renders (end_dt > 'last_inv_dt') but should have ' ' 
 							array('gt'=>date('Y-m-d', strtotime('last day of -2 month'))),
 							array('null' => true))
 			)
