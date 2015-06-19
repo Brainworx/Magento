@@ -421,7 +421,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				
 				$history->setIsCustomerNotified ( true );
 				
-				$invoice->sendEmail ( true, '' ); // set this to false to not send the invoice via email
+				$invoice->sendEmail ( false, '' ); // set this to false to not send the invoice via email
 				
 				$invoice->setUpdatedAt(new DateTime('NOW'));
 		
