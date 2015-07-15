@@ -1,5 +1,11 @@
 <?php
 class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action {
+	/*
+	 * Update required for security for non-admin users after patch 6285
+	 */
+	protected function _isAllowed(){
+		return Mage::getSingleton('admin/session')->isAllowed('rental/renteditem');
+	}
 	public function indexAction() {
 		$this->_title ( $this->__ ( 'Rental' ) )->_title ( $this->__ ( 'RentedItems' ) );
 		$this->loadLayout ();

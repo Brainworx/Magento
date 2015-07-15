@@ -1,6 +1,12 @@
 <?php
 class Brainworx_Productfileupload_Adminhtml_ProductfileuploadbackendController extends Mage_Adminhtml_Controller_Action
 {
+	/*
+	 * Update required for security for non-admin users after patch 6285
+	 */
+	protected function _isAllowed(){
+		return Mage::getSingleton('admin/session')->isAllowed('system/productfileupload_general');
+	}
 	public function indexAction()
     {
        $this->loadLayout();

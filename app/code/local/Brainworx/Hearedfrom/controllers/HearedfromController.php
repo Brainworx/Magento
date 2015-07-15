@@ -1,5 +1,11 @@
 <?php
 class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controller_Action {
+	/*
+	 * Update required for security for non-admin users after patch 6285
+	 */
+	protected function _isAllowed(){
+		return Mage::getSingleton('admin/session')->isAllowed('hearedfrom/salesCommission');
+	}
 	public function indexAction() {
 		$this->_title ( $this->__ ( 'Commission' ) )->_title ( $this->__ ( 'SalesCommission' ) );
 		$this->loadLayout ();
