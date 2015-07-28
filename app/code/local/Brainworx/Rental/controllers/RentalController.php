@@ -377,7 +377,9 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			$sendInvoiceEmailAuto = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('ASEND_INV_ML')->getValue('text');
 				
 			if($sendInvoiceEmailAuto == 'Y'){
-				$invoice->sendEmail ( true, '' ); // set this to false to not send the invoice via email
+				// set this to false to not send the invoice via email
+				// remark: invoice cc email addresses in config will receive email
+				$invoice->sendEmail ( true, '' ); 
 			}
 				
 			$invoice->setCreatedAt($invoiceDt);
@@ -427,7 +429,8 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				
 				$history->setIsCustomerNotified ( true );
 				
-				$invoice->sendEmail ( false, '' ); // set this to false to not send the invoice via email
+				// set this to false to not send the invoice via email (remark: if copy to is activated the email to this address will be send)
+				//$invoice->sendEmail ( false, '' );
 				
 				$invoice->setUpdatedAt(new DateTime('NOW'));
 		
