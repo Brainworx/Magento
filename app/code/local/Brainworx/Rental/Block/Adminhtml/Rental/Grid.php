@@ -116,7 +116,7 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
         		'header'    => Mage::helper('rental')->__('Produkt'),
         		'align'     =>'right',
         		'index'     => 'product',
-        		'filter_index' => 'item.product'
+        		'filter_index' => 'item.name'
         ));
         
         $this->addColumn('start_dt', array(
