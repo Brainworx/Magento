@@ -21,6 +21,7 @@ $table = $installer->getConnection()->newTable($installer->getTable('hearedfrom/
 ), "Creation time")
 ;
 //Add order vs seller table
+//Used to store the seller at order save and retrieve it on invoice creation to store individual commission record in salesCommission
 $table1 = $installer->getConnection()->newTable($installer->getTable('hearedfrom/salesSeller'))
 ->addColumn('entity_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
 		'unsigned' => true,
