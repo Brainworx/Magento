@@ -164,12 +164,13 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 							array('null' => true))
 					)
 			->addFieldToFilter( //end_dt null or after last invoice date which is -2 month
-					array('end_dt','end_dt'),
+					array('end_dt','end_dt','last_inv_dt'),
 					array(
 							//TODO check 'gt'=>'last_inv_dt' renders (end_dt > 'last_inv_dt') but should have ' ' 
-							array('gt'=>date('Y-m-d', strtotime('last day of -2 month'))),
+							array('gt'=>date('Y-m-d', strtotime('last day of -6 month'))),
+							array('null' => true),
 							array('null' => true))
-			)
+					)
 			->addFieldToFilter(
 					array('start_dt'),
 					array(
@@ -187,9 +188,13 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				$grandTotalInclTax = 0;
 				$tax = 0; 
 				foreach ( $rentalsToInvoice as $rental ) {
+					if($rental->getLastInvDt() >= $rental->getEndDt()){
+						continue;
+					}
 					if($rentalToInvoice == null){
 						$rentalToInvoice = $rental;
 					}
+					
 					if ($rentalToInvoice->getOrigOrderId() != $rental->getOrigOrderId ()) {
 						
 						$this->createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt);
