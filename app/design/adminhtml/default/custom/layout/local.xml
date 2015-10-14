@@ -5,4 +5,46 @@
         <remove name="notification_security" />
         <remove name="notification_survey" />
     </default>
+    <adminhtml_sales_order_index>
+	    <reference name="sales_order.grid">
+	        <action method="setDefaultLimit">
+	              <limit>200</limit>
+	      </action> 
+	    </reference>
+	</adminhtml_sales_order_index>
+	<adminhtml_sales_order_grid>
+	    <reference name="sales_order.grid">
+	        <action method="setDefaultLimit">
+	              <limit>200</limit>
+	      </action> 
+	    </reference>
+	</adminhtml_sales_order_grid>
+	 <adminhtml_sales_invoice_index>
+	    <reference name="sales_invoice.grid">
+	        <action method="setDefaultLimit">
+	              <limit>200</limit>
+	      </action> 
+	    </reference>
+	</adminhtml_sales_invoice_index>
+	<adminhtml_sales_invoice_grid>
+	    <reference name="sales_invoice.grid">
+	        <action method="setDefaultLimit">
+	              <limit>200</limit>
+	      </action> 
+	    </reference>
+	</adminhtml_sales_invoice_grid>
+	<adminhtml_rental_index>
+	 <reference name="adminhtml_rental.grid">
+	        <action method="setDefaultLimit">
+	              <limit>200</limit>
+	      </action> 
+	    </reference>
+	</adminhtml_rental_index>
+	<adminhtml_rental_grid>
+	 <reference name="adminhtml_rental.grid">
+	        <action method="setDefaultLimit">
+	              <limit>200</limit>
+	      </action> 
+	    </reference>
+	</adminhtml_rental_grid>
 </layout>
