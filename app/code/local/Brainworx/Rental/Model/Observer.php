@@ -35,104 +35,113 @@ class Brainworx_Rental_Model_Observer
 		Mage::Log("nr items : " . count($items));
 		$count = 0;
 		$process = 0;
-		
+		$rentaltosave = false;
 		foreach ($items as  $item)
 		{
-			foreach($item->getProduct()->getCategoryIds() as $cat){
-				Mage::Log("cat:" .$cat);
-				if($cat ==
-				  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text')){
-					$count++;
-					//saving new rental line to be invoiced monthly
-					try{
-						$newrentalitem = Mage::getModel('rental/rentedItem');
-		
-						$newrentalitem->setData('orig_order_id',$order->getEntityId());
-						$newrentalitem->setData('order_item_id',$item->getItemId());
-						$newrentalitem->setData('quantity',$item->getQtyOrdered());// nr of items - not days
-						$newrentalitem->setStartDt(date("Y-m-d"));
-						Mage::Log('date:'.Mage::getModel('core/date')->date('Y-m-d'));
-		
-						$newrentalitem->Save();			
-		
-						Mage::Log("new rental (product:".$item->getName()." - Q ".$item->getQtyOrdered()." after saved for order " . $order->getEntityId());
-						 
-						//Check/add sale_tax_item record
-						if(0==count(Mage::getModel('tax/sales_order_tax_item')->getCollection()->addFieldToFilter(
-								array('item_id'),
-								array(array('eq'=> $item->getItemId()))))){
-							$taxCollection = Mage::getModel('tax/calculation')->getCollection();						
-							// add joined data to the collection			
-							$taxCollection->getSelect()->join(
-									array('rate' => 'tax_calculation_rate'),
-									'main_table.tax_calculation_rate_id = rate.tax_calculation_rate_id',
-									array('code','rate')
-							)->join(
-									array('rule' => 'tax_calculation_rule'),
-									'main_table.tax_calculation_rule_id = rule.tax_calculation_rule_id',
-									array('priority','position')
-							);
-							$custTaxClassID = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CUST_TAX_ID')->getValue('text');
-							$taxCollection->addFieldToFilter(
-									array('customer_tax_class_id'),
-									array(
-											array('eq'=>$custTaxClassID)) //TODO update customer tax class from real customer
-							)->addFieldToFilter(
-									array('product_tax_class_id'),
-									array(
-											array('eq'=>$item->getProduct()->getData('tax_class_id')))
-							);
-							foreach ( $taxCollection as $taxR ) {
-								$code = $taxR->getData("code");
-								//Check add sale_tax 
-								$saleTaxes = Mage::getModel('tax/sales_order_tax')->getCollection()
-										->addFieldToFilter(
+			$rentaltosave = false;
+			if(!empty($item->getRentalitem())&&$item->getRentalitem() == true){
+				$rentaltosave = true;
+			}else{
+				//TODO remove this check as not needed
+				foreach($item->getProduct()->getCategoryIds() as $cat){
+					if($cat ==
+					  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text')){
+						$rentaltosave = true;
+						Mage::Log("checknewrental found rental cat for line without rentalitem identifier:" .$cat);							
+						break;
+					}
+				}
+			}
+			if($rentaltosave){
+				$count++;
+				//saving new rental line to be invoiced monthly
+				try{
+					$newrentalitem = Mage::getModel('rental/rentedItem');
+				
+					$newrentalitem->setData('orig_order_id',$order->getEntityId());
+					$newrentalitem->setData('order_item_id',$item->getItemId());
+					$newrentalitem->setData('quantity',$item->getQtyOrdered());// nr of items - not days
+					$newrentalitem->setStartDt(date("Y-m-d"));
+					Mage::Log('date:'.Mage::getModel('core/date')->date('Y-m-d'));
+				
+					$newrentalitem->Save();
+				
+					Mage::Log("new rental (product:".$item->getName()." - Q ".$item->getQtyOrdered()." after saved for order " . $order->getEntityId());
+						
+					//Check/add sale_tax_item record
+					if(0==count(Mage::getModel('tax/sales_order_tax_item')->getCollection()->addFieldToFilter(
+							array('item_id'),
+							array(array('eq'=> $item->getItemId()))))){
+						$taxCollection = Mage::getModel('tax/calculation')->getCollection();
+						// add joined data to the collection
+						$taxCollection->getSelect()->join(
+								array('rate' => 'tax_calculation_rate'),
+								'main_table.tax_calculation_rate_id = rate.tax_calculation_rate_id',
+								array('code','rate')
+						)->join(
+								array('rule' => 'tax_calculation_rule'),
+								'main_table.tax_calculation_rule_id = rule.tax_calculation_rule_id',
+								array('priority','position')
+						);
+						$custTaxClassID = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CUST_TAX_ID')->getValue('text');
+						$taxCollection->addFieldToFilter(
+								array('customer_tax_class_id'),
+								array(
+										array('eq'=>$custTaxClassID)) //TODO update customer tax class from real customer
+						)->addFieldToFilter(
+								array('product_tax_class_id'),
+								array(
+										array('eq'=>$item->getProduct()->getData('tax_class_id')))
+						);
+								foreach ( $taxCollection as $taxR ) {
+									$code = $taxR->getData("code");
+									//Check add sale_tax
+									$saleTaxes = Mage::getModel('tax/sales_order_tax')->getCollection()
+									->addFieldToFilter(
 											array('order_id'),
 											array(array('eq'=> $order->getEntityId())))
-										->addFieldToFilter(
-											array('code'),
-											array(array('eq'=> $code)));
-								if(0==count($saleTaxes)){
-									$data = array(
-											'order_id'          => $order->getId(),
-											'code'              => $code,
-											'title'             => $code, // here you could check tax_calculation_rate_title for overloaded title-if multiple stores exist
-											'hidden'            => 0,
-											'percent'           => $taxR->getData('rate'),
-											'priority'          => $taxR->getData('priority'),
-											'position'          => $taxR->getData('position'),
-											'amount'            => 0,
-											'base_amount'       => 0,
-											'process'           => $process,
-											'base_real_amount'  => 0,
-									);
-									$saleTax = Mage::getModel('tax/sales_order_tax')->setData($data)->save();
-									//process = used to sort tax rates per order
-									$process++;
-								}else{
-									foreach($saleTaxes as $st){
-										$saleTax = $st;
-										break;
+											->addFieldToFilter(
+													array('code'),
+													array(array('eq'=> $code)));
+									if(0==count($saleTaxes)){
+										$data = array(
+												'order_id'          => $order->getId(),
+												'code'              => $code,
+												'title'             => $code, // here you could check tax_calculation_rate_title for overloaded title-if multiple stores exist
+												'hidden'            => 0,
+												'percent'           => $taxR->getData('rate'),
+												'priority'          => $taxR->getData('priority'),
+												'position'          => $taxR->getData('position'),
+												'amount'            => 0,
+												'base_amount'       => 0,
+												'process'           => $process,
+												'base_real_amount'  => 0,
+										);
+										$saleTax = Mage::getModel('tax/sales_order_tax')->setData($data)->save();
+										//process = used to sort tax rates per order
+										$process++;
+									}else{
+										foreach($saleTaxes as $st){
+											$saleTax = $st;
+											break;
+										}
 									}
 								}
-							}
-								
-							//load data for sale tax item
-							$data = array(
-									'item_id'       => $item->getItemId(),
-									'tax_id'        => $saleTax->getTaxId(),
-									'tax_percent'   => $saleTax->getPercent()
-							);
-							//save the sale tax item
-							Mage::getModel('tax/sales_order_tax_item')->setData($data)->save();
-						}
-					}catch(Exception $e){
-						Mage::log($e->getMessage());
-						//set error message in session
-						Mage::getSingleton('core/session')->addError('Sorry, er gebeurde een fout tijdens het wegschrijven van je verhuur order.');
-						die;
+				
+								//load data for sale tax item
+								$data = array(
+										'item_id'       => $item->getItemId(),
+										'tax_id'        => $saleTax->getTaxId(),
+										'tax_percent'   => $saleTax->getPercent()
+								);
+								//save the sale tax item
+								Mage::getModel('tax/sales_order_tax_item')->setData($data)->save();
 					}
-					break;
+				}catch(Exception $e){
+					Mage::log($e->getMessage());
+					//set error message in session
+					Mage::getSingleton('core/session')->addError('Sorry, er gebeurde een fout tijdens het wegschrijven van je verhuur order.');
+					die;
 				}
 			}
 			 
@@ -167,20 +176,39 @@ class Brainworx_Rental_Model_Observer
 			if ($item->getParentItem()) {
 				$item = $item->getParentItem();
 			}
-			$notice = 0;
+			$rnotice = 0;
 			$catrental = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
+			$sinotice = 0;
+			$catssuppplinvl = explode(",",Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CATS_SUPPL_INV')->getValue('text'));
+			
 			foreach($item->getProduct()->getCategoryIds() as $cat){
 				if($cat == $catrental){
-					$item->setCustomPrice(0);
-					$item->setOriginalCustomPrice(0);
-					$item->getProduct()->setIsSuperMode(true);
-					Mage::Log("Custom price set for rental " . $item->getProduct()->getName() . " -" . $item->getProduct()->getSku());
-					$notice = 1;
+					$rnotice = 1;
 					break;
 				}
 			}
-			if($notice > 0){
+			if($rnotice == 0){
+				foreach($item->getProduct()->getCategoryIds() as $cat){						
+					foreach ($catssuppplinvl as $scat){
+						if($cat == $scat){
+							$sinotice = 1;
+							break;
+						}
+					}
+				}
+			}
+			if($rnotice > 0 || $sinotice > 0){
+				$item->setCustomPrice(0);
+				$item->setOriginalCustomPrice(0);
+				$item->getProduct()->setIsSuperMode(true);
+				Mage::Log("Custom price set for rental ".$rnotice." or supplier invoice ".$sinotice." " . $item->getProduct()->getName() . " -" . $item->getProduct()->getSku());
+			}
+			if($rnotice > 0){
 				Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('The price of your rental article has been set to 0, you will pay for this article within 10 days after receiving the monthly invoice.'));
+				$item->setRentalitem(true);
+			}else if($sinotice > 0){
+				Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('The price of your article has been set to 0, you will receive the invoice directly from the supplier.'));
+				$item->setSupplierinvoice(true);
 			}
 		}catch(Exception $e){
 			Mage::log($e->getMessage());

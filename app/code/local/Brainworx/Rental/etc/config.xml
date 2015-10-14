@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Brainworx_Rental>
-            <version>0.1.0</version>    <!-- Version number of your module -->
+            <version>0.1.1</version>    <!-- Version number of your module -->
         </Brainworx_Rental>
     </modules>
 	<admin>
@@ -129,6 +129,26 @@
                 </observers>
             </sales_order_place_after>
         </events>
+        <!--convert your custom product attribute "supplierinvoice", "rentalitem" from quote item to order item-->
+		<fieldsets>
+		    <sales_convert_quote_item>
+		        <supplierinvoice>
+		            <to_order_item>*</to_order_item>
+		        </supplierinvoice>
+		         <rentalitem>
+		            <to_order_item>*</to_order_item>
+		        </rentalitem>
+		    </sales_convert_quote_item>
+		    <sales_convert_order_item>
+		        <supplierinvoice>
+		            <to_quote_item>*</to_quote_item>
+		        </supplierinvoice>
+		        <rentalitem>
+		            <to_quote_item>*</to_quote_item>
+		        </rentalitem>
+		    </sales_convert_order_item>
+		</fieldsets>
+		
 	</global>
 	 <adminhtml>
         <layout>
