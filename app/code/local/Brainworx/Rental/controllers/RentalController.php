@@ -188,7 +188,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				$grandTotalInclTax = 0;
 				$tax = 0; 
 				foreach ( $rentalsToInvoice as $rental ) {
-					if($rental->getLastInvDt() >= $rental->getEndDt()){
+					if($rental->getLastInvDt()!=null && $rental->getLastInvDt() >= $rental->getEndDt()){
 						continue;
 					}
 					if($rentalToInvoice == null){
