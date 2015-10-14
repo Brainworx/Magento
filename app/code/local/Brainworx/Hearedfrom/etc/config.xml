@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Brainworx_Hearedfrom>
-			<version>0.1.5</version>    <!-- Version number of your module -->
+			<version>0.1.7</version>    <!-- Version number of your module -->
 		</Brainworx_Hearedfrom>
 	</modules>
 	<admin>
@@ -47,7 +47,7 @@
 			<brainworxadminthemecontroller>
 				<class>Brainworx_Hearedfrom_Controller</class>
 			</brainworxadminthemecontroller>
-
+			
 		</models>
 
 		<helpers>
@@ -141,8 +141,39 @@
                     </hooksystem_invoice>
                 </observers>
             </sales_order_invoice_register>
+            <!--convert product attribute to quote item through event observer-->
+            <sales_quote_item_set_product>
+			    <observers>
+			        <hooksysstem_quote>
+			            <class>hearedfrom/observer</class>
+			            <method>hookToQuoteSetProductEvent</method>
+			        </hooksysstem_quote>
+			    </observers>
+			</sales_quote_item_set_product>
 		</events>
-
+		<!--convert your custom product attribute "ristorno" from quote item to order item-->
+		<fieldsets>
+		    <sales_convert_quote_item>
+		        <ristorno>
+		            <to_order_item>*</to_order_item>
+		        </ristorno>
+		    </sales_convert_quote_item>
+		    <sales_convert_order_item>
+		        <ristorno>
+		            <to_quote_item>*</to_quote_item>
+		        </ristorno>
+		    </sales_convert_order_item>
+		</fieldsets>
+		<!--add your custom product attribute "ristorno" to quote item-->
+		<sales>
+		    <quote>
+		        <item>
+		            <product_attributes>
+		                <ristorno />
+		            </product_attributes>
+		        </item>
+		    </quote>
+		</sales>
 	</global>
 	<frontend>
 		<!-- setup the url path to our new module -->
