@@ -13,7 +13,7 @@ $table = $installer->getConnection()->newTable($installer->getTable('hearedfrom/
 ->addColumn('user_nm', Varien_Db_Ddl_Table::TYPE_VARCHAR, null, array(
 		'unsigned' => true,'nullable' => true,
 ), 'Name')
-->addColumn('vat_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, null, array(
+->addColumn('cust_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
 		'unsigned' => true,'nullable' => true,
 ), 'Vat ID')
 ->addColumn('create_dt', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(

@@ -2,7 +2,11 @@
 
 	<select id="getvoice" name="getvoice">
 		<?php foreach($this->getHearedFromValues() as $_option): ?>
-			<option value="<?php echo $_option ?>"><?php echo $_option ?></option>
+			<option value="<?php echo $_option ?>"
+			<?php if(!empty($this->getSellerValue()) && $_option == $this->getSellerValue()){
+					echo 'selected';
+			}?>
+			><?php echo $_option ?></option>
 		<?php endforeach; ?>
 	</select>
 	

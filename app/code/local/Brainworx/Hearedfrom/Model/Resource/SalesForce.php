@@ -8,8 +8,8 @@ class Brainworx_Hearedfrom_Model_Resource_SalesForce extends Mage_Core_Model_Res
     }
     /**
      * Optional method to load entity by username
-     * @param unknown $username
-     * @return multitype:
+     * @param varchar $username
+     * @return multitype:salesforce array of salesforce with column as keys
      */
     public function loadByUsername($username)
     {
@@ -20,6 +20,21 @@ class Brainworx_Hearedfrom_Model_Resource_SalesForce extends Mage_Core_Model_Res
             ->where($this->getMainTable().'.'.'user_nm'.'=?',$username);
 
         return $adapter->fetchRow($select);
+    }
+    /**
+     * Optional method to load entity by customerid
+     * @param int $id
+     * @return multitype:salesforce  array of salesforce with column as keys
+     */
+    public function loadByCustomerid($id)
+    {
+    	$adapter = $this->_getReadAdapter();
+    
+    	$select = $adapter->select()
+    	->from($this->getMainTable())
+    	->where($this->getMainTable().'.'.'cust_id'.'=?',$id);
+    
+    	return $adapter->fetchRow($select);
     }
     /**
      * Load foreign key related data to include in the model when selected

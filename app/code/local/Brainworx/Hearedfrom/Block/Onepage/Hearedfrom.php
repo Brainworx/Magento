@@ -15,6 +15,12 @@ class Brainworx_Hearedfrom_Block_Onepage_Hearedfrom extends Mage_Checkout_Block_
         	array_push($_options,$salesForce->getUserNm());
         }
         $this->setHearedFromValues($_options);
+        //set the current seller
+        $cid='';
+        if(Mage::getSingleton('customer/session')->isLoggedIn()){
+        	$cid = Mage::getSingleton('customer/session')->getCustomer()->getEntityId();
+        }
+        $this->setSellerValue(Mage::getModel("hearedfrom/salesForce")->loadSellerNameByCustid($cid));
         parent::_construct();
     }
 }
