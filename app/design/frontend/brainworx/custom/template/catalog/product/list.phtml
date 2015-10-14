@@ -39,7 +39,7 @@
     $_addOK = false;
     if(Mage::getSingleton('customer/session')->isLoggedIn()){
     	$groupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
-    	if(Mage::getModel('core/variable')->setStoreId($_storeId)->loadByCode('ZORGP_GID')->getValue('text') == $groupId) {
+    	if(Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('ZORGP_GID')->getValue('text') == $groupId) {
     		$_addOK = true;
     	}
     }
