@@ -155,14 +155,21 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
     	//create a string with the category ids based on the provided value
     	$cats="(";
     	$names = explode(",",$value);
-    	foreach($names as $key => $catname){
-    		$cats .= Mage::getResourceModel('catalog/category_collection')
-    		->addFieldToFilter('name', $catname)
-    		->getFirstItem()->getId();
-    		if($key < count($names)-1)
-    			$cats.= ' ,';
+    	if(!empty($names) && count($names)>0){
+	    	foreach($names as $key => $catname){
+	    		$cats .= Mage::getResourceModel('catalog/category_collection')
+	    		->addFieldToFilter('name', array("like"=>"%".$catname."%"))
+	    		->getFirstItem()->getId();
+	    		if($key < count($names)-1)
+	    			$cats.= ' ,';
+	    	}
+	    	$cats .= ")";
+    	}else{
+    		return $this;
     	}
-    	$cats .= ")";
+    	if($cats == '()'){
+    		return $this;
+    	}
     	
     	//add subquery to filter out the product for the category
     	$this->getCollection()->getSelect()->where(

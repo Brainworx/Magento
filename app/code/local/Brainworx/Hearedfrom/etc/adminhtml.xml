@@ -2,7 +2,7 @@
 <config>
 	<menu>
         <hearedfrom translate="title" module="hearedfrom">
-            <title>Commission</title>
+            <title>Financieel</title>
             <sort_order>10</sort_order>
             <!--action>adminhtml/hearedfroml</action-->
             <depends>
