@@ -34,8 +34,17 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
 					'main_table.user_id = force.entity_id',
 					array('user_nm')
 			);
-	        
-	        $this->setCollection($collection);
+			$select->join(
+					array('order' => $resource->getTableName('sales/order')),
+					'main_table.orig_order_id = order.entity_id',
+					array('increment_id')
+			);
+			$select->join(
+					array('item' => $resource->getTableName('sales/order_item')),
+					'main_table.order_item_id = item.item_id',
+					array('product' => 'name', 'sku')
+			);
+			$this->setCollection($collection);
 	        
 	        return parent::_prepareCollection();
         }catch(Exception $e){
@@ -69,18 +78,35 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         		'type'  => 'options',
         		'options'	=>  Mage::getModel('hearedfrom/salesForce')->getUserNames(),
         ));
-//         $this->addColumn('increment_id', array(
-//         		'header'    => Mage::helper('hearedfrom')->__('Bestelling #'),
-//         		'align'     =>'left',
-//         		'width'     => '50px',
-//         		'index'     => 'increment_id'
-//         ));
-        $this->addColumn('orig_order_id', array(
-        		'header'    => Mage::helper('hearedfrom')->__('Order #'),
+        $this->addColumn('category_ids',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Category'),
+        		'type'  => 'text',
+        		'width'     => '100px',
+        		'index' => 'category_ids',
+        		//	'options' => $this->catOptions,
+        		'renderer'  => 'Brainworx_Hearedfrom_Block_Adminhtml_Hearedfrom_List_Cat',
+        		'filter_condition_callback' => array($this, '_categoryFilter')
+        ));
+        $this->addColumn('product', array(
+        		'header'    => Mage::helper('hearedfrom')->__('Produkt'),
+        		'align'     =>'right',
+        		'width'     => '100px',
+        		'index'     => 'product',
+        		'filter_index' => 'item.name'
+        ));
+       
+        $this->addColumn('increment_id', array(
+        		'header'    => Mage::helper('hearedfrom')->__('Bestelling #'),
         		'align'     =>'left',
         		'width'     => '50px',
-        		'index'     => 'orig_order_id'
+        		'index'     => 'increment_id'
         ));
+//         $this->addColumn('orig_order_id', array(
+//         		'header'    => Mage::helper('hearedfrom')->__('Order #'),
+//         		'align'     =>'left',
+//         		'width'     => '50px',
+//         		'index'     => 'orig_order_id'
+//         ));
         $this->addColumn('type', array(
         		'header'    => Mage::helper('hearedfrom')->__('Type'),
         		'align'     =>'left',
@@ -94,17 +120,17 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         		'align'     =>'left',
         		'width'     => '25px',
         		'index'     => 'net_amount',
-        		'type'		=> 'price',
-        		'currency_code' => Mage::app()->getStore(0)->getBaseCurrency()->getCode(),
+        		'type'		=> 'number',//price
+        		//'currency_code' => Mage::app()->getStore(0)->getBaseCurrency()->getCode(),
         		
         ));
-        $this->addColumn('brut_amount', array(
-        		'header'    => Mage::helper('hearedfrom')->__('Amount invl VAT'),
+        $this->addColumn('ristorno', array(
+        		'header'    => Mage::helper('hearedfrom')->__('Ristorno'),
         		'align'     =>'left',
         		'width'     => '25px',
-        		'index'     => 'brut_amount',
-        		'type'		=> 'price',
-        		'currency_code' => Mage::app()->getStore(0)->getBaseCurrency()->getCode(),
+        		'index'     => 'ristorno',
+        		'type'		=> 'number', //price
+        		//'currency_code' => Mage::app()->getStore(0)->getBaseCurrency()->getCode(),
         ));
         $this->addColumn('create_dt', array(
         		'header'    => Mage::helper('hearedfrom')->__('Date'),
@@ -112,6 +138,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         		'width'     => '50px',
         		'index'     => 'create_dt',
         		'type'		=> 'date',
+        		'filter_index'=>'main_table.create_dt'
         ));    
         
         //Add exort options on admin panel
@@ -120,9 +147,33 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
 		
         return parent::_prepareColumns();
     }    
-    
-    public function getRowUrl($row)
+    protected function _categoryFilter($collection, $column)
     {
-        return $this->getUrl('*/*/edit', array('id' => $row->getId()));
+    	if (!$value = $column->getFilter()->getValue()) {
+    		return $this;
+    	}
+    	//create a string with the category ids based on the provided value
+    	$cats="(";
+    	$names = explode(",",$value);
+    	foreach($names as $key => $catname){
+    		$cats .= Mage::getResourceModel('catalog/category_collection')
+    		->addFieldToFilter('name', $catname)
+    		->getFirstItem()->getId();
+    		if($key < count($names)-1)
+    			$cats.= ' ,';
+    	}
+    	$cats .= ")";
+    	
+    	//add subquery to filter out the product for the category
+    	$this->getCollection()->getSelect()->where(
+    			"item.sku in (select p.sku from catalog_product_entity p join catalog_category_product cp
+    			on p.entity_id =  cp.product_id where cp.category_id in ".$cats.")");    
+    
+    			return $this;
     }
+    
+//     public function getRowUrl($row)
+//     {
+//         return $this->getUrl('*/*/edit', array('id' => $row->getId()));
+//     }
 }

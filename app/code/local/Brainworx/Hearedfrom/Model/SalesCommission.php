@@ -14,10 +14,8 @@ class Brainworx_Hearedfrom_Model_SalesCommission extends Mage_Core_Model_Abstrac
     public function getTypes() {
     
     	$array = array();
-    	$i = 0;
     	foreach($this->getCollection()->addFieldToSelect("type")->distinct(true) as $comm){
-    		$array[$i] = $comm->getType();
-    		$i = $i+1;
+    		$array[$comm->getType()] = $comm->getType();
     	}
     	return $array;
     }
