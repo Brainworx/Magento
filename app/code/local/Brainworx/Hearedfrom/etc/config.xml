@@ -3,6 +3,7 @@
 	<modules>
 		<Brainworx_Hearedfrom>
 			<version>0.1.7</version>    <!-- Version number of your module -->
+			<depends>Braiworx_Rental</depends>
 		</Brainworx_Hearedfrom>
 	</modules>
 	<admin>
@@ -54,6 +55,9 @@
 			<hearedfrom>
 				<class>Brainworx_Hearedfrom_Helper</class>
 			</hearedfrom>
+			<financial>
+				<class>Brainworx_Hearedfrom_Helper_Financial</class>
+			</financial>
 		</helpers>
 
 		<blocks>
@@ -66,6 +70,10 @@
 			<hearedfrom>
 				<class>Brainworx_Hearedfrom_Block</class>
 			</hearedfrom>
+			
+			<financial>
+			    <class>Brainworx_Hearedfrom_Block</class>
+			</financial>
 
 			<hearedfromonepage>
 				<class>Brainworx_Hearedfrom_Block_Onepage</class>
@@ -214,6 +222,9 @@
             <hearedfrom>
               <file>hearedfrom.xml</file>
             </hearedfrom>
+             <financial>
+              <file>financial.xml</file>
+            </financial>
           </updates>
         </layout>
         <translate>

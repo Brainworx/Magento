@@ -17,6 +17,11 @@
 					 <!--rental for controllername-->
 					 <!--index is action method in the HearedfromController-->
                 </salesCommission>
+                 <salesOverview>
+                    <title>Sales overview</title>
+                    <sort_order>2</sort_order>
+                    <action>adminhtml/financial/index</action>
+                </salesOverview>
             </children>
         </hearedfrom>
     </menu>
@@ -33,6 +38,9 @@
                             <salesCommission>
                                 <title>Commission Menu Item</title>
                             </salesCommission>
+                             <salesOverview>
+                                <title>Financial Overview Menu Item</title>
+                            </salesOverview>
                         </children>
                     </hearedfrom>
                 </children>

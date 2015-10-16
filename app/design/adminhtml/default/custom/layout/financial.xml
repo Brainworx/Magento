@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--app/design/adminhtml/default/default/layout/financial.xml-->
+<layout>
+	<!--reference to your module/controller/action-->
+   <adminhtml_financial_index>
+        <reference name="content">
+		<!--reference to block element in Block-->
+            <block type="hearedfrom/adminhtml_financial" name="financial" />
+        </reference>
+    </adminhtml_financial_index>
+</layout>
