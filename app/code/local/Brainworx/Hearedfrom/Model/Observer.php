@@ -112,7 +112,6 @@ class Brainworx_Hearedfrom_Model_Observer
 		$quoteItem = $observer->getQuoteItem();
 		$product = $observer->getProduct();
 		$quoteItem->setRistorno($product->getRistorno());
-		Mage::log('Ristorno set in quote '.$quoteItem->getEntityId());
 	}
 	private function saveCommission($sellerid,$orderid,$orderitemid,$type,$netamt,$brutamt,$rst,$invoiced ){
 		$newsalescomm = Mage::getModel('hearedfrom/salesCommission');

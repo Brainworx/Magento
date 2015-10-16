@@ -70,7 +70,7 @@
 			<hearedfrom>
 				<class>Brainworx_Hearedfrom_Block</class>
 			</hearedfrom>
-			
+			<!-- maps the block folder of the hearedfrom module -->
 			<financial>
 			    <class>Brainworx_Hearedfrom_Block</class>
 			</financial>
