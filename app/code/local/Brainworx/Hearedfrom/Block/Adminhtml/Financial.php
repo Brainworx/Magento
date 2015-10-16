@@ -4,11 +4,13 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Financial extends Mage_Adminhtml_Bloc
 {
     public function __construct()
     {	
-		/*controller points to location of grid element*/
+		/*controller points to location of grid element inside the blockgroup as configured in config.xml
+		 * example blockgroup financial maps to hearedfrom/block/ and is extended with adminhtml/financial
+		 * ==> result: hearedfrom/block/adminhtml/financial.php*/
         $this->_controller = 'adminhtml_financial';
         /*blockgroup points to block as in config.xml*/
 		$this->_blockGroup = 'financial';
-        $this->_headerText = Mage::helper('financial')->__('Financial Manager');
+        $this->_headerText = Mage::helper('hearedfrom')->__('Financial Manager');
               
         parent::__construct();
 
