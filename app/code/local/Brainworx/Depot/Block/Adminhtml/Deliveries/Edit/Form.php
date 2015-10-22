@@ -41,6 +41,13 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Edit_Form extends Mage_Adminhtm
         		'name'      => 'entity_id',
         		'required'	=> true,
         ));
+        $fieldset->addField('track_number', 'text', array(
+        		'label'     => Mage::helper('depot')->__('Tracking Number'),
+        		'class'     => 'required-entry',
+        		'readonly' => true,
+        		'name'      => 'track_number',
+        		'required'	=> true,
+        ));
       
         $fieldset->addField('title', 'select',array(
         		'label'    => Mage::helper('depot')->__('Carrier'),

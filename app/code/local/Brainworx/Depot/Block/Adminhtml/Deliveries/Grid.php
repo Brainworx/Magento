@@ -281,5 +281,8 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Grid extends Mage_Adminhtml_Blo
     	$pdf->pages[] = $page;
     	return $pdf->render();
     }
-   
+    public function getRowUrl($row)
+    {
+         return $this->getUrl('*/*/edit', array('id' => $row->getEntityId()));
+    }
 }
