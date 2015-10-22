@@ -61,7 +61,8 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
     	
         $this->addColumn('entity_id', array(
             'header'    => Mage::helper('rental')->__('ID'),
-            'align'     =>'right',
+        	'header_css_class'=>'a-center',
+            'align'     =>'center',
             'width'     => '50px',
             'index'     => 'entity_id',
         ));

@@ -59,14 +59,16 @@ class Brainworx_hearedfrom_Block_Adminhtml_Financial_Grid extends Mage_Adminhtml
     {    	
         $this->addColumn('date', array(
         		'header'    => Mage::helper('hearedfrom')->__('Invoice Period'),
-        		'align'     =>'left',
+        		'align'     =>'center',
         		'width'     => '50px',
         		'index'     => 'date',
         		'filter'	=> false,
         		'type'		=> 'text',
+        		'header_css_class'=>'a-center',
         ));
         $this->addColumn('qty',array(
         		'header'=> Mage::helper('hearedfrom')->__('Quantity'),
+        		'header_css_class'=>'a-right',
         		'type'  => 'number',
         		'width' => '25px',
         		'index' => 'qty',
@@ -74,6 +76,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Financial_Grid extends Mage_Adminhtml
         ));
         $this->addColumn('total',array(
         		'header'=> Mage::helper('hearedfrom')->__('Total Invoiced Amount'),
+        		'header_css_class'=>'a-right',
         		'type'  => 'number',
         		'width' => '25px',
         		'index' => 'total',
@@ -81,6 +84,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Financial_Grid extends Mage_Adminhtml
         ));
         $this->addColumn('sub_total',array(
         		'header'=> Mage::helper('hearedfrom')->__('Total (excl.vat)'),
+        		'header_css_class'=>'a-right',
         		'type'  => 'number',
         		'width' => '25px',
         		'index' => 'sub_total',
@@ -88,13 +92,15 @@ class Brainworx_hearedfrom_Block_Adminhtml_Financial_Grid extends Mage_Adminhtml
         ));
         $this->addColumn('tax',array(
                 'header'=> Mage::helper('hearedfrom')->__('Total Tax Amount'),
+        		'header_css_class'=>'a-right',
              	'type'  => 'number',
              	'width' => '25px',
              	'index' => 'tax',
         		'filter'	=> false,
         ));
         $this->addColumn('shipping_amount',array(
-           		'header'=> Mage::helper('hearedfrom')->__('Shipping'),
+           		'header'=> Mage::helper('hearedfrom')->__('Shipping (excl.vat)'),
+        		'header_css_class'=>'a-right',
            		'type'  => 'number',
            		'width' => '25px',
            		'index' => 'shipping',
@@ -102,6 +108,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Financial_Grid extends Mage_Adminhtml
         ));
         $this->addColumn('open',array(
         		'header'=> Mage::helper('hearedfrom')->__('Open'),
+        		'header_css_class'=>'a-right',
         		'type'  => 'number',
         		'width' => '25px',
         		'index' => 'open',
@@ -109,6 +116,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Financial_Grid extends Mage_Adminhtml
         ));
         $this->addColumn('paid',array(
         		'header'=> Mage::helper('hearedfrom')->__('Paid'),
+        		'header_css_class'=>'a-right',
         		'type'  => 'number',
         		'width' => '25px',
         		'index' => 'paid',
@@ -116,6 +124,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Financial_Grid extends Mage_Adminhtml
         ));
         $this->addColumn('cancelled',array(
         		'header'=> Mage::helper('hearedfrom')->__('Cancelled'),
+        		'header_css_class'=>'a-right',
         		'type'  => 'number',
         		'width' => '25px',
         		'index' => 'cancelled',

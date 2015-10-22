@@ -84,6 +84,8 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Grid extends Mage_Adminhtml_Blo
     	));
     	$this->addColumn('entity_id', array(
     			'header'    => Mage::helper('depot')->__('Delivery_id'),
+        		'header_css_class'=>'a-center',
+    			'align' => 'center',
     			'index' => 'entity_id',
     			'width' => '15px',
     	));
@@ -101,6 +103,8 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Grid extends Mage_Adminhtml_Blo
     	));
     	$this->addColumn('delivered',array(
     			'header'    => Mage::helper('depot')->__('Delivered'),
+        		'header_css_class'=>'a-center',
+    			'align' => 'center',
     			'index' => 'delivered',
     			'type'	=> 'options',
     			'options' => array(1=>Mage::helper('depot')->__('Y'),0=>Mage::helper('depot')->__('N')),

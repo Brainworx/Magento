@@ -65,7 +65,8 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
     	
         $this->addColumn('entity_id', array(
             'header'    => Mage::helper('hearedfrom')->__('ID'),
-            'align'     =>'right',
+        	'header_css_class'=>'a-center',
+            'align'     =>'center',
             'width'     => '50px',
             'index'     => 'entity_id',
         ));
@@ -89,7 +90,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         ));
         $this->addColumn('product', array(
         		'header'    => Mage::helper('hearedfrom')->__('Produkt'),
-        		'align'     =>'right',
+        		'align'     =>'left',
         		'width'     => '100px',
         		'index'     => 'product',
         		'filter_index' => 'item.name'
@@ -97,7 +98,8 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
        
         $this->addColumn('increment_id', array(
         		'header'    => Mage::helper('hearedfrom')->__('Bestelling #'),
-        		'align'     =>'left',
+        		'header_css_class'=>'a-center',
+        		'align'     =>'center',
         		'width'     => '50px',
         		'index'     => 'increment_id'
         ));
@@ -109,7 +111,8 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
 //         ));
         $this->addColumn('type', array(
         		'header'    => Mage::helper('hearedfrom')->__('Type'),
-        		'align'     =>'left',
+        		'header_css_class'=>'a-center',
+        		'align'     =>'center',
         		'width'     => '10px',
         		'index'     => 'type',
         		'type'  => 'options',
@@ -117,7 +120,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         ));
         $this->addColumn('net_amount', array(
         		'header'    => Mage::helper('hearedfrom')->__('Amount ex VAT'),
-        		'align'     =>'left',
+        		'header_css_class'=>'a-right',
         		'width'     => '25px',
         		'index'     => 'net_amount',
         		'type'		=> 'number',//price
@@ -126,7 +129,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         ));
         $this->addColumn('ristorno', array(
         		'header'    => Mage::helper('hearedfrom')->__('Ristorno'),
-        		'align'     =>'left',
+        		'header_css_class'=>'a-right',
         		'width'     => '25px',
         		'index'     => 'ristorno',
         		'type'		=> 'number', //price
@@ -134,7 +137,8 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         ));
         $this->addColumn('create_dt', array(
         		'header'    => Mage::helper('hearedfrom')->__('Date'),
-        		'align'     =>'right',
+        		'header_css_class'=>'a-center',
+        		'align'     =>'center',
         		'width'     => '50px',
         		'index'     => 'create_dt',
         		'type'		=> 'date',
