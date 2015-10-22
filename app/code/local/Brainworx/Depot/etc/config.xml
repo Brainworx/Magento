@@ -71,7 +71,7 @@
 	        <modules>
 	            <depot>
 	                <files>
-	                    <default>Brainworx_depot.csv</default>
+	                    <default>Brainworx_Depot.csv</default>
 	                </files>
 	            </depot>
 	       </modules>
