@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Brainworx_Depot>
+			<version>0.1.1</version>    <!-- Version number of your module -->
+			<depends>Braiworx_Rental</depends>
+		</Brainworx_Depot>
+	</modules>
+	<admin>
+		<routers>
+		<!--configure our module to use the admin frontend-->
+		  <adminhtml>
+			<args>
+			  <modules>
+				<Brainworx_Depot before="Mage_Adminhtml">Brainworx_Depot</Brainworx_Depot>
+			  </modules>
+			</args>
+		  </adminhtml>		
+		</routers>
+	 </admin>
+	<global>
+	    <models>
+				<!--
+                Unique identifier in the model's node.
+                By convention, we put the module's name in lowercase.
+            	-->
+				<depot>
+					<!--
+	                    The path to our models directory, with directory
+	                    separators replaced by underscores
+	                -->
+					<class>Brainworx_Depot_Model</class>
+				</depot>
+		</models>
+		<helpers>
+			<depot>
+				<class>Brainworx_Depot_Helper</class>
+			</depot>			
+		</helpers>
+		<blocks>
+		    <depot>
+				<class>Brainworx_Depot_Block</class>
+			</depot>				    
+		    <!-- Mage_Adminhtml_Block_Sales_Order_Shipment_Create_Tracking -->
+		    <adminhtml>
+		        <rewrite>
+		            <sales_order_shipment_create_tracking>Brainworx_Depot_Block_Adminhtml_Sales_Order_Shipment_Create_Tracking</sales_order_shipment_create_tracking>
+		            <sales_order_shipment_view_tracking>Brainworx_Depot_Block_Adminhtml_Sales_Order_Shipment_View_Tracking</sales_order_shipment_view_tracking>
+		        </rewrite>
+		        <!-- maps the block folder of the module -->
+		    </adminhtml>		    					
+		</blocks>
+		<resources>
+			<depot_setup>
+				<setup>
+					<module>Brainworx_Depot</module>
+					<class>Brainworx_Depot_Model_Resource_Setup</class>
+				</setup>
+			</depot_setup>
+		</resources>
+	</global>
+	<adminhtml>	   
+        <layout>
+          <updates>
+            <depot>
+              <file>depot.xml</file>
+            </depot>
+          </updates>
+        </layout>
+        <translate>
+	        <modules>
+	            <depot>
+	                <files>
+	                    <default>Brainworx_depot.csv</default>
+	                </files>
+	            </depot>
+	       </modules>
+		</translate>
+     </adminhtml>    
+</config>

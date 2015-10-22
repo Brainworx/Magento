@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--app/design/adminhtml/default/default/layout/depot.xml-->
+<layout>
+	<!--reference to your module/controller/action-->
+   <adminhtml_deliveries_index>
+        <reference name="content">
+		<!--reference to block element in Blocks: 
+		type= blocks declaration with path to blocks folder +'/'+ real path in blocks folder-->
+            <block type="depot/adminhtml_deliveries" name="deliveries" />
+        </reference>
+    </adminhtml_deliveries_index>
+     <adminhtml_deliveries_edit>
+        <reference name="content">
+            <block type="depot/adminhtml_deliveries_edit" name="depot_edit" />
+            <block type="depot/adminhtml_deliveries_view_items" name="delivery_items"> 
+                 <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>sales/items/column/name.phtml</template></action>
+                  <action method="addColumnRender"><column>qty</column><block>adminhtml/sales_items_column_qty</block><template>sales/items/column/qty.phtml</template></action>
+                             
+                </block>                 
+        </reference>
+    </adminhtml_deliveries_edit>
+</layout>

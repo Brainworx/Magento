@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<menu>
+        <depot translate="title" module="depot">
+            <title>Depot</title>
+            <sort_order>10</sort_order>
+            <!--action>adminhtml/hearedfroml</action-->
+            <depends>
+                <module>Brainworx_Rental</module>
+            </depends>
+            <children>
+                <deliveries>
+                    <title>Deliveries</title>
+                    <sort_order>1</sort_order>
+                    <action>adminhtml/deliveries/index</action>
+					 <!--adminhtml will be replaced by admin due to the route config of adminhtml in app/code/core/Mage/Adminhtml/etc/config.xml-->
+					 <!--rental for controllername-->
+					 <!--index is action method in the HearedfromController-->
+                </deliveries>
+            </children>
+        </depot>
+    </menu>
+
+<!--Access Control List-->
+	<acl>
+        <resources>
+            <admin>
+                <children>                
+                    <depot translate="title" module="depot">
+                        <title>Top Level Depot Menu Item</title>
+                        <sort_order>25</sort_order>
+                        <children>
+                            <deliveries>
+                                <title>Deliveries Menu Item</title>
+                            </deliveries>
+                        </children>
+                    </depot>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

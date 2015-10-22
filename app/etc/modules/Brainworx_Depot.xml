@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Brainworx_Depot>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Brainworx_Depot>
+    </modules>
+</config>
