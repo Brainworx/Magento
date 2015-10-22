@@ -115,14 +115,15 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
 //         ));
         $this->addColumn('product', array(
         		'header'    => Mage::helper('rental')->__('Produkt'),
-        		'align'     =>'right',
+        		'align'     =>'left',
         		'index'     => 'product',
         		'filter_index' => 'item.name'
         ));
         
         $this->addColumn('start_dt', array(
             'header'    => Mage::helper('rental')->__('Start Rental'),
-            'align'     =>'right',
+        	'header_css_class'=>'a-center',
+            'align'     =>'center',
             'width'     => '50px',
             'index'     => 'start_dt',
         	'type'		=> 'date',
@@ -130,14 +131,16 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
 		
         $this->addColumn('last_inv_dt', array(
             'header'    => Mage::helper('rental')->__('Last Invoiced'),
-            'align'     =>'left',
+        	'header_css_class'=>'a-center',
+            'align'     =>'center',
             'index'     => 'last_inv_dt',
         	'type'		=> 'date',
         ));
 		
         $this->addColumn('end_dt', array(
             'header'    => Mage::helper('rental')->__('End Rental'),
-            'align'     =>'left',
+        	'header_css_class'=>'a-center',
+            'align'     =>'center',
             'index'     => 'end_dt',
         	'type'		=> 'date',
         ));
