@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Brainworx_Rental>
-            <version>0.1.1</version>    <!-- Version number of your module -->
+            <version>0.1.2</version>    <!-- Version number of your module -->
         </Brainworx_Rental>
     </modules>
 	<admin>
@@ -138,6 +138,9 @@
 		         <rentalitem>
 		            <to_order_item>*</to_order_item>
 		        </rentalitem>
+		        <supplierneworderemail>
+		             <to_order_item>*</to_order_item>
+		        </supplierneworderemail>
 		    </sales_convert_quote_item>
 		    <sales_convert_order_item>
 		        <supplierinvoice>
@@ -146,10 +149,25 @@
 		        <rentalitem>
 		            <to_quote_item>*</to_quote_item>
 		        </rentalitem>
+		         <supplierneworderemail>
+		             <to_order_item>*</to_order_item>
+		        </supplierneworderemail>
 		    </sales_convert_order_item>
 		</fieldsets>
+		<!-- for sending transactional email -->
+		 <template>
+            <email>
+                <!-- Give the template a uniqiue name, you'll need to refer to this later when sending the email-->
+                <supplier_order_new>
+                    <label>Zorgpunt bestelling</label>
+                    <file>supplier_order_new.html</file>
+                    <type>html</type>
+                </supplier_order_new>
+            </email>
+        </template>
 		
 	</global>
+	
 	 <adminhtml>
         <layout>
           <updates>

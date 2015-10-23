@@ -1,0 +1,59 @@
+<?php
+/**
+ * Magento
+ *
+ * 
+ * @category    design
+ * @package     brainworx_custom
+ */
+?>
+
+<?php 
+$_order = $this->getOrder(); 
+Mage::log('in items order template');
+$_supplier = $this->getEmail();
+Mage::log('email supplier '.$_supplier);
+?>
+
+<?php if ($_order): ?>
+    <?php $_items = $_order->getAllItems(); ?>
+    <?php $_itemCount = count($_items); ?>
+    <tr>
+        <td>
+            <table class="items" cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                    <tr>
+                        <th class="cell-name">
+                            <?php if($_itemCount > 1): ?>
+                                <?php echo $this->__('Items in your order'); ?>
+                            <?php else: ?>
+                                <?php echo $this->__('Item in your order'); ?>
+                            <?php endif; ?>
+                        </th>
+                        <th class="cell-name">
+                            <?php echo $this->__('Qty'); ?>
+                        </th>
+                        <th class="cell-name">
+                            <?php echo $this->__('Indicated Price'); ?>
+                        </th>
+                    </tr>
+                </thead>
+            <?php $i=0; foreach ($_order->getAllItems() as $_item): ?>
+            <?php if(empty($_item->getSupplierneworderemail())
+            		||!($_item->getSupplierneworderemail()==$_supplier) 
+            		|| $_item->getParentItem()) continue; 
+                  else{ $i++; ?>
+                   <tr>
+			        	<td class="cell-content product-info">
+			        	<p class="product-name"><?php echo $this->escapeHtml($_item->getName()) ?></p>
+			        	<p class="sku"><?php echo $this->__('SKU'); ?>: <?php echo $this->escapeHtml($_item->getProduct()->getSku()) ?></p>
+				         <?php echo $this->escapeHtml($_item->getDescription()) ?>
+			            </td>
+			            <td class="cell-content"><?php echo $_item->getQtyOrdered()*1 ?></td>
+			            <td class="cell-content"><?php echo $_order->formatPrice($_item->getOriginalPrice()) ?></td>
+			        </tr>
+            <?php } endforeach; ?>
+            </table>
+        </td>
+    </tr>
+<?php endif; ?>
