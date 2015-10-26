@@ -91,7 +91,7 @@ class Brainworx_Hearedfrom_Model_Observer
 								}
 							}
 						}
-						self::saveCommission($seller['user_id'],$order->getEntityId(),
+						self::saveCommission($seller['cust_id'],$order->getEntityId(),
 						$item->getOrderItemId(),$type,$item->getRowTotal(),
 						$item->getRowTotalInclTax(),$orderitem->getRistorno()*$item->getQty(),true);
 						
