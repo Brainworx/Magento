@@ -4,24 +4,7 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE_AFL.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@magento.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade Magento to newer
- * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magento.com for more information.
- *
- * @category    design
- * @package     rwd_default
- * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
- * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ * SHE addto button is conditional
  */
 /* @var $this Mage_Catalog_Block_Product_Compare_List */
 ?>
@@ -34,7 +17,7 @@ if(Mage::getSingleton('customer/session')->isLoggedIn()){
 		$_addOK = true;
 	}
 }
-$_catssuppplinvl = explode(",",Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CATS_SUPPL_INV')->getValue('text'));
+$_catsviaapp = explode(",",Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CATS_VIAAPP_INV')->getValue('text'));
 $_catSI = false;
 ?>
 <div class="page-title title-buttons">
@@ -88,7 +71,7 @@ $_catSI = false;
                 <td>
                 <?php 
                  foreach($_item->getCategoryIds()as $cat){
-                    	if(in_array($cat,$_catssuppplinvl)){
+                    	if(in_array($cat,$_catsviaapp)){
                     		$_catSI = true;
                     		break;
                     	}
@@ -154,7 +137,7 @@ $_catSI = false;
                     <?php echo $this->getPriceHtml($_item, true, '-compare-list-bottom') ?>
                     <?php
                     foreach($_item->getCategoryIds()as $cat){
-                    	if(in_array($cat,$_catssuppplinvl)){
+                    	if(in_array($cat,$_catsviaapp)){
                     		$_catSI = true;
                     		break;
                     	}
