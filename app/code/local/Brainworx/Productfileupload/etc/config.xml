@@ -53,13 +53,14 @@
   </global>
   <admin>
 	<routers>
-	  <productfileupload>
-	    <use>admin</use>
-		<args>
-		  <module>Brainworx_Productfileupload</module>
-		  <frontName>productfileupload</frontName>
-		</args>
-	  </productfileupload>
+	  <adminhtml>
+            <args>
+                <modules>
+                    <productfileupload after="Mage_Adminhtml">Brainworx_Productfileupload</productfileupload>
+                    <frontName>productfileupload</frontName>
+                </modules>
+            </args>
+        </adminhtml>
 	</routers>
   </admin>
 	<frontend>
