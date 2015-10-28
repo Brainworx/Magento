@@ -64,7 +64,9 @@ class Brainworx_Hearedfrom_Block_Ristornopage extends Mage_Customer_Block_Accoun
 				'main_table.order_item_id = item.item_id',
 				array('product' => 'name', 'sku')
 		);
-		$this->collection = $collection;
+
+		$collection->setOrder('increment_id');
+		
 		return $collection;
 	}
 	function getMonthlyRistornos(){
@@ -87,8 +89,9 @@ class Brainworx_Hearedfrom_Block_Ristornopage extends Mage_Customer_Block_Accoun
 		->columns('SUM(net_amount) AS total_net')
 		->columns('SUM(ristorno) AS total_ristorno')
 		->group("DATE_FORMAT(create_dt,'%Y-%m')");
-		
-		$this->collection = $collection;
+				
+    	$collection->setOrder('date');
+    	
 		return $collection;
 	}
 	

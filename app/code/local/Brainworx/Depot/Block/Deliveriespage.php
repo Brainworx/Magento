@@ -63,7 +63,9 @@ class Brainworx_Depot_Block_Deliveriespage extends Mage_Customer_Block_Account_D
     	$seller= Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
     	$collection->addFieldToFilter('user_id',$seller['entity_id']);
     	
-    		
+
+    	$collection->setOrder('order_created_at');
+    	
     	$this->setCollection($collection);
 		return $collection;
 	}

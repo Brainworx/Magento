@@ -82,6 +82,9 @@
             <ristornopage>
                 <class>Brainworx_Hearedfrom_Block</class>
             </ristornopage>
+            <patientorderpage>
+                <class>Brainworx_Hearedfrom_Block</class>
+            </patientorderpage>
             <!-- Override account navigation to add custom links-->
             <customer>
                 <rewrite>
@@ -209,9 +212,11 @@
                     <modules>
                         <!--name / before: change existing -->
                         <ristornopage before="Mage_Customer">Brainworx_Hearedfrom</ristornopage>
+                        <patientorderpage before="Mage_Customer">Brainworx_Hearedfrom</patientorderpage>
                     </modules>
                 </args>
             </customer>
+            
 		</routers>
 
 		<events>
