@@ -7,6 +7,9 @@ class Brainworx_Hearedfrom_Model_Observer
     /**
      * Event Hook: checkout_type_onepage_save_order
      * 
+     * Save who brougth the order to save the commission later when invoiced.
+     * Exception for articles invoiced by supplier: already save commission record for lines delivered and invoiced
+     * by the supplier.
      * @author Stijn Heylen
      * @param $observer Varien_Event_Observer
      */
@@ -51,7 +54,7 @@ class Brainworx_Hearedfrom_Model_Observer
 	/**
 	 * Hook to sales_order_invoice_register
 	 *
-	 * Save invoice amount to seller record
+	 * Save invoice amount to seller commission record using info stored at order time
 	 * This hook will be triggered for each invoice - rental as sale or other if they would be created
 	 *
 	 * Magento passes a Varien_Event_Observer object as
@@ -91,7 +94,7 @@ class Brainworx_Hearedfrom_Model_Observer
 								}
 							}
 						}
-						self::saveCommission($seller['cust_id'],$order->getEntityId(),
+						self::saveCommission($seller['user_id'],$order->getEntityId(),
 						$item->getOrderItemId(),$type,$item->getRowTotal(),
 						$item->getRowTotalInclTax(),$orderitem->getRistorno()*$item->getQty(),true);
 						
