@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+
+    <customer_deliveriespage_index> <!-- module here matches node directly beneath <routers> in config.xml -->
+       <update handle="customer_account"/> <!-- include existing customer account layout -->
+       <reference name="my.account.wrapper"> <!-- target parent block -->
+           <block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml" /> <!-- add a back link -->
+           <block type="depot/deliveriespage" name="customerpage" template="customer/deliveriespage.phtml"/><!--name="unique_layout_name" template="module/template.phtml"  -->
+         </reference>
+   </customer_deliveriespage_index>
+   
+   
+</layout>

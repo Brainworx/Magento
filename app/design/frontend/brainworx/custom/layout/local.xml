@@ -4,7 +4,7 @@
         <reference name="customer_account_navigation">       
             <!-- option1: add a link in the code calling a method in our rewritten block-->     
             <action method="addLinkToUserNav"></action>
-            <!-- <action method="addLinkToDeliveriesNav"></action>-->
+            <action method="addLinkToDeliveriesNav"></action>
         </reference>
     </customer_account>
 </layout>

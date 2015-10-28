@@ -37,7 +37,6 @@ class Brainworx_hearedfrom_Block_Adminhtml_Financial_Grid extends Mage_Adminhtml
 			->columns('sum(if (state = 3, grand_total,0)) as cancelled')
 			->columns('sum(if (state > 3 or state < 1, grand_total,0)) as other')
 			->group("DATE_FORMAT(created_at,'%Y-%m')");
-			$resource = Mage::getSingleton('core/resource');
 			
 			$this->setCollection($collection);
 	        

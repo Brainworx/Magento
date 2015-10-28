@@ -1,0 +1,60 @@
+<div class="page-title">
+<h1><?php echo $this->__('Deliveries Overview') ?></h1>
+</div>
+<?php
+	  $_deliveries = $this->getDeliveries();
+	  $currentpage = Mage::getBlockSingleton('page/html_pager')->getCurrentPage();
+	  $perpage = Mage::getBlockSingleton('page/html_pager')->getLimit();
+	  $_deliveries->getSelect()->limitPage($currentpage, $perpage);
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<?php echo $this->getChildHtml('info');?>
+<?php echo $this->getPagerHtml(); ?>
+<?php if($_deliveries->getSize()): ?>
+<table class="data-table orders" id="my-delivery-table">
+    <col width="1" />
+    <col width="1" />
+    <col />
+    <col width="1" />
+    <col width="150" />
+    <col width="1" />
+    <thead>
+        <tr>        
+            <th class="date"><?php echo $this->__('Datum bestelling') ?></th> 
+            <th class="number"><?php echo $this->__('Bestel #') ?></th>           
+            <th class="date"><?php echo $this->__('Datum verzending') ?></th>                               
+            <th class="text"><?php echo $this->__('Levering door') ?></th>                     
+            <th class="text"><?php echo $this->__('Verzonden aan') ?></th>     
+            <th class="text"><?php echo $this->__('Leveradres') ?></th>
+            <th class="date"><?php echo $this->__('Datum levering') ?></th>         
+            <th class="text"><?php echo $this->__('Track #') ?></th>                   
+            <?php /* <th class="text"><?php echo $this->__('Afgeleverd') ?></th> */ ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $_odd = ''; 
+        foreach ($_deliveries as  $_delivery): 
+        ?>
+        <tr>
+            <td class="date"><span class="nobr"><?php echo $this->formatDate($_delivery['order_created_at']) ?></td> 
+            <td class="number"><?php echo $_delivery['order_increment_id'] ?></td>           
+            <td class="date"><span class="nobr"><?php echo $this->formatDate($_delivery['created_at']) ?></td>                                                              
+            <td class="text"><?php echo $_delivery['title'] ?></td>    
+            <td class="text"><?php echo $_delivery['shipping_name'] ?></td>    
+            <td class="text"><?php echo $_delivery['address'] ?></td>
+            <td class="date"><span class="nobr"><?php echo $this->formatDate($_delivery['delivery']) ?></td>         
+            <td class="text"><?php echo $_delivery['track_number'] ?></td>    
+            <?php /*               
+            <td class="text"><?php if($_delivery['delivered']==1)
+            						 echo $this->__('Y'); 
+            						else 	echo $this->__('N');?></td>    */ ?>
+        </tr><?php 
+        endforeach; 
+        ?>
+    </tbody>
+</table>
+<script type="text/javascript">decorateTable('my-delivery-table');</script>
+<?php echo $this->getPagerHtml(); ?>
+<?php else: ?>
+    <p><?php echo $this->__('You have no deliveries for the moment.'); ?></p>
+<?php endif ?>

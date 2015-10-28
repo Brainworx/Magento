@@ -3,7 +3,8 @@
 	<modules>
 		<Brainworx_Depot>
 			<version>0.1.1</version>    <!-- Version number of your module -->
-			<depends>Braiworx_Rental</depends>
+			<depends>Brainworx_Rental</depends>
+			<depends>Brainworx_Hearedfrom</depends> <!-- for addlinktocustomer -->
 		</Brainworx_Depot>
 	</modules>
 	<admin>
@@ -48,7 +49,12 @@
 		            <sales_order_shipment_view_tracking>Brainworx_Depot_Block_Adminhtml_Sales_Order_Shipment_View_Tracking</sales_order_shipment_view_tracking>
 		        </rewrite>
 		        <!-- maps the block folder of the module -->
-		    </adminhtml>		    					
+		    </adminhtml>	
+		    <!-- new myaccount page -->	 
+            <deliveriespage>
+                <class>Brainworx_Depot_Block</class>
+            </deliveriespage>
+            <!-- Override account navigation to add custom links done in Hearedfrom-->  					
 		</blocks>
 		<resources>
 			<depot_setup>
@@ -59,6 +65,35 @@
 			</depot_setup>
 		</resources>
 	</global>
+	 <frontend>
+		 <!-- setup the url path to our new module -->
+		 <routers>
+		     <brainworx_depot>
+				<use>standard</use>
+				<args>
+					<module>Brainworx_Depot</module>
+					<frontName>deliveries</frontName>
+				</args>
+			</brainworx_depot>
+			<!-- override mage_customer of core -->
+			 <customer>
+	             <args>
+	                 <modules>
+	                     <!--name / before: change existing -->
+	                     <deliveriespage before="Mage_Customer">Brainworx_Depot</deliveriespage>
+	                 </modules>
+	             </args>
+	         </customer>
+		 </routers>
+		<!-- add layout of the frontend component -->
+		 <layout>
+			 <updates>
+				 <depot>
+					 <file>depot.xml</file>
+				 </depot>
+			 </updates>
+		 </layout>
+	 </frontend>
 	<adminhtml>	   
         <layout>
           <updates>

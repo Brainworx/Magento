@@ -11,9 +11,9 @@ class Brainworx_Hearedfrom_Block_AddCustomerlink extends Mage_Customer_Block_Acc
 			$salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
 			if(!empty($salesforce)){
 				$this->addLink(
-						"Ristorno",
+						Mage::helper('customer')->__('Ristorno'),
 						"customer/ristornopage/",
-						"Ristorno"
+						Mage::helper('customer')->__('Ristorno')
 				);
 			}
 		}
@@ -27,9 +27,9 @@ class Brainworx_Hearedfrom_Block_AddCustomerlink extends Mage_Customer_Block_Acc
 			$salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
 			if(!empty($salesforce)){
 				$this->addLink(
-						"Deliveries",
+						Mage::helper('customer')->__('Deliveries'),
 						"customer/deliveriespage/",
-						"Deliveries"
+						Mage::helper('customer')->__('Deliveries')
 				);
 			}
 		}
