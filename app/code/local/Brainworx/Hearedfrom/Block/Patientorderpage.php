@@ -49,7 +49,7 @@ class Brainworx_Hearedfrom_Block_Patientorderpage extends Mage_Customer_Block_Ac
     	Mage::log($collection->getSelect());
 		return $collection;
 	}
-	public function getViewUrl($order)
+	public function getViewOrderUrl($order)
 	{
 		return $this->getUrl('sales/order/view', array('order_id' => $order->getId()));
 	}

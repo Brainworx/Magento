@@ -216,7 +216,13 @@
                     </modules>
                 </args>
             </customer>
-            
+            <sales>
+				<args>
+					<modules>
+						<hearedfromsales before="Mage_Sales">Brainworx_Hearedfrom</hearedfromsales>
+					</modules>
+				</args>
+			</sales>
 		</routers>
 
 		<events>
