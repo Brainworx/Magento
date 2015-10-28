@@ -177,6 +177,7 @@ class Brainworx_Rental_Model_Observer
 					$email_template_variables = array(
 							 'order'        => $order,
 							 'supplieremail'=> $email
+							 //'companyname' 	=> $order->getBillingAddress()->getCompanyname()
 							// Other variables for our email template.
 					);
 					
@@ -277,29 +278,23 @@ class Brainworx_Rental_Model_Observer
 			$sinotice = 0;
 			$catssuppplinvl = explode(",",Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CATS_SUPPL_INV')->getValue('text'));
 			
-			foreach($item->getProduct()->getCategoryIds() as $cat){
-				if($cat == $catrental){
-					$rnotice = 1;
-					break;
-				}
+			if(in_array($catrental,$item->getProduct()->getCategoryIds())){
+				$rnotice = 1;
 			}
 			if($rnotice == 0){
-				foreach($item->getProduct()->getCategoryIds() as $cat){						
-					foreach ($catssuppplinvl as $scat){
-						if($cat == $scat){
-							//set supplier email
-							if(!empty($item->getProduct()->getSupplierOrderEmail())){
-								Mage::log('Product '.$item->getProduct()->getSku().' supplier email '.$item->getProduct()->getSupplierOrderEmail());
-								$item->setSupplierneworderemail($item->getProduct()->getSupplierOrderEmail());
-							}else{
-								Mage::log('Article invoiced by supplier but no email '.$item->getProduct()->getSku());
-								$item->setSupplierneworderemail(Mage::getStoreConfig('trans_email/ident_general/email'));
-							}
-							Mage::log('Item with Product '.$item->getProduct()->getSku().' supplier email '.$item->getSupplierneworderemail());
-							
-							$sinotice = 1;
-							break;
+				foreach($item->getProduct()->getCategoryIds() as $cat){	
+					if( in_array($cat,$catssuppplinvl))	{	
+						if(!empty($item->getProduct()->getSupplierOrderEmail())){
+							Mage::log('Product '.$item->getProduct()->getSku().' supplier email '.$item->getProduct()->getSupplierOrderEmail());
+							$item->setSupplierneworderemail($item->getProduct()->getSupplierOrderEmail());
+						}else{
+							Mage::log('Article invoiced by supplier but no email '.$item->getProduct()->getSku());
+							$item->setSupplierneworderemail(Mage::getStoreConfig('trans_email/ident_general/email'));
 						}
+						Mage::log('Item with Product '.$item->getProduct()->getSku().' supplier email '.$item->getSupplierneworderemail());
+						
+						$sinotice = 1;
+						break;
 					}
 				}
 			}
