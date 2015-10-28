@@ -74,10 +74,20 @@
 			<financial>
 			    <class>Brainworx_Hearedfrom_Block</class>
 			</financial>
-
+			<!-- Add block for checkout step -->
 			<hearedfromonepage>
 				<class>Brainworx_Hearedfrom_Block_Onepage</class>
 			</hearedfromonepage>
+			<!-- Add block to be loaded in myaccount page -->
+            <ristornopage>
+                <class>Brainworx_Hearedfrom_Block</class>
+            </ristornopage>
+            <!-- Override account navigation to add custom links-->
+            <customer>
+                <rewrite>
+                    <account_navigation>Brainworx_Hearedfrom_Block_AddCustomerlink</account_navigation>
+                </rewrite>
+            </customer>
 		</blocks>
 
 		<!-- Here we modify the checkout to our custom one -->
@@ -193,6 +203,15 @@
 					<frontName>hearedfrom</frontName>
 				</args>
 			</brainworx_hearedfrom>
+			<!-- override mage_customer of core -->
+			<customer>
+                <args>
+                    <modules>
+                        <!--name / before: change existing -->
+                        <ristornopage before="Mage_Customer">Brainworx_Hearedfrom</ristornopage>
+                    </modules>
+                </args>
+            </customer>
 		</routers>
 
 		<events>

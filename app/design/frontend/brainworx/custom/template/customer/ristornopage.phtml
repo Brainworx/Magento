@@ -1,0 +1,50 @@
+<div class="page-title">
+<h1><?php echo $this->__('Ristorno Overview') ?></h1>
+</div>
+<?php 
+	  $_ristornos = $this->getMonthlyRistornos();
+	  /*
+	  $currentpage = Mage::getBlockSingleton('page/html_pager')->getCurrentPage();
+	  $perpage = Mage::getBlockSingleton('page/html_pager')->getLimit();
+	  $_ristornos->getSelect()->limitPage($currentpage, $perpage);*/
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<?php echo $this->getChildHtml('info');?>
+<?php /* echo $this->getMainPagerHtml();*/ ?>
+<?php if($_ristornos->getSize()): ?>
+<table class="data-table orders" id="my-mristorno-table">
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <thead>
+        <tr>
+            <th class="date"><?php echo $this->__('Periode') ?></th>
+            <th class="text"><?php echo $this->__('Quantity') ?></th> 
+            <th class="total"><span class="nobr"><?php echo $this->__('Order Amount excl. VAT') ?></span></th>
+            <th class="total"><span class="nobr"><?php echo $this->__('Ristorno') ?></span></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $_odd = ''; 
+        foreach ($_ristornos as  $_ristorno): 
+        	if(empty($_ristorno)) continue;
+        ?>
+        <tr>
+            <td class="date"><span class="nobr"><?php echo $this->__($_ristorno['date']) ?></span></td>
+            <td class="number"><?php echo $_ristorno['qty'] ?></td>
+            <td class="total"><?php echo $_ristorno->formatPrice($_ristorno['total_net']) ?></td>
+            <td class="total"><?php echo $_ristorno->formatPrice($_ristorno['total_ristorno']) ?></td>
+        </tr><?php 
+        endforeach; 
+        ?>
+    </tbody>
+</table>
+<div class="buttons-set">
+<p class=""><a href="<?php echo $this->escapeUrl($this->getDetailurl()) ?>"><?php echo $this->__('View Details') ?></a></p>
+</div>
+<script type="text/javascript">decorateTable('my-mristorno-table');</script>
+<?php /* echo $this->getMainPagerHtml();*/ ?>
+<?php else: ?>
+    <p><?php echo $this->__('You have no ristorno for the moment.'); ?></p>
+<?php endif ?>

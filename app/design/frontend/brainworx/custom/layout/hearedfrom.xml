@@ -2,12 +2,27 @@
 
 <layout version="0.1.0">
 
-<checkout_onepage_index>
-	<reference name="checkout.onepage">
-		<!-- Extra step added to OnePage Checkout -->
-		<block type="hearedfrom/onepage_hearedfrom" name="checkout.onepage.hearedfrom" 
-		as="hearedfrom" after="checkout.onepage.billing" template="checkout/onepage/hearedfrom.phtml"/>		
-	</reference>
-</checkout_onepage_index>
+	<checkout_onepage_index>
+		<reference name="checkout.onepage">
+			<!-- Extra step added to OnePage Checkout -->
+			<block type="hearedfrom/onepage_hearedfrom" name="checkout.onepage.hearedfrom" 
+			as="hearedfrom" after="checkout.onepage.billing" template="checkout/onepage/hearedfrom.phtml"/>		
+		</reference>
+	</checkout_onepage_index>
+
+    <customer_ristornopage_index> <!-- module here matches node directly beneath <routers> in config.xml -->
+       <update handle="customer_account"/> <!-- include existing customer account layout -->
+       <reference name="my.account.wrapper"> <!-- target parent block -->
+           <block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml" /> <!-- add a back link -->
+           <block type="hearedfrom/ristornopage" name="customerpage" template="customer/ristornopage.phtml"/><!--name="unique_layout_name" template="module/template.phtml"  -->
+         </reference>
+   </customer_ristornopage_index>
+   
+    <customer_ristornopage_viewdetails> <!-- module here matches node directly beneath <routers> in config.xml -->
+       <update handle="customer_account"/> <!-- include existing customer account layout -->
+       <reference name="my.account.wrapper"> <!-- target parent block -->
+            <block type="hearedfrom/ristornopage" name="customerpage" template="customer/ristornodetailpage.phtml"/><!--name="unique_layout_name" template="module/template.phtml"  -->
+         </reference>
+   </customer_ristornopage_viewdetails>
 
 </layout>

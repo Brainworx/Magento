@@ -1,0 +1,57 @@
+<div class="page-title">
+<h1><?php echo $this->__('Ristorno Detail Overview') ?></h1>
+<div class="buttons-set">
+    <p class="back-link"><a href="<?php echo $this->escapeUrl($this->getMainurl()) ?>"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+</div>
+</div>
+<?php
+	  $_ristornos = $this->getRistornos();
+	  $currentpage = Mage::getBlockSingleton('page/html_pager')->getCurrentPage();
+	  $perpage = Mage::getBlockSingleton('page/html_pager')->getLimit();
+	  $_ristornos->getSelect()->limitPage($currentpage, $perpage);
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<?php echo $this->getChildHtml('info');?>
+<?php echo $this->getPagerHtml(); ?>
+<?php if($_ristornos->getSize()): ?>
+<table class="data-table orders" id="my-ristorno-table">
+    <col width="1" />
+    <col width="1" />
+    <col />
+    <col width="1" />
+    <col width="150" />
+    <col width="1" />
+    <thead>
+        <tr>
+            <th class="number"><?php echo $this->__('Bestel #') ?></th>
+            <th class="date"><?php echo $this->__('Datum') ?></th>
+            <th class="text"><?php echo $this->__('Produkt') ?></th>            
+            <th class="text"><?php echo $this->__('Type') ?></th>
+            <th class="total"><span class="nobr"><?php echo $this->__('Order Amount excl. VAT') ?></span></th>
+            <th class="total"><span class="nobr"><?php echo $this->__('Ristorno') ?></span></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $_odd = ''; 
+        foreach ($_ristornos as  $_ristorno): 
+        ?>
+        <tr>
+            <td class="number"><?php echo $_ristorno->getIncrementId() ?></td>
+            <td class="date"><span class="nobr"><?php echo $this->formatDate($_ristorno->getCreateDt()) ?></span></td>
+            <td class="text"><?php echo $_ristorno->getProduct() ?></td>
+             <td class="text"><?php if($_ristorno->getType()=='S'){
+            	echo $this->__('Verkoop') ;}
+            	else if($_ristorno->getType()=='R'){echo $this->__('Verhuur');}
+            	else {echo $_ristorno->getType();}?></td>
+            <td class="total"><?php echo $_ristorno->formatPrice($_ristorno->getNetAmount()) ?></td>
+            <td class="total"><?php echo $_ristorno->formatPrice($_ristorno->getRistorno()) ?></td>
+        </tr><?php 
+        endforeach; 
+        ?>
+    </tbody>
+</table>
+<script type="text/javascript">decorateTable('my-ristorno-table');</script>
+<?php echo $this->getPagerHtml(); ?>
+<?php else: ?>
+    <p><?php echo $this->__('You have no ristorno for the moment.'); ?></p>
+<?php endif ?>

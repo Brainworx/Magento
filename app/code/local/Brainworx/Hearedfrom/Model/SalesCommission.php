@@ -19,4 +19,14 @@ class Brainworx_Hearedfrom_Model_SalesCommission extends Mage_Core_Model_Abstrac
     	}
     	return $array;
     }
+    public function formatPrice($price, $addBrackets = false)
+    {
+    	return $this->formatPricePrecision($price, 2, $addBrackets);
+    }
+    
+    public function formatPricePrecision($price, $precision, $addBrackets = false)
+    {
+    	$currency = Mage::getModel('directory/currency')->load(Mage::app()->getStore()->getCurrentCurrencyCode());
+    	return $currency->formatPrecision($price, $precision, array(), true, $addBrackets);
+    }
 }
