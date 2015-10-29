@@ -28,8 +28,12 @@ class Brainworx_Hearedfrom_Model_Observer
 		//Fetch the data from select box and throw it here- added to session in OnePageController
 		$_hearedfrom_salesforce = null;
 		$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
-		//$this->_getRequest()->getPost(‘myCustomerOrderComment’, false);
-		Mage::Log("Order brought by: ".$_hearedfrom_salesforce["user_nm"]." id ".$_hearedfrom_salesforce["entity_id"]);
+		$_comment_to_zorgpunt = null;
+		$_comment_to_zorgpunt = Mage::getSingleton('core/session')->getCommentToZorgpunt();
+		//Mage::Log("Order brought by: ".$_hearedfrom_salesforce["user_nm"]." id ".$_hearedfrom_salesforce["entity_id"]);
+		Mage::Log("Order comment ".$_comment_to_zorgpunt);
+		$order->setCommentToZorgpunt($_comment_to_zorgpunt);
+		$order->save();
 		//Create new salesCommission
 		$newsalesseller = Mage::getModel('hearedfrom/salesSeller');
 		$newsalesseller->setData("order_id",$order->getIncrementId());

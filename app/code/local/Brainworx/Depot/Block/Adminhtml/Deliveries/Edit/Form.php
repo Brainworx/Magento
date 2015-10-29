@@ -5,8 +5,7 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Edit_Form extends Mage_Adminhtm
     protected function _prepareForm()
     {
     	//Check for model data in the registry
-    	Mage::Log('preparing form');
-    	Mage::Log(print_r(Mage::registry('shipment_data'),true));
+    	//Mage::Log(print_r(Mage::registry('shipment_data'),true));
         if (Mage::registry('shipment_data'))
         {
             $data = Mage::registry('shipment_data')->getData();
@@ -70,7 +69,7 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Edit_Form extends Mage_Adminhtm
         ));
         
         $fieldset->addField('comment', 'text', array(
-        		'label'     => Mage::helper('depot')->__('Comment'),
+        		'label'     => Mage::helper('depot')->__('Additional Comment'),
         		'name'      => 'comment',
         ));
         

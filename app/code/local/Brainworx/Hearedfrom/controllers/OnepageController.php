@@ -58,11 +58,13 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
         $this->_expireAjax();
         if ($this->getRequest()->isPost()) {
             
-        	//Grab the submited value heared from who value
+        	//Grab the submited value heared from who and comment value
         	$_brainworx_hearedfrom = $this->getRequest()->getPost('getvoice');
-        	//Add the seller to the session
+        	$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
+        	//Add the seller and comment to the session
         	$seller = Mage::getModel("hearedfrom/salesForce")->loadByUsername($_brainworx_hearedfrom);
 			Mage::getSingleton('core/session')->setBrainworxHearedfrom($seller);
+			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
 
 			$result = array();
             

@@ -353,6 +353,7 @@
 "Update product(s) quantities in shopping cart","Hoeveelheid produkt(en) in winkelmandje bijwerken"
 "Use Billing Address","Factuuradres gebruiken"
 "VAT Number","BTW nummer"
+"VAT","BTW"
 "View Shopping Cart","winkelmand Bekijken"
 "Visible items in minicart","Zichtbare producten in mini-winkelmand"
 "Visibility","Zichtbaarheid"
@@ -373,3 +374,5 @@
 "ok","oké"
 "Who told you about us","Waar hoorde u van ons"
 "Weight","Gewicht"
+"Add comment for Zorgpunt (optional):","Voeg bericht toe voor Zorgpunt (optioneel):"
+

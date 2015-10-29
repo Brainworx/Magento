@@ -1,5 +1,5 @@
 <form id="co-hearedfrom-form" action="">
-
+	<p>
 	<select id="getvoice" name="getvoice">
 		<?php foreach($this->getHearedFromValues() as $_option): ?>
 			<option value="<?php echo $_option ?>"
@@ -9,6 +9,10 @@
 			><?php echo $_option ?></option>
 		<?php endforeach; ?>
 	</select>
+	</p>
+	<br/>
+	<p><label for="myCustomerOrderComment"><?php echo $this->__('Add comment for Zorgpunt (optional):'); ?></label></p>
+	<textarea name="myCustomerOrderComment" id="myCustomerOrderComment" style=”width:450px;height:100px;”></textarea>
 	
 	<div class="buttons-set" id="hearedfrom-buttons-container">
         <p class="back-link"><a href="#" onclick="checkout.back(); return false;"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>

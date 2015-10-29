@@ -3,6 +3,8 @@
 <?php
 $orderAdminDate = $this->formatDate($_order->getCreatedAtDate(), 'medium', true);
 $orderStoreDate = $this->formatDate($_order->getCreatedAtStoreDate(), 'medium', true);
+$_comment = $_order->getCommentToZorgpunt();
+if(empty($_comment)){ $_comment= Mage::helper('sales')->__('No comment provided');}			       
 ?>
 <div class="box-left">
     <!--Order Information-->
@@ -125,6 +127,7 @@ $orderStoreDate = $this->formatDate($_order->getCreatedAtStoreDate(), 'medium', 
     </div>
 </div>
 
+
 <div class="box-right">
     <!--Brainworx Module Placeholder - Where did you hear about us -->
     <div class="entry-edit">
@@ -132,13 +135,29 @@ $orderStoreDate = $this->formatDate($_order->getCreatedAtStoreDate(), 'medium', 
             <h4 class="icon-head head-hearedfrom"><?php echo Mage::helper('sales')->__('Who told you about us') ?></h4>
         </div>
          <fieldset>
-		<?php
-		//TODO add to controller
-		$seller = Mage::getModel("hearedfrom/salesSeller")->loadByOrderId($_order->getIncrementId());
-		echo Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])->getData("user_nm");?>
+         	<div id='seller_block'>
+	         <p>
+	          	<label class="normal" ><?php echo Mage::helper('sales')->__('Zorgpunter:') ?></label>
+		       	  <strong>
+					<?php
+					//TODO add to controller
+					$seller = Mage::getModel("hearedfrom/salesSeller")->loadByOrderId($_order->getIncrementId());
+					echo Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])->getData("user_nm");?>
+				  </strong>	
+			  </p>	
+		  	</div>
+			<div id="comments_block">
+				<p>
+			    	<span class="field-row">
+			        <label class="normal" for="”myCustomerOrderComment”"><?php echo Mage::helper('sales')->__('Comment for Zorgpunt:') ?></label>
+			        <textarea id="myCustomerOrderComment" name="myCustomerOrderComment" style="height:6em; width:99%;" disabled><?php echo $_comment;?></textarea>
+			    	</span>
+		    	</p>
+	    	</div>
 		</fieldset>
     </div>
 </div>
+
 <div class="clear"></div>
 
 <div class="box-left">
@@ -152,6 +171,7 @@ $orderStoreDate = $this->formatDate($_order->getCreatedAtStoreDate(), 'medium', 
         </fieldset>
     </div>
 </div>
+
 <?php if (!$this->getOrder()->getIsVirtual()): ?>
 <div class="box-right">
     <!--Shipping Address-->

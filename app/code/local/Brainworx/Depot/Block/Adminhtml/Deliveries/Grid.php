@@ -33,7 +33,7 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Grid extends Mage_Adminhtml_Blo
     		);
     		$select->join(array('order' => $resource->getTableName('sales/order')),
     				'shipment.order_id = order.entity_id',
-    				array('shipping_address_id'));
+    				array('shipping_address_id','comment_to_zorgpunt'));
     		$select->join(array('address' => $resource->getTableName('sales/order_address')),
     				'order.shipping_address_id = address.entity_id',
     				array('street','postcode','city','telephone'));
@@ -152,6 +152,11 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Grid extends Mage_Adminhtml_Blo
     			'index'     => 'created_at',
     			'type'      => 'datetime',
     	));
+    	$this->addColumn('comment_to_zorgpunt', array(
+    			'header' => Mage::helper('depot')->__('Comment Customer'),
+    			'index' => 'comment_to_zorgpunt',
+    			'width' => '350px',
+    	));
     	
 
     	$this->addExportType('*/*/exportPdf', Mage::helper('sales')->__('PDF'));
@@ -179,9 +184,9 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Grid extends Mage_Adminhtml_Blo
     	$colwidth = array('Levering'=>50,'Leverdatum'=>100,'Address'=>100); 	
     	$tcolumns = array('entity_id','delivery','address'); //,'track_number','comment'
     	$collection = $this->getCollection();
-    	$j = 20;
+    	$j = 60;
     	$o = 0;
-    	$i = 20;
+    	$i = 40;
     	$itemheigth = 0;
     	$page->drawText(Mage::helper('depot')->__('Zorgpunt delivery note page ').(count($pdf->pages)+1), 200, $page->getHeight()-$j);
     	$j+=5;
@@ -195,11 +200,12 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Grid extends Mage_Adminhtml_Blo
     		//prepare wirte items : 40 lines per parcel
     		$shipments = Mage::getModel('sales/order_shipment')->load($item->getParentId())->getAllItems();
     		$itemheigth += count($shipments)*40;
-    		
-    		if($itemheigth > $page->getHeight()-20){
+    		Mage::log("heigth " . $itemheigth);
+    		if($itemheigth > $page->getHeight()-60){
     			$pdf->pages[] = $page; //push element on array
     			//new page
-    			$j=20;
+    			$itemheigth = 30 + 6 * 20 + 10 + 30 + (count($shipments)*40);
+    			$j=60;
     			$page = new Zend_Pdf_Page(Zend_Pdf_Page::SIZE_A4);
     			$font = Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES);
     			$page->setFont($font, 12);
@@ -223,7 +229,7 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Grid extends Mage_Adminhtml_Blo
     			//}
     		}
     		$page->setFont($font, 12);
-    		$i = 20;  
+    		$i = 40;  
     		$j += 20;  		
     		$y = $page->getHeight()-$j;    		
 	    	foreach ($tcolumns as $cell) {
@@ -269,17 +275,37 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Grid extends Mage_Adminhtml_Blo
 	    		$page->drawText(Mage::helper('depot')->__('Qty').': '.$parcel->getQty(), $i+15, $page->getHeight()-$j);
 	    		$j+=20;
 	    	}
-	    	
 	    	$j+=10;
 	    	//write comment
-	    	$page->drawText(Mage::helper('depot')->__('Comment').' : '.$item['comment'], $i, $page->getHeight()-$j);
+	    	$page->drawText(Mage::helper('depot')->__('Comment Customer').' : ', $i, $page->getHeight()-$j);
+	    	
+	    	$i+=100;
+	    	if(!empty($item['comment_to_zorgpunt'])){
+	    		$cmt = $item['comment_to_zorgpunt'];
+	    		$pos = 0;
+	    		while(strlen($cmt)>50){
+	    			$scmt = substr($cmt,$pos,50);
+	    			$pos=50;
+	    			$cmt = substr($cmt,50);
+	    			if(strlen($scmt)>=50){
+	    			$page->drawText($scmt, $i, $page->getHeight()-$j);
+	    			$j+=20;	
+	    			}    			
+	    		}
+	    		$page->drawText($cmt, $i, $page->getHeight()-$j);
+	    	}
+	    	$i=60;
+	    	
+	    	$j+=20;
+	    	//write comment
+	    	$page->drawText(Mage::helper('depot')->__('Additional Comment').' : '.$item['comment'], $i, $page->getHeight()-$j);
 	    	
 	    	$j+= 10;
 	    	$page->drawLine(0, $page->getHeight()-$j, $page->getWidth(), $page->getHeight()-$j);
 	    	
 	    	$j+=20;
 	    	
-	    	$i = 20;
+	    	$i = 40;
 	    	
     	}
     	$pdf->pages[] = $page;
