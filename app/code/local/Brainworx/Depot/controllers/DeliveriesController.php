@@ -23,7 +23,6 @@ class Brainworx_Depot_DeliveriesController extends Mage_Adminhtml_Controller_Act
 	 * Edit rentalitem after selection in grid.
 	 */
 	public function editAction() {
-		Mage::Log ( "edit action start" );
 		$id = $this->getRequest ()->getParam ( 'id', null );
 		$model = Mage::getModel ( 'sales/order_shipment_track' );
 		if ($id) {
@@ -31,7 +30,6 @@ class Brainworx_Depot_DeliveriesController extends Mage_Adminhtml_Controller_Act
 			if ($model->getEntityId ()) {
 				$data = Mage::getSingleton ( 'adminhtml/session' )->getFormData ( true );
 				if ($data) {
-					Mage::Log ( 'setting model' );
 					$model->setData ( $data )->setEntityId ( $id );
 				}
 			} else {
@@ -47,7 +45,6 @@ class Brainworx_Depot_DeliveriesController extends Mage_Adminhtml_Controller_Act
 		$this->getLayout ()->getBlock ( 'head' )->setCanLoadExtJs ( true );
 		$this->renderLayout ();
 		
-		Mage::Log ( "edit action completed" );
 	}
 	public function saveAction() {
 		if ($data = $this->getRequest ()->getPost ()) {

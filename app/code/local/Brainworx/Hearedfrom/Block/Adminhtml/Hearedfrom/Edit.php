@@ -4,7 +4,6 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Edit extends Mage_Adminhtm
 {
     public function __construct()
     {
-    	Mage::Log('constuct edit form');
         parent::__construct();
  
         $this->_objectId = 'entity_id';
@@ -33,7 +32,6 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Edit extends Mage_Adminhtm
             }
         ";
         
-        Mage::Log('constuct edit form end');
     }
  
     public function getHeaderText()

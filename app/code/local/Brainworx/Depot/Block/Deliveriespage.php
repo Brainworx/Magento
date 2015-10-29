@@ -30,7 +30,7 @@ class Brainworx_Depot_Block_Deliveriespage extends Mage_Customer_Block_Account_D
 		/*query:
 		 SELECT `main_table`.*, `shipment`.`created_at`, `shipment`.`entity_id` AS `shipment_id`,
 		 `shipment`.`shipping_name`, `shipment`.`order_increment_id`, `shipment`.`order_created_at`,
-		  `shipment`.`increment_id`, `order`.`shipping_address_id`, `seller`.`user_id`,
+		  `shipment`.`increment_id`, `order`.`shipping_address_id`,`order`.`comment_to_zorgpunt`, `seller`.`user_id`,
 		   CONCAT(street," ", postcode," ",city, " ",telephone) AS `address` 
 		   FROM `sales_flat_shipment_track` AS `main_table` 
 		   INNER JOIN `sales_flat_shipment_grid` AS `shipment` ON main_table.parent_id = shipment.entity_id 

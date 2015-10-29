@@ -27,7 +27,6 @@ class Brainworx_Rental_Model_Observer
 			
 			// Retrieve the product being updated from the event observer
 			$order = $observer->getEvent()->getOrder();
-			Mage::log("order ".$order->getEntityId());
 			// array_keys($order->getData() prints teh data keys in the order - can later be used to getData($key);
 			
 			//Check tax record		
@@ -71,8 +70,7 @@ class Brainworx_Rental_Model_Observer
 						$newrentalitem->setData('order_item_id',$item->getItemId());
 						$newrentalitem->setData('quantity',$item->getQtyOrdered());// nr of items - not days
 						$newrentalitem->setStartDt(date("Y-m-d"));
-						Mage::Log('date:'.Mage::getModel('core/date')->date('Y-m-d'));
-					
+						
 						$newrentalitem->Save();
 						
 						//Check/add sale_tax_item record
@@ -246,7 +244,7 @@ class Brainworx_Rental_Model_Observer
 					Mage::log('Email to supplier '.$email.' sent. order '.$order->getEntityId());
 				}
 			}		
-			Mage::Log("Sale done: nr rental items : " . $count);
+			Mage::Log("Sale done: nr rental items : " . $count . " for order ".$order->getEntityId());
 		
 		}catch(Exception $e){
 			Mage::log($e->getMessage());
@@ -266,7 +264,7 @@ class Brainworx_Rental_Model_Observer
 	public function addDiscountToRental(Varien_Event_Observer $observer)
 	{
 		try{
-			Mage::log('sales_quote_product_add_after event occurred');
+			//Mage::log('sales_quote_product_add_after event occurred');
 			
 			$items = $observer->getItems();
 			$item = $items[0];
@@ -285,7 +283,6 @@ class Brainworx_Rental_Model_Observer
 				foreach($item->getProduct()->getCategoryIds() as $cat){	
 					if( in_array($cat,$catssuppplinvl))	{	
 						if(!empty($item->getProduct()->getSupplierOrderEmail())){
-							Mage::log('Product '.$item->getProduct()->getSku().' supplier email '.$item->getProduct()->getSupplierOrderEmail());
 							$item->setSupplierneworderemail($item->getProduct()->getSupplierOrderEmail());
 						}else{
 							Mage::log('Article invoiced by supplier but no email '.$item->getProduct()->getSku());

@@ -21,7 +21,6 @@ class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controlle
 	 * Edit rentalitem after selection in grid.
 	 */
 	public function editAction() {
-		Mage::Log ( "edit action start" );
 		$id = $this->getRequest ()->getParam ( 'id', null );
 		$model = Mage::getModel ( 'hearedfrom/salesCommission' );
 		if ($id) {
@@ -29,7 +28,6 @@ class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controlle
 			if ($model->getEntityId ()) {
 				$data = Mage::getSingleton ( 'adminhtml/session' )->getFormData ( true );
 				if ($data) {
-					Mage::Log ( 'setting model' );
 					$model->setData ( $data )->setEntityId ( $id );
 				}
 			} else {
@@ -45,7 +43,6 @@ class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controlle
 		$this->getLayout ()->getBlock ( 'head' )->setCanLoadExtJs ( true );
 		$this->renderLayout ();
 		
-		Mage::Log ( "edit action completed" );
 	}
 	public function saveAction() {
 		if ($data = $this->getRequest ()->getPost ()) {

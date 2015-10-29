@@ -5,8 +5,7 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
     protected function _prepareForm()
     {
     	//Check for model data in the registry
-    	Mage::Log('praparing form');
-    	Mage::Log(print_r(Mage::registry('rental_data'),true));
+    	//Mage::Log(print_r(Mage::registry('rental_data'),true));
         if (Mage::registry('rental_data'))
         {
             $data = Mage::registry('rental_data')->getData();
@@ -16,7 +15,7 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
         {
             $data = array();
         }
-        Mage::Log(print_r($data,true));
+        //Mage::Log(print_r($data,true));
  
         $form = new Varien_Data_Form(array(
                 'id' => 'edit_form',

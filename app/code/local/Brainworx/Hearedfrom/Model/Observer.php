@@ -31,7 +31,6 @@ class Brainworx_Hearedfrom_Model_Observer
 		$_comment_to_zorgpunt = null;
 		$_comment_to_zorgpunt = Mage::getSingleton('core/session')->getCommentToZorgpunt();
 		//Mage::Log("Order brought by: ".$_hearedfrom_salesforce["user_nm"]." id ".$_hearedfrom_salesforce["entity_id"]);
-		Mage::Log("Order comment ".$_comment_to_zorgpunt);
 		$order->setCommentToZorgpunt($_comment_to_zorgpunt);
 		$order->save();
 		//Create new salesCommission
@@ -67,7 +66,7 @@ class Brainworx_Hearedfrom_Model_Observer
 	public function hookToInvoiceEvent(Varien_Event_Observer $observer)
 	{
 		try{
-			Mage::Log('sales_order_invoice_register');
+			//Mage::Log('sales_order_invoice_register');
 			
 			$invoice = $observer->getEvent()->getInvoice();
 			$order = $observer->getEvent()->getOrder();

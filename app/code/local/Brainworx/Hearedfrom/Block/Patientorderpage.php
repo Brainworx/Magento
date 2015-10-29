@@ -46,7 +46,6 @@ class Brainworx_Hearedfrom_Block_Patientorderpage extends Mage_Customer_Block_Ac
     			Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId())['entity_id']);
     	
     	$collection->setOrder('increment_id');
-    	Mage::log($collection->getSelect());
 		return $collection;
 	}
 	public function getViewOrderUrl($order)

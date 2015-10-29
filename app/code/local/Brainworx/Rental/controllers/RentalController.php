@@ -20,7 +20,6 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 	 * Edit rentalitem after selection in grid.
 	 */
 	public function editAction() {
-		Mage::Log ( "edit action start" );
 		$id = $this->getRequest ()->getParam ( 'id', null );
 		$model = Mage::getModel ( 'rental/rentedItem' );
 		if ($id) {
@@ -28,7 +27,6 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			if ($model->getEntityId ()) {
 				$data = Mage::getSingleton ( 'adminhtml/session' )->getFormData ( true );
 				if ($data) {
-					Mage::Log ( 'setting model' );
 					$model->setData ( $data )->setEntityId ( $id );
 				}
 			} else {
@@ -44,7 +42,6 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 		$this->getLayout ()->getBlock ( 'head' )->setCanLoadExtJs ( true );
 		$this->renderLayout ();
 		
-		Mage::Log ( "edit action completed" );
 	}
 	public function saveAction() {
 		if ($data = $this->getRequest ()->getPost ()) {
@@ -133,7 +130,6 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			try {
 				
 				foreach ( $rentalIds as $rentalId ) {
-					Mage::Log ( "End rental" );
 					$rentalModel = Mage::getModel ( 'rental/rentedItem' )->load($rentalId);
 					$rentalModel->setEndDt(date("Y-m-d"));
 					$rentalModel->save();

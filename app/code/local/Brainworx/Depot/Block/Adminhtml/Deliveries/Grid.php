@@ -200,7 +200,6 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Grid extends Mage_Adminhtml_Blo
     		//prepare wirte items : 40 lines per parcel
     		$shipments = Mage::getModel('sales/order_shipment')->load($item->getParentId())->getAllItems();
     		$itemheigth += count($shipments)*40;
-    		Mage::log("heigth " . $itemheigth);
     		if($itemheigth > $page->getHeight()-60){
     			$pdf->pages[] = $page; //push element on array
     			//new page

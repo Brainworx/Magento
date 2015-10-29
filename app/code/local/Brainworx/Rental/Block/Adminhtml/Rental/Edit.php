@@ -4,7 +4,6 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit extends Mage_Adminhtml_Block_
 {
     public function __construct()
     {
-    	Mage::Log('constuct edit form');
         parent::__construct();
  
         $this->_objectId = 'entity_id';
@@ -33,7 +32,6 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit extends Mage_Adminhtml_Block_
             }
         ";
         
-        Mage::Log('constuct edit form end');
     }
  
     public function getHeaderText()

@@ -4,7 +4,6 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Edit extends Mage_Adminhtml_Blo
 {
     public function __construct()
     {
-    	Mage::Log('constuct edit form');
         parent::__construct();
  
         $this->_objectId = 'entity_id';
@@ -33,7 +32,6 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Edit extends Mage_Adminhtml_Blo
             }
         ";
         
-        Mage::Log('constuct edit form end');
     }
  
     public function getHeaderText()

@@ -9,13 +9,12 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Edit_Form extends Mage_Adminhtm
         if (Mage::registry('shipment_data'))
         {
             $data = Mage::registry('shipment_data')->getData();
-            Mage::Log('data found');
         }
         else
         {
             $data = array();
         }
-        Mage::Log(print_r($data,true));
+        //Mage::Log(print_r($data,true));
  
         $form = new Varien_Data_Form(array(
                 'id' => 'edit_form',
