@@ -25,12 +25,20 @@
          </reference>
    </customer_ristornopage_viewdetails>
    
-     <customer_patientorderpage_index> <!-- module here matches node directly beneath <routers> in config.xml -->
+   <customer_patientorderpage_index> <!-- module here matches node directly beneath <routers> in config.xml -->
        <update handle="customer_account"/> <!-- include existing customer account layout -->
        <reference name="my.account.wrapper"> <!-- target parent block -->
            <block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml" /> <!-- add a back link -->
            <block type="hearedfrom/patientorderpage" name="customerpage" template="customer/patientorderpage.phtml"/><!--name="unique_layout_name" template="module/template.phtml"  -->
          </reference>
    </customer_patientorderpage_index>
+   
+   <customer_invoicespage_index> <!-- module here matches node directly beneath <routers> in config.xml -->
+       <update handle="customer_account"/> <!-- include existing customer account layout -->
+       <reference name="my.account.wrapper"> <!-- target parent block -->
+           <block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml" /> <!-- add a back link -->
+           <block type="hearedfrom/invoicespage" name="customerpage" template="customer/invoicespage.phtml"/><!--name="unique_layout_name" template="module/template.phtml"  -->
+         </reference>
+   </customer_invoicespage_index>
 
 </layout>

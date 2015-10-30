@@ -50,5 +50,19 @@ class Brainworx_Hearedfrom_Block_AddCustomerlink extends Mage_Customer_Block_Acc
 			}
 		}
 	}
+	/**
+	 * Add link to invoices for everyone
+	 */
+	public function addLinkToInvoicesNav() {
+		$customer = Mage::getSingleton('customer/session')->getCustomer();
+		if(!empty($customer)){
+			$this->addLink(
+						Mage::helper('customer')->__('My Invoices'),
+						"customer/invoicespage/",
+						Mage::helper('customer')->__('My Invoices')
+				);
+			
+		}
+	}
 	
 }

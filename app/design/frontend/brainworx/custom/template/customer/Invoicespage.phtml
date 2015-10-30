@@ -1,0 +1,47 @@
+<div class="page-title">
+<h1><?php echo $this->__('Overzicht facturen') ?></h1>
+</div>
+<?php 
+	  $_invoices = $this->getInvoices();
+	  
+	  $currentpage = Mage::getBlockSingleton('page/html_pager')->getCurrentPage();
+	  $perpage = Mage::getBlockSingleton('page/html_pager')->getLimit();
+	  $_invoices->getSelect()->limitPage($currentpage, $perpage);
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<?php echo $this->getChildHtml('info');?>
+<?php echo $this->getPagerHtml();?>
+<?php if($_invoices->getSize()): ?>
+<table class="data-table orders" id="my-invoices-table">
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <thead>
+        <tr>
+            <th class="number"><?php echo $this->__('Factuur #') ?></th>
+            <th class="date"><?php echo $this->__('Datum') ?></th>
+            <th class="total"><span class="nobr"><?php echo $this->__('Totaal') ?></span></th>             
+            <th class="ship"><?php echo $this->__('Status') ?></th>          
+            <th class="number"><?php echo $this->__('Bestel #') ?></th>  
+        </tr>
+    </thead>
+    <tbody>
+        <?php $_odd = ''; ?>
+        <?php foreach ($_invoices as $_invoice): ?>
+        <tr>
+            <td class="number"><a href="<?php echo $this->getViewInvoiceUrl($_invoice->getOrderId()) ?> "> <?php echo $_invoice->getIncrementId() ?></td></a></a></td>
+            <td class="date"><span class="nobr"><?php echo $this->formatDate($_invoice->getCreatedAt()) ?></span></td>
+            <td class="total"><?php echo $this->formatPrice($_invoice->getGrandTotal()) ?></td>
+            <td class="text"><?php echo $this->getStateLabel($_invoice->getState())?></td>
+            <td class="number"><a href="<?php echo $this->getViewOrderUrl($_invoice->getOrderId()) ?> "> <?php echo $_invoice['order_i_id'] ?></td></a></a></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<script type="text/javascript">decorateTable('my-invoices-table');</script>
+<?php echo $this->getPagerHtml(); ?>
+<?php else: ?>
+    <p><?php echo $this->__('Er zijn momenteel geen facturen voor je.'); ?></p>
+<?php endif ?>
