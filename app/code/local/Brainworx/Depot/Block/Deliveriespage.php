@@ -51,7 +51,7 @@ class Brainworx_Depot_Block_Deliveriespage extends Mage_Customer_Block_Account_D
     	);
     	$select->join(array('order' => $resource->getTableName('sales/order')),
     			'shipment.order_id = order.entity_id',
-    			array('shipping_address_id'));
+    			array('shipping_address_id','order_id'=>'entity_id','status'));
     	$select->join(array('seller' => $resource->getTableName('hearedfrom/salesSeller')),
     			'order.increment_id = seller.order_id',
     			array('user_id'));
@@ -62,11 +62,16 @@ class Brainworx_Depot_Block_Deliveriespage extends Mage_Customer_Block_Account_D
     	$customer = Mage::getSingleton('customer/session')->getCustomer();
     	$seller= Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
     	$collection->addFieldToFilter('user_id',$seller['entity_id']);
+    	$collection->addFieldToFilter('order.status',array('neq'=>'canceled'));
     	
 
     	$collection->setOrder('order_created_at');
     	
     	$this->setCollection($collection);
 		return $collection;
+	}
+	public function getViewOrderUrl($id)
+	{
+		return $this->getUrl('sales/order/view', array('order_id' => $id));
 	}
 }

@@ -37,12 +37,13 @@
         ?>
         <tr>
             <td class="date"><span class="nobr"><?php echo $this->formatDate($_delivery['order_created_at']) ?></td> 
-            <td class="number"><?php echo $_delivery['order_increment_id'] ?></td>           
+            <td class="number"><a href="<?php echo $this->getViewOrderUrl($_delivery['order_id']) ?>"><?php echo $_delivery['order_increment_id'] ?></a></td>           
             <td class="date"><span class="nobr"><?php echo $this->formatDate($_delivery['created_at']) ?></td>                                                              
             <td class="text"><?php echo $_delivery['title'] ?></td>    
             <td class="text"><?php echo $_delivery['shipping_name'] ?></td>    
             <td class="text"><?php echo $_delivery['address'] ?></td>
-            <td class="date"><span class="nobr"><?php echo $this->formatDate($_delivery['delivery']) ?></td>         
+            <td class="date"><span class="nobr"><?php if(!empty($_delivery['delivery'])) echo $_delivery['delivery'];
+            else echo $this->__('Te plannen'); ?></td>         
             <td class="text"><?php echo $_delivery['track_number'] ?></td>    
             <?php /*               
             <td class="text"><?php if($_delivery['delivered']==1)

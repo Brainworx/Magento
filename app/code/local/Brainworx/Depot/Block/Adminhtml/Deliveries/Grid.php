@@ -33,12 +33,13 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Grid extends Mage_Adminhtml_Blo
     		);
     		$select->join(array('order' => $resource->getTableName('sales/order')),
     				'shipment.order_id = order.entity_id',
-    				array('shipping_address_id','comment_to_zorgpunt'));
+    				array('shipping_address_id','comment_to_zorgpunt','status'));
     		$select->join(array('address' => $resource->getTableName('sales/order_address')),
     				'order.shipping_address_id = address.entity_id',
     				array('street','postcode','city','telephone'));
     		
-    		
+    		$collection->addFieldToFilter('order.status',array('neq'=>'canceled'));
+    		 
     		$this->setCollection($collection);
     		return parent::_prepareCollection();
     		

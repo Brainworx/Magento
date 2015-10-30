@@ -17,6 +17,9 @@ class Brainworx_Depot_Block_Adminhtml_Deliveries_Edit extends Mage_Adminhtml_Blo
                   'class' => 'save',
         ), -100);
         $this->_updateButton('save', 'label', Mage::helper('depot')->__('Save Delivery'));
+        
+        $this->_removeButton('delete');
+        $this->_removeButton('reset');
  
         $this->_formScripts[] = "
             function toggleEditor() {
