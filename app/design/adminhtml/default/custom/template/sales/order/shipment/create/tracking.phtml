@@ -7,21 +7,28 @@
 <?php /** @var $this Mage_Adminhtml_Block_Sales_Order_Shipment_Create_Tracking */ ?>
 <script type="text/javascript">
 //<![CDATA[
+var tracknr = 0;
 var trackingControl;
 trackingControl = {
     index : 0,
     add : function () {
-        this.index++;
-        var data = {index:this.index};
-        Element.insert($('track_row_container'), {bottom: this.template.evaluate(data)});
-        $('trackingC' + this.index).disabled = false;
-        $('trackingT' + this.index).disabled = false;
-        $('trackingN' + this.index).disabled = false;
-        this.bindCurrierOnchange();
+        if(tracknr != 0){
+            alert(<?php echo Mage::helper('depot')->__('You can only add 1 depot.') ?>);
+        }else{
+	        this.index++;
+	        tracknr++;
+	        var data = {index:this.index};
+	        Element.insert($('track_row_container'), {bottom: this.template.evaluate(data)});
+	        $('trackingC' + this.index).disabled = false;
+	        $('trackingT' + this.index).disabled = false;
+	        $('trackingN' + this.index).disabled = false;
+	        this.bindCurrierOnchange();
+        }
     },
     deleteRow : function(event) {
         var row = Event.findElement(event, 'tr');
         if (row) {
+            tracknr--;
             row.parentNode.removeChild(row)
         }
     },

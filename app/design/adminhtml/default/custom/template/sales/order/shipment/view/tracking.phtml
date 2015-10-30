@@ -25,24 +25,7 @@ $count = 1;
             <th class="last"><?php echo Mage::helper('sales')->__('Action') ?></th>
         </tr>
     </thead>
-    <tfoot>
-        <tr>
-            <td>
-                <select name="carrier" class="select" style="width:210px" onchange="selectCarrier(this)">
-                    <option value=""><?php echo Mage::helper('sales')->__('Select')?></option>
-                    <?php foreach ($this->getCarriers() as $_code=>$_name): ?>
-                    <option value="<?php echo $_code ?>"><?php echo $this->escapeHtml($_name) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </td>
-           
-            <td><input class="input-text" type="text" id="tracking_title" name="title" value="" /></td>
-               
-            <td><input class="input-text" type="text" id="tracking_number" name="number" value="" /></td>
-            
-            <td class="last"><?php echo $this->getSaveButtonHtml() ?></td>
-        </tr>
-    </tfoot>
+    
 <?php if($_tracks = $this->getShipment()->getAllTracks()): ?>
     <tbody>
     <?php $i=0;foreach ($_tracks as $_track):$i++ ?>
@@ -67,6 +50,26 @@ $count = 1;
         </tr>
     <?php endforeach; ?>
     </tbody>
+    <?php else :?>
+    <!-- SHE moved this to the else block to have 1 depot per shipment -->
+    <tfoot>
+        <tr>
+            <td>
+                <select name="carrier" class="select" style="width:210px" onchange="selectCarrier(this)">
+                    <option value=""><?php echo Mage::helper('sales')->__('Select')?></option>
+                    <?php foreach ($this->getCarriers() as $_code=>$_name): ?>
+                    <option value="<?php echo $_code ?>"><?php echo $this->escapeHtml($_name) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+           
+            <td><input class="input-text" type="text" id="tracking_title" name="title" value="" /></td>
+               
+            <td><input class="input-text" type="text" id="tracking_number" name="number" value="" /></td>
+            
+            <td class="last"><?php echo $this->getSaveButtonHtml() ?></td>
+        </tr>
+    </tfoot>
 <?php endif; ?>
 </table>
 </div>
