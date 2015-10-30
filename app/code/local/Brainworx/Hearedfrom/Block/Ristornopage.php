@@ -101,4 +101,8 @@ class Brainworx_Hearedfrom_Block_Ristornopage extends Mage_Customer_Block_Accoun
 	function getMainurl(){
 		return $this->getUrl('customer/ristornopage/');
 	}
+	public function getViewOrderUrl($id)
+	{
+		return $this->getUrl('sales/order/view', array('order_id' => $id));
+	}
 }

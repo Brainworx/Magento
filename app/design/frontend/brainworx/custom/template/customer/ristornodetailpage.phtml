@@ -35,8 +35,8 @@
         <?php $_odd = ''; 
         foreach ($_ristornos as  $_ristorno): 
         ?>
-        <tr>
-            <td class="number"><?php echo $_ristorno->getIncrementId() ?></td>
+        <tr>            
+            <td class="number"><a href="<?php echo $this->getViewOrderUrl($_ristorno['orig_order_id']) ?>"><?php  echo $_ristorno->getIncrementId() ?></a></td>
             <td class="date"><span class="nobr"><?php echo $this->formatDate($_ristorno->getCreateDt()) ?></span></td>
             <td class="text"><?php echo $_ristorno->getProduct() ?></td>
              <td class="text"><?php if($_ristorno->getType()=='S'){
