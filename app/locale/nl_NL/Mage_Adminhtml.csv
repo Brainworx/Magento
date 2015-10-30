@@ -849,7 +849,7 @@
 "Save Role","Save Role"
 "Save Template","Save Template"
 "Save User","Save User"
-"Save and Continue Edit","Save and Continue Edit"
+"Save and Continue Edit","Bewaar en ga door met bewerken"
 "Search","Search"
 "Search Index","Search Index"
 "Search Term","Search Term"
@@ -1198,3 +1198,4 @@
 "to","to"
 "website(%s) scope","website(%s) scope"
 "{{base_url}} is not recommended to use in a production environment to declare the Base Unsecure URL / Base Secure URL. It is highly recommended to change this value in your Magento <a href=""%s"">configuration</a>.","{{base_url}} is not recommended to use in a production environment to declare the Base Unsecure URL / Base Secure URL. It is highly recommended to change this value in your Magento <a href=""%s"">configuration</a>."
+"Deliveries","Leveringen"
