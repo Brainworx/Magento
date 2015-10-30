@@ -61,7 +61,13 @@ class Brainworx_Depot_Block_Deliveriespage extends Mage_Customer_Block_Account_D
     	
     	$customer = Mage::getSingleton('customer/session')->getCustomer();
     	$seller= Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
-    	$collection->addFieldToFilter('user_id',$seller['entity_id']);
+    	$id;
+    	if(empty($seller)){
+    		$id = $customer->getEntityId();
+    	}else{
+    		$id=$seller['entity_id'];
+    	}
+    	$collection->addFieldToFilter('user_id',$id);
     	$collection->addFieldToFilter('order.status',array('neq'=>'canceled'));
     	
 

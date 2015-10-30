@@ -24,14 +24,11 @@ class Brainworx_Hearedfrom_Block_AddCustomerlink extends Mage_Customer_Block_Acc
 	public function addLinkToDeliveriesNav() {
 		$customer = Mage::getSingleton('customer/session')->getCustomer();
 		if(!empty($customer)){
-			$salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
-			if(!empty($salesforce)){
 				$this->addLink(
 						Mage::helper('customer')->__('Deliveries'),
 						"customer/deliveriespage/",
 						Mage::helper('customer')->__('Deliveries')
 				);
-			}
 		}
 	}
 	/**
