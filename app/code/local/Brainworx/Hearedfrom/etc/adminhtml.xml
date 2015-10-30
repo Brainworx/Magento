@@ -22,6 +22,11 @@
                     <sort_order>2</sort_order>
                     <action>adminhtml/financial/index</action>
                 </salesOverview>
+                <SupplierSalesOverview>
+                    <title>Supplier order overview</title>
+                    <sort_order>3</sort_order>
+                    <action>adminhtml/financialssupplier/index</action>
+                </SupplierSalesOverview>
             </children>
         </hearedfrom>
     </menu>
@@ -41,6 +46,9 @@
                              <salesOverview>
                                 <title>Financial Overview Menu Item</title>
                             </salesOverview>
+                             <supplierSalesOverview>
+                                <title>Supplier Turnover Menu Item</title>
+                            </supplierSalesOverview>
                         </children>
                     </hearedfrom>
                 </children>

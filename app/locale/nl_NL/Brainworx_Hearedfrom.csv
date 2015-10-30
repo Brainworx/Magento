@@ -17,8 +17,8 @@
 "Seach","Zoek"
 "Commission","Commissie"
 "Invoice Period","Facturatie periode"
-"Quantity","Aantal"
 "Total (excl.vat)","Totaal (excl. Btw)"
+"Total Amount","Totaal bedrag"
 "Cancelled","Geannuleerd"
 "Overview","Overzicht"
 "Financial","Financieel"
@@ -31,4 +31,7 @@
 "Invoices overview","Overzicht Facturatie"
 "Sales commission","Overzicht Commissie"
 "Shipping (excl.vat)","Verzending (excl. Btw)"
+"Financials Supplier Manager","Omzet via leverancier"
+"Supplier order overview","Omzet via leveranciers"
+"Supplier Turnover Menu Item","Overzicht omzet via leveranciers"
 

@@ -58,6 +58,9 @@
 			<financial>
 				<class>Brainworx_Hearedfrom_Helper_Financial</class>
 			</financial>
+			<financialssupplier>
+				<class>Brainworx_Hearedfrom_Helper_Financialssupplier</class>
+			</financialssupplier>
 		</helpers>
 
 		<blocks>
@@ -74,6 +77,9 @@
 			<financial>
 			    <class>Brainworx_Hearedfrom_Block</class>
 			</financial>
+			<financialssupplier>
+			    <class>Brainworx_Hearedfrom_Block</class>
+			</financialssupplier>
 			<!-- Add block for checkout step -->
 			<hearedfromonepage>
 				<class>Brainworx_Hearedfrom_Block_Onepage</class>
@@ -259,6 +265,9 @@
              <financial>
               <file>financial.xml</file>
             </financial>
+             <financialssupplier>
+              <file>financialssupplier.xml</file>
+            </financialssupplier>
           </updates>
         </layout>
         <translate>
