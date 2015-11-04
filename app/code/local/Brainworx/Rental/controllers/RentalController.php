@@ -173,7 +173,8 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 							array('to'=>$invoiceDt))
 					)
 			->setOrder('orig_order_id','asc');
-					
+			/* SELECT * FROM `rental_renteditem` AS `main_table` WHERE ((last_inv_dt <= '2015-09-30') OR (last_inv_dt IS NULL)) AND ((end_dt > '2015-05-31') OR (end_dt IS NULL) OR (last_inv_dt IS NULL)) AND ((start_dt <= '2015-10-31')) group by orig_order_id */
+				
 			if(count($rentalsToInvoice) > 0){
 			
 				$qtys = array (); // this will be used for processing the invoice
@@ -184,7 +185,8 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				$grandTotalInclTax = 0;
 				$tax = 0; 
 				foreach ( $rentalsToInvoice as $rental ) {
-					if($rental->getLastInvDt()!=null && $rental->getLastInvDt() >= $rental->getEndDt()){
+					if($rental->getLastInvDt()!=null && $rental->getEndDt() != null && $rental->getLastInvDt() >= $rental->getEndDt()){
+						Mage::log('skipping invoice for '.$rental->getEntityId().' as lastinvdt('.$rental->getLastInvDt().') >= enddt ('.$rental->getEndDt().')');
 						continue;
 					}
 					if($rentalToInvoice == null){
