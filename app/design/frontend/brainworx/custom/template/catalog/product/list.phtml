@@ -2,7 +2,7 @@
 /**
  * Magento
  *
- * SHE add to button is conditional
+ * SHE add to button has different text and action depending condition user
  */
 ?>
 <?php
@@ -85,7 +85,10 @@
 	                    	}
 	                    }
 						if($_catSI && !$_addOK){
-							echo $this->__('Exclusive for farmacie');
+							$buttonTitle = $this->__('Exclusive for farmacie');
+							?>
+							<p class="action"><button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->__('farmacielink')?>')"><span><span><?php echo $buttonTitle ?></span></span></button></p>
+							<?php                  
 						}
 						else{
 							?>
@@ -162,8 +165,10 @@
 	                    	}
 	                    }
 						if($_catSI && !$_addOK){
-                     
-							echo $this->__('Exclusive for farmacie');
+							$buttonTitle = $this->__('Exclusive for farmacie');
+							?>
+							 <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart" onclick="location.href='<?php echo $this->__('farmacielink');?>'"><span><span><?php echo $buttonTitle ?></span></span></button>
+							<?php 
 						}
 						else{
 							?>

@@ -4,7 +4,7 @@
  *
  * NOTICE OF LICENSE
  *
- * SHE show add to cart only if applicable
+ * SHE add to button has different text and action depending condition user
  */
 ?>
 
@@ -27,8 +27,15 @@
 		}
 	}
 	if($_catSI && !$_addOK){
-		 
-		echo '<strong>'.$this->__('Exclusive for farmacie').'</strong>';
+		$buttonTitle = $this->__('Exclusive for farmacie');
+		?>
+		<div class="add-to-cart">
+		        <div class="add-to-cart-buttons">
+		            <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart" onclick="location.href='<?php echo $this->__('farmacielink');?>'"><span><span><?php echo $buttonTitle ?></span></span></button>
+		            <?php echo $this->getChildHtml('', true, true) ?>
+		        </div>
+		    </div>
+		<?php 
 		return;
 	}
 ?>
