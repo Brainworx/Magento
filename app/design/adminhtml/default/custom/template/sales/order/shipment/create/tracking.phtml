@@ -12,9 +12,7 @@ var trackingControl;
 trackingControl = {
     index : 0,
     add : function () {
-        if(tracknr != 0){
-            alert(<?php echo Mage::helper('depot')->__('You can only add 1 depot.') ?>);
-        }else{
+        if(tracknr == 0){        
 	        this.index++;
 	        tracknr++;
 	        var data = {index:this.index};
@@ -23,7 +21,9 @@ trackingControl = {
 	        $('trackingT' + this.index).disabled = false;
 	        $('trackingN' + this.index).disabled = false;
 	        this.bindCurrierOnchange();
-        }
+    	}else{
+        	alert('Er is maar 1 depot mogelijk per levering. Voor meerdere depots moet je meerdere leveringen aanmaken.');
+    	}
     },
     deleteRow : function(event) {
         var row = Event.findElement(event, 'tr');
