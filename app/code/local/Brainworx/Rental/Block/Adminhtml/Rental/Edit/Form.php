@@ -6,10 +6,14 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
     {
     	//Check for model data in the registry
     	//Mage::Log(print_r(Mage::registry('rental_data'),true));
+    	$patient = "";
         if (Mage::registry('rental_data'))
         {
             $data = Mage::registry('rental_data')->getData();
             Mage::Log('data found');
+            $order = Mage::getModel("sales/order")->load($data['orig_order_id']);
+            $patient = $order->getBillingAddress()->getFirstname().' '.$order->getBillingAddress()->getLastname();
+            
         }
         else
         {
@@ -34,48 +38,54 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
         # now add fields on to the fieldset object, for more detailed info
         # see https://makandracards.com/magento/12737-admin-form-field-types
         $fieldset->addField('entity_id', 'text', array(
-        		'label'     => Mage::helper('rental')->__('Verhuur #'),
+        		'label'     => Mage::helper('rental')->__('Rental #'),
         		'class'     => 'required-entry',
         		'readonly' => true,
         		'name'      => 'entity_id'
         ));
         $fieldset->addField('increment_id', 'text', array(
-        		'label'     => Mage::helper('rental')->__('Bestelling #'),
+        		'label'     => Mage::helper('rental')->__('Order #'),
         		'class'     => 'required-entry',
         		'readonly' => true,
         		'name'      => 'increment_id'
         ));
         $fieldset->addField('customer_id', 'text', array(
-        		'label'     => Mage::helper('rental')->__('Klant #'),
+        		'label'     => Mage::helper('rental')->__('Customer #'),
         		'readonly' => true,
         		'name'      => 'customer_id'
         ));
         $fieldset->addField('customer', 'text', array(
-        		'label'     => Mage::helper('rental')->__('Naam klant'),
+        		'label'     => Mage::helper('rental')->__('Ordered by'),
         		'class'     => 'required-entry',
         		'readonly' => true,
         		'name'      => 'customer'
         ));
+        $fieldset->addField('patient', 'text', array(
+        		'label'     => Mage::helper('rental')->__('Invoiced to patient'),
+        		'class'     => 'required-entry',
+        		'readonly' => true,
+        		'value'      => $patient
+        ));
         $fieldset->addField('billing_address', 'text', array(
-        		'label'     => Mage::helper('rental')->__('Factuuradres klant'),
+        		'label'     => Mage::helper('rental')->__('Invoice address'),
         		'class'     => 'required-entry',
         		'readonly' => true,
         		'name'      => 'billing_address'
         ));
         $fieldset->addField('shipping_address', 'text', array(
-        		'label'     => Mage::helper('rental')->__('Verzendadres klant'),
+        		'label'     => Mage::helper('rental')->__('Delivery Address'),
         		'class'     => 'required-entry',
         		'readonly' => true,
-        		'name'      => 'billing_address'
+        		'name'      => 'shipping_address'
         ));        
         $fieldset->addField('orig_order_id', 'text', array(
-        		'label'     => Mage::helper('rental')->__('ID originele bestelling'),
+        		'label'     => Mage::helper('rental')->__('Original Order Id'),
         		'class'     => 'required-entry',
         		'readonly' => true,
         		'name'      => 'orig_order_id'
         ));
         $fieldset->addField('order_item_id', 'text', array(
-        		'label'     => Mage::helper('rental')->__('ID item'),
+        		'label'     => Mage::helper('rental')->__('Orderitem id'),
         		'class'     => 'required-entry',
         		'readonly' => true,
         		'name'      => 'order_item_id'
@@ -93,14 +103,14 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
         		'name'      => 'product'
         ));
         $fieldset->addField('quantity', 'text', array(
-        		'label'     => Mage::helper('rental')->__('Aantal'),
+        		'label'     => Mage::helper('rental')->__('QTY'),
         		'class'     => 'required-entry',
         		'readonly' => true,
         		'name'      => 'quantity'
         ));
         
         $fieldset->addField('last_inv_dt', 'date', array(
-        		'label'     => Mage::helper('rental')->__('Datum laatste factuur'),
+        		'label'     => Mage::helper('rental')->__('Date last invoice'),
         		'image' => $this->getSkinUrl('images/grid-cal.gif'),
         	 	'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
         		'readonly' => true,
@@ -115,7 +125,7 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
 //         		'name'      => 'last_order_id'
 //         ));
         $fieldset->addField('start_dt', 'date', array(
-        		'label'     => Mage::helper('rental')->__('Start verhuur'),
+        		'label'     => Mage::helper('rental')->__('Start Rental'),
         		'image' => $this->getSkinUrl('images/grid-cal.gif'),
         		'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
         		'class'     => 'required-entry',
@@ -123,14 +133,14 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
         		'name'      => 'start_dt'
         ));
         $fieldset->addField('end_dt', 'date', array(
-        		'label'     => Mage::helper('rental')->__('Einde verhuur'),
+        		'label'     => Mage::helper('rental')->__('End Rental'),
         		'image' => $this->getSkinUrl('images/grid-cal.gif'),
         	 	'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
         		'name'      => 'end_dt'
         ));
         
-        
-        $form->setValues($data);
+        //use addValues and not setValues to allow default values
+        $form->addValues($data);
         
  
         return parent::_prepareForm();
