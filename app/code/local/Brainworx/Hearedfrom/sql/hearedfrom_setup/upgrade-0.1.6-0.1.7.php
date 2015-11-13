@@ -10,7 +10,7 @@ $installer->getConnection()
 				'length'	=> '12,4',
 				'unsigned'  => true,
 				'nullable'  => true,
-				'comment'	=> 'ristorno'
+				'comment'	=> 'ristorno' //for 1 item
 		)
 )
 ;
