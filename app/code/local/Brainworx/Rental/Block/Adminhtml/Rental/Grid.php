@@ -70,6 +70,7 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
             'align'     =>'center',
             'width'     => '50px',
             'index'     => 'entity_id',
+        	'filter_index' => 'main_table.entity_id'
         ));
         
 //         $this->addColumn('orig_order_id', array(

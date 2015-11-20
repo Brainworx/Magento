@@ -69,6 +69,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
             'align'     =>'center',
             'width'     => '50px',
             'index'     => 'entity_id',
+        	'filter_index' => 'main_table.entity_id'
         ));
         $this->addColumn('user_nm', array(
         		'header'    => Mage::helper('hearedfrom')->__('Seller'),
