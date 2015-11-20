@@ -13,7 +13,8 @@
 "var order.getShippingAddress().format('html')":"Shipping Address",
 "var order.getShippingDescription()":"Shipping Description",
 "layout handle=\"sales_email_order_items\" order=$order":"Order Items Grid",
-"var order.getEmailCustomerNote()":"Email Order Note"}
+"var order.getEmailCustomerNote()":"Email Order Note",
+"var order.getCommentToZorgpunt()":"Comment To Zorgpunt"}
 @-->
 <!--@styles
 @-->
@@ -60,6 +61,13 @@
             <table cellspacing="0" cellpadding="0" class="message-container">
                 <tr>
                     <td>{{var order.getEmailCustomerNote()}}</td>
+                </tr>
+            </table>
+            {{/if}}
+            {{if order.getCommentToZorgpunt()}}
+            <table cellspacing="0" cellpadding="0" class="message-container">
+                <tr>
+                    <td>{{var order.getCommentToZorgpunt()}}</td>
                 </tr>
             </table>
             {{/if}}

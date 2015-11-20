@@ -103,7 +103,10 @@
                 </observers>
             </sales_quote_product_add_after>
             <!-- event after sale -->
-            <sales_order_place_after><!--sales_order_save_commit_after / sales_order_save_after / sales_order_place_after -->
+            <sales_order_place_after>
+                <!--sales_order_save_commit_after 
+                / sales_order_save_after (triggered after every order save- status change etc
+                / sales_order_place_after: triggered 1 time when order has been placed-->
                 <!-- Defining an observer for this event -->
                 <observers>
                     <!--

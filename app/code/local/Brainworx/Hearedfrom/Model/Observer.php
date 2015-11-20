@@ -28,11 +28,12 @@ class Brainworx_Hearedfrom_Model_Observer
 		//Fetch the data from select box and throw it here- added to session in OnePageController
 		$_hearedfrom_salesforce = null;
 		$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
-		$_comment_to_zorgpunt = null;
-		$_comment_to_zorgpunt = Mage::getSingleton('core/session')->getCommentToZorgpunt();
-		//Mage::Log("Order brought by: ".$_hearedfrom_salesforce["user_nm"]." id ".$_hearedfrom_salesforce["entity_id"]);
-		$order->setCommentToZorgpunt($_comment_to_zorgpunt);
-		$order->save();
+		//stored in hookafterplaceorderevent
+// 		$_comment_to_zorgpunt = null;
+// 		$_comment_to_zorgpunt = Mage::getSingleton('core/session')->getCommentToZorgpunt();
+// 		//Mage::Log("Order brought by: ".$_hearedfrom_salesforce["user_nm"]." id ".$_hearedfrom_salesforce["entity_id"]);
+// 		$order->setCommentToZorgpunt($_comment_to_zorgpunt);
+// 		$order->save();
 		//Create new salesCommission
 		$newsalesseller = Mage::getModel('hearedfrom/salesSeller');
 		$newsalesseller->setData("order_id",$order->getIncrementId());
@@ -118,6 +119,13 @@ class Brainworx_Hearedfrom_Model_Observer
 		$quoteItem = $observer->getQuoteItem();
 		$product = $observer->getProduct();
 		$quoteItem->setRistorno($product->getRistorno());
+	}
+	public function hookToOrderPlaceAfterEvent($observer){
+		//save here the comment in the order
+		$_comment_to_zorgpunt = Mage::getSingleton('core/session')->getCommentToZorgpunt();
+		$order = $observer->getEvent()->getOrder();
+		$order->setCommentToZorgpunt($_comment_to_zorgpunt);
+		$order->save();		
 	}
 	private function saveCommission($sellerid,$orderid,$orderitemid,$type,$netamt,$brutamt,$rst,$invoiced ){
 		$newsalescomm = Mage::getModel('hearedfrom/salesCommission');
