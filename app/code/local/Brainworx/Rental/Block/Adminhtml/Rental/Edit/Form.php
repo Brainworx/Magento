@@ -10,7 +10,6 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
         if (Mage::registry('rental_data'))
         {
             $data = Mage::registry('rental_data')->getData();
-            Mage::Log('data found');
             $order = Mage::getModel("sales/order")->load($data['orig_order_id']);
             $patient = $order->getBillingAddress()->getFirstname().' '.$order->getBillingAddress()->getLastname();
             
