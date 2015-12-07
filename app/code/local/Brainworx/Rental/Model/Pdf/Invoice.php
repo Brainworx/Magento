@@ -73,7 +73,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			//end add comment
 			
 			/*SHE add footer*/
-			$this->insertFooter($page, $invoice->getStore());
+			$this->insertFooter($page, $invoice->getStore(),($invoice->getIncrementId()-100000000));
 		}
 		$this->_afterGetPdf();
 		return $pdf;
@@ -92,7 +92,8 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 				'lines'  => array(),
 				'height' => 15
 		);
-		foreach ($totals as $total) {
+		$last_key = count($totals)-1;
+		foreach ($totals as $key=>$total) {
 			$total->setOrder($order)
 			->setSource($source);
 	
@@ -101,24 +102,32 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 				//hierin komt label BE-04(6.0000%): t array 7 title BE-06 percent 6.0000 amount en label bE06(6.0000%)
 				//Mage_Sales_Model_Order_Pdf_Total_Default
 				//public function getFullTaxInfo()
-				foreach ($total->getTotalsForDisplay() as $totalData) {
+				
+				$size;
+				$last_key_2 = count($total->getTotalsForDisplay())-1;
+				foreach ($total->getTotalsForDisplay() as $key2=>$totalData) {
+					$size = $totalData['font_size'];
+					if($last_key === $key && $last_key_2 === $key2){
+						$size = 14;
+					}
 					$lineBlock['lines'][] = array(
 							array(
 									'text'      => $totalData['label'],
 									'feed'      => 475,
 									'align'     => 'right',
-									'font_size' => $totalData['font_size'],
+									'font_size' => $size,
 									'font'      => 'bold'
 							),
 							array(
 									'text'      => $totalData['amount'],
 									'feed'      => 565,
 									'align'     => 'right',
-									'font_size' => $totalData['font_size'],
+									'font_size' => $size,
 									'font'      => 'bold'
 							),
 					);
 				}
+				
 			}
 		}
 	
@@ -143,7 +152,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 	/**
 	 * Insert footer
 	 */
-	private function insertFooter(&$page, $store = null) {
+	private function insertFooter(&$page, $store = null, $invnr = "#") {
 		//$this->_setFontBold($page);
 		$this->_setFontRegular($page, 10);
 	
@@ -179,7 +188,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$bicc =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('BICC')->getValue('text');		
 		$page->drawText('BIC '.$bicc, $x, $y, 'UTF-8');
 		$y -= $lineY;
-		$page->drawText('OMG/mededeling: factuur #', $x, $y, 'UTF-8');
+		$page->drawText('OMG/mededeling: factuur '.$invnr, $x, $y, 'UTF-8');
 		
 		
 		// Column 1
