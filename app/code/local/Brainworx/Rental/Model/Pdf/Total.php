@@ -24,8 +24,6 @@ class Brainworx_Rental_Model_Pdf_Total extends Mage_Tax_Model_Sales_Pdf_Grandtot
     {
         $fontSize       = $this->getFontSize() ? $this->getFontSize() : 7;
         $taxClassAmount = $this->_getCalculatedTaxes();
-        $shippingTax    = $this->_getShippingTax();
-        $taxClassAmount = array_merge($taxClassAmount, $shippingTax);
 
         if (!empty($taxClassAmount)) {
             foreach ($taxClassAmount as &$tax) {
