@@ -1,6 +1,7 @@
 <?php
 class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invoice
 {
+	public $euro = " ";
 	//TODO add translation
 	public function getPdf($invoices = array())
 	{
@@ -50,29 +51,49 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 				$page = end($pdf->pages);
 			}
 			/* Add totals */
+			$tempYstartTotals = $this->y;
 			$this->insertTotals($page, $invoice);
 			if ($invoice->getStoreId()) {
 				Mage::app()->getLocale()->revert();
 			}
+			$tempYstopTotals = $this->y;
 			
 			//Add invoice comments to pdf
+			//use drawlineblock for this
+			$clineBlock = array(
+					'lines'  => array(),
+					'height' => 15
+			);
 			$this->_setFontRegular($page, 10);
 			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.25));//0.25
 			$order = $invoice->getOrder();
-			$orderComment = "";
+			$orderComment = null;
 			foreach ($invoice->getCommentsCollection() as $comment) {
-	             $orderComment = $orderComment . $comment->getComment();
-	             $orderComment = $orderComment . "<br>";
-	        }
-	        $comments = explode("<br>",$orderComment);
-	        $h = $this->y - 20;
-	        foreach($comments as $c){
-				$page->drawText($c, 50, $h, 'UTF-8');
-				$h = $h - 10;
-	        }
+				$orderComment = $orderComment . $comment->getComment();
+				$orderComment = $orderComment . "<br>";
+			}
+			if(!empty($orderComment)){
+				$comments = explode("<br>",$orderComment);
+				foreach($comments as $c){
+					$clineBlock['lines'][] = array(array('text'      => $c,
+									'feed'      => 50,
+									'align'     => 'left')	
+					);
+				}		
+				//put comment on same heigth as totals
+				$this->y = $tempYstartTotals;
+				$this->y -= 20;
+				$page = $this->drawLineBlocks($page, array($clineBlock));
+			}
+			//make sure the next block doesn't overlop totals or comments
+			if($tempYstopTotals > $this->y){
+				$this->y = $tempYstopTotals;
+			}
+			$this->y -= 30;
 			//end add comment
 			
 			/*SHE add footer*/
+	        //use drawlineblock for this
 			$this->insertFooter($page, $invoice->getStore(),($invoice->getIncrementId()-100000000));
 		}
 		$this->_afterGetPdf();
@@ -109,6 +130,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 					$size = $totalData['font_size'];
 					if($last_key === $key && $last_key_2 === $key2){
 						$size = 14;
+						$this->euro = $totalData['amount'].' ';
 					}
 					$lineBlock['lines'][] = array(
 							array(
@@ -153,85 +175,97 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 	 * Insert footer
 	 */
 	private function insertFooter(&$page, $store = null, $invnr = "#") {
-		//$this->_setFontBold($page);
+		$flineBlock = array(
+				'lines'  => array(),
+				'height' => 15
+		);
+		$linesContent = array();
+		
 		$this->_setFontRegular($page, 10);
 	
-		$startX = 50;
-		$startY = 80;
-		$columnWidth = 165; //120
-		$lineY = 12;
-	
 		$name = Mage::getStoreConfig('general/store_information/name');
-		// Footer title
+		// Footer title and rist block*******************************************************
 		$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.25));//0.25
-	
-		//$text = "We danken je voor het vertrouwen in ".$name.".";
-		$text = Mage::helper('sales')->__('Thank you for trusting ').$name."."; 
-	
-		$page->drawText($text, $startX, $startY, 'UTF-8');
-	
-		$startY = $startY - $lineY - $lineY;
-	
-		// Columns
-		$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.25));//0.5
-		
-		//Above
-		$x = $startX;
-		$y = $startY + 80;
 		
 		$this->_setFontBold($page,10);
-		$page->drawText('Gelieve het saldo binnen de 10 dagen te betalen op bankrekening:', $x, $y, 'UTF-8');
-		$y -= $lineY;
+		$linesContent[]='Gelieve het saldo van '.$this->euro.'binnen de 10 dagen te betalen op bankrekening:';
 		$iban =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('IBAN')->getValue('text');
-		$page->drawText('IBAN '.$iban, $x, $y, 'UTF-8');
-		$y -= $lineY;
 		$bicc =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('BICC')->getValue('text');		
-		$page->drawText('BIC '.$bicc, $x, $y, 'UTF-8');
-		$y -= $lineY;
-		$page->drawText('OMG/mededeling: factuur '.$invnr, $x, $y, 'UTF-8');
+		$linesContent[]=$iban.' '.$bicc;
+		$linesContent[]='OMG/mededeling: factuur '.$invnr;
+		//write first block 
+		foreach($linesContent as $c){
+			$flineBlock['lines'][] = array(array('text'      => $c,
+					'feed'      => 50,
+					'align'     => 'left',
+					'font' 		=> 'bold'
+			)
+			);
+		}
+		$this->y -= 20;
+		$page = $this->drawLineBlocks($page, array($flineBlock));
 		
+		// write first column second block********************************************************
+		//init
+		$tempY = $this->y;
+		$flineBlock = array(
+				'lines'  => array(),
+				'height' => 15
+		);
+		$linesContent = array();
+		//end init
+		$linesContent[]=$name;
+		$linesContent[]=Mage::getStoreConfig('general/store_information/address');
+		$linesContent[]='BTW '.Mage::getStoreConfig('general/store_information/merchant_vat_number');
+		//write first column second block *********************************************
+		foreach($linesContent as $c){
+			$flineBlock['lines'][] = array(array('text'      => $c,
+					'feed'      => 50,
+					'align'     => 'left')
+			);
+		}
+		$this->y -= 20;
+		$page = $this->drawLineBlocks($page, array($flineBlock));
+	
+		// Column 2 second block *******************************************************
+		//init
+		$this->y = $tempY;
+		$flineBlock = array(
+				'lines'  => array(),
+				'height' => 15
+		);
+		$linesContent = array();
+		//end init
+		$linesContent[] = Mage::getStoreConfig('general/store_information/phone');
+		$linesContent[] = Mage::getStoreConfig('trans_email/ident_general/email');
+		$linesContent[]=Mage::getStoreConfig('web/unsecure/base_url');
 		
-		// Column 1
-		$x = $startX;
-		$y = $startY;
-	
-		 
-		$page->drawText($name, $x, $y, 'UTF-8');
-		$y -= $lineY;
-		$page->drawText(Mage::getStoreConfig('general/store_information/address'), $x, $y, 'UTF-8');
-		$y -= $lineY;
-		$page->drawText('BTW '.Mage::getStoreConfig('general/store_information/merchant_vat_number'), $x, $y, 'UTF-8');
+		//write
+		foreach($linesContent as $c){
+			$flineBlock['lines'][] = array(array('text'      => $c,
+					'feed'      => 350,
+					'align'     => 'left')
+			);
+		}
+		$this->y -= 20;
+		$page = $this->drawLineBlocks($page, array($flineBlock));
 		
-		//$page->drawText('3360 Bierbeeck', $x, $y, 'UTF-8');
-	
-		// Column 2
-		$x += $columnWidth;
-		$y = $startY;
-	
-		$page->drawText(Mage::getStoreConfig('general/store_information/phone'), $x, $y, 'UTF-8');
-		$y -= $lineY;
-		 
-		$page->drawText(Mage::getStoreConfig('trans_email/ident_general/email'), $x, $y, 'UTF-8');
-		$y -= $lineY;
-		 
-		$page->drawText(Mage::getStoreConfig('web/unsecure/base_url'), $x, $y, 'UTF-8');
-	
-// 		// Column 3
-// 		$x += $columnWidth;
-// 		$y = $startY;
-	
-// 		//$this->_setFontBold($page,10);
-// 		$page->drawText('Gelieve het saldo binnen de 10 dagen te betalen op onderstaande bankrekening.', $x, $y, 'UTF-8');
-// 		$y -= $lineY;
-// 		$page->drawText('IBAN BE12 1234 1234 1234', $x, $y, 'UTF-8');
-// 		$y -= $lineY;
-// 		$page->drawText('BIC BEDDCCEE', $x, $y, 'UTF-8');
-	
-		// Column 3
-// 		$x += $columnWidth;
-// 		$y = $startY;
-	
-// 		$page->drawText($store->getFrontendName(), $x, $y, 'UTF-8');
+		//footnote *******************************************************************
+		$flineBlock = array(
+				'lines'  => array(),
+				'height' => 15
+		);
+		$linesContent = array();
+		$linesContent[] = Mage::helper('sales')->__('Thank you for trusting ').$name.".";
+		foreach($linesContent as $c){
+			$flineBlock['lines'][] = array(array('text'      => $c,
+					'feed'      => 50,
+					'align'     => 'center')
+			);
+		}
+		$this->y -= 20;
+		$page = $this->drawLineBlocks($page, array($flineBlock));
+		
 	}
 	protected function insertOrder(&$page, $obj, $putOrderId = true)
 	{
