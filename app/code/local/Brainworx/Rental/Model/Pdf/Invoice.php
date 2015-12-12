@@ -86,7 +86,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 				$page = $this->drawLineBlocks($page, array($clineBlock));
 			}
 			//make sure the next block doesn't overlop totals or comments
-			if($tempYstopTotals > $this->y){
+			if($tempYstopTotals < $this->y){
 				$this->y = $tempYstopTotals;
 			}
 			$this->y -= 30;
@@ -207,7 +207,6 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		
 		// write first column second block********************************************************
 		//init
-		$tempY = $this->y;
 		$flineBlock = array(
 				'lines'  => array(),
 				'height' => 15
@@ -229,7 +228,8 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 	
 		// Column 2 second block *******************************************************
 		//init
-		$this->y = $tempY;
+		$this->y += 65;
+		
 		$flineBlock = array(
 				'lines'  => array(),
 				'height' => 15
@@ -238,7 +238,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		//end init
 		$linesContent[] = Mage::getStoreConfig('general/store_information/phone');
 		$linesContent[] = Mage::getStoreConfig('trans_email/ident_general/email');
-		$linesContent[]=Mage::getStoreConfig('web/unsecure/base_url');
+		$linesContent[] = Mage::getStoreConfig('web/unsecure/base_url');
 		
 		//write
 		foreach($linesContent as $c){
