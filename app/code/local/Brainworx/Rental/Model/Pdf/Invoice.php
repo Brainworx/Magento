@@ -2,6 +2,7 @@
 class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invoice
 {
 	public $euro = " ";
+	public $totalsh = 0;
 	//TODO add translation
 	public function getPdf($invoices = array())
 	{
@@ -81,7 +82,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 					);
 				}		
 				//put comment on same heigth as totals
-				$this->y = $tempYstartTotals;
+				$this->y += $this->totalsh +20;//$tempYstartTotals;
 				$this->y -= 20;
 				$page = $this->drawLineBlocks($page, array($clineBlock));
 			}
@@ -132,6 +133,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 						$size = 14;
 						$this->euro = $totalData['amount'].' ';
 					}
+					$this->totalsh += 15;
 					$lineBlock['lines'][] = array(
 							array(
 									'text'      => $totalData['label'],
