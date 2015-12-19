@@ -27,10 +27,11 @@
             <th class="total"><span class="nobr"><?php echo $this->__('Totaal') ?></span></th>
             <th class="status"><span class="nobr"><?php echo $this->__('Status') ?></span></th>
             <th class="view">&nbsp;</th>
+            <th class="view">&nbsp;</th>
         </tr>
     </thead>
     <tbody>
-        <?php $_odd = ''; ?>
+        <?php $_odd = ''; $contact=Mage::getBaseUrl().'/contacts';?>
         <?php foreach ($_orders as $_order): ?>
         <tr>
             <td class="number"><?php echo $_order->getRealOrderId() ?></td>
@@ -38,6 +39,9 @@
             <td class="ship"><?php echo $_order->getShippingAddress() ? $this->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
             <td class="total"><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
             <td class="status"><em><?php echo $_order->getStatusLabel() ?></em></td>
+            <td class="a-center view">
+                <span class="nobr"><a href="<?php echo $contact.'?cmt=Aanvraag wijziging bestelling '.$_order->getRealOrderId().' Detail aanvraag: '?>"><?php echo  $this->__('Wijzig bestelling') ?></a></span>
+            </td>
             <td class="a-center view">
                 <span class="nobr"><a href="<?php echo $this->getViewOrderUrl($_order) ?>"><?php echo $this->__('Bekijk bestelling') ?></a></span>
             </td>
