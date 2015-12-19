@@ -40,7 +40,7 @@
             <td class="total"><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
             <td class="status"><em><?php echo $_order->getStatusLabel() ?></em></td>
             <td class="a-center view">
-                <span class="nobr"><a href="<?php echo $contact.'?cmt=Aanvraag wijziging bestelling '.$_order->getRealOrderId().' Detail aanvraag: '?>"><?php echo  $this->__('Wijzig bestelling') ?></a></span>
+                <span class="nobr"><a href="<?php echo $contact.'?cmt='.urlencode('Aanvraag wijziging bestelling '.$_order->getRealOrderId().' Detail aanvraag: ')?>"><?php echo  $this->__('Wijzig bestelling') ?></a></span>
             </td>
             <td class="a-center view">
                 <span class="nobr"><a href="<?php echo $this->getViewOrderUrl($_order) ?>"><?php echo $this->__('Bekijk bestelling') ?></a></span>
