@@ -457,4 +457,23 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 		//$this->_redirect ( '*/*/' );
 		$this->_redirect('*/sales_order_invoice/view', array('invoice_id' => $invoiceId, 'order_id' => $invoice->getOrder()->getEntityId()));
 	}
+	/**
+	 * Export order grid to CSV format
+	 */
+	public function exportCsvAction()
+	{
+		$fileName   = 'rentals.csv';
+		$grid       = $this->getLayout()->createBlock('rental/adminhtml_rental_grid');
+		$this->_prepareDownloadResponse($fileName, $grid->getCsvFile());
+	}
+	
+	/**
+	 *  Export order grid to Excel XML format
+	 */
+	public function exportExcelAction()
+	{
+		$fileName   = 'rentals.xml';
+		$grid       = $this->getLayout()->createBlock('rental/adminhtml_rental_grid');
+		$this->_prepareDownloadResponse($fileName, $grid->getExcelFile($fileName));
+	}
 }

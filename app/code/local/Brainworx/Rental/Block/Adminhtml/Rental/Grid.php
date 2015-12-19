@@ -168,7 +168,9 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
             'index'     => 'create_dt',
         	'type'		=> 'datetime',
         ));
-		
+        $this->addExportType('*/*/exportCsv', Mage::helper('rental')->__('CSV'));
+        $this->addExportType('*/*/exportExcel', Mage::helper('rental')->__('Excel XML'));
+        
         return parent::_prepareColumns();
     }
     
