@@ -131,6 +131,11 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
         		'index'     => 'product',
         		'filter_index' => 'item.name'
         ));
+        $this->addColumn('quantity', array(
+        		'header'    => Mage::helper('rental')->__('QTY'),
+        		'align'     =>'left',
+        		'index'     => 'quantity',
+        ));
         
         $this->addColumn('start_dt', array(
             'header'    => Mage::helper('rental')->__('Start Rental'),
