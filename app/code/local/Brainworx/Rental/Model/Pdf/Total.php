@@ -30,7 +30,7 @@ class Brainworx_Rental_Model_Pdf_Total extends Mage_Tax_Model_Sales_Pdf_Grandtot
             	//SHE updated round percent
                 $percent          = $tax['percent'] ? ' (' . round($tax['percent'],1). '%)' : '';
                 $tax['amount']    = $this->getAmountPrefix() . $this->getOrder()->formatPriceTxt($tax['tax_amount']);
-                $tax['label']     = $this->_getTaxHelper()->__($tax['title']) . $percent . ':';
+                $tax['label']     = '> info '.$this->_getTaxHelper()->__($tax['title']) . $percent . ':';
                 $tax['font_size'] = $fontSize;
             }
         } else {
