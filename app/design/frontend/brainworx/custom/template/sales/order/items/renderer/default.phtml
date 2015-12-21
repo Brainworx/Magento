@@ -8,8 +8,8 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
-<?php $_item = $this->getItem() ; $_order = $this->getOrder(); 
-$contact=Mage::getBaseUrl().'/contacts'.'?cmt='.urlencode('Aanvraag wijziging bestelling '.$_order->getRealOrderId().' '.$this->escapeHtml($_item->getName()).'('. $this->escapeHtml(Mage::helper('core/string')->splitInjection($this->getSku())).') Detail aanvraag: ');?>
+<?php $_item = $this->getItem() ; $_order = $this->getOrder(); $bur= Mage::helper('core/url')->getCurrentUrl();
+$contact=Mage::getBaseUrl().'/contacts'.'?bur='.$bur.'&cmt='.urlencode($this->__('Betreft bestelling ').$_order->getRealOrderId().' '.$this->escapeHtml($_item->getName()).'('. $this->escapeHtml(Mage::helper('core/string')->splitInjection($this->getSku())).') Detail aanvraag: ');?>
 <tr class="border" id="order-item-row-<?php echo $_item->getId() ?>">
     <td><h3 class="product-name"><?php echo $this->escapeHtml($_item->getName()) ?></h3>
         <?php if($_options = $this->getItemOptions()): ?>
@@ -299,7 +299,7 @@ $contact=Mage::getBaseUrl().'/contacts'.'?cmt='.urlencode('Aanvraag wijziging be
     </td>
      <!-- Brainworx: Added link to request change order line -->
     <td class="a-center view">
-                <span class="nobr"><a href="<?php echo $contact?>"><?php echo  $this->__('Wijzig item') ?></a></span>
+         <span class="nobr"><a href="<?php echo $contact?>"><?php echo  $this->__('Bericht Zorgpunt') ?></a></span>
     </td>
     <!--
     <?php if ($this->helper('tax')->displaySalesBothPrices() || $this->helper('tax')->displaySalesPriceExclTax()): ?>
