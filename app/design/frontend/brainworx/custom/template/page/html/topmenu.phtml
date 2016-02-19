@@ -1,0 +1,27 @@
+<?php
+/**
+ * Magento
+ *
+ * SHE added link to Zorgpunt Apotheken
+ *
+ * @category    design
+ * @package     brainworx_custom - edit rwd_default
+ */
+?>
+<?php
+/**
+ * Top menu for store
+ *
+ * @see Mage_Page_Block_Html_Topmenu
+ */
+?>
+<?php $_menu = $this->getHtml('level-top') ?>
+
+<?php if($_menu): ?>
+    <nav id="nav">
+        <ol class="nav-primary">
+            <?php echo $_menu ?>
+            <li class="level0 parent"><a href="<?php echo $this->getUrl('apotheken') ?>" class="level0">Zorgpunt Apotheken</a></li>
+        </ol>
+    </nav>
+<?php endif ?>
