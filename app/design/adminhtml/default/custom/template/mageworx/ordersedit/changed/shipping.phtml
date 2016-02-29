@@ -1,0 +1,27 @@
+<?php
+/**
+ * MageWorx
+ * Admin Order Editor extension
+ *
+ * @category   MageWorx
+ * @package    MageWorx_OrdersEdit
+ * @copyright  Copyright (c) 2015 MageWorx (http://www.mageworx.com/)
+ */
+
+$_order = $this->getOrder();
+?>
+<?php if ($_rate = $this->getActiveMethodRate()): ?>
+    <div id="order-shipping-method-info">
+        <strong><?php echo $this->escapeHtml($this->getCarrierName($_rate->getCarrier())) ?></strong> -
+        <?php echo $this->escapeHtml($_rate->getMethodTitle() ? $_rate->getMethodTitle() : $_rate->getMethodDescription()) ?>
+        <strong>
+            <?php $_excl = $this->getShippingPrice($this->helper('tax')->displayShippingPriceIncludingTax()); ?>
+            <?php $_incl = $this->getShippingPrice(true); ?>
+
+            <?php echo $_excl; ?>
+            <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+            <?php endif; ?>
+        </strong>
+    </div>
+<?php endif; ?>
