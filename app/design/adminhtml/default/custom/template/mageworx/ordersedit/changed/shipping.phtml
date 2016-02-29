@@ -20,7 +20,7 @@ $_order = $this->getOrder();
 
             <?php echo $_excl; ?>
             <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
-                (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+                (<?php echo $this->__('MageWorx_OrdersEdit::Incl. Tax'); ?> <?php echo $_incl; ?>)
             <?php endif; ?>
         </strong>
     </div>
