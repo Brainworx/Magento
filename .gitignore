@@ -13,7 +13,16 @@
 /app/pkginfo/
 /app/shell/
 /app/var/
-/js/
+/js/calendar/
+/js/extjs/
+/js/flash/
+/js/jscolor/
+/js/lib/
+/js/mage/
+/js/prototype/
+/js/scriptaculous/
+/js/tiny_mce/
+/js/varien/
 /downloader/
 /errors/
 /includes/
