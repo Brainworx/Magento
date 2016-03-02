@@ -2,7 +2,6 @@
 class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invoice
 {
 	public $euro = " ";
-	public $totalsh = 0;
 	//TODO add translation
 	public function getPdf($invoices = array())
 	{
@@ -82,15 +81,15 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 					);
 				}		
 				//put comment on same heigth as totals
-				$this->y += $this->totalsh +20;//$tempYstartTotals;
-				$this->y -= 20;
+				$this->y=$tempYstartTotals - 20;
 				$page = $this->drawLineBlocks($page, array($clineBlock));
 			}
-			//make sure the next block doesn't overlop totals or comments
+			//make sure the next block doesn't overlap totals or comments
+			// higher number is lower on the page
 			if($tempYstopTotals < $this->y){
 				$this->y = $tempYstopTotals;
 			}
-			$this->y -= 30;
+			$this->y -= 20;
 			//end add comment
 			
 			/*SHE add footer*/
