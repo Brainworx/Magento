@@ -77,11 +77,11 @@
                     <input type="hidden" name="comment_id" value="<?php echo $_item->getEntityId() ?>" />
                     <textarea rows="5" cols="100" name="comment"><?php echo $this->escapeHtml($_item->getComment(), array('b','br','strong','i','u')) ?></textarea>
                     <div class="ordersedit-buttons">
-                        <button class="f-left" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Cancel') ?>" onclick="orderEdit.cancelCommentEdit()">
-                            <span><span><?php echo $this->__('MageWorx_OrdersEdit::Cancel') ?></span></span>
+                        <button class="f-left" type="button" title="<?php echo $this->__('Cancel') ?>" onclick="orderEdit.cancelCommentEdit()">
+                            <span><span><?php echo $this->__('Cancel') ?></span></span>
                         </button>
-                        <button class="f-right" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Submit') ?>" onclick="orderEdit.saveCommentEdit(<?php echo $_item->getEntityId() ?>)">
-                            <span><span><?php echo $this->__('MageWorx_OrdersEdit::Submit') ?></span></span>
+                        <button class="f-right" type="button" title="<?php echo $this->__('Submit') ?>" onclick="orderEdit.saveCommentEdit(<?php echo $_item->getEntityId() ?>)">
+                            <span><span><?php echo $this->__('Submit') ?></span></span>
                         </button>
                     </div>
                 </form>

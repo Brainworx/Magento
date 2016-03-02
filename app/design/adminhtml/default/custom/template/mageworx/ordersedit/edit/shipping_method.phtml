@@ -64,7 +64,7 @@
             <?php $customPrice = Mage::getSingleton('adminhtml/session_quote')->getShippingCustomPrice(); ?>
             <?php $shippingPrice = ($customPrice > 0) ? $customPrice : $_rate->getPrice(); ?>
 
-            <label for="shipping_price"><?php echo $this->__('MageWorx_OrdersEdit::Price'); ?>: </label>
+            <label for="shipping_price"><?php echo $this->__('Price'); ?>: </label>
             <input type="text" name="shipping[custom_price]" id="shipping_price" value="<?php echo $shippingPrice ?>" />
 
             <br/>

@@ -12,7 +12,7 @@ OrdersEditEdit.prototype = {
 
     initialize: function(editUrl, productGridUrl, customersGridUrl, submitCustomerUrl, saveOrderUrl, blocksConfig, beforeTabCloseText, saveChangesUrl, cancelChangesUrl) {
 
-        this.editLinkTmp = '<div class="tools"><a href="#" onclick="orderEdit.loadEditForm(\'%block_id%\', this); return false;">Edit</a></div>';
+        this.editLinkTmp = '<div class="tools"><a href="#" onclick="orderEdit.loadEditForm(\'%block_id%\', this); return false;">Wijzig</a></div>';
 
         this.editUrl = editUrl;
         this.productGridUrl = productGridUrl;
@@ -353,8 +353,8 @@ OrdersEditEdit.prototype = {
         });
     },
 
-    applyChangedOrder : function() { // save changes
-        if (confirm("Are you sure you want to apply the changes the order?")) {
+    applyChangedOrder : function() { // save changes - SHE tranlations
+        if (confirm("Bent u zeker dat u de wijzigingen aan de bestelling wil doorvoeren?")) {
             orderEdit.hasChanges = false; // Skip validation
             window.setLocation(this.saveOrderChangesUrl);
         }
