@@ -314,7 +314,7 @@ class MageWorx_OrdersEdit_Model_Observer
                 ->toHtml();
 
             /** @var string $newHtml */
-            $newHtml = $oldHtml . $couponsBlockHtml; // append coupon block html
+            $newHtml = $oldHtml. $couponsBlockHtml; // append coupon block html
             $transport->setHtml($newHtml);
         }
 

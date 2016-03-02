@@ -24,12 +24,12 @@ class MageWorx_OrdersEdit_Helper_Edit extends Mage_Core_Helper_Abstract
         if (is_null($this->_availableBlocks)){
             $this->_availableBlocks = array(
 //SHE comment blocks not to be edited
-                array(
-                    'className' => 'head-general',
-                    'blockId' => 'order_info',
-                    'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_general',
-                    'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_general'
-                ),
+//                 array(
+//                     'className' => 'head-general',
+//                     'blockId' => 'order_info',
+//                     'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_general',
+//                     'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_general'
+//                 ),
                 array(
                     'className' => 'head-account',
                     'blockId' => 'customer_info',
@@ -48,12 +48,12 @@ class MageWorx_OrdersEdit_Helper_Edit extends Mage_Core_Helper_Abstract
                     'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_address',
                     'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_address'
                 ),
-                array(
-                    'className' => 'head-payment-method',
-                    'blockId' => 'payment_method',
-                    'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_payment',
-                    'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_payment'
-                ),
+//                 array(
+//                     'className' => 'head-payment-method',
+//                     'blockId' => 'payment_method',
+//                     'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_payment',
+//                     'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_payment'
+//                 ),
                 array(
                     'className' => 'head-shipping-method',
                     'blockId' => 'shipping_method',
@@ -66,12 +66,12 @@ class MageWorx_OrdersEdit_Helper_Edit extends Mage_Core_Helper_Abstract
                     'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_items',
                     'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_items'
                 ),
-                array(
-                    'className' => 'head-coupons',
-                    'blockId' => 'sales_order_coupons',
-                    'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_coupons',
-                    'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_coupons'
-                ),
+//                 array(
+//                     'className' => 'head-coupons',
+//                     'blockId' => 'sales_order_coupons',
+//                     'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_coupons',
+//                     'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_coupons'
+//                 ),
             );
         }
 

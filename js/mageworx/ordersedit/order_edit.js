@@ -335,9 +335,11 @@ OrdersEditEdit.prototype = {
         this.saveOrder();
     },
 
+    //SHE updated replacement of html in new totals field
     showTempTotals : function(html) {
         if ($$('.new-totals').first()) {
-            $$('.new-totals').first().up().replace(html);
+            //$$('.new-totals').first().up().replace(html);
+            $$('.new-totals').first().replace(html);
         } else {
             $$('.box-left.mw_coupons').first().insert({ after: html });
         }

@@ -219,15 +219,15 @@
         </layout>
         <events>
         <!-- SHE Brainworx remove coupons block -->
-            <core_block_abstract_to_html_after>
-                <observers>
-                    <mw_add_coupon_block>
-                        <type>singleton</type>
-                        <class>mageworx_ordersedit/observer</class>
-                        <method>insertCouponBlock</method>
-                    </mw_add_coupon_block>
-                </observers>
-            </core_block_abstract_to_html_after>
+<!--             <core_block_abstract_to_html_after> -->
+<!--                 <observers> -->
+<!--                     <mw_add_coupon_block> -->
+<!--                         <type>singleton</type> -->
+<!--                         <class>mageworx_ordersedit/observer</class> -->
+<!--                         <method>insertCouponBlock</method> -->
+<!--                     </mw_add_coupon_block> -->
+<!--                 </observers> -->
+<!--             </core_block_abstract_to_html_after> -->
             
             <controller_action_predispatch_adminhtml_sales_order_view>
                 <observers>
