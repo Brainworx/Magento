@@ -39,6 +39,11 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
 					'order.billing_address_id = billingaddress.entity_id',
 					array('firstname','lastname')
 			);
+			$select->join(
+					array('shippingaddress' => $resource->getTableName('sales/order_address')),
+					'order.shipping_address_id = shippingaddress.entity_id',
+					array('street','city','postcode')
+			);
 	        $select->join(
 	        		array('item' => $resource->getTableName('sales/order_item')),
 	        		'main_table.order_item_id = item.item_id',
@@ -110,6 +115,24 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
         		'align'     =>'left',
         		'index'     => 'lastname',
         		'filter_index' => 'billingaddress.lastname'
+        ));
+        $this->addColumn('street', array(
+        		'header'    => Mage::helper('rental')->__('Street'),
+        		'align'     =>'left',
+        		'index'     => 'street',
+        		'filter_index' => 'shippingaddress.street'
+        ));
+        $this->addColumn('postcode', array(
+        		'header'    => Mage::helper('rental')->__('Zip'),
+        		'align'     =>'left',
+        		'index'     => 'postcode',
+        		'filter_index' => 'shippingaddress.postcode'
+        ));
+        $this->addColumn('city', array(
+        		'header'    => Mage::helper('rental')->__('City'),
+        		'align'     =>'left',
+        		'index'     => 'city',
+        		'filter_index' => 'shippingaddress.city'
         ));
 //         $this->addColumn('customer_firstname', array(
 //         		'header'    => Mage::helper('rental')->__('Customer Firstname'),
