@@ -91,10 +91,14 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			}
 			$this->y -= 20;
 			//end add comment
+			/*SHE add hearedfrom */
+			$seller = Mage::getModel("hearedfrom/salesSeller")->loadByOrderId($order->getIncrementId());
+			$sellerName = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])->getData("user_nm");
+							
 			
 			/*SHE add footer*/
 	        //use drawlineblock for this
-			$this->insertFooter($page, $invoice->getStore(),($invoice->getIncrementId()-100000000));
+			$this->insertFooter($page, $invoice->getStore(),($invoice->getIncrementId()-100000000),$sellerName);
 		}
 		$this->_afterGetPdf();
 		return $pdf;
@@ -175,7 +179,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 	/**
 	 * Insert footer
 	 */
-	private function insertFooter(&$page, $store = null, $invnr = "#") {
+	private function insertFooter(&$page, $store = null, $invnr = "#", $sellerNm = null) {
 		$flineBlock = array(
 				'lines'  => array(),
 				'height' => 15
@@ -239,7 +243,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		//end init
 		$linesContent[] = Mage::getStoreConfig('general/store_information/phone');
 		$linesContent[] = Mage::getStoreConfig('trans_email/ident_general/email');
-		$linesContent[] = Mage::getStoreConfig('web/unsecure/base_url');
+		$linesContent[] = Mage::getStoreConfig('web/secure/base_url');
 		
 		//write
 		foreach($linesContent as $c){
@@ -257,7 +261,12 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 				'height' => 15
 		);
 		$linesContent = array();
-		$linesContent[] = Mage::helper('sales')->__('Thank you for trusting ').$name.".";
+		if($sellerNm != null && $sellerNm != 'Zorgpunt'){
+			$sellerNm = ' '.Mage::helper('sales')->__('and').' '.$sellerNm.'.';
+		}else{
+			$sellerNm = '.';
+		}
+		$linesContent[] = Mage::helper('sales')->__('Thank you for trusting ').$name.$sellerNm;
 		foreach($linesContent as $c){
 			$flineBlock['lines'][] = array(array('text'      => $c,
 					'feed'      => 50,
