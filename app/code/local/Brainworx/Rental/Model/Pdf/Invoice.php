@@ -250,7 +250,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 					'align'     => 'left')
 			);
 		}
-		$this->y -= 20;
+		$this->y -= 10;
 		$page = $this->drawLineBlocks($page, array($flineBlock));
 	
 		// Column 2 second block *******************************************************
