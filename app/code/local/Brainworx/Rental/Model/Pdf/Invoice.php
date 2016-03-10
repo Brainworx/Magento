@@ -210,6 +210,28 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$this->y -= 20;
 		$page = $this->drawLineBlocks($page, array($flineBlock));
 		
+		//footnote *******************************************************************
+		$flineBlock = array(
+				'lines'  => array(),
+				'height' => 15
+		);
+		$linesContent = array();
+		if($sellerNm != null && $sellerNm != 'Zorgpunt'){
+			$sellerNm = ' '.$sellerNm.'.';
+		}else{
+			$sellerNm = '.';
+		}
+		$linesContent[] = Mage::helper('sales')->__('Thank you for trusting ').$name.$sellerNm;
+		foreach($linesContent as $c){
+			$flineBlock['lines'][] = array(array('text'      => $c,
+					'feed'      => 50,
+					'align'     => 'center')
+			);
+		}
+		$this->y -= 20;
+		$page = $this->drawLineBlocks($page, array($flineBlock));
+		//end footnote
+		
 		// write first column second block********************************************************
 		//init
 		$flineBlock = array(
@@ -250,27 +272,6 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			$flineBlock['lines'][] = array(array('text'      => $c,
 					'feed'      => 350,
 					'align'     => 'left')
-			);
-		}
-		$this->y -= 20;
-		$page = $this->drawLineBlocks($page, array($flineBlock));
-		
-		//footnote *******************************************************************
-		$flineBlock = array(
-				'lines'  => array(),
-				'height' => 15
-		);
-		$linesContent = array();
-		if($sellerNm != null && $sellerNm != 'Zorgpunt'){
-			$sellerNm = ' '.Mage::helper('sales')->__('and').' '.$sellerNm.'.';
-		}else{
-			$sellerNm = '.';
-		}
-		$linesContent[] = Mage::helper('sales')->__('Thank you for trusting ').$name.$sellerNm;
-		foreach($linesContent as $c){
-			$flineBlock['lines'][] = array(array('text'      => $c,
-					'feed'      => 50,
-					'align'     => 'center')
 			);
 		}
 		$this->y -= 20;
