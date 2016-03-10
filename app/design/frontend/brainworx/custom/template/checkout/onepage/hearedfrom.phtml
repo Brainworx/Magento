@@ -3,7 +3,8 @@
 	<select id="getvoice" name="getvoice">
 		<?php foreach($this->getHearedFromValues() as $_option): ?>
 			<option value="<?php echo $_option ?>"
-			<?php if(!empty($this->getSellerValue()) && $_option == $this->getSellerValue()){
+			<?php if((!empty($this->getSellerValue()) && $_option == $this->getSellerValue())
+			|| ((empty($this->getSellerValue()) && $_option == 'Zorgpunt'))){
 					echo 'selected';
 			}?>
 			><?php echo $_option ?></option>
