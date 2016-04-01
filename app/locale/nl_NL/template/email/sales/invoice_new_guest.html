@@ -13,7 +13,8 @@
 "var order.shipping_address.format('html')":"Shipping Address",
 "var order.shipping_description":"Shipping Description",
 "layout area=\"frontend\" handle=\"sales_email_order_invoice_items\" invoice=$invoice order=$order":"Invoice Items Grid",
-"var comment":"Invoice Comment"}
+"var comment":"Invoice Comment",
+"var seller":"Zorgpunt"}
 @-->
 <!--@styles
 @-->
@@ -52,8 +53,8 @@
     </tr>
     <tr>
         <td class="order-details">
-            <h3>Je factuur <span class="no-link">#{{var invoice.increment_id}}</span></h3>
-            <p>Bestelling <span class="no-link">#{{var order.increment_id}}</span></p>
+            <h3>Je factuur <span class="no-link">{{var invoice.increment_id}}</span></h3>
+            <p>Bestelling <span class="no-link">{{var order.increment_id}}</span></p>
         </td>
     </tr>
     <tr class="order-information">
@@ -62,6 +63,13 @@
             <table cellspacing="0" cellpadding="0" class="message-container">
                 <tr>
                     <td>{{var comment}}</td>
+                </tr>
+            </table>
+            {{/if}}
+             {{if seller}}
+            <table cellspacing="0" cellpadding="0" class="message-container">
+                <tr>
+                    <td>Je Zorgpunt: {{var seller}}</td>
                 </tr>
             </table>
             {{/if}}

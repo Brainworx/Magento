@@ -11,13 +11,23 @@
 		  <adminhtml>
 			<args>
 			  <modules>
-				<Brainworx_Rental before="Mage_Adminhtml">Brainworx_Rental</Brainworx_Rental>
+				<Brainworx_Rental after="Mage_Adminhtml">Brainworx_Rental</Brainworx_Rental>	
+				<!-- Adminhtml folder in controller to override mage controller, loaded before to override -->
+				<Brainworx_Rental2 before="Mage_Adminhtml">Brainworx_Rental_Adminhtml</Brainworx_Rental2>			
 			  </modules>
 			</args>
 		  </adminhtml>		
 		</routers>
 	 </admin>
 	<global>
+	<!-- rewrite action address -
+	<rewrite>
+            <module_sales_invoice>
+                <from><![CDATA[#^/.*/sales_invoice/email/#]]></from>
+               <to>/brainworx_rental/invoicecoail/</to>
+            </module_sales_invoice>
+        </rewrite> -->
+       
 		<models>
 				<!--
                 Unique identifier in the model's node.
@@ -39,11 +49,15 @@
 						</rentedItem>
 					</entities>
 				</rental_resource>
-				<!-- update invoice -->
 				 <sales>
+				 	<!-- Override Sales_Oder_Pdf_Invoice  to have custom pdf -->
 			        <rewrite>			        
 			            <order_pdf_invoice>Brainworx_Rental_Model_Pdf_Invoice</order_pdf_invoice>
 			        </rewrite>
+			        <!-- Overriding Sales_Order_Invoice model for sendEmail with force -->
+			        <rewrite>
+			    		<order_invoice>Brainworx_Rental_Model_Order_Invoice</order_invoice>
+			    	</rewrite>
 			    </sales>
 		</models>
 		
