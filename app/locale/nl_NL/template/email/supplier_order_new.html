@@ -9,7 +9,8 @@
 "var order.getCreatedAtFormated('long')":"Order Created At (datetime)",
 "var order.getShippingDescription()":"Shipping Description",
 "layout handle=\"supplier_email_order_items\" order=$order email=$supplieremail":"Order Items Grid",
-"var order.getEmailCustomerNote()":"Email Order Note"}
+"var order.getEmailCustomerNote()":"Email Order Note",
+"var order.getCommentToZorgpunt()":"Comment To Zorgpunt"}
 @-->
 <!--@styles
 @-->
@@ -49,8 +50,16 @@
             <h3>Bestelling <span class="no-link">#{{var order.increment_id}} geplaatst op {{var order.getCreatedAtFormated('long')}}</span></h3>
         </td>
     </tr>
-    <tr class="order-information">
+    <tr class="order-information">    		
         <td>
+        	{{if order.getCommentToZorgpunt()}}
+            <table cellspacing="0" cellpadding="0" class="message-container">
+                <tr>
+                    <td><h6>Opmerking van klant:</h6>
+                    <p>{{var order.getCommentToZorgpunt()}}</p></td>
+                </tr>
+            </table>
+            {{/if}}
         	{{block type="core/template" template="email/supplieritems.phtml" order=$order email=$supplieremail}}
         </td>
     </tr>

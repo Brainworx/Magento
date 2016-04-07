@@ -41,12 +41,7 @@ class Brainworx_Rental_Model_Observer
 						&&!in_array($item->getSupplierneworderemail(),$suppliersToEmail)){
 					$suppliersToEmail[]=$item->getSupplierneworderemail();
 				}
-				//check $item->getProduct()->getSupplierOrderEmail() instead
-// 				$semail = $item->getProduct()->getSupplierOrderEmail();
-// 				if(!empty($semail)
-// 						&&!in_array($email,$suppliersToEmail)){
-// 					$suppliersToEmail[]=$semail;
-// 				}
+	
 				$rentaltosave = false;
 				if(!empty($item->getRentalitem())&&$item->getRentalitem() == true){
 					$rentaltosave = true;
