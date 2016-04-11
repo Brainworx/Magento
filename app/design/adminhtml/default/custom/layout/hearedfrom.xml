@@ -8,4 +8,11 @@
             <block type="hearedfrom/adminhtml_hearedfrom" name="hearedfrom" />
         </reference>
     </adminhtml_hearedfrom_index>
+    <!-- Add js and css to order edit page -->
+     <adminhtml_sales_order_view>
+        <reference name="head">
+           <action method="addItem"><type>js</type><name>brainworx/hearedfrom_edit.js</name><params/><if/></action>
+		   <action method="addCss"><stylesheet>css/brainworx/hearedfromedit.css</stylesheet></action>
+		</reference>
+	</adminhtml_sales_order_view>
 </layout>

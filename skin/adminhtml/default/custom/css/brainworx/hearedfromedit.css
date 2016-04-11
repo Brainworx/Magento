@@ -1,0 +1,16 @@
+@CHARSET "ISO-8859-1";
+.hidden {
+	display:none;
+}
+.unhide {
+	
+}
+.tooltip {
+	float: right;
+}
+.left {
+	float: left;
+}
+.right {
+	float: right;
+}

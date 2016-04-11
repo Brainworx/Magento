@@ -143,4 +143,17 @@ class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controlle
 	{
 		$this->_prepareDownloadResponse($fileName, $content, $contentType);
 	}
+	/**
+	 * Action to update the sales commission for an order
+	 */
+	public function updateAction(){
+		$sellernm = $this->getRequest()->getParam('sellerusernm');
+		$orderid = $this->getRequest()->getParam('ooid');
+		$salesseller = Mage::getModel("hearedfrom/salesSeller")->load(Mage::getModel("hearedfrom/salesSeller")->loadByOrderId($orderid)['entity_id']);
+		$_hearedfrom_salesforce =  Mage::getModel("hearedfrom/salesForce")->loadByUsername($sellernm);
+		$salesseller->setData("user_id",$_hearedfrom_salesforce["entity_id"]);
+		$salesseller->save();
+		Mage::log('update order '.$orderid.' to seller '.$sellernm);
+		
+	}
 }

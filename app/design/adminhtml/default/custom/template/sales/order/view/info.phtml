@@ -133,23 +133,57 @@ if(empty($_comment)){ $_comment= Mage::helper('sales')->__('No comment provided'
     <div class="entry-edit">
         <div class="entry-edit-head">
             <h4 class="icon-head head-hearedfrom"><?php echo Mage::helper('sales')->__('Who told you about us') ?></h4>
+        	<div class="tooltip"><a href="#" onclick="loadHearedfromEdit()"><?php echo $this->__('MageWorx_OrdersEdit::Change') ?></a></div>
         </div>
          <fieldset>
-         	<div id='seller_block'>
+         	<div id='seller_block' class=''>
 	         <p>
-	          	<label class="normal" ><?php echo Mage::helper('sales')->__('Zorgpunter:') ?></label>
+	          	 <div id="sellerblock">
+	          	 <label class="normal" ><?php echo Mage::helper('sales')->__('Zorgpunter:') ?></label>
 		       	  <strong>
 					<?php
-					//TODO add to controller
+					//TODO add to custom Mage_Adminhtml_Block_Sales_Order_View_Info
 					$seller = Mage::getModel("hearedfrom/salesSeller")->loadByOrderId($_order->getIncrementId());
+					$user =  Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])->getData("user_nm");
 					echo Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])->getData("user_nm");?>
-				  </strong>	
+				  </strong>					  	
+				  </div>
+				  <!-- Brainworx: make seller editable -->
+				  <div id="sellerblockedit" class="hidden">
+				  <label class="normal" ><?php echo Mage::helper('sales')->__('Zorgpunter:') ?></label>
+		       	 
+					  <input type="hidden" id="ooid" value="<?php echo$_order->getIncrementId()?>"/>
+					  <select id="sellerusernm" name="sellerusernm">
+						<?php foreach(Mage::getModel("hearedfrom/salesForce")->getUserNames() as $_option): ?>
+							<option value="<?php echo $_option ?>"
+							<?php 
+							if(!empty($user) && $_option == $user){
+									echo 'selected';
+							}?>
+							><?php echo $_option ?></option>
+						<?php endforeach; ?>
+					  </select>
+					  <br><br>
+					  <span class="left">
+					  <button class="f-right" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Change') ?>" 
+					   onclick="loadHearedfromDefault()" >
+					        <span><span><?php echo $this->__('MageWorx_OrdersEdit::Cancel') ?></span></span>
+					   </button>
+					   </span>
+					   <span class="right">
+					   <button type="submit" class="f-right" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Change') ?>" 
+					   onclick="updateHearedfrom('<?php echo Mage::helper("adminhtml")->getUrl('adminhtml/hearedfrom/update');?>')" >
+					        <span><span><?php echo $this->__('MageWorx_OrdersEdit::Submit') ?></span></span>
+					    </button>
+					    </span>
+					    <br><br>
+				  </div>
 			  </p>	
 		  	</div>
 			<div id="comments_block">
 				<p>
 			    	<span class="field-row">
-			        <label class="normal" for="”myCustomerOrderComment”"><?php echo Mage::helper('sales')->__('Comment for Zorgpunt:') ?></label>
+			        <label class="normal" for="myCustomerOrderComment"><?php echo Mage::helper('sales')->__('Comment for Zorgpunt:') ?></label>
 			        <textarea id="myCustomerOrderComment" name="myCustomerOrderComment" style="height:6em; width:99%;" disabled><?php echo $_comment;?></textarea>
 			    	</span>
 		    	</p>

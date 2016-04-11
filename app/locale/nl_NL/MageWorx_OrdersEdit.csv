@@ -78,10 +78,10 @@ Price,Prijs
 Shipping,Verzending
 "Shipping method selection is not applicable","Selectie verzendwijze niet van toepassing"
 "Show Thumbnails","Toon Thumbnails"
-"Sorry, no quotes are available for this order at this time.","Sorrie, op dit ogenblik zijn er geen quotes beschikbaar voor deze bestelling."
+"Sorry, no quotes are available for this order at this time.","Sorry, op dit ogenblik zijn er geen quotes beschikbaar voor deze bestelling."
 "Sorry, there was an error getting the file","Sorrie, fout bij ophalen bestand"
 Status,Status
-Submit,Verstuur
+Submit,Bewaar
 "Submit Comment","Verstuur opmerking"
 "The VAT ID entered (%s) is not a valid VAT ID. The customer would belong to Customer Group %s.","Het ingevoerde Btw nr (%s) is ongeldig. De klant zou bij klantgroep %s  horen."
 "The VAT ID is valid. The current Customer Group will be used.","Het Btw nr is geldig. De klant behoort tot de huidige groep."
