@@ -15,4 +15,11 @@
 		   <action method="addCss"><stylesheet>css/brainworx/hearedfromedit.css</stylesheet></action>
 		</reference>
 	</adminhtml_sales_order_view>
+	
+	 <adminhtml_sales_order_invoice_view>
+        <reference name="head">
+           <action method="addItem"><type>js</type><name>brainworx/hearedfrom_edit.js</name><params/><if/></action>
+		   <action method="addCss"><stylesheet>css/brainworx/hearedfromedit.css</stylesheet></action>
+		</reference>
+	</adminhtml_sales_order_invoice_view>
 </layout>
