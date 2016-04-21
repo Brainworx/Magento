@@ -171,7 +171,9 @@ class MageWorx_OrdersEdit_Adminhtml_Mageworx_Ordersedit_EditController extends M
                 $origOrder = clone $order;
 
                 Mage::getSingleton('mageworx_ordersedit/edit_quote')->applyDataToQuote($quote, $pendingChanges);
+
                 Mage::getSingleton('mageworx_ordersedit/edit')->saveOrder($quote, $order, $pendingChanges);
+             
                 Mage::getSingleton('mageworx_ordersedit/edit_quote')->saveTemporaryItems($quote, 0, false); // Drop is_temporary flag from items
 
                 $invoices = $order->getInvoiceCollection();

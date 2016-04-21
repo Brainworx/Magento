@@ -21,6 +21,8 @@ class MageWorx_OrdersEdit_Model_Edit_Quote extends Mage_Core_Model_Abstract
      */
     public function applyDataToQuote(Mage_Sales_Model_Quote $quote, array $data)
     {
+    	//Brainworx SHE
+    	$totalimpacted = false;
         foreach ($data as $key => $value) {
             if ($key == 'shipping_address') {
                 $this->setAddress($quote, $value, 'shipping');
@@ -32,28 +34,34 @@ class MageWorx_OrdersEdit_Model_Edit_Quote extends Mage_Core_Model_Abstract
                 $this->setShipping($quote, $value);
             } elseif ($key == 'quote_items') {
                 $this->updateItems($quote, $value);
+                $totalimpacted=true; //she
             } elseif ($key == 'product_to_add') {
                 $this->addNewItems($quote, $value);
+                $totalimpacted = true; //she
             } elseif ($key == 'coupon_code') {
                 $this->setCouponCode($quote, $value);
                 $quote->getShippingAddress()->setCouponCode($value);
             }
         }
 
-        // Clear quote from canceled items
-        $this->clearQuote($quote);
-
-        // If multifees enabled
-        $this->collectMultifees();
-
-        $quote->setTotalsCollectedFlag(false)->collectTotals();
-        $this->saveTemporaryItems($quote, 1, true);
-
-        if (isset($data['coupon_code'])) 
-        {
-            $this->validateCouponCode($quote, $data['coupon_code']);
+        //SHE
+        if($totalimpacted){
+	        // Clear quote from canceled items
+	        $this->clearQuote($quote);
+	
+	        // If multifees enabled
+	        $this->collectMultifees();
+	
+	        $quote->setTotalsCollectedFlag(false)->collectTotals();
+	        $this->saveTemporaryItems($quote, 1, true);
+	
+	        if (isset($data['coupon_code'])) 
+	        {
+	            $this->validateCouponCode($quote, $data['coupon_code']);
+	        }
+        }else{
+        	Mage::log('Order edit but not totals impacted - quote: '.$quote->getId());
         }
-
         return $quote;
     }
 

@@ -104,9 +104,81 @@ class MageWorx_OrdersEdit_Block_Adminhtml_Sales_Order_Totals extends Mage_Adminh
         //for shipping incl. tax on "New Totals" block
         if (Mage::helper('tax')->displayShippingPriceIncludingTax()) {
             $totals['shipping']->setValue($this->getSource()->getShippingAddress()->getShippingInclTax());
+           // $totals['shipping']->setValue($this->getQuote()->getShippingAddress()->getShippingInclTax());      //SHE       
         }
 
         $order = $this->getOrder();
+        //Brainworx: if rental, total in quote will be empty and we can use the ones form the order
+        //causes: An error occured while saving the orderMaximum amount available to refund is € 0,00
+        $quote = Mage::getModel('mageworx_ordersedit/edit')->getQuoteByOrder($order);
+        //loop thru quote_items - if rentalitem, check sku, set q,
+        foreach ($quote->getAllItems() as $quoteitem) {
+        	if($quoteitem->getRentalitem()){
+        		Mage::log('Rentalitem '.$quoteitem->getQuoteId());
+	        	//print_r($item->getData()); //sales_quote_collect_totals_before collect totals reset alles + 
+	        	foreach($order->getAllItems() as $orderitem){
+	        		//if($orderitem->getProductId()==$quoteitem->getProductId()){ //kan ook op order->quote_item_id
+	        		if($orderitem->getQuoteItemId()==$quoteitem->getItemId()){
+	        			$quoteitem->setQty($orderitem->getQty());
+	        			$quoteitem->setCustomPrice(null);
+	        			$quoteitem->setPrice($orderitem->getPrice()); //needed?
+	        			$quoteitem->setBasePrice($orderitem->getBasePrice());//needed?
+	        			$quoteitem->setPriceInclTax($orderitem->getPriceInclTax());
+	        			$quoteitem->setBasePriceInclTax($orderitem->getBasePriceInclTax());
+	        			$quoteitem->setTaxAmount($orderitem->getTaxAmount());
+	        			$quoteitem->setBaseTaxAmount($orderitem->getBaseTaxAmount());
+	        			$quoteitem->setRowTotalInclTax($orderitem->getRowTotalInclTax());
+	        			$quoteitem->setBaseRowTotalInclTax($orderitem->getBaseRowTotalInclTax());
+	        			$quoteitem->setRowTotal($orderitem->getRowTotal());
+	        			$quoteitem->setBaseRowTotal($orderitem->getBaseRowTotal());
+	        			$quoteitem->save();
+	        			break;
+	        		}
+	        	}
+        	}
+        }
+        
+        //update totals
+         
+        if($totals['subtotal']->getValue()==0||$totals['subtotal']->getValue()!=$quote->getSubtotal()){
+        	Mage::log("Edit of rental order ".$order->getEntityId());
+        	
+        	$quoteShippingAddress = $quote->getShippingAddress();
+        	//$quoteBillingAddress = $quote->getBillingAddress();
+        	 try{
+	        	$totals['subtotal']->setValue($order->getSubtotal());
+	        	$totals['grand_total']->setValue($order->getGrandTotal());
+	        	$totals['tax']->setValue($order->getTaxAmount());
+        	  } catch (Exception $e) {
+           			 Mage::log('Order edit Total.php An error occured while saving the order' . $e->getMessage());
+        		}
+        	
+        	
+        	$quote->setSubtotal($order->getSubtotal()); 
+        	$quote->setBaseSubtotal($order->getSubtotal());
+        	$quote->setTaxAmount($order->getTaxAmount());
+        	$quote->setBaseTaxAmount($order->getBaseTaxAmount());
+        	$quote->setBaseGrandTotal($order->getGrandTotal());
+        	$quote->setGrandTotal($order->getGrandTotal());
+        	$quote->setSubtotalInclTax($order->getSubtotalInclTax());
+        	$quote->setBaseSubtotalInclTax($order->getBaseSubtotalInclTax());
+        	$quote->save();
+        	
+        	$quoteShippingAddress->setSubtotal($order->getSubtotal());
+        	$quoteShippingAddress->setBaseSubtotal($order->getSubtotal());
+        	$quoteShippingAddress->setTaxAmount($order->getTaxAmount());
+        	$quoteShippingAddress->setBaseTaxAmount($order->getBaseTaxAmount());
+        	$quoteShippingAddress->setBaseGrandTotal($order->getGrandTotal());
+        	$quoteShippingAddress->setGrandTotal($order->getGrandTotal());
+        	$quoteShippingAddress->setSubtotalInclTax($order->getSubtotalInclTax());
+        	$quoteShippingAddress->setBaseSubtotalInclTax($order->getBaseSubtotalInclTax());
+        	$quoteShippingAddress->save();
+        	 
+        }
+        
+        //tax amount displayed is still not the one from quote
+        	
+        	//
         $rate = $order->getBaseToOrderRate();
         foreach ($totals as $total) {
             $base = $total->getValue() / $rate;

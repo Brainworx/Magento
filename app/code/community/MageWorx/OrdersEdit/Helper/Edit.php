@@ -54,18 +54,18 @@ class MageWorx_OrdersEdit_Helper_Edit extends Mage_Core_Helper_Abstract
 //                     'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_payment',
 //                     'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_payment'
 //                 ),
-                array(
-                    'className' => 'head-shipping-method',
-                    'blockId' => 'shipping_method',
-                    'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_shipping',
-                    'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_shipping'
-                ),
-                array(
-                    'className' => 'head-products',
-                    'blockId' => 'order_items',
-                    'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_items',
-                    'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_items'
-                ),
+//                 array(
+//                     'className' => 'head-shipping-method',
+//                     'blockId' => 'shipping_method',
+//                     'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_shipping',
+//                     'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_shipping'
+//                 ),
+//                 array(
+//                     'className' => 'head-products',
+//                     'blockId' => 'order_items',
+//                     'block' => 'mageworx_ordersedit/adminhtml_sales_order_edit_form_items',
+//                     'changedBlock' => 'mageworx_ordersedit/adminhtml_sales_order_changed_items'
+//                 ),
 //                 array(
 //                     'className' => 'head-coupons',
 //                     'blockId' => 'sales_order_coupons',
