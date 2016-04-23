@@ -158,6 +158,19 @@ class Brainworx_Rental_Model_Observer
 				$template_id = 'supplier_order_new';
 				$storeId = Mage::app()->getStore()->getId();
 				
+				//Load sellername
+				$seller = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
+				try{
+					$sellerName = $seller['user_nm'];
+					if($sellerName != null && $sellerName != 'Zorgpunt' && $sellerName != ''&& $sellerName != 'Selecteer'){//add translation
+						$sellerName = 'Zorgpunt '.$sellerName.'.';
+					}else{
+						$sellerName = 'Zorgpunt';
+					}
+				}catch(Exception $e){
+					$sellerName = 'Zorgpunt';
+					Mage::log('No hearedfrom set when sending supplier order - exception on order '.$order->getId());
+				}
 				foreach($suppliersToEmail as $email){
 					//send new order email to supplier
 					
@@ -169,7 +182,8 @@ class Brainworx_Rental_Model_Observer
 					// Here is where we can define custom variables to go in our email template!
 					$email_template_variables = array(
 							 'order'        => $order,
-							 'supplieremail'=> $email
+							 'supplieremail'=> $email,
+							 'seller'		=> $sellerName
 							 //'companyname' 	=> $order->getBillingAddress()->getCompanyname()
 							// Other variables for our email template.
 					);

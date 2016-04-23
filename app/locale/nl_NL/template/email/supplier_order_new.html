@@ -10,6 +10,7 @@
 "var order.getShippingDescription()":"Shipping Description",
 "layout handle=\"supplier_email_order_items\" order=$order email=$supplieremail":"Order Items Grid",
 "var order.getEmailCustomerNote()":"Email Order Note",
+"var seller":"Zorgpunt"
 "var order.getCommentToZorgpunt()":"Comment To Zorgpunt"}
 @-->
 <!--@styles
@@ -52,6 +53,13 @@
     </tr>
     <tr class="order-information">    		
         <td>
+         	{{if seller}}
+            <table cellspacing="0" cellpadding="0" class="message-container">
+                <tr>
+                    <td>Bestelling via: {{var seller}}</td>
+                </tr>
+            </table>
+            {{/if}}
         	{{if order.getCommentToZorgpunt()}}
             <table cellspacing="0" cellpadding="0" class="message-container">
                 <tr>
