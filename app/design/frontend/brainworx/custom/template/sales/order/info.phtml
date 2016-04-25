@@ -93,12 +93,12 @@ $_sellername = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])
 </div>
 
 <div class="col2-set order-info-box">
- <h2><?php echo Mage::helper('sales')->__('Who told you about us')?></h2>         
+ <h2><?php echo Mage::helper('checkout')->__('Additional info')?></h2>         
     <div class="col-1">
         <div class="box">
             <div class="box-content">            	
                 <p>	
-                	<label class="normal" ><?php echo Mage::helper('sales')->__('Zorgpunt:') ?></label>
+                	<label class="normal" ><?php echo Mage::helper('sales')->__('Who told you about us:') ?></label>
 		       		<strong><?php echo$_sellername;?> </strong>
 		       	</p>	
 				<p>

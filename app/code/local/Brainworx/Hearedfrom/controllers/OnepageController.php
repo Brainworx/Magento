@@ -60,10 +60,26 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
             
         	//Grab the submited value heared from who and comment value
         	$_brainworx_hearedfrom = $this->getRequest()->getPost('getvoice');
+        	//set Zorgpunt as default if no selection was made
+        	if($_brainworx_hearedfrom == Mage::helper('checkout')->__('Select')){
+        		$_brainworx_hearedfrom = "Zorgpunt";
+        	}
+        	$_preferred_delivery_date = $this->getRequest()->getPost('pddate');
         	$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
         	//Add the seller and comment to the session
         	$seller = Mage::getModel("hearedfrom/salesForce")->loadByUsername($_brainworx_hearedfrom);
 			Mage::getSingleton('core/session')->setBrainworxHearedfrom($seller);
+			$cmt = false;
+			if(!empty($_preferred_delivery_date)){
+				if(!empty($_comment_tozorgpunt)){
+					$cmt = $_comment_tozorgpunt;
+				}
+				Mage::getSingleton('core/session')->setPreferredDeliveryDate($_preferred_delivery_date);
+				$_comment_tozorgpunt = Mage::helper('checkout')->__('Preferred delivery date:').' '.$_preferred_delivery_date;
+				if(!empty($cmt)){
+						$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
+				}
+			}
 			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
 
 			$result = array();

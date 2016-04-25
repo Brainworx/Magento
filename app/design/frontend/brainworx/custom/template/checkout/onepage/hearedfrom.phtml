@@ -1,16 +1,22 @@
 <form id="co-hearedfrom-form" action="">
 	<p>
+	<label for="getvoice"><?php echo $this->__('Who told you about us:'); ?></label><br/>
 	<select id="getvoice" name="getvoice">
 		<?php foreach($this->getHearedFromValues() as $_option): ?>
 			<option value="<?php echo $_option ?>"
 			<?php if((!empty($this->getSellerValue()) && $_option == $this->getSellerValue())
-			|| ((empty($this->getSellerValue()) && $_option == 'Zorgpunt'))){
+			|| ((empty($this->getSellerValue()) && $_option == $this->__('Select')))){
 					echo 'selected';
 			}?>
 			><?php echo $_option ?></option>
 		<?php endforeach; ?>
 	</select>
 	</p>
+	<br/>
+	<p> 
+		<label for="pddate"><?php echo $this->__('Preferred delivery date:') ?> </label><br/>
+		<input type="text" name="pddate" id="pddate" value=""/>
+	 </p>
 	<br/>
 	<p><label for="myCustomerOrderComment"><?php echo $this->__('Add comment for Zorgpunt (optional):'); ?></label></p>
 	<textarea name="myCustomerOrderComment" id="myCustomerOrderComment" style=”width:450px;height:100px;”></textarea>
@@ -24,6 +30,7 @@
     </div>
 
 </form>
+
 
 <script type="text/javascript">
 //<![CDATA[

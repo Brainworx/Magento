@@ -6,7 +6,18 @@
 		<reference name="checkout.onepage">
 			<!-- Extra step added to OnePage Checkout -->
 			<block type="hearedfrom/onepage_hearedfrom" name="checkout.onepage.hearedfrom" 
-			as="hearedfrom" after="checkout.onepage.billing" template="checkout/onepage/hearedfrom.phtml"/>		
+			as="hearedfrom" after="checkout.onepage.billing" template="checkout/onepage/hearedfrom.phtml"/>	
+		</reference>
+		<reference name="head">
+			<action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name><params/></action>
+			<action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
+			<action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
+			<action method="addItem"><type>js</type><name>brainworx/hearedfrom.js</name></action>
+			<action method="addItem"><type>js</type><name>lib/jqueryUI/jquery-ui.js</name></action>	
+			<action method="addItem"><type>js_css</type><name>lib/jqueryUI/jquery-ui.css</name></action>	
+			<action method="addItem"><type>js_css</type><name>lib/jqueryUI/jquery-ui.structure.css</name></action>	
+			<action method="addItem"><type>js_css</type><name>lib/jqueryUI/jquery-ui.theme.css</name></action>	
+		
 		</reference>
 	</checkout_onepage_index>
 
