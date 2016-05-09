@@ -152,7 +152,9 @@ class Brainworx_Rental_Model_Observer
 				$order->addStatusToHistory($order->getStatus(), 'Verhuurartikels worden aangerekend per dag en maandelijks gefactureerd.', true);
 				$order->save();
 			}
-			Mage::log('Need to send '.count($suppliersToEmail).' supplier emails.');
+			if(count($suppliersToEmail)>0){
+				Mage::log($order->getEntityId().' Need to send '.count($suppliersToEmail).' supplier emails.');
+			}
 			if(!empty($suppliersToEmail)){
 				// This is the template name from your etc/config.xml
 				$template_id = 'supplier_order_new';
