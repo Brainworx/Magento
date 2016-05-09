@@ -146,9 +146,15 @@ class MageWorx_OrdersEdit_Block_Adminhtml_Sales_Order_Totals extends Mage_Adminh
         	$quoteShippingAddress = $quote->getShippingAddress();
         	//$quoteBillingAddress = $quote->getBillingAddress();
         	 try{
-	        	$totals['subtotal']->setValue($order->getSubtotal());
-	        	$totals['grand_total']->setValue($order->getGrandTotal());
-	        	$totals['tax']->setValue($order->getTaxAmount());
+        	 	if(isset($totals['subtotal'])){
+	        		$totals['subtotal']->setValue($order->getSubtotal());
+        	 	}
+        	 	if(isset($totals['grand_total'])){
+	        		$totals['grand_total']->setValue($order->getGrandTotal());
+        	 	}
+        	 	if(isset($totals['tax'])){
+	        		$totals['tax']->setValue($order->getTaxAmount());
+        	 	}
         	  } catch (Exception $e) {
            			 Mage::log('Order edit Total.php An error occured while saving the order' . $e->getMessage());
         		}
