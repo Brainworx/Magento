@@ -2,7 +2,7 @@
 /**
  * Magento
  * 
- * SHE removed reorder button
+ * SHE removed reorder button + status field ($_order->getStatusLabel())
  *
  * @category    design
  * @package     rwd_default
@@ -30,8 +30,7 @@
             <th class="number"><?php echo $this->__('Order #') ?></th>
             <th class="date"><?php echo $this->__('Date') ?></th>
             <th class="ship"><?php echo $this->__('Ship To') ?></th>
-            <th class="total"><span class="nobr"><?php echo $this->__('Order Total') ?></span></th>
-            <th class="status"><span class="nobr"><?php echo $this->__('Order Status') ?></span></th>            
+            <th class="total"><span class="nobr"><?php echo $this->__('Order Total') ?></span></th>           
             <th class="view">&nbsp;</th>
             <th class="view">&nbsp;</th>
         </tr>
@@ -44,7 +43,6 @@
             <td class="date"><span class="nobr"><?php echo $this->formatDate($_order->getCreatedAtStoreDate()) ?></span></td>
             <td class="ship"><?php echo $_order->getShippingAddress() ? $this->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
             <td class="total"><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
-            <td class="status"><em><?php echo $_order->getStatusLabel() ?></em></td>
             <td class="a-center view">
                   <span class="nobr"><a href="<?php echo $contact.'?bur='.$bur.'&cmt='.urlencode($this->__('Betreft Bestelling ').$_order->getRealOrderId().' Detail aanvraag: ')?>"><?php echo  $this->__('Bericht Zorgpunt') ?></a></span>
 		    </td>

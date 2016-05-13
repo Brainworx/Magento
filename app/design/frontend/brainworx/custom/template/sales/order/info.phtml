@@ -2,7 +2,8 @@
 /**
  * Magento
  *
- * SHE added hearedfrom info
+ * SHE added hearedfrom info + removed status from heading
+ * $this->__('Order #%s - %s', $_order->getRealOrderId(), $_order->getStatusLabel())
  * 
  * @category    design
  * @package     base_default
@@ -20,7 +21,7 @@ $seller = Mage::getModel("hearedfrom/salesSeller")->loadByOrderId($_order->getIn
 $_sellername = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])->getData("user_nm");				  
 ?>
 <div class="page-title title-buttons">
-    <h1><?php echo $this->__('Order #%s - %s', $_order->getRealOrderId(), $_order->getStatusLabel()) ?></h1>
+    <h1><?php echo $this->__('Order #%s', $_order->getRealOrderId()) ?></h1>
     <?php echo $this->getChildHtml('buttons') ?>
 </div>
 <?php echo $this->getStatusHistoryRssUrl($_order) ?>
