@@ -1,12 +1,20 @@
 <layout version="0.1.0">
     <!--add link to the customer panel-->
-    <customer_account>
-        <reference name="customer_account_navigation">       
-            <!-- option1: add a link in the code calling a method in our rewritten block--> 
-            <action method="addLinkToInvoicesNav"></action>    
-            <action method="addLinkToPatientOrdersNav"></action>            
-            <action method="addLinkToDeliveriesNav"></action>
-            <action method="addLinkToUserNav"></action>
+    <customer_account translate="label">
+        <reference name="left">  
+        	<!--Unset the whole block then add back later-->
+            <action method="unsetChild"><name>customer_account_navigation</name></action>
+            <!-- Now add the links in the order we like -->
+            <block type="customer/account_navigation" name="customer_account_navigation" before="-" template="customer/account/navigation.phtml">
+                <action method="addLink" translate="label" module="customer"><name>account</name><path>customer/account/</path><label>Account Dashboard</label></action>
+                <action method="addLinkToPatientOrdersNav"></action><!-- block-AddCusomerLink to add if required -->                  
+            	<action method="addLinkToDeliveriesNav"></action>
+            	<action method="addLink" translate="label" module="sales"><name>orders</name><path>sales/order/history/</path><label>My Orders</label></action>
+                <action method="addLinkToInvoicesNav"></action> 
+                <action method="addLink" translate="label" module="customer"><name>account_edit</name><path>customer/account/edit/</path><label>Account Information</label></action>
+                <action method="addLink" translate="label" module="customer"><name>address_book</name><path>customer/address/</path><label>Address Book</label></action>
+            	<action method="addLinkToUserNav"></action> <!-- ristorno -->
+             </block>   
         </reference>
     </customer_account>
 </layout>
