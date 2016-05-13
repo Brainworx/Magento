@@ -1,7 +1,7 @@
 <layout version="0.1.0">
     <!--add link to the customer panel-->
     <customer_account translate="label">
-        <reference name="left">  
+        <reference name="customer_account_navigation">  
         	<!--Unset the whole block then add back later-->
             <action method="unsetChild"><name>customer_account_navigation</name></action>
             <!-- Now add the links in the order we like -->
