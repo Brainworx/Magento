@@ -71,14 +71,21 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 			Mage::getSingleton('core/session')->setBrainworxHearedfrom($seller);
 			$cmt = false;
 			if(!empty($_preferred_delivery_date)){
+				Mage::getSingleton('core/session')->setPreferredDeliveryDT($_preferred_delivery_date);
 				if(!empty($_comment_tozorgpunt)){
+					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
 					$cmt = $_comment_tozorgpunt;
+				}else{
+					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt('');						
 				}
 				Mage::getSingleton('core/session')->setPreferredDeliveryDate($_preferred_delivery_date);
 				$_comment_tozorgpunt = Mage::helper('checkout')->__('Preferred delivery date:').' '.$_preferred_delivery_date;
 				if(!empty($cmt)){
 						$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
 				}
+			}else{
+				//default delivery date = next day
+				Mage::getSingleton('core/session')->setPreferredDeliveryDT(date('Y-m-d', strtotime(date('m-d-Y') .' +1 day')));
 			}
 			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
 

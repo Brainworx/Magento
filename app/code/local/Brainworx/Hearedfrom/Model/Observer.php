@@ -123,8 +123,10 @@ class Brainworx_Hearedfrom_Model_Observer
 	public function hookToOrderPlaceAfterEvent($observer){
 		//save here the comment in the order
 		$_comment_to_zorgpunt = Mage::getSingleton('core/session')->getCommentToZorgpunt();
+		$_preferred_delivery_DT = Mage::getSingleton('core/session')->getPreferredDeliveryDT();
 		$order = $observer->getEvent()->getOrder();
 		$order->setCommentToZorgpunt($_comment_to_zorgpunt);
+		$order->setPreferredDeliveryDt($_preferred_delivery_DT);
 		$order->save();		
 	}
 	private function saveCommission($sellerid,$orderid,$orderitemid,$type,$netamt,$brutamt,$rst,$invoiced ){
