@@ -184,7 +184,7 @@ class Brainworx_Hearedfrom_Model_Observer
 			//Send the email!
 			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Deliveries'), $email_template_variables);
 			
-			Mage::log('Email for delivery sent: '.$filename);
+			Mage::log('Email for delivery sent: '.$filename.' from '.$sender_email.' ('.$sender_name.') to '.$email_to);
 			
 		}catch(Exception $e){
 			Mage::log('Fout create lever excel: ' . $e->getMessage());
