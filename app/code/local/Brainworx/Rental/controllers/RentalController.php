@@ -185,6 +185,10 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				$grandTotalInclTax = 0;
 				$tax = 0; 
 				foreach ( $rentalsToInvoice as $rental ) {
+					if(Mage::getModel ( 'sales/order' )->load ( $rental->getOrigOrderId() )->getStatus() == 'canceled'){
+						Mage::log('skipping invoice for '.$rental->getEntityId().' as order '.$rental->getOrigOrderId ().' is cancelled');
+						continue;
+					}
 					if($rental->getLastInvDt()!=null && $rental->getEndDt() != null && $rental->getLastInvDt() >= $rental->getEndDt()){
 						Mage::log('skipping invoice for '.$rental->getEntityId().' as lastinvdt('.$rental->getLastInvDt().') >= enddt ('.$rental->getEndDt().')');
 						continue;
@@ -193,7 +197,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 						$rentalToInvoice = $rental;
 					}
 					
-					if ($rentalToInvoice->getOrigOrderId() != $rental->getOrigOrderId ()) {
+					if ($rentalToInvoice->getOrigOrderId() != $rental->getOrigOrderId()) {
 						
 						$this->createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt);
 						//reset data for next rental
