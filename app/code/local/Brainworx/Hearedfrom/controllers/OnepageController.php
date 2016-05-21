@@ -85,7 +85,8 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 				}
 			}else{
 				//default delivery date = next day
-				Mage::getSingleton('core/session')->setPreferredDeliveryDT(date('Y-m-d', strtotime(date('m-d-Y') .' +1 day')));
+				Mage::getSingleton('core/session')->setPreferredDeliveryDate(date('d-m-Y', strtotime('+1 day')));
+				Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
 			}
 			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
 

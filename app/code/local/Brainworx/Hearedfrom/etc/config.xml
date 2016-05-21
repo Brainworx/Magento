@@ -233,6 +233,22 @@
 		        </item>
 		    </quote>
 		</sales>
+		<!-- for sending transactional email -->
+		 <template>
+            <email>
+                <!-- Give the template a uniqiue name, you'll need to refer to this later when sending the email-->
+                <supplier_new_shipment>
+                    <label>Zorgpunt levering</label>
+                    <file>supplier_new_shipment.html</file>
+                    <type>html</type>
+                </supplier_new_shipment>
+                <problem_zorgpunt>
+                    <label>Zorgpunt problem</label>
+                    <file>problem_zorgpunt.html</file>
+                    <type>html</type>
+                </problem_zorgpunt>
+            </email>
+        </template>
 	</global>
 	<frontend>
 		<!-- setup the url path to our new module -->
