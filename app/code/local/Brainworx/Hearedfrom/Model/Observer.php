@@ -44,17 +44,20 @@ class Brainworx_Hearedfrom_Model_Observer
 		$newsalesseller->save();
 
 		$shippinglist = null;
+		$zorgpunt_shippinglist = null;
 		$delivery_to_report = false;
+		
 		//check shipment method
+		//helpers for shipping lists
+		$preferredDT=Mage::getSingleton('core/session')->getPreferredDeliveryDate();
+		$comment=Mage::getSingleton('core/session')->getOrigCommentToZorgpunt();
+		$shippinglist = array();
 		if($order->getShippingInclTax()>0){
+			//need to create excel to send to external delivery party
 			$delivery_to_report = true;
-			$shippinglist = array();
-			//create excel to send to essens
-			$preferredDT=Mage::getSingleton('core/session')->getPreferredDeliveryDate();
-			$comment=Mage::getSingleton('core/session')->getOrigCommentToZorgpunt();
 		}
 		//TODO add to transaction
-		//save commission for articles invoiced by the supplier - marked invoiced false
+		//save commission for articles invoiced and delivered by the supplier - marked invoiced false
 		$items = $order->getAllItems();
 		foreach($items as $item){
 			if(!empty($item->getSupplierinvoice())&&$item->getSupplierinvoice()>0){
@@ -64,39 +67,35 @@ class Brainworx_Hearedfrom_Model_Observer
 						($item->getOriginalPrice()*$item->getQtyOrdered()*(1+$item->getTaxPercent()/100))
 						,$item->getRistorno()*$item->getQtyOrdered(),false);
 			}else{
-				if($delivery_to_report){
-					$shippingitem = array();
-					//items not supplied by supplier
-					$shippingitem['Bestelling #']=$order->getIncrementId();
-					//Added in OnePageController
-					$shippingitem['Leverdatum']=$preferredDT; //nog leeg
-					$shippingitem['Naam']=$order->getShippingAddress()->getFirstname().' '.$order->getShippingAddress()->getLastname();
-					$shippingitem['Adres (straat + nr)']=$order->getShippingAddress()->getStreetFull();
-					$shippingitem['Gemeente']=$order->getShippingAddress()->getCity();
-					$shippingitem['Postcode']=$order->getShippingAddress()->getPostcode();
-					$shippingitem['Land']=$order->getShippingAddress()->getCountry();
-					$shippingitem['Telefoon']=$order->getShippingAddress()->getTelephone();
-					$shippingitem['Artikel']=$item->getName();
-					$shippingitem['Aantal']=$item->getQtyOrdered();
-					$shippingitem['Artikelnr.']=$item->getSku();
-					$shippingitem['Info aan Zorgpunt']=$comment;
-					$shippingitem['Gewicht']=$item->getWeight();
-					$shippinglist[]=$shippingitem;
-					unset($shippingitem);
-				}else{
-					Mage::log("No deliveries to report for order ".$order->getIncrementId());
-				}
+				$shippingitem = array();
+				//items not supplied by supplier
+				$shippingitem['Bestelling #']=$order->getIncrementId();
+				//Added in OnePageController
+				$shippingitem['Leverdatum']=$preferredDT; //nog leeg
+				$shippingitem['Naam']=$order->getShippingAddress()->getFirstname().' '.$order->getShippingAddress()->getLastname();
+				$shippingitem['Adres (straat + nr)']=$order->getShippingAddress()->getStreetFull();
+				$shippingitem['Gemeente']=$order->getShippingAddress()->getCity();
+				$shippingitem['Postcode']=$order->getShippingAddress()->getPostcode();
+				$shippingitem['Land']=$order->getShippingAddress()->getCountry();
+				$shippingitem['Telefoon']=$order->getShippingAddress()->getTelephone();
+				$shippingitem['Artikel']=$item->getName();
+				$shippingitem['Aantal']=$item->getQtyOrdered();
+				$shippingitem['Artikelnr.']=$item->getSku();
+				$shippingitem['Info aan Zorgpunt']=$comment;
+				$shippingitem['Gewicht']=$item->getWeight();
+				$shippinglist[]=$shippingitem;
+				unset($shippingitem);
 			}		
 		}
-		if($delivery_to_report && !empty($shippinglist)){
-			self::createShipmentsExcel($shippinglist,$order);
+		if(!empty($shippinglist)){
+			self::createShipmentsExcel($shippinglist,$order,$delivery_to_report);
 		}	
 		
 	}
 	/**
 	 * Create an excel with items to be shipped + send it to transporter via email
 	 */
-	public function createShipmentsExcel($list,$order)
+	public function createShipmentsExcel($list,$order,$to_external)
 	{
 		try{
 			require_once Mage::getBaseDir('lib').'/Excel/PHPExcel.php'; 
@@ -146,7 +145,11 @@ class Brainworx_Hearedfrom_Model_Observer
 			}
 			//write file
 			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-			$filename = 'levering_'.$order->getIncrementId().'.xlsx';
+			if($to_external){
+				$filename = 'levering_ext_'.$order->getIncrementId().'.xlsx';				
+			}else{
+				$filename = 'levering_zp_'.$order->getIncrementId().'.xlsx';
+			}
 			$file = Mage::getBaseDir('export').'/'.$filename;
 			$objWriter->save($file);
 			Mage::log('file written '.$file);
@@ -159,7 +162,11 @@ class Brainworx_Hearedfrom_Model_Observer
 			//send new shipment email to supplier
 						
 			// Who were sending to...
-			$email_to = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
+			if($to_external){
+				$email_to = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
+			}else{
+				$email_to = Mage::getStoreConfig('trans_email/ident_general/email');
+			}
 			// Load our template by template_id
 			$email_template  = Mage::getModel('core/email_template')->loadDefault($template_id);
 				
@@ -174,7 +181,7 @@ class Brainworx_Hearedfrom_Model_Observer
 			$sender_email = Mage::getStoreConfig('trans_email/ident_general/email');
 			$email_template->setSenderName($sender_name);
 			$email_template->setSenderEmail($sender_email);
-			$email_template->addBcc($sender_email);
+			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_custom1/email'));
 			
 			//Add attachement
 			$fileContents = file_get_contents($file); 
