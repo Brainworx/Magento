@@ -78,7 +78,7 @@ class Brainworx_Hearedfrom_Model_Observer
 					$shippingitem['Telefoon']=$order->getShippingAddress()->getTelephone();
 					$shippingitem['Artikel']=$item->getName();
 					$shippingitem['Aantal']=$item->getQtyOrdered();
-					$shippingitem['Artikelnr.']=$item->getProductId().'|'.$item->getSku();
+					$shippingitem['Artikelnr.']=$item->getSku();
 					$shippingitem['Info aan Zorgpunt']=$comment;
 					$shippingitem['Gewicht']=$item->getWeight();
 					$shippinglist[]=$shippingitem;
