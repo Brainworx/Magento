@@ -192,7 +192,7 @@
                     <type>html</type>
                 </supplier_order_new>
                 <supplier_new_pickup>
-                    <label>Zorgpunt levering</label>
+                    <label>Zorgpunt ophaling</label>
                     <file>supplier_new_pickup.html</file>
                     <type>html</type>
                 </supplier_new_pickup>
