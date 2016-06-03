@@ -50,6 +50,14 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
 	        		array('product' => 'name', 'sku')
 	        );
 	        
+	        //only show rental ended in the last 2 months or open rentals
+	        $collection->addFieldToFilter( array('main_table.end_dt','main_table.end_dt'),
+				 array(
+				 	array('from'=>date('Y-m-d', strtotime('last day of -2 month'))),
+				 	array('null' => true))
+				 );
+	        
+	        
 	        $this->setCollection($collection);
 	        
 	        return parent::_prepareCollection();
