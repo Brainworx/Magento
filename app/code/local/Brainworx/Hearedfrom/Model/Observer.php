@@ -163,7 +163,8 @@ class Brainworx_Hearedfrom_Model_Observer
 						
 			// Who were sending to...
 			if($to_external){
-				$email_to = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
+				$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
+				$email_to = explode(",",$emails);
 			}else{
 				$email_to = Mage::getStoreConfig('trans_email/ident_general/email');
 			}
