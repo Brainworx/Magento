@@ -17,6 +17,7 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit extends Mage_Adminhtml_Block_
                   'class' => 'save',
         ), -100);
         $this->_updateButton('save', 'label', Mage::helper('rental')->__('Save Rented Item'));
+        $this->_removeButton('delete');
  
         $this->_formScripts[] = "
             function toggleEditor() {

@@ -4,6 +4,12 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
 {
     protected function _prepareForm()
     {
+    	//check callcenter
+    	
+    	$adminuserId = Mage::getSingleton('admin/session')->getUser()->getUserId();
+    	$role_data = Mage::getModel('admin/user')->load($adminuserId)->getRole()->getData();
+    	$callcenter = ($role_data["role_name"] == "Callcenter");
+    	
     	//Check for model data in the registry
     	//Mage::Log(print_r(Mage::registry('rental_data'),true));
     	$patient = "";
@@ -107,14 +113,23 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
         		'readonly' => true,
         		'name'      => 'quantity'
         ));
-        
-        $fieldset->addField('last_inv_dt', 'date', array(
-        		'label'     => Mage::helper('rental')->__('Date last invoice'),
-        		'image' => $this->getSkinUrl('images/grid-cal.gif'),
-        	 	'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
-        		'readonly' => true,
-        		'name'      => 'last_inv_dt'
-        ));
+        if($callcenter){
+	        $fieldset->addField('last_inv_dt', 'text', array(
+	        		'label'     => Mage::helper('rental')->__('Date last invoice'),
+	//         		'image' => $this->getSkinUrl('images/grid-cal.gif'),
+	        	 	'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
+	        		'readonly' => true,
+	        		'name'      => 'last_inv_dt'
+	        ));
+        }else{
+        	$fieldset->addField('last_inv_dt', 'date', array(
+        			'label'     => Mage::helper('rental')->__('Date last invoice'),
+        			'image' => $this->getSkinUrl('images/grid-cal.gif'),
+        			'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
+        			'readonly' => false,
+        			'name'      => 'last_inv_dt'
+        	));
+        }
 //TODO remove last_order_id field
 //         $fieldset->addField('last_order_id', 'text', array(
 //         		'label'     => Mage::helper('rental')->__('ID laatste bestelling'),
@@ -123,14 +138,25 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Edit_Form extends Mage_Adminhtml_B
 //         		'required' => false,
 //         		'name'      => 'last_order_id'
 //         ));
-        $fieldset->addField('start_dt', 'date', array(
+		if($callcenter){
+        $fieldset->addField('start_dt', 'text', array(
         		'label'     => Mage::helper('rental')->__('Start Rental'),
         		'image' => $this->getSkinUrl('images/grid-cal.gif'),
         		'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
         		'class'     => 'required-entry',
-        		'readonly' => false,
+        		'readonly' => true,
         		'name'      => 'start_dt'
         ));
+		}else{
+			$fieldset->addField('start_dt', 'date', array(
+					'label'     => Mage::helper('rental')->__('Start Rental'),
+					'image' => $this->getSkinUrl('images/grid-cal.gif'),
+					'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
+					'class'     => 'required-entry',
+					'readonly' => false,
+					'name'      => 'start_dt'
+			));
+		}
         $fieldset->addField('end_dt', 'date', array(
         		'label'     => Mage::helper('rental')->__('End Rental'),
         		'image' => $this->getSkinUrl('images/grid-cal.gif'),
