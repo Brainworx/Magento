@@ -42,4 +42,19 @@ class Brainworx_Rental_Model_Resource_RentedItem extends Mage_Core_Model_Resourc
         );
     	return $select;
     }
+    /**
+     * Optional method to load entity by order_item id
+     * @param varchar $itemid
+     * @return multitype:renteditem array of renteditem with column as keys
+     */
+    public function loadByOrderItem($itemid)
+    {
+    	$adapter = $this->_getReadAdapter();
+    
+    	$select = $adapter->select()
+    	->from($this->getMainTable())
+    	->where($this->getMainTable().'.'.'order_item_id'.'=?',$itemid);
+    
+    	return $adapter->fetchRow($select);
+    }
 }

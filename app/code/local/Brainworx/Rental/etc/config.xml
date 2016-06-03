@@ -19,6 +19,17 @@
 		  </adminhtml>		
 		</routers>
 	 </admin>
+	  <frontend>
+        <routers>
+            <frontrental><!-- unique router identification -->
+                <use>standard</use><!-- can be standard or admin -->
+                <args>
+                    <module>Brainworx_Rental</module>
+                    <frontName>rental</frontName><!-- router name to be used in url -->
+                </args>
+            </frontrental>
+        </routers>   
+    </frontend>
 	<global>
 	<!-- rewrite action address -
 	<rewrite>
@@ -180,9 +191,18 @@
                     <file>supplier_order_new.html</file>
                     <type>html</type>
                 </supplier_order_new>
+                <supplier_new_pickup>
+                    <label>Zorgpunt levering</label>
+                    <file>supplier_new_pickup.html</file>
+                    <type>html</type>
+                </supplier_new_pickup>
+                <problem_zorgpunt>
+                    <label>Zorgpunt problem</label>
+                    <file>problem_zorgpunt.html</file>
+                    <type>html</type>
+                </problem_zorgpunt>
             </email>
         </template>
-		
 	</global>
 	
 	 <adminhtml>

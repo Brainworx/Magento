@@ -71,4 +71,27 @@ class Brainworx_Rental_Model_RentedItem extends Mage_Core_Model_Abstract
 		}
    	
    	}
+   	/**
+   	 * Load renteditem record in array with column names as key
+   	 * @param unknown $name
+   	 */
+   	public function loadByOrderItem($itemid){
+   		return $this->_getResource()->loadByOrderItem($itemid);
+   	}
+   	public function isOpenRental($orderItemId){
+   		$rental = self::loadByOrderItem($orderItemId);
+   		if(!empty($rental)){
+   			return !isset($rental["end_dt"]);
+   		}else{
+   			return false;
+   		}
+   	}
+   	public function getEndDateRental($orderItemId){
+   		$rental = self::loadByOrderItem($orderItemId);
+   		if(!empty($rental)){
+   			return $rental["end_dt"];
+   		}else{
+   			return null;
+   		}
+   	}
 }

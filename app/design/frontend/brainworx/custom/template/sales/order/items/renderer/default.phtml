@@ -8,10 +8,21 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
-<?php $_item = $this->getItem() ; $_order = $this->getOrder(); $bur= Mage::helper('core/url')->getCurrentUrl();
-$contact=Mage::getBaseUrl().'/contacts'.'?bur='.$bur.'&cmt='.urlencode($this->__('Betreft bestelling ').$_order->getRealOrderId().' '.$this->escapeHtml($_item->getName()).'('. $this->escapeHtml(Mage::helper('core/string')->splitInjection($this->getSku())).') Detail aanvraag: ');?>
+<?php $_item = $this->getItem(); $_order = $this->getOrder();
+$bur= Mage::helper('core/url')->getCurrentUrl();
+$rentalitem = ($_item->getRentalitem()!= null && $_item->getRentalitem() == 1);
+$openrental = ( $rentalitem && Mage::getModel("rental/rentedItem")->isOpenRental($_item->getId()));
+$rentalEndDT = Mage::getModel("rental/rentedItem")->getEndDateRental($_item->getId());
+$contact=Mage::getBaseUrl().'/contacts'.'?bur='.$bur.'&cmt='.urlencode($this->__('Betreft bestelling ').$_order->getRealOrderId().' '.$this->escapeHtml($_item->getName()).'('. $this->escapeHtml(Mage::helper('core/string')->splitInjection($this->getSku())).') Detail aanvraag: ');
+$customer = Mage::getSingleton('customer/session')->getCustomer()->getID();
+$salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer);
+$_seller = false;
+if(!empty($salesforce)){
+	$_seller = true;
+}
+?>
 <tr class="border" id="order-item-row-<?php echo $_item->getId() ?>">
-    <td><h3 class="product-name"><?php echo $this->escapeHtml($_item->getName()) ?></h3>
+	<td><h3 class="product-name"><?php echo $this->escapeHtml($_item->getName()) ?></h3>
         <?php if($_options = $this->getItemOptions()): ?>
         <dl class="item-options">
         <?php foreach ($_options as $_option) : ?>
@@ -297,10 +308,20 @@ $contact=Mage::getBaseUrl().'/contacts'.'?bur='.$bur.'&cmt='.urlencode($this->__
             </span>
         <?php endif; ?>
     </td>
-     <!-- Brainworx: Added link to request change order line -->
-    <td class="a-center view">
+    <!-- Brainworx custom -->
+    <td class="a-center view" data-rwd-label="<?php echo $this->__('Info') ?> ">
+         <?php if($rentalitem){if($openrental) echo  $this->__('Open rental'); else echo $this->__('Closed rental: ').$rentalEndDT; }
+         else echo $this->__('Sale')?>
+    </td>
+    <td class="a-center view" data-rwd-label="<?php echo $this->__('Action')?>" >
          <span class="nobr"><a href="<?php echo $contact?>"><?php echo  $this->__('Bericht Zorgpunt') ?></a></span>
     </td>
+    <?php if($_seller){?>
+    <td id="term" class="a-center" data-rwd-label="<?php echo $this->__('Select')?>">
+    	<input class="termselect term" type='checkbox' value='<?php echo $_item->getId() ?>' 
+    <?php  if(!$openrental) echo "disabled" ?>></td>
+    <?php } ?>
+    
     <!--
     <?php if ($this->helper('tax')->displaySalesBothPrices() || $this->helper('tax')->displaySalesPriceExclTax()): ?>
     <th class="a-right"><?php echo $this->getOrder()->formatPrice($this->getItem()->getRowTotal()) ?></th>

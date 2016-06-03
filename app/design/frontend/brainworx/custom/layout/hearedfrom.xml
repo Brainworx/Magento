@@ -53,5 +53,11 @@
             <block type="hearedfrom/ristornopage" name="customerpage" template="customer/ristornodetailpage.phtml"/><!--name="unique_layout_name" template="module/template.phtml"  -->
          </reference>
    </customer_ristornopage_viewdetails>
+   
+   <sales_order_view> <!-- module here matches node directly beneath <routers> in config.xml -->
+      <reference name="head">
+			<action method="addItem"><type>js</type><name>brainworx/rental_mgt.js</name></action>
+		</reference>
+	</sales_order_view>
   
 </layout>

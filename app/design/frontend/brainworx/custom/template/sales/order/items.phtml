@@ -24,9 +24,30 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
-<?php  $_order = $this->getOrder() ?>
+<?php  $_order = $this->getOrder();
+$customer = Mage::getSingleton('customer/session')->getCustomer()->getID(); 
+$salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer);
+$_seller = false;
+if(!empty($salesforce)){
+	$_seller = true;
+}
+$_items = $_order->getItemsCollection();
+$_rentals = false;
+foreach($_items as $_item){
+	if($_item->getRentalitem()!= null && $_item->getRentalitem() == 1){
+		$_rentals = true;
+		break;
+	}
+}
+?>
+<?php if($_seller && $_rentals){?>
+<div align="right" class="term"><button class="button" id="btn_term_i">Be&euml;indig huur<br> geselecteerde items</button></div>
+<br>
+<?php }?>
 <table class="data-table linearize-table-large" id="my-orders-table" summary="<?php echo $this->__('Items Ordered') ?>">
     <col />
+    <col width="1" />
+    <col width="1" />
     <col width="1" />
     <col width="1" />
     <col width="1" />
@@ -37,14 +58,18 @@
             <th><?php echo $this->__('SKU') ?></th>
             <th class="a-right"><?php echo $this->__('Price') ?></th>
             <th class="a-center"><?php echo $this->__('Qty') ?></th>
-            <th class="a-right"><?php echo $this->__('Subtotal') ?></th>            
-            <th class="view">&nbsp;</th>
+            <th class="a-right"><?php echo $this->__('Subtotal') ?></th>   
+            <th class="a-center"><?php echo $this->__('Info') ?></th>         
+            <th class="view"><?php echo $this->__('Action') ?></th>
+            <?php if($_seller){?>
+            <th class="a-right term"><?php echo $this->__('Select') ?></th>
+            <?php }?>
         </tr>
     </thead>
     <tfoot>
         <?php echo $this->getChildHtml('order_totals') ?>
     </tfoot>
-        <?php $_items = $_order->getItemsCollection(); ?>
+        
         <?php $_index = 0; ?>
             <?php $_count = $_items->count(); ?>
         <?php foreach ($_items as $_item): ?>

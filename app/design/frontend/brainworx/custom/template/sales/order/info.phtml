@@ -20,6 +20,7 @@ if(empty($_comment)){ $_comment= Mage::helper('sales')->__('No comment provided'
 $seller = Mage::getModel("hearedfrom/salesSeller")->loadByOrderId($_order->getIncrementId());
 $_sellername = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])->getData("user_nm");				  
 ?>
+<input id="realorderid" type="hidden" value="<?php echo $_order->getRealOrderId()?>" />
 <div class="page-title title-buttons">
     <h1><?php echo $this->__('Order #%s', $_order->getRealOrderId()) ?></h1>
     <?php echo $this->getChildHtml('buttons') ?>
