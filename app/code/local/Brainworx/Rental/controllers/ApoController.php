@@ -42,6 +42,9 @@ class Brainworx_Rental_ApoController extends Mage_Core_Controller_Front_Action
 			if (!$success) {
 				Mage::log("ending rentals but some error occurred - ".$orderid);
 				$response['message'] = Mage::helper('rental')->__('Er liep iets fout, gelieve het resultaat te controleren of contact op te nemen met Zorgpunt.');
+				try{
+					Mage::helper('rental/terminator')->sendErrorMail('Probleem end rental from account order '.$orderid);
+				}catch (Exception $e){Mage::log("Error sending error mail - account end rental ".$orderid);}
 			}
 			Mage::log("ending rentals from account finished - ".$orderid);
 				

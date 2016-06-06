@@ -54,9 +54,35 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				}
 			}
 			
+			$pickupsuccess=false;
+			
 			if ($id) {
 				$model->load ( $id );
+				
+				//check for ended rental item - not for edit
+				if(empty($model->getEndDt()) && !empty($data["end_dt"])){
+					$rentalstoend = array();
+					$rentalstoend[]=$id;
+					$basedt = date("Y-m-d");
+					if($data["end_dt"]>$basedt){
+						$basedt = $data["end_dt"];
+					}
+					$preferredDT = date('Y-m-d', strtotime($basedt . ' + 1 day'));
+				
+					$pickupsuccess = Mage::helper('rental/terminator')->TerminateRentals($preferredDT,$rentalstoend,null,$data["end_dt"]);
+						
+					if (!$pickupsuccess) {
+						Mage::log("ending rentals but some error occurred - rental ".$id);
+						try{
+							Mage::helper('rental/terminator')->sendErrorMail('Probleem end rental - edit renteditem '.$id);
+						}catch (Exception $e){Mage::log("Error sending error mail - mass end rental");}
+						Mage::throwException ( Mage::helper('rental')->__('Er liep iets fout bij het beëindigen van de huur of maken van de excel.') );
+					}
+					Mage::log("ending rentals from edit rental form finished - rental".$id);
+				
+				}
 			}
+						
 			$model->setData ( $data );
 			
 			Mage::getSingleton ( 'adminhtml/session' )->setFormData ( $data );
@@ -67,10 +93,13 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				$model->save ();
 				
 				if (! $model->getEntityId ()) {
-					Mage::throwException ( Mage::helper ( 'rental' )->__ ( 'Error saving rented item' ) );
+					Mage::throwException ( Mage::helper ( 'rental' )->__( 'Error saving rented item' ) );
 				}
-				
-				Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( Mage::helper ( 'rental' )->__ ( 'Rented item was successfully saved.' ) );
+				$text = Mage::helper ( 'rental' )->__( 'Rented item was successfully saved.' );
+				if($pickupsuccess){
+					$text = $text.' '.Mage::helper ( 'rental' )->__( 'Pickup excel mail was sent successfully.');
+				}
+				Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( $text);
 				
 				Mage::getSingleton ( 'adminhtml/session' )->setFormData ( false );
 				
@@ -137,6 +166,9 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				}
 				} catch ( Exception $e ) {
 				Mage::getSingleton ( 'adminhtml/session' )->addError ( $e->getMessage () );
+				try{
+					Mage::helper('rental/terminator')->sendErrorMail('Probleem mass end rental');
+				}catch (Exception $e){Mage::log("Error sending error mail - mass end rental");}
 			}
 		}
 		

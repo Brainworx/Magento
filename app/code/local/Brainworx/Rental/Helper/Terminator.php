@@ -1,6 +1,16 @@
 <?php
 class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
-	function TerminateRentals($pickupDT, $rentalids, $order=null){
+	/**
+	 * public function to end rentals provided
+	 * @param date (Y-m-d) $pickupDT
+	 * @param array $rentalids
+	 * @param Order $order
+	 * @return boolean
+	 */
+	function TerminateRentals($pickupDT, $rentalids, $order=null, $endDT=null){
+		if(empty($endDT)){
+			$endDT = date("Y-m-d");
+		}
 		$shippinglistZP = array();
 		$shippinglistEXT = array();
 		$error = false;
@@ -14,7 +24,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 				}
 				$itemModel = Mage::getModel('sales/order_item')->load($rentalModel->getOrderItemId());
 				
-				$shippingitem = self::terminateOneRental($rentalModel,$pickupDT,$orderModel,$itemModel);
+				$shippingitem = self::terminateOneRental($rentalModel,$pickupDT,$orderModel,$itemModel,$endDT);
 				if($orderModel->getShippingInclTax()>0){
 					$shippinglistEXT[]=$shippingitem;
 				}else{
@@ -40,8 +50,17 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 		}
 		return !$error;
 	}
-	function terminateOneRental($rental,$preferredDT,$order,$item ){
-		$rental->setEndDt(date("Y-m-d"));
+	
+	/**
+	 * private function to end one rental record and update stock
+	 * @param RentedItem $rental
+	 * @param date (Y-m-d) $preferredDT
+	 * @param Order $order
+	 * @param Order_item $item
+	 * @return multitype:string pickuprecord for excel
+	 */
+	private function terminateOneRental($rental,$preferredDT,$order,$item,$endDT ){
+		$rental->setEndDt($endDT);
 		$rental->save();
 		$rental->updateStock();
 			
@@ -63,10 +82,14 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 		$shippingitem['Gewicht']=$item->getWeight();
 		return $shippingitem;
 	}
+	
 	/**
+	 * private functions
 	 * Create an excel with items to be shipped + send it to transporter via email
+	 * @param array with pickuplines $list
+	 * @param boolean $to_external (send to emails in DELIVERY_EMAIL)
 	 */
-	public function createPickupShipmentsExcel($list,$to_external)
+	private function createPickupShipmentsExcel($list,$to_external)
 	{
 		try{
 			require_once Mage::getBaseDir('lib').'/Excel/PHPExcel.php';
@@ -174,7 +197,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	 * Sending error mail to webmaster
 	 * @param unknown $info
 	 */
-	function sendErrorMail($info){
+	public function sendErrorMail($info){
 		try{
 			// This is the template name from your etc/config.xml
 			$template_id = 'problem_zorgpunt';
