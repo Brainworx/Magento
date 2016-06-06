@@ -58,7 +58,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 		$shippingitem['Land']=$order->getShippingAddress()->getCountry();
 		$shippingitem['Telefoon']=$order->getShippingAddress()->getTelephone();
 		$shippingitem['Artikel']=$item->getName();
-		$shippingitem['Aantal']=$item->getQtyOrdered();
+		$shippingitem['Aantal']=$rental->getQuantity();
 		$shippingitem['Artikelnr.']=$item->getSku();
 		$shippingitem['Gewicht']=$item->getWeight();
 		return $shippingitem;
