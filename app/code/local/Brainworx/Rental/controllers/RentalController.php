@@ -63,8 +63,9 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				if(empty($model->getEndDt()) && !empty($data["end_dt"])){
 					$rentalstoend = array();
 					$rentalstoend[]=$id;
-					$basedt = date("d-m-Y");
-					if($data["end_dt"]>$basedt){
+					$basedt = date("Y-m-d");
+					$enddt = date("Y-m-d",strtotime($data["end_dt"]));
+					if($basedt < $enddt){
 						$basedt = $data["end_dt"];
 					}
 					$preferredDT = date('d-m-Y', strtotime($basedt . ' + 1 day'));

@@ -2,14 +2,15 @@
 class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	/**
 	 * public function to end rentals provided
-	 * @param date (Y-m-d) $pickupDT
+	 * @param date (d-m-Y) $pickupDT
 	 * @param array $rentalids
 	 * @param Order $order
+	 * @param date (d-m-Y) $end_date rental
 	 * @return boolean
 	 */
 	function TerminateRentals($pickupDT, $rentalids, $order=null, $endDT=null){
 		if(empty($endDT)){
-			$endDT = date("Y-m-d");
+			$endDT = date("d-m-Y");
 		}
 		$shippinglistZP = array();
 		$shippinglistEXT = array();
