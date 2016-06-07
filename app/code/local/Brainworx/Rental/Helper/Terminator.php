@@ -54,7 +54,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	/**
 	 * private function to end one rental record and update stock
 	 * @param RentedItem $rental
-	 * @param date (Y-m-d) $preferredDT
+	 * @param date (d-m-Y) $preferredDT
 	 * @param Order $order
 	 * @param Order_item $item
 	 * @return multitype:string pickuprecord for excel
