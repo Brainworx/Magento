@@ -71,7 +71,6 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 			Mage::getSingleton('core/session')->setBrainworxHearedfrom($seller);
 			$cmt = false;
 			if(!empty($_preferred_delivery_date)){
-				Mage::getSingleton('core/session')->setPreferredDeliveryDT($_preferred_delivery_date);
 				if(!empty($_comment_tozorgpunt)){
 					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
 					$cmt = $_comment_tozorgpunt;

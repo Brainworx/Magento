@@ -71,7 +71,7 @@ class Brainworx_Hearedfrom_Model_Observer
 				//items not supplied by supplier
 				$shippingitem['Bestelling #']=$order->getIncrementId();
 				//Added in OnePageController
-				$shippingitem['Leverdatum']=$preferredDT; //nog leeg
+				$shippingitem['Leverdatum']=$preferredDT; 
 				$shippingitem['Naam']=$order->getShippingAddress()->getFirstname().' '.$order->getShippingAddress()->getLastname();
 				$shippingitem['Adres (straat + nr)']=$order->getShippingAddress()->getStreetFull();
 				$shippingitem['Gemeente']=$order->getShippingAddress()->getCity();
@@ -295,7 +295,7 @@ class Brainworx_Hearedfrom_Model_Observer
 	public function hookToOrderPlaceAfterEvent($observer){
 		//save here the comment in the order
 		$_comment_to_zorgpunt = Mage::getSingleton('core/session')->getCommentToZorgpunt();
-		$_preferred_delivery_DT = Mage::getSingleton('core/session')->getPreferredDeliveryDT();
+		$_preferred_delivery_DT = Mage::getSingleton('core/session')->getPreferredDeliveryDate();
 		$order = $observer->getEvent()->getOrder();
 		$order->setCommentToZorgpunt($_comment_to_zorgpunt);
 		$order->setPreferredDeliveryDt($_preferred_delivery_DT);
