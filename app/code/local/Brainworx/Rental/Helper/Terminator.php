@@ -62,6 +62,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	 */
 	private function terminateOneRental($rental,$preferredDT,$order,$item,$endDT ){
 		$rental->setEndDt($endDT);
+		$rental->setPickupDt($preferredDT);
 		$rental->save();
 		$rental->updateStock();
 			
