@@ -83,6 +83,7 @@ class Brainworx_Hearedfrom_Model_Observer
 				$shippingitem['Artikelnr.']=$item->getSku();
 				$shippingitem['Info aan Zorgpunt']=$comment;
 				$shippingitem['Gewicht']=$item->getWeight();
+				$shippingitem['Type']=(!empty($item->getRentalitem())&&$item->getRentalitem() == true)? Mage::helper('hearedfrom')->__('Verhuur'): Mage::helper('hearedfrom')->__('Verkoop');
 				$shippinglist[]=$shippingitem;
 				unset($shippingitem);
 			}		
@@ -119,9 +120,10 @@ class Brainworx_Hearedfrom_Model_Observer
 			->setCellValue('J'.$line, 'Aantal')
 			->setCellValue('K'.$line, 'Artikelnr.')
 			->setCellValue('L'.$line, 'Gewicht')
-			->setCellValue('M'.$line, 'Info aan Zorgpunt');
-			$objPHPExcel->getActiveSheet()->getStyle("A1:M1")->getFont()->setBold(true);
-			foreach(range('A','M') as $columnID) {
+			->setCellValue('M'.$line, 'Info aan Zorgpunt')
+			->setCellValue('N'.$line, 'Type');
+			$objPHPExcel->getActiveSheet()->getStyle("A1:N1")->getFont()->setBold(true);
+			foreach(range('A','N') as $columnID) {
 				$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
 				->setAutoSize(true);
 			}
@@ -141,7 +143,8 @@ class Brainworx_Hearedfrom_Model_Observer
 				->setCellValue('J'.$line, $item['Aantal'])
 				->setCellValue('K'.$line, $item['Artikelnr.'])
 				->setCellValue('L'.$line, $item['Gewicht'])
-				->setCellValue('M'.$line, $item['Info aan Zorgpunt']);
+				->setCellValue('M'.$line, $item['Info aan Zorgpunt'])
+				->setCellValue('N'.$line, $item['Type']);
 			}
 			//write file
 			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
