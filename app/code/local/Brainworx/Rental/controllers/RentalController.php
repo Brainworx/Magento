@@ -371,7 +371,10 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				//Add 0 or uninvoiced quantity for other items
 				if(!isset($qtys[$oitem->getId()])) {
                     // <!-- please note that if you don't want to invoice this product, set this value to 0 -->
-					$qtys [$oitem->getId ()] = $oitem->getQtyOrdered()-$oitem->getQtyInvoiced();
+					$qtys [$oitem->getId ()] = $oitem->getQtyOrdered()-$oitem->getQtyInvoiced()-$oitem->getQtyRefunded();
+					if($qtys [$oitem->getId ()]<0){
+						$qtys [$oitem->getId ()]=0;
+					}
                 }
 			}
 			

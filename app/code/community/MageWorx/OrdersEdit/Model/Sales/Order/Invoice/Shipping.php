@@ -27,7 +27,10 @@ class MageWorx_OrdersEdit_Model_Sales_Order_Invoice_Shipping extends Mage_Sales_
         $order = $invoice->getOrder();
 
         $shippingAmount        = $order->getShippingAmount() - $order->getShippingInvoiced() - $order->getShippingRefunded();
+        /*SHE Brainworx fix if shipping has been refunded it causes negative on next invoice*/
+        if($shippingAmount<0){$shippingAmount=0;}
         $baseShippingAmount    = $order->getBaseShippingAmount() - $order->getBaseShippingInvoiced() - $order->getBaseShippingRefunded();
+        if($baseShippingAmount<0){$baseShippingAmount=0;}
 
         $invoice->setShippingAmount($shippingAmount);
         $invoice->setBaseShippingAmount($baseShippingAmount);
