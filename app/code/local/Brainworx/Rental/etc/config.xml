@@ -64,6 +64,7 @@
 				 	<!-- Override Sales_Oder_Pdf_Invoice  to have custom pdf -->
 			        <rewrite>			        
 			            <order_pdf_invoice>Brainworx_Rental_Model_Pdf_Invoice</order_pdf_invoice>
+			            <order_pdf_creditmemo>Brainworx_Rental_Model_Pdf_Creditmemo</order_pdf_creditmemo>
 			        </rewrite>
 			        <!-- Overriding Sales_Order_Invoice model for sendEmail with force -->
 			        <rewrite>
