@@ -13,7 +13,6 @@
 			<action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
 			<action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
 			<action method="addItem"><type>js</type><name>brainworx/hearedfrom.js</name></action>
-			<action method="addItem"><type>js</type><name>brainworx/date-nl-BE.js</name></action>			
 			<action method="addItem"><type>js</type><name>lib/jqueryUI/jquery-ui.js</name></action>	
 			<action method="addItem"><type>js_css</type><name>lib/jqueryUI/jquery-ui.css</name></action>	
 			<action method="addItem"><type>js_css</type><name>lib/jqueryUI/jquery-ui.structure.css</name></action>	
