@@ -2792,6 +2792,9 @@ p.required,
   margin-top: 10px;
   margin-left: 15px;
 }
+.form-list .control label.elong{
+  min-width: 400px;
+}
 .form-list .control label,
 .sp-methods dt label,
 #checkout-shipping-method-load .sp-methods dd label,
@@ -2806,7 +2809,9 @@ p.required,
   min-width: 250px;
   float: none;
   padding: 6px 10px 6px 40px;
+  margin-bottom: 5px;
 }
+
 .form-list .control label:hover,
 .sp-methods dt label:hover,
 #checkout-shipping-method-load .sp-methods dd label:hover,

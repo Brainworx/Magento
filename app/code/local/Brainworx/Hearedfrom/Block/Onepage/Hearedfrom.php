@@ -22,6 +22,7 @@ class Brainworx_Hearedfrom_Block_Onepage_Hearedfrom extends Mage_Checkout_Block_
         	$cid = Mage::getSingleton('customer/session')->getCustomer()->getEntityId();
         }
         $this->setSellerValue(Mage::getModel("hearedfrom/salesForce")->loadSellerNameByCustid($cid));
+
         parent::_construct();
     }
 }
