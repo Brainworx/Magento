@@ -114,7 +114,7 @@ class Brainworx_Hearedfrom_Model_Observer
 			->setCellValue('B'.$line, 'Leverdatum van')
 			->setCellValue('C'.$line, 'Leverdatum tot')
 			->setCellValue('D'.$line, 'Naam')
-			->setCellValue('D'.$line, 'Adres (straat + nr)')
+			->setCellValue('E'.$line, 'Adres (straat + nr)')
 			->setCellValue('F'.$line, 'Gemeente')
 			->setCellValue('G'.$line, 'Postcode')
 			->setCellValue('H'.$line, 'Land')

@@ -26,6 +26,9 @@
      $j(".delrange").remove();
  }
  function resetView(){
+	 $j('#pddatelbl').removeClass("error");
+	 $j('#deloptiontext').removeClass("error");
+	 $j('#vlbl').removeClass("error");
 	 $j('#pddate').val('');
 	 if($j('#co-shipping-method-form input[name=shipping_method]:radio:checked').val()=="freeshipping_freeshipping")
 	 {
@@ -35,10 +38,10 @@
 	 }
 	 removeLI();
      if($j('#limit').val()!="1"){
-    	 $j("#dateoptions").append('<li class="delrange"> <input required type="radio" class="radio" name="delrange" value=""></input><label class="elong"> Binnen 24u</label></li>');
-         $j("#dateoptions").append('<li class="delrange"> <input required type="radio" class="radio" name="delrange" value=""></input><label class="elong"> Binnen 3 dagen</label></li>');
+    	 $j("#dateoptions").append('<li class="delrange"> <input required type="radio" class="radio" name="delrange" value="" disabled></input><label class="elong"> Binnen 24u</label></li>');
+         $j("#dateoptions").append('<li class="delrange"> <input required type="radio" class="radio" name="delrange" value="" disabled></input><label class="elong"> Binnen 3 dagen</label></li>');
      }
-     $j("#dateoptions").append('<li class="delrange"> <input required type="radio" class="radio" name="delrange" value=""></input><label class="elong"> Binnen 14 dagen</label></li>');    
+     $j("#dateoptions").append('<li class="delrange"> <input required type="radio" class="radio" name="delrange" value="" disabled></input><label class="elong"> Binnen 14 dagen</label></li>');    
  }
 //parse a date from dd-mm-yyyy format
  function parseDate(input) {
@@ -66,15 +69,12 @@
 	 $j('#deloptiontext').removeClass("error");
 	 $j('#vlbl').removeClass("error");
 	 if(!($j( "#pddate" ).val())){
-		 alert("Selecteer de leverdatum.");
 		 $j('#pddatelbl').addClass("error");
 	 }
 	 else if(getDeliveryTermValue ==0){
-		 alert("Selecteer de levertermijn.");
 		 $j('#deloptiontext').addClass("error");
 	 }
 	 else if($j("#getvoice option:selected").val() == "Selecteer"){
-		 alert("Selecteer een zorgpunt.");
 		 $j('#vlbl').addClass("error");
 	 }
 	 else{
