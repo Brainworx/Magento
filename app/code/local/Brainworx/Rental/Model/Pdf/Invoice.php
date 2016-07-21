@@ -375,7 +375,8 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 					$text[] = $_value;
 				}
 				foreach ($text as $part) {
-					$page->drawText(strip_tags(ltrim($part)), 35, $this->y, 'UTF-8');
+					//switched postition on pdf from 35 to 285
+					$page->drawText(strip_tags(ltrim($part)), 285, $this->y, 'UTF-8');
 					$this->y -= 15;
 				}
 			}
@@ -392,7 +393,8 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 						$text[] = $_value;
 					}
 					foreach ($text as $part) {
-						$page->drawText(strip_tags(ltrim($part)), 285, $this->y, 'UTF-8');
+						//switched postition on pdf from 285 to 35
+						$page->drawText(strip_tags(ltrim($part)), 35, $this->y, 'UTF-8');
 						$this->y -= 15;
 					}
 				}
