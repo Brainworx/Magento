@@ -68,7 +68,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					if($basedt < $enddt){
 						$basedt = $data["end_dt"];
 					}
-					$preferredDT = date('d-m-Y', strtotime($basedt . ' + 1 day'));
+					$preferredDT = date('d-m-Y', strtotime($basedt . ' + 2 day'));
 				
 					$pickupsuccess = Mage::helper('rental/terminator')->TerminateRentals($preferredDT,$rentalstoend,null,$data["end_dt"]);
 						
@@ -159,7 +159,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 		} else {
 			try {
 				
-				$success = Mage::helper('rental/terminator')->TerminateRentals(date('d-m-Y', strtotime('+1 day')),$rentalIds);
+				$success = Mage::helper('rental/terminator')->TerminateRentals(date('d-m-Y', strtotime('+2 day')),$rentalIds);
 				if($success){
 					Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( Mage::helper ( 'rental' )->__ ( '%d verhuuritem(s) werden vandaag beeindigd.', count ( $rentalIds ) ) );
 				}else{
