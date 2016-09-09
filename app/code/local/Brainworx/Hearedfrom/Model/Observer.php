@@ -53,7 +53,7 @@ class Brainworx_Hearedfrom_Model_Observer
 		$deliveryBefore=Mage::getSingleton('core/session')->getDeliveryBefore();
 		$comment=Mage::getSingleton('core/session')->getOrigCommentToZorgpunt();
 		$shippinglist = array();
-		if($order->getShippingInclTax()>0){
+		if($order->getShippingInclTax()>0 || Mage::getSingleton('core/session')->getStockSupplyPossible()){
 			//need to create excel to send to external delivery party
 			$delivery_to_report = true;
 		}
@@ -62,12 +62,17 @@ class Brainworx_Hearedfrom_Model_Observer
 		$items = $order->getAllItems();
 		foreach($items as $item){
 			if(!empty($item->getSupplierinvoice())&&$item->getSupplierinvoice()>0){
+				Mage::log("No need to send shipment exl as shipment + invoidone by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
+				
 				$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
 				self::saveCommission($_hearedfrom_salesforce["entity_id"],$order->getEntityId(),$item->getItemId(),
 				$type,($item->getOriginalPrice()*$item->getQtyOrdered()),
 						($item->getOriginalPrice()*$item->getQtyOrdered()*(1+$item->getTaxPercent()/100))
 						,$item->getRistorno()*$item->getQtyOrdered(),false);
-			}else{
+			}elseif (!empty($item->getSupplierneworderemail())){
+				Mage::log("No need to send shipment exl as shipment done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
+			}
+			else{
 				$shippingitem = array();
 				//items not supplied by supplier
 				$shippingitem['Bestelling #']=$order->getIncrementId();
@@ -302,6 +307,9 @@ class Brainworx_Hearedfrom_Model_Observer
 	public function hookToOrderPlaceAfterEvent($observer){
 		//save here the comment in the order
 		$_comment_to_zorgpunt = Mage::getSingleton('core/session')->getCommentToZorgpunt();
+		if(Mage::getSingleton('core/session')->getStockSupplySelected()){
+			$_comment_to_zorgpunt = "Bevoorrading Stock - " . $_comment_to_zorgpunt;
+		}
 		$_preferred_delivery_DT = Mage::getSingleton('core/session')->getPreferredDeliveryDate();
 		$order = $observer->getEvent()->getOrder();
 		$order->setCommentToZorgpunt($_comment_to_zorgpunt);

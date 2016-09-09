@@ -28,7 +28,12 @@ class Brainworx_Rental_Model_Observer
 			// Retrieve the product being updated from the event observer
 			$order = $observer->getEvent()->getOrder();
 			// array_keys($order->getData() prints teh data keys in the order - can later be used to getData($key);
-			
+			$skiprental = false;
+			if($order->getShippingInclTax()==0 && Mage::getSingleton('core/session')->getStockSupplyPossible()){
+				Mage::log("Stocksupply order - no start for rental");
+				//$skiprental = true;
+			}		
+				
 			//Check tax record		
 			$items=$order->getAllVisibleItems();
 			$count = 0;
@@ -43,15 +48,17 @@ class Brainworx_Rental_Model_Observer
 				}
 	
 				$rentaltosave = false;
-				if(!empty($item->getRentalitem())&&$item->getRentalitem() == true){
-					$rentaltosave = true;
-				}else{
-					//TODO remove this check as not needed
-					foreach($item->getProduct()->getCategoryIds() as $cat){
-						if($cat ==
-						  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text')){
-							$rentaltosave = true;						
-							break;
+				if(!$skiprental){
+					if(!empty($item->getRentalitem())&&$item->getRentalitem() == true){
+						$rentaltosave = true;
+					}else{
+						//TODO remove this check as not needed
+						foreach($item->getProduct()->getCategoryIds() as $cat){
+							if($cat ==
+							  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text')){
+								$rentaltosave = true;						
+								break;
+							}
 						}
 					}
 				}
@@ -292,6 +299,12 @@ class Brainworx_Rental_Model_Observer
 			$catrental = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
 			$sinotice = 0;
 			$catssuppplinvl = explode(",",Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CATS_SUPPL_INV')->getValue('text'));
+			$dsnotice = 0;
+			
+			if(!empty($item->getProduct()->getSupplierOrderEmail())){
+				$item->setSupplierneworderemail($item->getProduct()->getSupplierOrderEmail());
+				$dsnotice = 1;
+			}
 			
 			if(in_array($catrental,$item->getProduct()->getCategoryIds())){
 				$rnotice = 1;
@@ -320,9 +333,12 @@ class Brainworx_Rental_Model_Observer
 			if($rnotice > 0){
 				Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('The price of your rental article has been set to 0, you will pay for this article within 10 days after receiving the monthly invoice.'));
 				$item->setRentalitem(true);
-			}else if($sinotice > 0){
+			}elseif($sinotice > 0){
 				Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('The price of your article has been set to 0, you will receive the invoice directly from the supplier.'));
 				$item->setSupplierinvoice(true);
+			}
+			if ($sinotice == 0 && $dsnotice > 0){
+				Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('This article will be shipped directly from the supplier.'));
 			}
 		}catch(Exception $e){
 			Mage::log($e->getMessage());
