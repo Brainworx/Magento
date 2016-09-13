@@ -14,6 +14,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 		}
 		$shippinglistZP = array();
 		$shippinglistEXT = array();
+		$shippinglistSupplier = array();
 		$error = false;
 		foreach($rentalids as $rentalId){
 			try {
@@ -26,7 +27,9 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 				$itemModel = Mage::getModel('sales/order_item')->load($rentalModel->getOrderItemId());
 				
 				$shippingitem = self::terminateOneRental($rentalModel,$pickupDT,$orderModel,$itemModel,$endDT);
-				if($orderModel->getShippingInclTax()>0){
+				if(!empty($itemModel->getSupplierneworderemail())){
+					$shippinglistSupplier[$itemModel->getSupplierneworderemail()][]=$shippingitem;
+				}elseif($orderModel->getShippingInclTax()>0){
 					$shippinglistEXT[]=$shippingitem;
 				}else{
 					$shippinglistZP[]=$shippingitem;
@@ -42,9 +45,14 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 			}
 		}
 		//send mail with excel
+		foreach ($shippinglistSupplier as $supplier => $list){
+			$email = $supplier;
+			self::createPickupShipmentsExcel($list, true,$email);
+		}
 		if(!empty($shippinglistEXT)){
 			//need to create excel to send to external delivery party
-			self::createPickupShipmentsExcel($shippinglistEXT,true);
+			$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
+			self::createPickupShipmentsExcel($shippinglistEXT,true,$emails);
 		}
 		if(!empty($shippinglistZP)){
 			self::createPickupShipmentsExcel($shippinglistZP,false);
@@ -91,7 +99,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	 * @param array with pickuplines $list
 	 * @param boolean $to_external (send to emails in DELIVERY_EMAIL)
 	 */
-	private function createPickupShipmentsExcel($list,$to_external)
+	private function createPickupShipmentsExcel($list,$to_external,$emails=null)
 	{
 		try{
 			require_once Mage::getBaseDir('lib').'/Excel/PHPExcel.php';
@@ -158,7 +166,6 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	
 			// Who were sending to...
 			if($to_external){
-				$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
 				$email_to = explode(",",$emails);
 			}else{
 				$email_to = Mage::getStoreConfig('trans_email/ident_general/email');
