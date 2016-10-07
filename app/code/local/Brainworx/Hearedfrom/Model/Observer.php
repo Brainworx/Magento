@@ -96,14 +96,14 @@ class Brainworx_Hearedfrom_Model_Observer
 			}		
 		}
 		if(!empty($shippinglist)){
-			self::createShipmentsExcel($shippinglist,$order,$delivery_to_report);
+			self::createShipmentsExcel($shippinglist,$order,$delivery_to_report,$_hearedfrom_salesforce["entity_id"]);
 		}	
 		
 	}
 	/**
 	 * Create an excel with items to be shipped + send it to transporter via email
 	 */
-	public function createShipmentsExcel($list,$order,$to_external)
+	public function createShipmentsExcel($list,$order,$to_external,$seller=null)
 	{
 		try{
 			require_once Mage::getBaseDir('lib').'/Excel/PHPExcel.php'; 
@@ -177,6 +177,15 @@ class Brainworx_Hearedfrom_Model_Observer
 			if($to_external){
 				$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
 				$email_to = explode(",",$emails);
+				//check external shipment or Bruno
+				if($seller!=null){
+					$sellerids = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_SPECIALSELLER')->getValue('text');
+					$ids = explode(',',$sellerids);
+					if(in_array($seller,$ids)){
+						$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_SPECIAL_EMAIL')->getValue('text');
+						$email_to = explode(",",$emails);
+					}
+				}
 			}else{
 				$email_to = Mage::getStoreConfig('trans_email/ident_general/email');
 			}
