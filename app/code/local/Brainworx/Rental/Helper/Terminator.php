@@ -14,8 +14,13 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 		}
 		$shippinglistZP = array();
 		$shippinglistEXT = array();
+		$shippinglistEXT2 = array();
 		$shippinglistSupplier = array();
 		$error = false;
+		$sellerids = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_SPECIALSELLER')->getValue('text');
+		$specialsellerids = explode(',',$sellerids);
+		
+			
 		foreach($rentalids as $rentalId){
 			try {
 				$rentalModel = Mage::getModel ( 'rental/rentedItem' )->load($rentalId);
@@ -30,7 +35,13 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 				if(!empty($itemModel->getSupplierneworderemail())){
 					$shippinglistSupplier[$itemModel->getSupplierneworderemail()][]=$shippingitem;
 				}elseif($orderModel->getShippingInclTax()>0){
-					$shippinglistEXT[]=$shippingitem;
+					//check seller 
+					$seller = Mage::getModel('hearedfrom/salesSeller')->loadByOrderId($orderModel->getIncrementId());
+					if(isset($seller) && $seller != false && in_array($seller['user_id'],$specialsellerids)){
+						$shippinglistEXT2[]=$shippingitem;
+					}else{
+						$shippinglistEXT[]=$shippingitem;
+					}
 				}else{
 					$shippinglistZP[]=$shippingitem;
 				}
@@ -56,6 +67,11 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 		}
 		if(!empty($shippinglistZP)){
 			self::createPickupShipmentsExcel($shippinglistZP,false);
+		}
+		if(!empty($shippinglistEXT2)){
+			//need to create excel to send to external delivery party
+			$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_SPECIAL_EMAIL')->getValue('text');
+			self::createPickupShipmentsExcel($shippinglistEXT2,true,$emails);
 		}
 		return !$error;
 	}
