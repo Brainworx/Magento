@@ -53,7 +53,7 @@ class Brainworx_Hearedfrom_Model_Observer
 		$deliveryBefore=Mage::getSingleton('core/session')->getDeliveryBefore();
 		$comment=Mage::getSingleton('core/session')->getOrigCommentToZorgpunt();
 		$shippinglist = array();
-		if($order->getShippingInclTax()>0 || Mage::getSingleton('core/session')->getStockSupplyPossible()){
+		if($order->getShippingInclTax()>0 || $order->getShippingMethod()=='flatrate_flatrate'){
 			//need to create excel to send to external delivery party
 			$delivery_to_report = true;
 		}
@@ -62,7 +62,7 @@ class Brainworx_Hearedfrom_Model_Observer
 		$items = $order->getAllItems();
 		foreach($items as $item){
 			if(!empty($item->getSupplierinvoice())&&$item->getSupplierinvoice()>0){
-				Mage::log("No need to send shipment exl as shipment + invoidone by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
+				Mage::log("No need to send shipment exl as shipment + invoice done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
 				
 				$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
 				self::saveCommission($_hearedfrom_salesforce["entity_id"],$order->getEntityId(),$item->getItemId(),
@@ -315,13 +315,9 @@ class Brainworx_Hearedfrom_Model_Observer
 	}
 	public function hookToOrderPlaceAfterEvent($observer){
 		//save here the comment in the order
-		$_comment_to_zorgpunt = Mage::getSingleton('core/session')->getCommentToZorgpunt();
-		if(Mage::getSingleton('core/session')->getStockSupplySelected()){
-			$_comment_to_zorgpunt = "Bevoorrading Stock - " . $_comment_to_zorgpunt;
-		}
 		$_preferred_delivery_DT = Mage::getSingleton('core/session')->getPreferredDeliveryDate();
 		$order = $observer->getEvent()->getOrder();
-		$order->setCommentToZorgpunt($_comment_to_zorgpunt);
+		$order->setCommentToZorgpunt(Mage::getSingleton('core/session')->getCommentToZorgpunt());
 		$order->setPreferredDeliveryDt($_preferred_delivery_DT);
 		$order->setDeliveryUntilDt(Mage::getSingleton('core/session')->getDeliveryBefore());
 		$order->save();		

@@ -29,9 +29,11 @@ class Brainworx_Rental_Model_Observer
 			$order = $observer->getEvent()->getOrder();
 			// array_keys($order->getData() prints teh data keys in the order - can later be used to getData($key);
 			$skiprental = false;
-			if($order->getShippingInclTax()==0 && Mage::getSingleton('core/session')->getStockSupplyPossible()){
+			if($order->getShippingMethod()=='flatrate_flatrate'){
 				Mage::log("Stocksupply order - no start for rental");
-				//$skiprental = true;
+				$skiprental = true;
+				$order->addStatusToHistory($order->getStatus(), 'Bevoorrading van zorgpunt.', true);
+				$order->save();
 			}		
 				
 			//Check tax record		

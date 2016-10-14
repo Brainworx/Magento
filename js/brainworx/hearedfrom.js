@@ -6,17 +6,18 @@
     	onSelect: function(dateText, inst) {
     		var enddate3 = parseDate(dateText);
             enddate3.setDate(enddate3.getDate() + 14);	
-    		removeLI();            
-    		if($j('#limit').val()!="1"){
-	    		var date = parseDate(dateText);  
+    		removeLI();  
+    		if($j('#s_method_flatrate_flatrate').is(':checked')) {
+    			$j("#dateoptions").append('<li id="delrange3"> <input required type="radio" class="radio" name="delrange" value="'+dateToText(enddate3)+'" checked></input><label class="elong"> Binnen 14 dagen (ten laatste op '+dateToText(enddate3)+')</label></li>');
+    		}else{
+    			var date = parseDate(dateText);  
 	    		var enddate2 = parseDate(dateText); 
 	            enddate2.setDate(enddate2.getDate() + 3);	                       
 	            $j("#dateoptions").append('<li id="delrange1"> <input required type="radio" class="radio" name="delrange" value="'+dateToText(date)+'"></input><label class="elong"> Binnen 24u (op '+dateToText(date)+')</label></li>');
 	            $j("#dateoptions").append('<li id="delrange2"> <input required type="radio" class="radio" name="delrange" value="'+dateToText(enddate2)+'" checked></input><label class="elong"> Binnen 3 dagen (ten laatste op '+dateToText(enddate2)+')</label></li>');
 	            $j("#dateoptions").append('<li id="delrange3"> <input required type="radio" class="radio" name="delrange" value="'+dateToText(enddate3)+'" ></input><label class="elong"> Binnen 14 dagen (ten laatste op '+dateToText(enddate3)+')</label></li>');
-    		}else{
-    			$j("#dateoptions").append('<li id="delrange3"> <input required type="radio" class="radio" name="delrange" value="'+dateToText(enddate3)+'" checked></input><label class="elong"> Binnen 14 dagen (ten laatste op '+dateToText(enddate3)+')</label></li>');
-    		}
+    		
+	    	}
         }});
   });
  function removeLI(){
@@ -30,14 +31,8 @@
 	 $j('#deloptiontext').removeClass("error");
 	 $j('#vlbl').removeClass("error");
 	 $j('#pddate').val('');
-	 if($j('#co-shipping-method-form input[name=shipping_method]:radio:checked').val()=="freeshipping_freeshipping")
-	 {
-		 $j('#limit').val("1");
-	 }else{
-		 $j('#limit').val("0");
-	 }
 	 removeLI();
-     if($j('#limit').val()!="1"){
+	 if(!$j('#s_method_flatrate_flatrate').is(':checked')) {
     	 $j("#dateoptions").append('<li class="delrange"> <input required type="radio" class="radio" name="delrange" value="" disabled></input><label class="elong"> Binnen 24u</label></li>');
          $j("#dateoptions").append('<li class="delrange"> <input required type="radio" class="radio" name="delrange" value="" disabled></input><label class="elong"> Binnen 3 dagen</label></li>');
      }
@@ -83,11 +78,11 @@
 	 
  }
  function getDeliveryTermValue () {
-	    if( $j('#co-hearedfrom-form input[name=delrange]:radio:checked').length > 0 ) {
-	        return $j('#co-hearedfrom-form input[name=delrange]:radio:checked').val();
-	    }
-	    else {
-	        return 0;
-	    } 
-	}
+    if( $j('#co-hearedfrom-form input[name=delrange]:radio:checked').length > 0 ) {
+        return $j('#co-hearedfrom-form input[name=delrange]:radio:checked').val();
+    }
+    else {
+        return 0;
+    } 
+}
  

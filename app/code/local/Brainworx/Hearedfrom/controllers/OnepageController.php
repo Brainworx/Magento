@@ -17,6 +17,112 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 		}		
     }
     /**
+     * Save checkout billing address
+     */
+    public function saveBillingAction()
+    {
+    	if ($this->_expireAjax()) {
+    		return;
+    	}
+    	if ($this->getRequest()->isPost()) {
+    		$data = $this->getRequest()->getPost('billing', array());
+    		$customerAddressId = $this->getRequest()->getPost('billing_address_id', false);
+    
+    		if (isset($data['email'])) {
+    			$data['email'] = trim($data['email']);
+    		}
+    		$result = $this->getOnepage()->saveBilling($data, $customerAddressId);
+    		
+    		//verify stocksupply is possible
+    		//todo check order contents - only rental allowed for stock supply
+    		Mage::getSingleton('core/session')->setStockSupplyPossible(false);
+    		$salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($this->getOnepage()->getQuote()->getCustomer()->getEntityId());
+	    	if(!empty($salesforce)){
+	    		$defaultbillingaddress = $this->getOnepage()->getQuote()->getCustomer()->getDefaultBillingAddress();
+	    		if($defaultbillingaddress){
+	    			if($defaultbillingaddress->getId() == $customerAddressId){
+	    				//stock supply possible
+	    				Mage::getSingleton('core/session')->setStockSupplyPossible(true);
+	    				$supplyAll = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('STOCK_SUPPLY_ALL')->getValue('text');
+	    				if(isset($supplyAll)&&$supplyAll==0){
+		    				$items=$this->getOnepage()->getQuote()->getAllVisibleItems();
+		    				foreach ($items as  $item)
+		    				{
+		    					if(!empty($item->getRentalitem())&&$item->getRentalitem() == true){
+		    						$rentaltosave = true;
+		    					}else{
+		    						//item in basket which isn't rental
+		    						Mage::log('Stocksupply not possible due to sale item in basket:'.$item->getItemId());
+		    						Mage::getSingleton('core/session')->setStockSupplyPossible(false);
+		    					}
+		    				}
+	    				}
+	    			}
+	    		}
+    		}
+    		
+    
+    		if (!isset($result['error'])) {
+    			if ($this->getOnepage()->getQuote()->isVirtual()) {
+    				$result['goto_section'] = 'payment';
+    				$result['update_section'] = array(
+    						'name' => 'payment-method',
+    						'html' => $this->_getPaymentMethodsHtml()
+    				);
+    			} elseif (isset($data['use_for_shipping']) && $data['use_for_shipping'] == 1) {
+    				$result['goto_section'] = 'shipping_method';
+    				$result['update_section'] = array(
+    						'name' => 'shipping-method',
+    						'html' => $this->_getShippingMethodsHtml()
+    				);
+    
+    				$result['allow_sections'] = array('shipping');
+    				$result['duplicateBillingInfo'] = 'true';
+    			} else {
+    				$result['goto_section'] = 'shipping';
+    			}
+    		}
+    
+    		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    	}
+    }
+    
+//     public function saveShippingAction()
+//     {
+// 	    if ($this->_expireAjax()) {
+// 	            return;
+//         }
+//         if ($this->getRequest()->isPost()) {
+//             $data = $this->getRequest()->getPost('shipping', array());
+//             $customerAddressId = $this->getRequest()->getPost('shipping_address_id', false);
+//             $result = $this->getOnepage()->saveShipping($data, $customerAddressId);
+ 
+//             /*if we pass via this step - other shipping address was selected*/
+
+//             Mage::getSingleton('core/session')->setStockSupplyPossible(false);
+//             $salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($this->getOnepage()->getQuote()->getCustomer()->getEntityId());
+//             if(!empty($salesforce)){
+//             	$defaultbillingaddress = $this->getOnepage()->getQuote()->getCustomer()->getDefaultBillingAddress();
+//             	if($defaultbillingaddress){
+//             		if($defaultbillingaddress->getId() == $customerAddressId){
+//             			//stock supply possible
+//             			Mage::getSingleton('core/session')->setStockSupplyPossible(true);
+//             		}
+//             	}
+//             }
+            
+//             if (!isset($result['error'])) {
+                
+//                 if (!isset($result['error'])) {
+//                     $result['goto_section'] = 'shipping_method';
+//                 }
+//             }
+//             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+//         }
+	    
+// 	}
+    
+    /**
      * Shipping method save action
      * SHE: route next step to additional info step
      */
