@@ -225,6 +225,10 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 						Mage::log('skipping invoice for '.$rental->getEntityId().' as lastinvdt('.$rental->getLastInvDt().') >= enddt ('.$rental->getEndDt().')');
 						continue;
 					}
+					if($rental->getEndDt() != null && $rental->getEndDt() <= $rental->getStartDt()){
+						Mage::log('skipping invoice for '.$rental->getEntityId().' as enddt('.$rental->getEndDt().') <= startdt('.$rental->getStartDt().')');
+						continue;
+					}
 					if($rentalToInvoice == null){
 						$rentalToInvoice = $rental;
 					}
