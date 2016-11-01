@@ -15,7 +15,7 @@ $table = $installer->getConnection()->newTable($installer->getTable('hearedfrom/
 ), 'Name')
 ->addColumn('cust_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
 		'unsigned' => true,'nullable' => true,
-), 'Vat ID')
+), 'Cust ID')
 ->addColumn('create_dt', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(
 		"default" => Varien_Db_Ddl_Table::TIMESTAMP_INIT
 ), "Creation time")

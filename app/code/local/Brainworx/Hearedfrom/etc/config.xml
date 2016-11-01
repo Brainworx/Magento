@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Brainworx_Hearedfrom>
-			<version>0.2.0</version>    <!-- Version number of your module -->
+			<version>0.2.1</version>    <!-- Version number of your module -->
 			<depends>Braiworx_Rental</depends>
 		</Brainworx_Hearedfrom>
 	</modules>
@@ -33,6 +33,9 @@
 					<salesForce>
 						<table>hearedfrom_salesforce</table>
 					</salesForce>
+					<salesForceLink>
+						<table>hearedfrom_salesforcelink</table>
+					</salesForceLink>
 					<salesSeller>
 						<table>hearedfrom_salesseller</table>
 					</salesSeller>
@@ -80,6 +83,9 @@
 			<financialssupplier>
 			    <class>Brainworx_Hearedfrom_Block</class>
 			</financialssupplier>
+			<salesforce>
+				<class>Brainworx_Hearedfrom_Block</class>
+			</salesforce>
 			<!-- Add block for checkout step -->
 			<hearedfromonepage>
 				<class>Brainworx_Hearedfrom_Block_Onepage</class>
@@ -313,6 +319,9 @@
              <financialssupplier>
               <file>financialssupplier.xml</file>
             </financialssupplier>
+            <salesforce>
+            	<file>salesforce.xml</file>
+            </salesforce>
           </updates>
         </layout>
         <translate>
