@@ -1,6 +1,6 @@
 <?php
  /*referenced in rental.xml layout file*/
-class Brainworx_Hearedfrom_Block_Adminhtml_SalesForce extends Mage_Adminhtml_Block_Widget_Grid_Container
+class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce extends Mage_Adminhtml_Block_Widget_Grid_Container
 {
     public function __construct()
     {	

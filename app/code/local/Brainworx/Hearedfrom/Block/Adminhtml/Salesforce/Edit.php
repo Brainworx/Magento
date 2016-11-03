@@ -1,6 +1,6 @@
 <?php
  
-class Brainworx_Hearedfrom_Block_Adminhtml_SalesForce_Edit extends Mage_Adminhtml_Block_Widget_Form_Container
+class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Edit extends Mage_Adminhtml_Block_Widget_Form_Container
 {
     public function __construct()
     {

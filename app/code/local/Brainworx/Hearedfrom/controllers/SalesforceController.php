@@ -1,17 +1,17 @@
 <?php
-class Brainworx_Hearedfrom_SalesForceController extends Mage_Adminhtml_Controller_Action {
+class Brainworx_Hearedfrom_SalesforceController extends Mage_Adminhtml_Controller_Action {
 	/*
 	 * Update required for security for non-admin users after patch 6285
 	 */
 	protected function _isAllowed(){
-		return Mage::getSingleton('admin/session')->isAllowed('hearedfrom/salesForce');
+		return Mage::getSingleton('admin/session')->isAllowed('hearedfrom/salesForceOverview');
 	}
 	public function indexAction() {
 		$this->_title ( $this->__ ( 'Overview' ) )->_title ( $this->__ ( 'SalesForceOverview' ) );
 		$this->loadLayout ();
 // 		$block = $this->getLayout()->createBlock('core/text', 'test-block')->setText('<h1>Test</h1>');
 // 		$this->_addContent($block);
-		$this->_setActiveMenu ( 'hearedfrom/salesforceoverview' );
+		$this->_setActiveMenu ( 'hearedfrom/salesForceOverview' );
 		
 		$this->renderLayout ();
 	}
