@@ -4,7 +4,7 @@ class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controlle
 	 * Update required for security for non-admin users after patch 6285
 	 */
 	protected function _isAllowed(){
-		return Mage::getSingleton('admin/session')->isAllowed('hearedfrom/salesCommission');
+		return Mage::getSingleton('admin/session')->isAllowed('hearedfrom/salescommission');
 	}
 	public function indexAction() {
 		$this->_title ( $this->__ ( 'Commission' ) )->_title ( $this->__ ( 'SalesCommission' ) );

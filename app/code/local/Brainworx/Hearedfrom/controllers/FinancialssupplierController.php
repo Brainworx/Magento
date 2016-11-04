@@ -4,7 +4,7 @@ class Brainworx_Hearedfrom_FinancialssupplierController extends Mage_Adminhtml_C
 	 * Update required for security for non-admin users after patch 6285
 	 */
 	protected function _isAllowed(){
-		return Mage::getSingleton('admin/session')->isAllowed('hearedfrom/supplierSalesOverview');
+		return Mage::getSingleton('admin/session')->isAllowed('hearedfrom/suppliersalesoverview');
 	}
 	public function indexAction() {
 		$this->_title ( $this->__ ( 'Overview' ) )->_title ( $this->__ ( 'SupplierSalesOverview' ) );
