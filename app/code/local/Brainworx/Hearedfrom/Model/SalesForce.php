@@ -25,6 +25,18 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     	return $userArray;
     }
     /**
+     * Prepare list for overview form select box
+     */
+    public function getUserNamesOptions(){
+    	$userArray = array();
+    	$userArray[0] = Mage::helper('hearedfrom')->__('Not Selected');
+    	foreach($this->getCollection()->addFieldToSelect("*")
+    			->addFieldToFilter('linked_to', array("eq" => 0)) as $usr){
+    		$userArray[$usr->getEntityId()] = $usr->getUserNm();
+    	}
+    	return $userArray;
+    }
+    /**
      * load hearedfrom by customer id
      * Load hearedfrom salesforce record in array with column names as key
      */

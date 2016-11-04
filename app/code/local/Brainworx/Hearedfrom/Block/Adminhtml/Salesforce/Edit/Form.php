@@ -2,6 +2,30 @@
  
 class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Edit_Form extends Mage_Adminhtml_Block_Widget_Form
 {
+	private function getAllCustomerOptions(){
+	
+		$zpgroups = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('ZORGP_HEAREDFROM_GIDS')->getValue('text');
+		$collection = Mage::getModel('customer/customer')
+		->getCollection()
+		->addAttributeToSelect('*')
+		->addFieldToFilter('group_id', array("in" => explode(',', $zpgroups)));
+	
+		$options[] = array(
+				'value' => null,
+				'label' => Mage::helper('hearedfrom')->__('Not Selected')
+		);
+		foreach($collection as $customer){
+			$options[] = array(
+					'value' => $customer->getID(),
+					'label' => $customer->getName()
+			);
+		}
+	
+		$this->_options = $options;
+	
+		return $this->_options;
+	}
+	
     protected function _prepareForm()
     {
     	//Check for model data in the registry
@@ -32,39 +56,45 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Edit_Form extends Mage_Adm
         ));
         # now add fields on to the fieldset object, for more detailed info
         # see https://makandracards.com/magento/12737-admin-form-field-types
+        
+        $fieldset->addField('user_nm', 'text', array(
+        		'label'     => Mage::helper('hearedfrom')->__('User name*'),
+        		'class'     => 'required-entry',
+        		'name'      => 'user_nm'
+        ));
+        $fieldset->addField('cust_id', 'select', array(
+        		'label'     => Mage::helper('hearedfrom')->__('Main Customer #'),
+        		'values'    => $this->getAllCustomerOptions(),
+        		'name'      => 'cust_id'
+        		//TODO check options
+        ));
+        $fieldset->addField('linked_to', 'select', array(
+        		'label'     => Mage::helper('hearedfrom')->__('Linked to Seller'),
+        		'values'	=> Mage::getModel('hearedfrom/salesForce')->getUserNamesOptions(),
+        		'name'      => 'linked_to'
+        ));
+        $fieldset->addField('ristorno_split_perc', 'text', array(
+        		'label'     => Mage::helper('hearedfrom')->__('Ristorno % to keep'),
+        		'name'      => 'ristorno_split_perc',
+        		'value'		=> 100
+        ));
+        $fieldset->addField('comment', 'text', array(
+        		'label'     => Mage::helper('hearedfrom')->__('Comment'),
+        		'name'      => 'comment'
+        ));
         $fieldset->addField('entity_id', 'text', array(
         		'label'     => Mage::helper('hearedfrom')->__('SalesForce #'),
-        		'class'     => 'required-entry',
         		'readonly' => true,
         		'name'      => 'entity_id'
         ));
         $fieldset->addField('create_dt', 'date', array(
         		'label'     => Mage::helper('hearedfrom')->__('Created on'),
-        		'readonly' => true,
+        		'readonly' => false,
+        		'image' => $this->getSkinUrl('images/grid-cal.gif'),
         		'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
-        		'name'      => 'create_dt'
-        ));
-        $fieldset->addField('user_nm', 'text', array(
-        		'label'     => Mage::helper('hearedfrom')->__('User name'),
-        		'class'     => 'required-entry',
-        		'name'      => 'user_nm'
-        ));
-        $fieldset->addField('cust_id', 'text', array(
-        		'label'     => Mage::helper('hearedfrom')->__('Main Customer #'),
-        		'name'      => 'cust_id'
-        		//TODO check options
-        ));
-        $fieldset->addField('linked_to', 'text', array(
-        		'label'     => Mage::helper('hearedfrom')->__('Linked to Seller'),
-        		'name'      => 'linked_to'
-        ));
-        $fieldset->addField('ristorno_split_perc', 'text', array(
-        		'label'     => Mage::helper('hearedfrom')->__('Ristorno % to keep'),
-        		'name'      => 'ristorno_split_perc'
-        ));
-        $fieldset->addField('comment', 'text', array(
-        		'label'     => Mage::helper('hearedfrom')->__('Comment'),
-        		'name'      => 'comment'
+        		'name'      => 'create_dt',
+        		'value'		=>  date( Mage::app()->getLocale()->getDateStrFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
+                                  strtotime('next weekday') )
         ));
         $fieldset->addField('end_dt', 'date', array(
         		'label'     => Mage::helper('hearedfrom')->__('Ended on'),

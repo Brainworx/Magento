@@ -39,11 +39,14 @@
 "Select","Selecteer"
 "Deliveries","Leveringen"
 "SalesForce","Zorgpunter"
+"SalesForce #","Zorgpunter #"
 "Created on","Aangemaakt op"
-"Main Customer #","Klant #"
+"Main Customer #","Klant Zorgpunter"
 "Linked to Seller","Gekoppeld aan Zorgpunter"
 "Ristorno % to keep","% Ristono Zorgpunter"
 "Comment","Opmerking"
 "Ended on","Beeindigd op"
+"Not Selected","Niet geselecteerd"
+"User name*","Frontend naam in select*"
 
 

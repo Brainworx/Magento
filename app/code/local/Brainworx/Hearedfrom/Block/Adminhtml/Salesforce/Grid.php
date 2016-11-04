@@ -31,18 +31,18 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Grid extends Mage_Adminhtm
 // 			WHERE attr.attribute_code IN ( 'firstname',  'lastname' )
 // 			GROUP BY entity_id
 			$select = $collection->getSelect();
-			$resource = Mage::getSingleton('core/resource');
-			$select->join(
-					array('customer' => 'customer_entity_varchar'),
-					'main_table.cust_id = customer.entity_id',
-					array('value','attribute_id')
-			);
-			$select->join(
-					array('attribute' => 'eav_attribute'),
-					'customer.attribute_id = attribute.attribute_id',
-					array('attribute_id','attribute_code')
-			);
-			$collection->addFieldToFilter('attribute_code','lastname');
+// 			$resource = Mage::getSingleton('core/resource');
+// 			$select->joinLeft(
+// 					array('customer' => 'customer_entity_varchar'),
+// 					'main_table.cust_id = customer.entity_id',
+// 					array('value','attribute_id')
+// 			);
+// 			$select->join(
+// 					array('attribute' => 'eav_attribute'),
+// 					'customer.attribute_id = attribute.attribute_id',
+// 					array('attribute_id','attribute_code')
+// 			);
+// 			$collection->addFieldToFilter('attribute_code','lastname');
 	        
 	        $this->setCollection($collection);
 	        
@@ -89,12 +89,12 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Grid extends Mage_Adminhtm
             'index'     => 'user_nm',
         ));
         
-        $this->addColumn('value', array(
-        		'header'    => Mage::helper('hearedfrom')->__('Customer Lastname'),
-        		'align'     =>'left',
-        		'index'     => 'value',
-        		'filter_index' => 'customer.value'
-        ));
+//         $this->addColumn('value', array(
+//         		'header'    => Mage::helper('hearedfrom')->__('Customer Lastname'),
+//         		'align'     =>'left',
+//         		'index'     => 'value',
+//         		'filter_index' => 'customer.value'
+//         ));
         $this->addColumn('cust_id', array(
         		'header'    => Mage::helper('hearedfrom')->__('Customer #'),
         		'align'     =>'left',
