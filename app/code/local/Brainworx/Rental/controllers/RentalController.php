@@ -90,6 +90,9 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			try {
 				if ($id) {
 					$model->setEntityId ( $id );
+				}else{
+					//unset id as otherwise null will be applied an no insert will be done
+					unset($data['entity_id']);
 				}
 				$model->save ();
 				
