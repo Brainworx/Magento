@@ -85,7 +85,7 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Grid extends Mage_Adminhtm
             'header'    => Mage::helper('hearedfrom')->__('User name'),
             'align'     =>'left',
         	'type'		=>'text',
-        	'width'     => '50px',
+        	'width'     => '350px',
             'index'     => 'user_nm',
         ));
         

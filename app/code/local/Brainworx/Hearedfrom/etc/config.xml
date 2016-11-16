@@ -297,6 +297,25 @@
 					</hooksystem_order_success>
 				</observers>
 			</checkout_onepage_controller_success_action>
+			<!-- set / unset custom session variable -->
+			<customer_login>
+	            <observers>
+	                <hooksystem_customer_login>
+	                    <class>hearedfrom/observer</class>
+	                    <method>login</method>
+	                    <type>singleton</type>
+	                </hooksystem_customer_login>
+	            </observers>
+	        </customer_login>
+			<customer_logout>
+	            <observers>
+	                <hooksystem_customer_logout>
+	                    <class>hearedfrom/observer</class>
+	                    <method>logout</method>
+	                    <type>singleton</type>
+	                </hooksystem_customer_logout>
+	            </observers>
+	        </customer_logout>
 		</events>
 		<!-- add layout of the frontend component -->
 		<layout>

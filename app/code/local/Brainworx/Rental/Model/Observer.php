@@ -81,7 +81,7 @@ class Brainworx_Rental_Model_Observer
 						}
 						$newrentalitem->setStartDt($start_date);
 						
-						$newrentalitem->Save();
+						$newrentalitem->save();
 						
 						//Check/add sale_tax_item record
 						if(0==count(Mage::getModel('tax/sales_order_tax_item')->getCollection()->addFieldToFilter(

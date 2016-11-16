@@ -65,7 +65,7 @@ class Brainworx_Hearedfrom_Model_Observer
 				Mage::log("No need to send shipment exl as shipment + invoice done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
 				
 				$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
-				self::saveCommission($_hearedfrom_salesforce["entity_id"],$order->getEntityId(),$item->getItemId(),
+				self::saveCommission($_hearedfrom_salesforce,$order->getEntityId(),$item->getItemId(),
 				$type,($item->getOriginalPrice()*$item->getQtyOrdered()),
 						($item->getOriginalPrice()*$item->getQtyOrdered()*(1+$item->getTaxPercent()/100))
 						,$item->getRistorno()*$item->getQtyOrdered(),false);
@@ -291,7 +291,8 @@ class Brainworx_Hearedfrom_Model_Observer
 								}
 							}
 						}
-						self::saveCommission($seller['user_id'],$order->getEntityId(),
+						$sales_force = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id']);
+						self::saveCommission($sales_force,$order->getEntityId(),
 						$item->getOrderItemId(),$type,$item->getRowTotal(),
 						$item->getRowTotalInclTax(),$orderitem->getRistorno()*$item->getQty(),true);
 						
@@ -322,7 +323,27 @@ class Brainworx_Hearedfrom_Model_Observer
 		$order->setDeliveryUntilDt(Mage::getSingleton('core/session')->getDeliveryBefore());
 		$order->save();		
 	}
-	private function saveCommission($sellerid,$orderid,$orderitemid,$type,$netamt,$brutamt,$rst,$invoiced ){
+	private function saveCommission($seller,$orderid,$orderitemid,$type,$netamt,$brutamt,$rst,$invoiced ){
+		$sellerid = $seller["entity_id"];
+		$linkedtosellerid = $seller['linked_to'];
+		$ristorno = $rst;
+		//todo insert if linked
+		if(!empty($linkedtosellerid) && $linkedtosellerid>0){
+			$_perc = $seller['ristorno_split_perc'];
+			$ristorno = $rst * ($_perc/100);
+			$ristorno2 = $rst - $ristorno;
+			$newsalescomm = Mage::getModel('hearedfrom/salesCommission');
+			$newsalescomm->setData('user_id',$linkedtosellerid);
+			$newsalescomm->setData('orig_order_id',$orderid);
+			$newsalescomm->setData('order_item_id', $orderitemid);
+			$newsalescomm->setData('type',$type);
+			$newsalescomm->setData('net_amount',$netamt);
+			$newsalescomm->setData('brut_amount',$brutamt);
+			$newsalescomm->setData('ristorno',$ristorno2);
+			$newsalescomm->setData('invoiced',$invoiced);
+			$newsalescomm->save();
+			Mage::log("Saving ristono for linked Zorgpunt ".$linkedtosellerid." - seller ".$sellerid);
+		}
 		$newsalescomm = Mage::getModel('hearedfrom/salesCommission');
 		$newsalescomm->setData('user_id',$sellerid);
 		$newsalescomm->setData('orig_order_id',$orderid);
@@ -331,8 +352,22 @@ class Brainworx_Hearedfrom_Model_Observer
 		$newsalescomm->setData('type',$type);
 		$newsalescomm->setData('net_amount',$netamt);
 		$newsalescomm->setData('brut_amount',$brutamt);
-		$newsalescomm->setData('ristorno',$rst);
+		$newsalescomm->setData('ristorno',$ristorno);
 		$newsalescomm->setData('invoiced',$invoiced);
 		$newsalescomm->save();
+	}
+	public function login()
+	{
+		$_perc = 100;
+		$seller = Mage::getModel('hearedfrom/salesForce')->loadByCustid(Mage::getSingleton('customer/session')->getId());
+		if(!empty($seller)){
+			$_perc = $seller['ristorno_split_perc'];
+		}
+		Mage::getSingleton('customer/session')->setRistornoPerc($_perc);
+	}
+	
+	public function logout()
+	{
+		Mage::getSingleton('customer/session')->unsRistornoPerc();
 	}
 }

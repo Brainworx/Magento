@@ -54,9 +54,13 @@ $_specialPriceStoreLabel = $this->getProductAttribute('special_price')->getStore
 /*Brainworx*/
 $_ristorno = '';
 if(Mage::getSingleton('customer/session')->isLoggedIn()){
-	$groupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
-	if(Mage::getModel('core/variable')->setStoreId($_storeId)->loadByCode('ZORGP_GID')->getValue('text') == $groupId) {
+	$groupId = explode(",",Mage::getSingleton('customer/session')->getCustomerGroupId());
+	if(in_array(Mage::getModel('core/variable')->setStoreId($_storeId)->loadByCode('ZORGP_GID')->getValue('text'),$groupId)) {
 		$_ristorno = $_product->getRistorno();
+	}
+	$perc = Mage::getSingleton('customer/session')->getRistornoPerc();
+	if(!empty($perc)){
+		$_ristorno *= ($perc / 100);
 	}
 }
 ?>
