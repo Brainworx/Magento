@@ -204,8 +204,8 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
         $this->_expireAjax();
         if ($this->getRequest()->isPost()) {
         	if(empty($this->getRequest()->getPost('getvoice'))||
-        			empty($this->getRequest()->getPost('pddate')||
-        					empty($this->getRequest()->getPost('delrange')))){
+        		//	empty($this->getRequest()->getPost('pddate')||
+        					empty($this->getRequest()->getPost('delrange'))){
         		$this->loadLayout('checkout_onepage_hearedfrom');
         		$result['error'] = $this->__('Please complete all fields.');
         		$result['goto_section'] = 'hearedfrom';
@@ -219,59 +219,45 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
         	if($_brainworx_hearedfrom == Mage::helper('checkout')->__('Select')){
         		$_brainworx_hearedfrom = "Zorgpunt";
         	}
-        	$_preferred_delivery_date = $this->getRequest()->getPost('pddate');
+        	//preferred delivery date is selected from datepicker
+        	//$_preferred_delivery_date = $this->getRequest()->getPost('pddate');
+        	//delivery before is the date generated after picking or 24hrs or within 3 days
         	$_delivery_before = $this->getRequest()->getPost('delrange');
+        	
+        	//set preferred delivery day with selection as made in radio buttons
+        	Mage::getSingleton('core/session')->setPreferredDeliveryDate($_delivery_before);
         	Mage::getSingleton('core/session')->setDeliveryBefore($_delivery_before);
         	$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
         	//Add the seller and comment to the session
         	$seller = Mage::getModel("hearedfrom/salesForce")->loadByUsername($_brainworx_hearedfrom);
 			Mage::getSingleton('core/session')->setBrainworxHearedfrom($seller);
 			$cmt = false;
-			if(!empty($_preferred_delivery_date)){
+			if(!empty($_delivery_before)){
 				if(!empty($_comment_tozorgpunt)){
 					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
 					$cmt = $_comment_tozorgpunt;
 				}else{
 					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt('');						
 				}
-				Mage::getSingleton('core/session')->setPreferredDeliveryDate($_preferred_delivery_date);
-				//
-				if($_preferred_delivery_date != $_delivery_before)
-					$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivered between %s and %s',$_preferred_delivery_date,$_delivery_before);
-				else 
-					$_comment_tozorgpunt = Mage::helper('checkout')->__('Preferred delivery date:').' '.$_preferred_delivery_date;
+				$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivery on %s',$_delivery_before);
 				if(!empty($cmt)){
 						$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
 				}
 			}else{
 				//default delivery date = next day
-				Mage::getSingleton('core/session')->setPreferredDeliveryDate(date('d-m-Y', strtotime('+1 day')));
+				Mage::log("ERROR -- DELIVERY NOT SET".$_comment_tozorgpunt);
+				Mage::getSingleton('core/session')->setDeliveryBefore(date('d-m-Y', strtotime('+1 day')));
 				Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
 			}
 			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
 
 			$result = array();
             
-//             $redirectUrl = $this->getOnePage()->getQuote()->getPayment()->getCheckoutRedirectUrl();
-//             if (!$redirectUrl) {
-//                 $this->loadLayout('checkout_onepage_review');
-
-//                 $result['goto_section'] = 'review';
-//                 $result['update_section'] = array(
-//                     'name' => 'review',
-//                     'html' => $this->_getReviewHtml()
-//                 );
                 $result['goto_section'] = 'payment';
                 $result['update_section'] = array(
                 		'name' => 'payment-method',
                 		'html' => $this->_getPaymentMethodsHtml()
                 );
-
-//             }
-
-//             if ($redirectUrl) {
-//                 $result['redirect'] = $redirectUrl;
-//             }
 
             $this->getResponse()->setBody(Zend_Json::encode($result));
         }

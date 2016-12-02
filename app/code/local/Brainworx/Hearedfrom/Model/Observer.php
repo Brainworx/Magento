@@ -49,7 +49,6 @@ class Brainworx_Hearedfrom_Model_Observer
 		
 		//check shipment method
 		//helpers for shipping lists
-		$preferredDT=Mage::getSingleton('core/session')->getPreferredDeliveryDate();
 		$deliveryBefore=Mage::getSingleton('core/session')->getDeliveryBefore();
 		$comment=Mage::getSingleton('core/session')->getOrigCommentToZorgpunt();
 		$shippinglist = array();
@@ -77,8 +76,8 @@ class Brainworx_Hearedfrom_Model_Observer
 				//items not supplied by supplier
 				$shippingitem['Bestelling #']=$order->getIncrementId();
 				//Added in OnePageController
-				$shippingitem['Leverdatum van']=$preferredDT; 
-				$shippingitem['Leverdatum tot']=$deliveryBefore;
+				$shippingitem['Leverdatum']=$deliveryBefore; 
+				//$shippingitem['Leverdatum tot']=$deliveryBefore;
 				$shippingitem['Naam']=$order->getShippingAddress()->getFirstname().' '.$order->getShippingAddress()->getLastname();
 				$shippingitem['Adres (straat + nr)']=$order->getShippingAddress()->getStreetFull();
 				$shippingitem['Gemeente']=$order->getShippingAddress()->getCity();
@@ -116,22 +115,22 @@ class Brainworx_Hearedfrom_Model_Observer
 			$line=1;
 			$objPHPExcel->setActiveSheetIndex(0)
 			->setCellValue('A'.$line, 'Bestelling #')
-			->setCellValue('B'.$line, 'Leverdatum van')
-			->setCellValue('C'.$line, 'Leverdatum tot')
-			->setCellValue('D'.$line, 'Naam')
-			->setCellValue('E'.$line, 'Adres (straat + nr)')
-			->setCellValue('F'.$line, 'Gemeente')
-			->setCellValue('G'.$line, 'Postcode')
-			->setCellValue('H'.$line, 'Land')
-			->setCellValue('I'.$line, 'Telefoon')
-			->setCellValue('J'.$line, 'Artikel')
-			->setCellValue('K'.$line, 'Aantal')
-			->setCellValue('L'.$line, 'Artikelnr.')
-			->setCellValue('M'.$line, 'Gewicht')
-			->setCellValue('N'.$line, 'Info aan Zorgpunt')
-			->setCellValue('O'.$line, 'Type');
+			->setCellValue('B'.$line, 'Leverdatum ')
+			//->setCellValue('C'.$line, 'Leverdatum tot')
+			->setCellValue('c'.$line, 'Naam')
+			->setCellValue('D'.$line, 'Adres (straat + nr)')
+			->setCellValue('E'.$line, 'Gemeente')
+			->setCellValue('F'.$line, 'Postcode')
+			->setCellValue('G'.$line, 'Land')
+			->setCellValue('H'.$line, 'Telefoon')
+			->setCellValue('I'.$line, 'Artikel')
+			->setCellValue('J'.$line, 'Aantal')
+			->setCellValue('K'.$line, 'Artikelnr.')
+			->setCellValue('L'.$line, 'Gewicht')
+			->setCellValue('M'.$line, 'Info aan Zorgpunt')
+			->setCellValue('N'.$line, 'Type');
 			$objPHPExcel->getActiveSheet()->getStyle("A1:O1")->getFont()->setBold(true);
-			foreach(range('A','O') as $columnID) {
+			foreach(range('A','N') as $columnID) {
 				$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
 				->setAutoSize(true);
 			}
@@ -140,20 +139,20 @@ class Brainworx_Hearedfrom_Model_Observer
 				$line +=1;
 				$objPHPExcel->setActiveSheetIndex(0)
 				->setCellValue('A'.$line, $item['Bestelling #'])
-				->setCellValue('B'.$line, $item['Leverdatum van'])
-				->setCellValue('C'.$line, $item['Leverdatum tot'])
-				->setCellValue('D'.$line, $item['Naam'])
-				->setCellValue('E'.$line, $item['Adres (straat + nr)'])
-				->setCellValue('F'.$line, $item['Gemeente'])
-				->setCellValue('G'.$line, $item['Postcode'])
-				->setCellValue('H'.$line, $item['Land'])
-				->setCellValue('I'.$line, $item['Telefoon'])
-				->setCellValue('J'.$line, $item['Artikel'])
-				->setCellValue('K'.$line, $item['Aantal'])
-				->setCellValue('L'.$line, $item['Artikelnr.'])
-				->setCellValue('M'.$line, $item['Gewicht'])
-				->setCellValue('N'.$line, $item['Info aan Zorgpunt'])
-				->setCellValue('O'.$line, $item['Type']);
+				->setCellValue('B'.$line, $item['Leverdatum'])
+				//->setCellValue('C'.$line, $item['Leverdatum tot'])
+				->setCellValue('C'.$line, $item['Naam'])
+				->setCellValue('D'.$line, $item['Adres (straat + nr)'])
+				->setCellValue('E'.$line, $item['Gemeente'])
+				->setCellValue('F'.$line, $item['Postcode'])
+				->setCellValue('G'.$line, $item['Land'])
+				->setCellValue('H'.$line, $item['Telefoon'])
+				->setCellValue('I'.$line, $item['Artikel'])
+				->setCellValue('J'.$line, $item['Aantal'])
+				->setCellValue('K'.$line, $item['Artikelnr.'])
+				->setCellValue('L'.$line, $item['Gewicht'])
+				->setCellValue('M'.$line, $item['Info aan Zorgpunt'])
+				->setCellValue('N'.$line, $item['Type']);
 			}
 			//write file
 			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
@@ -316,10 +315,9 @@ class Brainworx_Hearedfrom_Model_Observer
 	}
 	public function hookToOrderPlaceAfterEvent($observer){
 		//save here the comment in the order
-		$_preferred_delivery_DT = Mage::getSingleton('core/session')->getPreferredDeliveryDate();
 		$order = $observer->getEvent()->getOrder();
 		$order->setCommentToZorgpunt(Mage::getSingleton('core/session')->getCommentToZorgpunt());
-		$order->setPreferredDeliveryDt($_preferred_delivery_DT);
+		$order->setPreferredDeliveryDt(Mage::getSingleton('core/session')->getDeliveryBefore());
 		$order->setDeliveryUntilDt(Mage::getSingleton('core/session')->getDeliveryBefore());
 		$order->save();		
 	}

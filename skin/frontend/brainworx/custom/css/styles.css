@@ -10613,3 +10613,6 @@ img.cat_img
 {
 	width: 75%;
 }
+input.tsmall{
+	width: 150px;
+}
