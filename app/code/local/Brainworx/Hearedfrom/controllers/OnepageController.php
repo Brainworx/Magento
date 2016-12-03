@@ -60,6 +60,23 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 	    			}
 	    		}
     		}
+    		//verify delivery pickup allowed
+    		//if only items from cat consig >> pickup possible, 
+    		//if minimal 1 non consignation rental item >> no pickup
+    		Mage::getSingleton('core/session')->setPickupPossible(true);
+    		$catconsig = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_CONSIG')->getValue('text');
+    		if(isset($catconsig)){
+    			$items=$this->getOnepage()->getQuote()->getAllVisibleItems();
+    			foreach ($items as  $item)
+    			{
+    				if(!empty($item->getRentalitem())&&$item->getRentalitem() == true){
+    					if(!in_array($catconsig,$item->getProduct()->getCategoryIds())){
+    						Mage::getSingleton('core/session')->setPickupPossible(false);
+    						Mage::log("Found rental without consignation cat >> pickup not possible - product ".$item->getProduct()->getSku());
+    					}
+    				}
+    			}
+    		}
     		
     
     		if (!isset($result['error'])) {
@@ -78,11 +95,46 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     
     				$result['allow_sections'] = array('shipping');
     				$result['duplicateBillingInfo'] = 'true';
+    				
     			} else {
     				$result['goto_section'] = 'shipping';
     			}
     		}
     
+    		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    	}
+    }
+    /**
+     * Shipping address save action
+     */
+    public function saveShippingAction()
+    {
+    	if ($this->_expireAjax()) {
+    		return;
+    	}
+    	if ($this->getRequest()->isPost()) {
+    		$data = $this->getRequest()->getPost('shipping', array());
+    		$customerAddressId = $this->getRequest()->getPost('shipping_address_id', false);
+    		$result = $this->getOnepage()->saveShipping($data, $customerAddressId);
+    		
+    		//If shipment addres is different from billing address, pickup isn't possible
+    		$defaultbillingaddress = $this->getOnepage()->getQuote()->getCustomer()->getDefaultBillingAddress();
+    		if($defaultbillingaddress){
+    			if($defaultbillingaddress->getId() != $customerAddressId){
+    				 Mage::getSingleton('core/session')->setPickupPossible(false);
+    				 Mage::log("Selected other delivery address >> no pickup possible - address:".$customerAddressId);
+    			}else{
+    				Mage::getSingleton('core/session')->setPickupPossible(true);    				
+    			}
+    		}
+    
+    		if (!isset($result['error'])) {
+    			$result['goto_section'] = 'shipping_method';
+    			$result['update_section'] = array(
+    					'name' => 'shipping-method',
+    					'html' => $this->_getShippingMethodsHtml()
+    			);
+    		}
     		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
     	}
     }
