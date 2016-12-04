@@ -32,7 +32,25 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     			$data['email'] = trim($data['email']);
     		}
     		$result = $this->getOnepage()->saveBilling($data, $customerAddressId);
-    		
+    		//verify delivery pickup allowed
+    		$onlySalesORConsigRental = true;
+    		//if only items from cat consig >> pickup possible,
+    		//if minimal 1 non consignation rental item >> no pickup
+    		Mage::getSingleton('core/session')->setPickupPossible(true);
+    		$catconsig = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_CONSIG')->getValue('text');
+    		if(isset($catconsig)){
+    			$items=$this->getOnepage()->getQuote()->getAllVisibleItems();
+    			foreach ($items as  $item)
+    			{
+    				if(!empty($item->getRentalitem())&&$item->getRentalitem() == true){
+    					if(!in_array($catconsig,$item->getProduct()->getCategoryIds())){
+    						$onlySalesORConsigRental= false;
+    						Mage::getSingleton('core/session')->setPickupPossible(false);
+    						Mage::log("Found rental without consignation cat >> pickup not possible - product ".$item->getProduct()->getSku());
+    					}
+    				}
+    			}
+    		}
     		//verify stocksupply is possible
     		//todo check order contents - only rental allowed for stock supply
     		Mage::getSingleton('core/session')->setStockSupplyPossible(false);
@@ -41,10 +59,11 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 	    		$defaultbillingaddress = $this->getOnepage()->getQuote()->getCustomer()->getDefaultBillingAddress();
 	    		if($defaultbillingaddress){
 	    			if($defaultbillingaddress->getId() == $customerAddressId){
-	    				//stock supply possible
-	    				Mage::getSingleton('core/session')->setStockSupplyPossible(true);
+	    				//stock supply possible for sales or consig rentals
+	    				Mage::getSingleton('core/session')->setStockSupplyPossible($onlySalesORConsigRental);
 	    				$supplyAll = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('STOCK_SUPPLY_ALL')->getValue('text');
 	    				if(isset($supplyAll)&&$supplyAll==0){
+	    					//limit stocksupply to (consig) rental
 		    				$items=$this->getOnepage()->getQuote()->getAllVisibleItems();
 		    				foreach ($items as  $item)
 		    				{
@@ -60,23 +79,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 	    			}
 	    		}
     		}
-    		//verify delivery pickup allowed
-    		//if only items from cat consig >> pickup possible, 
-    		//if minimal 1 non consignation rental item >> no pickup
-    		Mage::getSingleton('core/session')->setPickupPossible(true);
-    		$catconsig = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_CONSIG')->getValue('text');
-    		if(isset($catconsig)){
-    			$items=$this->getOnepage()->getQuote()->getAllVisibleItems();
-    			foreach ($items as  $item)
-    			{
-    				if(!empty($item->getRentalitem())&&$item->getRentalitem() == true){
-    					if(!in_array($catconsig,$item->getProduct()->getCategoryIds())){
-    						Mage::getSingleton('core/session')->setPickupPossible(false);
-    						Mage::log("Found rental without consignation cat >> pickup not possible - product ".$item->getProduct()->getSku());
-    					}
-    				}
-    			}
-    		}
+    		
     		
     
     		if (!isset($result['error'])) {
@@ -117,16 +120,17 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		$customerAddressId = $this->getRequest()->getPost('shipping_address_id', false);
     		$result = $this->getOnepage()->saveShipping($data, $customerAddressId);
     		
+    		//default no pickup as other delivery address was selected
+    		Mage::getSingleton('core/session')->setPickupPossible(false);
     		//If shipment addres is different from billing address, pickup isn't possible
-    		$defaultbillingaddress = $this->getOnepage()->getQuote()->getCustomer()->getDefaultBillingAddress();
-    		if($defaultbillingaddress){
-    			if($defaultbillingaddress->getId() != $customerAddressId){
-    				 Mage::getSingleton('core/session')->setPickupPossible(false);
-    				 Mage::log("Selected other delivery address >> no pickup possible - address:".$customerAddressId);
-    			}else{
-    				Mage::getSingleton('core/session')->setPickupPossible(true);    				
-    			}
+    		$billingaddress = $this->getOnepage()->getQuote()->getBillingAddress();
+    		if($billingaddress->getCustomerAddressId() != $customerAddressId){
+    			Mage::getSingleton('core/session')->setPickupPossible(false);
+    			Mage::log("Selected other delivery address >> no pickup possible - address:".$customerAddressId);
+    		}else{
+    			Mage::getSingleton('core/session')->setPickupPossible(true);    				
     		}
+    		
     
     		if (!isset($result['error'])) {
     			$result['goto_section'] = 'shipping_method';
