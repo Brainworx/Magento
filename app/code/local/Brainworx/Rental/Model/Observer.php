@@ -73,8 +73,9 @@ class Brainworx_Rental_Model_Observer
 						$newrentalitem->setData('orig_order_id',$order->getEntityId());
 						$newrentalitem->setData('order_item_id',$item->getItemId());
 						$newrentalitem->setData('quantity',$item->getQtyOrdered());// nr of items - not days
-						//start verhuur bij levering is leverdatum, bij afhaling ingave order
-						if($order->getShippingInclTax()>0){
+						//start bij levering is leverdatum
+						if(isset(Mage::getSingleton('core/session')->getDeliveryBefore())
+								&& !empty(Mage::getSingleton('core/session')->getDeliveryBefore())){
 							$start_date = Mage::getSingleton('core/session')->getDeliveryBefore();
 						}else{
 							$start_date = date("Y-m-d");
