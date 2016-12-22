@@ -120,15 +120,19 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		$customerAddressId = $this->getRequest()->getPost('shipping_address_id', false);
     		$result = $this->getOnepage()->saveShipping($data, $customerAddressId);
     		
-    		//default no pickup as other delivery address was selected
-    		Mage::getSingleton('core/session')->setPickupPossible(false);
-    		//If shipment addres is different from billing address, pickup isn't possible
-    		$billingaddress = $this->getOnepage()->getQuote()->getBillingAddress();
-    		if($billingaddress->getCustomerAddressId() != $customerAddressId){
-    			Mage::getSingleton('core/session')->setPickupPossible(false);
-    			Mage::log("Selected other delivery address >> no pickup possible - address:".$customerAddressId);
-    		}else{
-    			Mage::getSingleton('core/session')->setPickupPossible(true);    				
+    		//check if pickup is possible - could be no depending basket which is checked in previous actions
+    		if(Mage::getSingleton('core/session')->getPickupPossible()){
+	    		//default no pickup as other delivery address was selected
+	    		Mage::getSingleton('core/session')->setPickupPossible(false);
+	    		//If shipment addres is different from billing address, pickup isn't possible
+	    		$billingaddress = $this->getOnepage()->getQuote()->getBillingAddress();
+	    		if((isset($data['same_as_billing']) && $data['same_as_billing']==1)
+	    				 || ($customerAddressId && $billingaddress->getCustomerAddressId() == $customerAddressId)){
+	    			Mage::getSingleton('core/session')->setPickupPossible(true);
+	    		}else{    	
+	    			Mage::getSingleton('core/session')->setPickupPossible(false);
+	    			Mage::log("Selected other delivery address >> no pickup possible - address:".$customerAddressId);
+	    		}
     		}
     		
     
