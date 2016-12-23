@@ -87,7 +87,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		Mage::getSingleton('core/session')->setDeliveryPossible($levfound);
     	}else{
     		//Default only delivery at home -- should not occur
-    		Mage:log('Default delivery only - should not occur!! -- customer '.$this->getOnepage()->getQuote()->getCustomer()->getEntityId());
+    		//Mage:log('Default delivery only - should not occur!! --  ');
     		Mage::getSingleton('core/session')->setPickupPossible(false);
     		Mage::getSingleton('core/session')->setStockSupplyPossible(false);
     		Mage::getSingleton('core/session')->setDeliveryPossible(true);

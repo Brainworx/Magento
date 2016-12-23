@@ -52,7 +52,8 @@ class Brainworx_Hearedfrom_Model_Observer
 		$deliveryBefore=Mage::getSingleton('core/session')->getDeliveryBefore();
 		$comment=Mage::getSingleton('core/session')->getOrigCommentToZorgpunt();
 		$shippinglist = array();
-		if($order->getShippingInclTax()>0 || $order->getShippingMethod()=='flatrate_flatrate'){
+		//$order->getShippingInclTax()>0
+		if(  $order->getShippingMethod()=='tablerate_bestway'|| $order->getShippingMethod()=='flatrate_flatrate'){
 			//need to create excel to send to external delivery party
 			$delivery_to_report = true;
 		}
