@@ -16,6 +16,11 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 			$result['goto_section'] = 'shipping';
 		}		
     }
+    /*
+     * Bepaal leveropties op basis van categorieën
+     * in design frontend/checkout/onepage/shipment_method/available wordt dit gebruikt
+     * custom var nodig
+     */
     private function determineDeliveryOptions($customerAddressId){
     	$consigfound=false;
     	$afhfound=false;
