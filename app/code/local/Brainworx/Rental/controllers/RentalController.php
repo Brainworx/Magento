@@ -162,7 +162,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 		} else {
 			try {
 				
-				$success = Mage::helper('rental/terminator')->TerminateRentals(date('d-m-Y', strtotime('+2 day')),$rentalIds);
+				$success = Mage::helper('rental/terminator')->TerminateRentals(date('d-m-Y', strtotime('+3 day')),$rentalIds);
 				if($success){
 					Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( Mage::helper ( 'rental' )->__ ( '%d verhuuritem(s) werden vandaag beeindigd.', count ( $rentalIds ) ) );
 				}else{
