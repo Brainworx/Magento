@@ -34,7 +34,8 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 				$shippingitem = self::terminateOneRental($rentalModel,$pickupDT,$orderModel,$itemModel,$endDT);
 				if(!empty($itemModel->getSupplierneworderemail())){
 					$shippinglistSupplier[$itemModel->getSupplierneworderemail()][]=$shippingitem;
-				}elseif($orderModel->getShippingMethod()=='tablerate_bestway'){//->getShippingInclTax()>0){
+				}elseif($orderModel->getShippingMethod()=='tablerate_bestway'
+						|| $orderModel->getShippingInclTax()>0){ //from earlier orders flatrate_flatrate can be found with shipping cost so pickup required
 					//check seller 
 					$seller = Mage::getModel('hearedfrom/salesSeller')->loadByOrderId($orderModel->getIncrementId());
 					if(isset($seller) && $seller != false && in_array($seller['user_id'],$specialsellerids)){
