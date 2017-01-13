@@ -517,4 +517,49 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			$this->y -= 15;
 		}
 	}
+	/**
+	 * Insert logo to pdf page
+	 *
+	 * @param Zend_Pdf_Page $page
+	 * @param null $store
+	 */
+	protected function insertLogo(&$page, $store = null)
+	{
+		$this->y = $this->y ? $this->y : 815;
+		$image = Mage::getStoreConfig('sales/identity/logo', $store);
+		if ($image) {
+			$image = Mage::getBaseDir('media') . '/sales/store/logo/' . $image;
+			if (is_file($image)) {
+				$image       = Zend_Pdf_Image::imageWithPath($image);
+				$top         = 830; //top border of the page
+				$widthLimit  = 160; //SHE update so logo is smaller and invoice address get higher
+				$heightLimit = 160; //SHE update so logo is smaller and invoice address get higher
+				$width       = $image->getPixelWidth();
+				$height      = $image->getPixelHeight();
+	
+				//preserving aspect ratio (proportions)
+				$ratio = $width / $height;
+				if ($ratio > 1 && $width > $widthLimit) {
+					$width  = $widthLimit;
+					$height = $width / $ratio;
+				} elseif ($ratio < 1 && $height > $heightLimit) {
+					$height = $heightLimit;
+					$width  = $height * $ratio;
+				} elseif ($ratio == 1 && $height > $heightLimit) {
+					$height = $heightLimit;
+					$width  = $widthLimit;
+				}
+	
+				$y1 = $top - $height;
+				$y2 = $top;
+				$x1 = 25;
+				$x2 = $x1 + $width;
+	
+				//coordinates after transformation are rounded by Zend
+				$page->drawImage($image, $x1, $y1, $x2, $y2);
+	
+				$this->y = $y1 - 10;
+			}
+		}
+	}
 }
