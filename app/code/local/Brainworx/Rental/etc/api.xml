@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<config>
+    <api>
+        <resources>
+            <rental_customer translate="title" module="rental">
+                <model>rental/customer_api</model>
+                <title>Brainworx Customer API</title>
+                <acl>rental_customer</acl>
+                <methods>
+                    <login translate="title" module="rental">
+                        <title>Login Customer</title>
+                        <method>login</method>
+                        <acl>rental_customer/login</acl>
+                    </login>
+                </methods>
+                <faults module="rental">
+                    <data_invalid>
+                        <code>100</code>
+                        <message>Invalid customer data. Details in error message.</message>
+                    </data_invalid>
+                    <filters_invalid>
+                        <code>101</code>
+                        <message>Invalid filters specified. Details in error message.</message>
+                    </filters_invalid>
+                    <not_exists>
+                        <code>102</code>
+                        <message>Customer not exists.</message>
+                    </not_exists>
+                    <not_deleted>
+                        <code>103</code>
+                        <message>Customer not deleted. Details in error message.</message>
+                    </not_deleted>
+                </faults>
+            </rental_customer>
+        </resources>
+        <v2>
+            <resources_function_prefix>
+                <rental_customer>zorgpuntCustomer</rental_customer>
+            </resources_function_prefix>
+        </v2>
+        <acl>
+            <resources>
+                <rental_customer translate="title" module="rental">
+                     <title>Customer</title>
+                     <sort_order>3</sort_order>
+                     <login translate="title" module="rental">
+                        <title>Login</title>
+                     </login>                    
+                </rental_customer>
+            </resources>
+        </acl>
+    </api>
+</config>
