@@ -14,7 +14,8 @@
 "var order.shipping_description":"Shipping Description",
 "layout area=\"frontend\" handle=\"sales_email_order_invoice_items\" invoice=$invoice order=$order":"Invoice Items Grid",
 "var comment":"Invoice Comment",
-"var seller":"Zorgpunt"}
+"var seller":"Zorgpunt",
+"var invoicedt":"Invoice Dt"}
 @-->
 <!--@styles
 @-->
@@ -25,36 +26,9 @@
 
 <table cellpadding="0" cellspacing="0" border="0">
     <tr>
-        <td>
-            <table cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                   <td class="email-heading">
-                       <h1>Bedankt voor je bestelling op {{var store.getFrontendName()}}.</h1>
-                        <p>Je kan de status van je bestelling opvolgen door <a href="{{store url="customer/account/"}}"">in te loggen op je account</a>.</p>
-                    </td>
-                    <td class="store-info">
-                        <h4>Andere vragen?</h4>
-                        <p>
-                            {{depend store_phone}}
-                            <b>Bel ons:</b>
-                            <a href="tel:{{var phone}}">{{var store_phone}}</a><br>
-                            {{/depend}}
-                            {{depend store_hours}}
-                            <span class="no-link">{{var store_hours}}</span><br>
-                            {{/depend}}
-                            {{depend store_email}}
-                            <b>Mail ons:</b> <a href="mailto:{{var store_email}}">{{var store_email}}</a>
-                            {{/depend}}
-                        </p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-        <tr>
         <td class="order-details">
-            <h3>Je factuur <span class="no-link">{{var invoice.increment_id}}</span></h3>
-            <p>Bestelling <span class="no-link">{{var order.increment_id}}</span></p>
+            <h3>Factuur <span class="no-link">{{var invoice.increment_id}}</span></h3>
+            <p>Factuurdatum: {{var invoicedt}}<br/>Bestelling <span class="no-link">{{var order.increment_id}}</span></p>
         </td>
     </tr>
     <tr class="order-information">
@@ -69,7 +43,7 @@
             {{if seller}}
             <table cellspacing="0" cellpadding="0" class="message-container">
                 <tr>
-                    <td>Je Zorgpunt: {{var seller}}</td>
+                    <td>{{var seller}}</td>
                 </tr>
             </table>
             {{/if}}

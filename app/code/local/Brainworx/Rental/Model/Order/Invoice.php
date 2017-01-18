@@ -94,6 +94,7 @@ class Brainworx_Rental_Model_Order_Invoice extends Mage_Sales_Model_Order_Invoic
 				'billing'      => $order->getBillingAddress(),
 				'payment_html' => $paymentBlockHtml,
 				'seller'	   => $seller,
+				'invoicedt'	   => Mage::helper('core')->formatDate($this->getCreatedAt(), 'medium', false)
 		)
 		);
 		$mailer->send();
