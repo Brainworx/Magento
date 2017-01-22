@@ -174,7 +174,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$page->setFillColor(new Zend_Pdf_Color_GrayScale(1));
 		$this->_setFontRegular($page, 10);
 		$docHeader = $this->getDocHeaderCoordinates();
-		$page->drawText($text, 450, $docHeader[1] - 15, 'UTF-8');
+		$page->drawText($text, 443, $docHeader[1] - 15, 'UTF-8');
 	}
 	/**
 	 * Insert footer
