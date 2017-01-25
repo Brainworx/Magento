@@ -71,6 +71,11 @@
 			    		<order_invoice>Brainworx_Rental_Model_Order_Invoice</order_invoice>
 			    	</rewrite>
 			    </sales>
+			    <checkout>
+			    	<rewrite>
+			    		<session>Brainworx_Rental_Model_Session</session>
+			    	</rewrite>
+			    </checkout>
 		</models>
 		
 		<!-- update totals section on pdf -->
