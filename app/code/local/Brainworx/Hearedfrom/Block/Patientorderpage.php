@@ -44,7 +44,9 @@ class Brainworx_Hearedfrom_Block_Patientorderpage extends Mage_Customer_Block_Ac
     	
     	$collection->addFieldToFilter('user_id',
     			Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId())['entity_id']);
-    	
+    	//fiter out cancelled orders
+    	$collection->addFieldToFilter('status', array('nlike' => 'canceled'));
+    	 
     	$collection->setOrder('increment_id');
 		return $collection;
 	}

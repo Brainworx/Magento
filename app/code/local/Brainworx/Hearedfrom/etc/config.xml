@@ -106,6 +106,13 @@
                     <account_navigation>Brainworx_Hearedfrom_Block_AddCustomerlink</account_navigation>
                 </rewrite>
             </customer>
+            <!-- leave out cancelled order in the my account view -->
+            <sales>
+            	<rewrite>
+            		<order_history>Brainworx_Hearedfrom_Block_Order_History</order_history>
+            		<order_recent>Brainworx_Hearedfrom_Block_Order_Recent</order_recent>
+            	</rewrite>
+            </sales>
 		</blocks>
 
 		<!-- Here we modify the checkout to our custom one -->
