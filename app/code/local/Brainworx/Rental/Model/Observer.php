@@ -209,7 +209,7 @@ class Brainworx_Rental_Model_Observer
 					// I'm using the Store Name as sender name here.
 					$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);
 					// I'm using the general store contact here as the sender email.
-					$sender_email = Mage::getStoreConfig('trans_email/ident_general/email');
+					$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
 					$email_template->setSenderName($sender_name);
 					$email_template->setSenderEmail($sender_email);
 					$email_template->addBcc($sender_email);
