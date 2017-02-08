@@ -73,12 +73,12 @@ class Brainworx_Rental_Model_Observer
 						$newrentalitem->setData('orig_order_id',$order->getEntityId());
 						$newrentalitem->setData('order_item_id',$item->getItemId());
 						$newrentalitem->setData('quantity',$item->getQtyOrdered());// nr of items - not days
-						//start verhuur bij levering is leverdatum, bij afhaling ingave order
-						//if($order->getShippingInclTax()>0){
-						if($order->getShippingMethod()=='tablerate_bestway'){
-							$start_date = Mage::getSingleton('core/session')->getDeliveryBefore();
-						}else{
+						//old rule: start verhuur bij levering is leverdatum, bij afhaling ingave order
+						//ticket 144 new rule: always delivery date
+						$start_date = Mage::getSingleton('core/session')->getDeliveryBefore();
+						if(! isset($start_date)){
 							$start_date = date("Y-m-d");
+							Mage::log('Startdate set to today as delivery date was empty! '.$order->getIncrementId());
 						}
 						$newrentalitem->setStartDt($start_date);
 						
@@ -281,6 +281,58 @@ class Brainworx_Rental_Model_Observer
 		}
 		
 	}
+	/**
+	 * Observer method configured for sales_order_place_after
+	 *
+	 * Update stock quantity and in rent quantity for salesforcestock.
+	 *
+	 * Magento passes a Varien_Event_Observer object as
+	 * the first parameter of dispatched events.
+	 *
+	public function checkNewConsignation(Varien_Event_Observer $observer)
+	{
+		try{
+			$items=$order->getAllVisibleItems();
+			$cat = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_CONSIG')->getValue('text');
+			$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
+				
+			foreach ($items as  $item)
+			{
+				if(in_array($cat, $item->getProduct()->getCategoryIds())){
+					//update stock record
+					$stock = Mage::getModel('hearedfrom/salesForceStock')->lodByProdCodeAndSalesForce($item->getProduct()->getSku(),$_hearedfrom_salesforce["entity_id"]);
+					if(!isset($stock)){
+						$stock = Mage::getModel('hearedfrom/salesForceStock');
+						$stock->setData("force_id",$_hearedfrom_salesforce["entity_id"]);
+						$stock->setData("article_pcd",$item->getProduct()->getSku());
+						$stock->setData("stock_quantity",0);
+						$stock->setData("inrent_quantity",1);
+					}else{
+						$qstock = $stock['stock_quantity'];
+						$qinrent = $stock['inrent_quantity'];
+						if($qstock >= $item->getQtyOrdered()){
+							$qstock = $qstock - $item->getQtyOrdered();
+						}else{
+							$qstock = 0;
+						}
+						$stock['stock_quantity'] = $qstock;
+						$qinrent = $qinrent + $item->getQtyOrdered();
+						$stock['inrent_quantity'] = $qinrent;
+					}
+					$stock->save();
+					unset($stock);
+				}
+			}
+			
+		}catch(Exception $e){
+			Mage::log($e->getMessage());
+			//set error message in session
+			Mage::getSingleton('core/session')->addError('Sorry, er gebeurde een fout tijdens het wegschrijven van je bestelling.');
+			die;
+		}
+		
+		
+	}*/
 	/**
 	 * Observer method configured for sales_quote_product_add_after
 	 * After adding a rental item or item invoiced by the supplier
