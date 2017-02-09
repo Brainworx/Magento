@@ -4,9 +4,26 @@
 	$j('#hearedfrom-buttons-container button').click(validate);
   });
  function setup(){
+	 /*flatrate for consignation stock supply*/
 	 if($j('#s_method_flatrate_flatrate').is(':checked')) {
 		$j("#dateoptions").append('<li id="delrange3"> <input required type="radio" class="radio" name="delrange" value="'+dateToText(determineDeliveryDay(3))+'" checked></input><label class="elong"> Binnen 3 dagen (ten laatste op '+dateToText(determineDeliveryDay(3))+')</label></li>');
-	 }else{    		
+	 }else if($j('#s_method_freeshipping_freeshipping').is(':checked')){ 
+		 /*pickup*/
+		$j("#dateoptions").append('<li id="delrange2"> <input id="rsel2" required type="radio" class="radio" name="delrange" value="'+dateToText(determineDeliveryDay(0))+'"></input><label class="elong"> Onmiddellijk meegenomen <input class="tsmall" type="text" name="" id="dummy" value="'+dateToText(determineDeliveryDay(0))+'" disabled/></label></li>');
+		$j("#dateoptions").append('<li id="delrange1"> <input id="rsel" required type="radio" class="radio" name="delrange" value="0"></input><label class="elong"> Selecteer een datum: <input class="tsmall" type="text" name="pddate" id="pddate" value=""/> </label></li>');
+	    $j( "#pddate" ).datepicker({ 
+	     	minDate: 1, dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	      	beforeShowDay: function(date) {
+	      		var day = date.getDay();
+	       		return [day != 0,''];
+	       		},
+	       	onSelect: function(dateText, inst) {
+	       		$j("#rsel").prop('checked', true);
+	       		$j("#rsel").val(dateText);
+	    }});
+	    $j("#rsel2").prop('checked', true);
+	 }else {
+		 /*delivered*/
 		$j("#dateoptions").append('<li id="delrange1"> <input id="rsel" required type="radio" class="radio" name="delrange" value="0"></input><label class="elong"> Selecteer een datum: <input class="tsmall" type="text" name="pddate" id="pddate" value=""/> </label></li>');
         $j("#dateoptions").append('<li id="delrange2"> <input required type="radio" class="radio" name="delrange" value="'+dateToText(determineDeliveryDay(1))+'"></input><label class="elong"> DRINGEND - 24u - <input class="tsmall" type="text" name="" id="dummy" value="'+dateToText(determineDeliveryDay(1))+'" disabled/></label></li>');
         $j( "#pddate" ).datepicker({ 
