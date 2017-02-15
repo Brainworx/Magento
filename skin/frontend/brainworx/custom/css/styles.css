@@ -6116,7 +6116,7 @@ p.product-name a:hover {
 .crosssell {
   float: right;
   clear: right;
-  width: 40%;
+  width: 30%; /*she 40% --> 30%*/
   padding-left: 20px;
 }
 
@@ -6738,7 +6738,7 @@ p.product-name a:hover {
   border-bottom: 1px solid #E6E6E6;
 }
 .cart .cart-totals table tfoot td {
-  font-size: 24px;
+  font-size: 18px; /*she 24px -> 18px */
   padding: 2px 5px;
   vertical-align: top;
 }
