@@ -4,7 +4,10 @@
     name="{{var wsdl.name}}" targetNamespace="urn:{{var wsdl.name}}">
     <message name="zorgpuntCustomerLoginRequest">
     	<part name="sessionId" type="xsd:string" />
+    	<part name="mederiId" type="xsd:int"/>
         <part name="email" type="xsd:string" />
+        <part name="firstname" type="xsd:string" />
+        <part name="lastname" type="xsd:string" />
     </message>
     <message name="zorgpuntCustomerLoginResponse">
         <part name="customerSessionId" type="xsd:string" />

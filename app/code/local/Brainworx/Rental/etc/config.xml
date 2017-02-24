@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Brainworx_Rental>
-            <version>0.1.4</version>    <!-- Version number of your module -->
+            <version>0.1.5</version>    <!-- Version number of your module -->
         </Brainworx_Rental>
     </modules>
 	<admin>
@@ -58,6 +58,9 @@
 						<rentedItem>
 							<table>rental_renteditem</table>
 						</rentedItem>
+						<mederi>
+							<table>rental_mederi</table>
+						</mederi>
 					</entities>
 				</rental_resource>
 				 <sales>
@@ -160,6 +163,8 @@
                         <!-- The type of class to instantiate -->
                         <type>singleton</type>
                     </rental>
+                   <!-- hooktosaveorder add commission -->
+                    
                 </observers>
             </sales_order_place_after>
         </events>
