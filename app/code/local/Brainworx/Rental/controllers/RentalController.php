@@ -402,9 +402,41 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			$invoice = Mage::getModel ( 'sales/service_order', $order )->prepareInvoice ( $qtys );
 			//TODO add Mage::getModel('sales/order_payment_transaction')
 			//$invoice->getOrder()->getPayment()->setCanCapture(true);
+			
+			
+			
 			$invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_OFFLINE);
+			
 			//register invoice to update order totals and invoiced quantities
 			$invoice->register();
+			
+			// remove invoice grand total from order paid amount as they where added during register
+			$order->setTotalPaid($order->getTotalPaid()-$invoice->getGrandTotal());
+			$order->setBaseTotalPaid($order->getBaseTotalPaid()-$invoice->getBaseGrandTotal());
+			
+			//FIX ticket 159 tickets wrong invoice: Check subtotal generated invoice to prevent issue with amount CN
+			if($invoice->getSubtotal()<>$grandTotal){
+				$correction = $invoice->getSubtotal()-$grandTotal;
+				Mage::log('Invoice subtotal wrong '.$order->getIncrementId().' amount '.$invoice->getSubtotal().' should be '.$grandTotal.' correction '.$correction);
+				$invoice->setSubtotal($grandTotal);
+				$invoice->setBaseSubtotal($grandTotal);
+				$invoice->setSubtotalInclTax($grandTotalInclTax);
+				$invoice->setBaseSubtotalInclTax($grandTotalInclTax);
+				$invoice->setGrandTotal($grandTotalInclTax);
+				$invoice->setBaseGrandTotal($grandTotalInclTax);
+					
+				// Correct order invoiced amounts - total due is auto generated correctly
+				$order->setBaseTotalInvoiced($order->getGrandTotal());
+				$order->setTotalInvoiced($order->getGrandTotal());
+				$order->setSubtotalInvoiced($order->getSubTotal());
+				$order->setBaseSubtotalInvoiced($order->getSubTotal());
+				
+				//fix //sales_flat_order_payment - base amount paid, amount_paid contain difference
+				$payment = $order->getPayment();
+				$payment->setAmountPaid($order->getGrandTotal());
+				$payment->setBaseAmountPaid($order->getGrandTotal());
+				$payment->save();
+			}
 						
 			//add note to invoice about invoiced period
 			$invoice->addComment($comment);
@@ -412,9 +444,6 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			$invoice->getOrder ()->setIsInProcess ( true );
 			// Options: STATE_OPEN / STATE_PAID / STATE_CANCELED					
 			$invoice->setState(Mage_Sales_Model_Order_Invoice::STATE_OPEN);
-			// remove invoice grand total from order paid amount as they where added during register
-			$order->setTotalPaid($order->getTotalPaid()-$invoice->getGrandTotal());
-			$order->setBaseTotalPaid($order->getBaseTotalPaid()-$invoice->getBaseGrandTotal());
 				
 			//add comment about money transfer
 			$history = $invoice->getOrder ()->addStatusHistoryComment ( 'Verhuur factuur '. $invoiceDt
