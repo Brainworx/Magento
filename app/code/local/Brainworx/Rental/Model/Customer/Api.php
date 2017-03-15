@@ -94,6 +94,8 @@ class Brainworx_Rental_Customer_Model_Customer_Api extends Mage_Customer_Model_C
 				}
 			}
 			if(!empty($update)){
+				$groupid = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_GID')->getValue('text');
+				$customer->setData('group_id', $groupid);
 				$customer->save();
 				$log = $log.$update.'- cust saved -';
 			}
