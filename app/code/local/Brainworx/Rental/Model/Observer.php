@@ -109,49 +109,49 @@ class Brainworx_Rental_Model_Observer
 									array(
 											array('eq'=>$item->getProduct()->getData('tax_class_id')))
 							);
-									foreach ( $taxCollection as $taxR ) {
-										$code = $taxR->getData("code");
-										//Check add sale_tax
-										$saleTaxes = Mage::getModel('tax/sales_order_tax')->getCollection()
+							foreach ( $taxCollection as $taxR ) {
+								$code = $taxR->getData("code");
+								//Check add sale_tax
+								$saleTaxes = Mage::getModel('tax/sales_order_tax')->getCollection()
+								->addFieldToFilter(
+										array('order_id'),
+										array(array('eq'=> $order->getEntityId())))
 										->addFieldToFilter(
-												array('order_id'),
-												array(array('eq'=> $order->getEntityId())))
-												->addFieldToFilter(
-														array('code'),
-														array(array('eq'=> $code)));
-										if(0==count($saleTaxes)){
-											$data = array(
-													'order_id'          => $order->getId(),
-													'code'              => $code,
-													'title'             => $code, // here you could check tax_calculation_rate_title for overloaded title-if multiple stores exist
-													'hidden'            => 0,
-													'percent'           => $taxR->getData('rate'),
-													'priority'          => $taxR->getData('priority'),
-													'position'          => $taxR->getData('position'),
-													'amount'            => 0,
-													'base_amount'       => 0,
-													'process'           => $process,
-													'base_real_amount'  => 0,
-											);
-											$saleTax = Mage::getModel('tax/sales_order_tax')->setData($data)->save();
-											//process = used to sort tax rates per order
-											$process++;
-										}else{
-											foreach($saleTaxes as $st){
-												$saleTax = $st;
-												break;
-											}
-										}
-									}
-					
-									//load data for sale tax item
+												array('code'),
+												array(array('eq'=> $code)));
+								if(0==count($saleTaxes)){
 									$data = array(
-											'item_id'       => $item->getItemId(),
-											'tax_id'        => $saleTax->getTaxId(),
-											'tax_percent'   => $saleTax->getPercent()
+											'order_id'          => $order->getId(),
+											'code'              => $code,
+											'title'             => $code, // here you could check tax_calculation_rate_title for overloaded title-if multiple stores exist
+											'hidden'            => 0,
+											'percent'           => $taxR->getData('rate'),
+											'priority'          => $taxR->getData('priority'),
+											'position'          => $taxR->getData('position'),
+											'amount'            => 0,
+											'base_amount'       => 0,
+											'process'           => $process,
+											'base_real_amount'  => 0,
 									);
-									//save the sale tax item
-									Mage::getModel('tax/sales_order_tax_item')->setData($data)->save();
+									$saleTax = Mage::getModel('tax/sales_order_tax')->setData($data)->save();
+									//process = used to sort tax rates per order
+									$process++;
+								}else{
+									foreach($saleTaxes as $st){
+										$saleTax = $st;
+										break;
+									}
+								}
+							}
+			
+							//load data for sale tax item
+							$data = array(
+									'item_id'       => $item->getItemId(),
+									'tax_id'        => $saleTax->getTaxId(),
+									'tax_percent'   => $saleTax->getPercent()
+							);
+							//save the sale tax item
+							Mage::getModel('tax/sales_order_tax_item')->setData($data)->save();
 						}
 					}catch(Exception $e){
 						Mage::log($e->getMessage());
@@ -288,10 +288,11 @@ class Brainworx_Rental_Model_Observer
 	 *
 	 * Magento passes a Varien_Event_Observer object as
 	 * the first parameter of dispatched events.
-	 *
+	 */
 	public function checkNewConsignation(Varien_Event_Observer $observer)
 	{
 		try{
+			$order = $observer->getEvent()->getOrder();
 			$items=$order->getAllVisibleItems();
 			$cat = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_CONSIG')->getValue('text');
 			$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
@@ -299,28 +300,44 @@ class Brainworx_Rental_Model_Observer
 			foreach ($items as  $item)
 			{
 				if(in_array($cat, $item->getProduct()->getCategoryIds())){
-					//update stock record
-					$stock = Mage::getModel('hearedfrom/salesForceStock')->lodByProdCodeAndSalesForce($item->getProduct()->getSku(),$_hearedfrom_salesforce["entity_id"]);
-					if(!isset($stock)){
+					//update stock record as the order is to add stock item(s)
+					$stock = Mage::getModel('hearedfrom/salesForceStock')->loadByProdCodeAndSalesForce($item->getProduct()->getSku(),$_hearedfrom_salesforce["entity_id"]);
+					if(empty($stock)){
 						$stock = Mage::getModel('hearedfrom/salesForceStock');
 						$stock->setData("force_id",$_hearedfrom_salesforce["entity_id"]);
 						$stock->setData("article_pcd",$item->getProduct()->getSku());
-						$stock->setData("stock_quantity",0);
-						$stock->setData("inrent_quantity",1);
+						$stock->setData("stock_quantity",$item->getQtyOrdered());
+						$stock->setData("inrent_quantity",0);
 					}else{
-						$qstock = $stock['stock_quantity'];
-						$qinrent = $stock['inrent_quantity'];
+						$qstock = $stock[0]['stock_quantity']+ $item->getQtyOrdered();
+						$stock['stock_quantity'] = $qstock;
+					}
+					$stockitem = Mage::getModel('hearedfrom/salesForceStock')->load($stock[0]['entity_id']);
+					$stockitem->setData('stock_quantity',$qstock);
+					$stockitem->save();
+					unset($stockitem);
+					unset($stock);
+				}else{
+					//check the zorgpunt stock and update if required
+					$stock = Mage::getModel('hearedfrom/salesForceStock')->loadByProdCodeAndSalesForce('cons'.$item->getProduct()->getSku(),$_hearedfrom_salesforce["entity_id"]);
+					if(!empty($stock)){
+						$qstock = $stock[0]['stock_quantity'];
+						$qinrent = $stock[0]['inrent_quantity'];
 						if($qstock >= $item->getQtyOrdered()){
 							$qstock = $qstock - $item->getQtyOrdered();
 						}else{
 							$qstock = 0;
 						}
-						$stock['stock_quantity'] = $qstock;
+						$stock[0]['stock_quantity'] = $qstock;
 						$qinrent = $qinrent + $item->getQtyOrdered();
-						$stock['inrent_quantity'] = $qinrent;
+						$stock[0]['inrent_quantity'] = $qinrent;
+						
+						$stockitem = Mage::getModel('hearedfrom/salesForceStock')->load($stock[0]['entity_id']);
+						$stockitem->setData('inrent_quantity',$qinrent);
+						$stockitem->setData('stock_quantity',$qstock);
+						$stockitem->save();
+						unset($stockitem);
 					}
-					$stock->save();
-					unset($stock);
 				}
 			}
 			
@@ -332,7 +349,7 @@ class Brainworx_Rental_Model_Observer
 		}
 		
 		
-	}*/
+	}
 	/**
 	 * Observer method configured for sales_quote_product_add_after
 	 * After adding a rental item or item invoiced by the supplier
