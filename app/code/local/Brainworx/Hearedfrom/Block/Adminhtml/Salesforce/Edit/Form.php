@@ -17,7 +17,7 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Edit_Form extends Mage_Adm
 		foreach($collection as $customer){
 			$options[] = array(
 					'value' => $customer->getID(),
-					'label' => $customer->getName()
+					'label' => $customer->getName().' (klantnr.:'.$customer->getID().')'
 			);
 		}
 	
