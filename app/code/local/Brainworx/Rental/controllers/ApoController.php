@@ -33,7 +33,7 @@ class Brainworx_Rental_ApoController extends Mage_Core_Controller_Front_Action
 				$rentalstoend[]= $rental["entity_id"];
 			}
 
-			$success = Mage::helper('rental/terminator')->TerminateRentals($preferredDT,$rentalstoend,$order);
+			$success = Mage::helper('rental/terminator')->TerminateRentals($preferredDT,$rentalstoend,$order,null,true);
 			
 			$response = array();
 			$response['success'] = $success;

@@ -100,13 +100,13 @@ class Brainworx_Hearedfrom_Model_Observer
 			}		
 		}
 		if(!empty($shippinglist)){
-			self::createShipmentsExcel($shippinglist,$order,$delivery_to_report,$_hearedfrom_salesforce["entity_id"]);
+			Mage::helper("hearedfrom/delivery")->createShipmentsExcel($shippinglist,$order,$delivery_to_report,$_hearedfrom_salesforce["entity_id"]);
 		}	
 		
 	}
 	/**
 	 * Create an excel with items to be shipped + send it to transporter via email
-	 */
+	 *
 	public function createShipmentsExcel($list,$order,$to_external,$seller=null)
 	{
 		try{
@@ -250,7 +250,7 @@ class Brainworx_Hearedfrom_Model_Observer
 				Mage::log('fout bij verzenden problem mail: '.$e->getMessage());
 			}
 		}
-	}
+	}*/
 	
 	/**
 	 * Hook to sales_order_invoice_register
@@ -372,5 +372,70 @@ class Brainworx_Hearedfrom_Model_Observer
 	public function logout()
 	{
 		Mage::getSingleton('customer/session')->unsRistornoPerc();
+	}
+	/**
+	 * Observer method configured for sales_order_place_after
+	 *
+	 * Update stock quantity and in rent quantity for salesforcestock.
+	 *
+	 * Magento passes a Varien_Event_Observer object as
+	 * the first parameter of dispatched events.
+	 */
+	public function checkNewConsignation(Varien_Event_Observer $observer)
+	{
+		try{
+			$order = $observer->getEvent()->getOrder();
+			
+			if($order->getShippingMethod()=='tablerate_bestway'|| $order->getShippingInclTax()>0){
+				Mage::log("items delivered at home so never stockupdate. ".$order->getIncrementId());
+				return;
+			}
+			
+			$items=$order->getAllVisibleItems();
+			$cat = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_CONSIG')->getValue('text');
+			$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
+	
+			foreach ($items as  $item)
+			{
+				if(in_array($cat, $item->getProduct()->getCategoryIds())){
+					//update stock record as the order is to add stock item(s)
+					$stock = Mage::getModel('hearedfrom/salesForceStock');
+					$stockrow = Mage::getModel('hearedfrom/salesForceStock')->loadByProdCodeAndSalesForce($item->getProduct()->getSku(),$_hearedfrom_salesforce["entity_id"]);
+					$qstock=0;
+					$qinrent = $item->getQtyOrdered();
+					if(!empty($stockrow) && !empty($stockrow['entity_id'])){
+						$stock->load($stockrow['entity_id']);
+						$qstock = $stockrow['stock_quantity'];
+						$oldrent = $stockrow['inrent_quantity'];
+						if($qstock >= $qinrent){
+							$qstock -= $qinrent;
+						}else{
+							$qstock = 0;
+						}
+						$qinrent += $oldrent;
+					}else{
+						$stock->setData('force_id',$_hearedfrom_salesforce["entity_id"]);
+						$stock->setData('article_pcd',$item->getProduct()->getSku());
+						$stock->setData('article',$item->getProduct()->getName());
+						$stock->setData('enabled',1);
+					}
+					$stock->setData("stock_quantity",$qstock);
+					if(!empty($item->getRentalitem())&& $item->getRentalitem() == true){
+						$stock->setData("inrent_quantity",$qinrent);
+					}
+					$stock->setData('update_dt',date('d-m-Y H:i:s', strtotime('now')));
+					 
+					$stock->save();
+					unset($stock);
+					unset($stockrow);
+				}
+			}
+				
+		}catch(Exception $e){
+			Mage::log($e->getMessage());
+			//set error message in session
+			Mage::getSingleton('core/session')->addError('Sorry, er gebeurde een fout tijdens het wegschrijven van je bestelling.');
+			die;
+		}
 	}
 }

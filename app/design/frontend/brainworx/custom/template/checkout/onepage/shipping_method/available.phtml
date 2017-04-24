@@ -10,7 +10,6 @@
 ?>
 <?php /** @var $this Mage_Checkout_Block_Onepage_Shipping_Method_Available */ ?>
 <?php $_shippingRateGroups = $this->getShippingRates(); 
-$stock = Mage::getSingleton('core/session')->getStockSupplyPossible();
 $pickup = Mage::getSingleton('core/session')->getPickupPossible();
 $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
 ?>
@@ -21,8 +20,7 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
     <dl class="sp-methods">
     <?php $shippingCodePrice = array(); ?>
     <?php $_sole = count($_shippingRateGroups) == 1; foreach ($_shippingRateGroups as $code => $_rates): ?>
-        <dt><?php if($code == "flatrate" && !$stock){continue;}
-        	else if($code == "freeshipping" && !$pickup){continue;} 
+        <dt><?php if($code == "freeshipping" && !$pickup){continue;} 
         	else if($code == "tablerate" && !$delivery){continue;}
         	else echo $this->escapeHtml($this->getCarrierName($code)); ?></dt>
         <dd>

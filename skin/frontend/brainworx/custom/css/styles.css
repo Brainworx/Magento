@@ -10678,4 +10678,6 @@ input.tsmall{
   padding:15px;
   display:block;
 }
-
+input.input-number-small{
+	width:10%;
+}

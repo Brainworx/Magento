@@ -43,7 +43,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     			}
     			if(in_array($catlev,$item->getProduct()->getCategoryIds())){
     				$levfound = true;
-    				if(!in_array($catafh,$item->getProduct()->getCategoryIds())){
+    				if(!($consigfound || $afhfound)){
     					$excllevfound=true;
     				}
     			}
@@ -52,56 +52,14 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     	if($excllevfound){
     		//develivery at home rules over other options when 1 art is delivery only
     		Mage::getSingleton('core/session')->setPickupPossible(false);
-    		Mage::getSingleton('core/session')->setStockSupplyPossible(false);
     		Mage::getSingleton('core/session')->setDeliveryPossible(true);
-    	}elseif ($consigfound && !($levfound || $afhfound)){
-    		//Stocksupply is only possible when all articles are from consig
-    		//verify stocksupply is possible
-    		//todo check order contents - only rental allowed for stock supply
-    		Mage::getSingleton('core/session')->setStockSupplyPossible(false);
-    		Mage::getSingleton('core/session')->setPickupPossible(false);
-    		Mage::getSingleton('core/session')->setDeliveryPossible(false);
-    		$salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($this->getOnepage()->getQuote()->getCustomer()->getEntityId());
-    		if(!empty($salesforce)){
-    			Mage::getSingleton('core/session')->setStockSupplyPossible(true);
-    			//check on billing address not required
-    			$defaultbillingaddress = $this->getOnepage()->getQuote()->getCustomer()->getDefaultBillingAddress();
-//     			if($defaultbillingaddress){
-//     				if($defaultbillingaddress->getId() == $customerAddressId){
-//     					//stock supply possible for sales or consig rentals
-//     					Mage::getSingleton('core/session')->setStockSupplyPossible($consigfound);
-//     					// 		    				$supplyAll = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('STOCK_SUPPLY_ALL')->getValue('text');
-//     					// 		    				if(isset($supplyAll)&&$supplyAll==0){
-//     					// 		    					//limit stocksupply to (consig) rental
-//     					// 			    				$items=$this->getOnepage()->getQuote()->getAllVisibleItems();
-//     					// 			    				foreach ($items as  $item)
-//     						// 			    				{
-//     						// 			    					if(!empty($item->getRentalitem())&&$item->getRentalitem() == true){
-//     						// 			    						$rentaltosave = true;
-//     						// 			    					}else{
-//     						// 			    						//item in basket which isn't rental
-//     						// 			    						Mage::log('Stocksupply not possible due to sale item in basket:'.$item->getItemId());
-//     						// 			    						Mage::getSingleton('core/session')->setStockSupplyPossible(false);
-//     						// 			    					}
-//     						// 			    				}
-//     					// 		    				}
-//     				}else{
-//     					return 'Bevoorrading kan enkel op eigen adres';
-//     				}
-//     			}
-    		}else{
-    			//TODO emp workarround if consignatie would be selected 
-    			Mage::getSingleton('core/session')->setDeliveryPossible(true);
-    		}
-    	}elseif($afhfound||$levfound){
-    		Mage::getSingleton('core/session')->setPickupPossible($afhfound);
-    		Mage::getSingleton('core/session')->setStockSupplyPossible(false);
+    	}elseif($afhfound||$levfound||$consigfound){
+    		Mage::getSingleton('core/session')->setPickupPossible($afhfound || $consigfound);
     		Mage::getSingleton('core/session')->setDeliveryPossible($levfound);
     	}else{
     		//Default only delivery at home -- should not occur
     		//Mage:log('Default delivery only - should not occur!! --  ');
     		Mage::getSingleton('core/session')->setPickupPossible(false);
-    		Mage::getSingleton('core/session')->setStockSupplyPossible(false);
     		Mage::getSingleton('core/session')->setDeliveryPossible(true);
     	}
     	return false;

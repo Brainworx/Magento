@@ -163,8 +163,6 @@
                         <!-- The type of class to instantiate -->
                         <type>singleton</type>
                     </rental>
-                   <!-- hooktosaveorder add commission -->
-                    
                 </observers>
             </sales_order_place_after>
         </events>

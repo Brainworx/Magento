@@ -8,7 +8,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	 * @param date (d-m-Y) $end_date rental
 	 * @return boolean
 	 */
-	function TerminateRentals($pickupDT, $rentalids, $order=null, $endDT=null){
+	function TerminateRentals($pickupDT, $rentalids, $order=null, $endDT=null, $overrule=false){
 		if(empty($endDT)){
 			$endDT = date("d-m-Y");
 		}
@@ -31,7 +31,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 				}
 				$itemModel = Mage::getModel('sales/order_item')->load($rentalModel->getOrderItemId());
 				
-				$shippingitem = self::terminateOneRental($rentalModel,$pickupDT,$orderModel,$itemModel,$endDT);
+				$shippingitem = self::terminateOneRental($rentalModel,$pickupDT,$orderModel,$itemModel,$endDT,$overrule);
 				if(!empty($itemModel->getSupplierneworderemail())){
 					$shippinglistSupplier[$itemModel->getSupplierneworderemail()][]=$shippingitem;
 				}elseif($orderModel->getShippingMethod()=='tablerate_bestway'
@@ -85,7 +85,9 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	 * @param Order_item $item
 	 * @return multitype:string pickuprecord for excel
 	 */
-	private function terminateOneRental($rental,$preferredDT,$order,$item,$endDT ){
+	private function terminateOneRental($rental,$preferredDT,$order,$item,$endDT,$overrule=false ){
+		self::updateSalesForceStock($order, $item, $rental,$overrule);
+		
 		$rental->setEndDt($endDT);
 		$rental->setPickupDt($preferredDT);
 		$rental->save();
@@ -109,7 +111,57 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 		$shippingitem['Gewicht']=$item->getWeight();
 		return $shippingitem;
 	}
-	
+	/**
+	 * Update the salesforce stock as the rented item has been returned.
+	 * - will only be for consignation items (sku)
+	 * @param  $order
+	 * @param  $item
+	 * @param  $overrule (update stock even when delivered at home)
+	 */
+	private function updateSalesForceStock($order,$item, $rental, $overrule = false){
+		try{
+			if(!$overrule && ($order->getShippingMethod()=='tablerate_bestway'|| $order->getShippingInclTax()>0)){
+				Mage::log("items delivered at home so never stockupdate. ".$order->getIncrementId());
+				return;
+			}
+			$seller = Mage::getModel('hearedfrom/salesSeller')->loadByOrderId($order->getIncrementId());
+			//update stock record
+			$stock = Mage::getModel('hearedfrom/salesForceStock');
+			$stockrow = Mage::getModel('hearedfrom/salesForceStock')->loadByProdCodeAndSalesForce($item->getProduct()->getSku(),$seller["user_id"]);
+			if(!empty($stockrow) && !empty($stockrow['entity_id'])){
+				$stock->load($stockrow['entity_id']);
+				$qstock = $stockrow['stock_quantity'];
+				$qinrent = $stockrow['inrent_quantity'];
+				if($qinrent >= $rental->getQuantity()){
+					$qinrent -= $rental->getQuantity();
+				}else{
+					$qinrent = 0;
+				}				
+				$qstock += $rental->getQuantity();
+				
+				
+			}else{
+				$stock->setData('force_id',$_hearedfrom_salesforce["user_id"]);
+				$stock->setData('article_pcd',$item->getProduct()->getSku());
+				$stock->setData('article',$item->getProduct()->getName());
+				$stock->setData('enabled',1);
+				$qinrent = 0;
+				$qstock = $rental->getQuantity();
+			}
+			
+			$stock->setData('inrent_quantity',$qinrent);
+			$stock->setData('stock_quantity',$qstock);
+			$stock->save();
+			unset($stock);
+			unset($stockrow);
+			
+		}catch(Exception $e){
+			Mage::log($e->getMessage());
+			Mage::log('error while updated salesforcestock after return for '.$order->getIncrementId());
+			self::sendErrorMail('Probleem update stock record '.$order->getIncrementId() .' - '.$e->getMessage());
+			
+		}
+	}
 	/**
 	 * private functions
 	 * Create an excel with items to be shipped + send it to transporter via email

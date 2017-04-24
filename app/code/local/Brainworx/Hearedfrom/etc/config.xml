@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Brainworx_Hearedfrom>
-			<version>0.2.1</version>    <!-- Version number of your module -->
+			<version>0.2.2</version>    <!-- Version number of your module -->
 			<depends>Braiworx_Rental</depends>
 		</Brainworx_Hearedfrom>
 	</modules>
@@ -39,6 +39,12 @@
 					<salesSeller>
 						<table>hearedfrom_salesseller</table>
 					</salesSeller>
+					<salesForceStock>
+						<table>hearedfrom_salesforcestock</table>
+					</salesForceStock>
+					<salesForceStockRequest>
+						<table>hearedfrom_salesforcestockrequest</table>
+					</salesForceStockRequest>
 				</entities>
 			</hearedfrom_resource>
 
@@ -86,6 +92,12 @@
 			<salesforce>
 				<class>Brainworx_Hearedfrom_Block</class>
 			</salesforce>
+			<salesforcestock>
+				<class>Brainworx_Hearedfrom_Block</class>
+			</salesforcestock>
+			<salesforcestockrequest>
+				<class>Brainworx_Hearedfrom_Block</class>
+			</salesforcestockrequest>
 			<!-- Add block for checkout step -->
 			<hearedfromonepage>
 				<class>Brainworx_Hearedfrom_Block_Onepage</class>
@@ -100,6 +112,12 @@
             <invoicespage>
                 <class>Brainworx_Hearedfrom_Block</class>
             </invoicespage>
+            <stockpage>
+            	<class>Brainworx_Hearedfrom_Block</class>
+            </stockpage>
+            <stockrequestpage>
+            	<class>Brainworx_Hearedfrom_Block</class>
+            </stockrequestpage>
             <!-- Override account navigation to add custom links-->
             <customer>
                 <rewrite>
@@ -220,6 +238,20 @@
                         <!-- The type of class to instantiate -->
                         <type>singleton</type>
                     </commentstore>
+                    <hooktosaveorder>
+                        <!-- The model to be instantiated: 
+                        maps to 
+                        Model class as found in config <model> brainworx/rental/model
+                        brainworx/rental/model/observer.php 
+                        brainworx_rental/observer - geeft include(Mage/Brainworx/Rental/Model/Observer.php):
+                        rental/observer - geeft correct mapping
+                        -->
+                        <class>hearedfrom/observer</class> 
+                        <!-- The method of the class to be called -->
+                        <method>checkNewConsignation</method>
+                        <!-- The type of class to instantiate -->
+                        <type>singleton</type>
+                    </hooktosaveorder>
                 </observers>
             </sales_order_place_after>
 		</events>
@@ -255,6 +287,11 @@
                     <file>supplier_new_shipment.html</file>
                     <type>html</type>
                 </supplier_new_shipment>
+                <supplier_new_stockshipment>
+                    <label>Zorgpunt levering voorraad</label>
+                    <file>supplier_new_stockshipment.html</file>
+                    <type>html</type>
+                </supplier_new_stockshipment>
                 <problem_zorgpunt>
                     <label>Zorgpunt problem</label>
                     <file>problem_zorgpunt.html</file>
@@ -273,7 +310,7 @@
 					<frontName>hearedfrom</frontName>
 				</args>
 			</brainworx_hearedfrom>
-			<!-- override mage_customer of core -->
+			<!-- override mage_customer of core to add some myaccount controllers-->
 			<customer>
                 <args>
                     <modules>
@@ -281,9 +318,12 @@
                         <ristornopage before="Mage_Customer">Brainworx_Hearedfrom</ristornopage>
                         <patientorderpage before="Mage_Customer">Brainworx_Hearedfrom</patientorderpage>
                     	<invoicespage before="Mage_Customer">Brainworx_Hearedfrom</invoicespage>
+                    	<stockpage before="Mage_Customer">Brainworx_Hearedfrom</stockpage>
+                    	<stockrequestpage before="Mage_Customer">Brainworx_Hearedfrom</stockrequestpage>
                     </modules>
                 </args>
             </customer>
+            <!-- override mage_sales of core to add some custom sales controllers-->
             <sales>
 				<args>
 					<modules>
@@ -348,6 +388,12 @@
             <salesforce>
             	<file>salesforce.xml</file>
             </salesforce>
+            <salesforcestock>
+            	<file>salesforcestock.xml</file>
+            </salesforcestock>
+            <salesforcestockrequest>
+            	<file>salesforcestockrequest.xml</file>
+            </salesforcestockrequest>
           </updates>
         </layout>
         <translate>

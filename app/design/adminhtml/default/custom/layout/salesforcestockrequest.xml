@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--app/design/adminhtml/default/custom/layout/-->
+<layout>
+	<!--reference to your module/controller/action-->
+   <adminhtml_salesforcestockrequest_index>
+        <reference name="content">
+		<!--reference to block element in Block-->
+            <block type="hearedfrom/adminhtml_salesforcestockrequest" name="salesforcestockrequest" />
+        </reference>
+    </adminhtml_salesforcestockrequest_index>
+</layout>

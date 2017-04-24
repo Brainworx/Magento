@@ -1,0 +1,54 @@
+<div class="buttons-set">
+   <p class="back-link"><a href="<?php echo $this->getUrl('customer/stockpage/') ?>"><small>&laquo; </small><?php echo $this->__('Terug') ?></a></p>
+</div>
+<div class="page-title">
+<h1><?php echo $this->__('Stock Request Overview') ?></h1>
+</div>
+<?php 
+	  $_stockrequests = $this->getStockRequests();
+	  
+	  $currentpage = Mage::getBlockSingleton('page/html_pager')->getCurrentPage();
+	  $perpage = Mage::getBlockSingleton('page/html_pager')->getLimit();
+	  $_stockrequests->getSelect()->limitPage($currentpage, $perpage);
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<?php echo $this->getChildHtml('info');?>
+<?php if($_stockrequests->getSize()): ?>
+<table class="data-table orders" id="my-mstockrequest-table">
+    <col width="1" />
+    <col width="1" />
+    <col />
+    <col width="1" />
+    <thead>
+        <tr>
+        	<th class="date"><span class="nobr"><?php echo $this->__('Date') ?></span></th>
+            <th class="text"><?php echo $this->__('Product code') ?></th>
+            <th class="text"><?php echo $this->__('Product') ?></th> 
+            <th class="number"><span class="nobr"><?php echo $this->__('Quantity') ?></span></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $_odd = ''; 
+        foreach ($_stockrequests as $_sitem): 
+        	if(empty($_sitem)) continue;
+        ?>
+        <tr>        	
+            <td class="date"><span class="nobr"><?php echo $this->__($_sitem['create_dt']) ?></span></td>
+            <td class="text"><span class="nobr"><?php echo $this->__($_sitem['article_pcd']) ?></span></td>
+            <td class="text"><span class="nobr"><?php echo $this->__($_sitem['article']) ?></span></td>
+            <td class="number"><?php echo $_sitem['inrequest_quantity'] ?></td>
+        </tr><?php 
+        endforeach; 
+        ?>
+    </tbody>
+</table>
+<script type="text/javascript">decorateTable('my-mstockrequest-table');</script>
+<?php /* echo $this->getMainPagerHtml();*/ ?>
+<?php else: ?>
+    <p><?php echo $this->__('You have no stockrequest for the moment.'); ?></p>
+<?php endif ?>
+<div class="buttons-set">
+<p class=""><a href="<?php echo $this->escapeUrl($this->getRequesturl()) ?>"><?php echo $this->__('New Request') ?></a></p>
+<p class=""><a href="<?php echo $this->getUrl('customer/stockpage/') ?>"><?php echo $this->__('Stockoverview') ?></a></p>
+
+</div>

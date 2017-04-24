@@ -1,0 +1,37 @@
+<div class="buttons-set">
+        <p class="back-link"><a href="<?php echo $this->getUrl('customer/stockrequestpage/') ?>"><small>&laquo; </small><?php echo $this->__('Terug') ?></a></p>
+</div>
+<div class="page-title">
+    <h1><?php echo $this->__('Stock Request') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<form action="<?php echo $this->getAction() ?>" method="post" id="form-validate" class="scaffold-form">
+<div class="fieldset">
+    <h2 class="legend"><?php echo $this->__('Request delivery of stock item') ?></h2>
+    <p class="required"><?php echo $this->__('* Required input') ?></p>
+    <ul id="stockinputfields" class="form-list">
+ 		<li class="fields">
+ 			<div class="field">
+				<div class="input-box">
+					<label id="lb_product_code0" for="product_code0" class="required"><?php echo $this->__('Product') ?>:</label>
+ 					<select id="product_code0" name="product_code0" title="<?php echo $this->__('Product') ?>" class="validate-select" required>
+ 						<?php foreach ($this->getStockItems() as $_sitem_key => $_sitem): ?>        
+ 						<option value="<?php if($_sitem_key!='0') echo $_sitem_key ?>"><?php echo $_sitem ?></option>
+						<?php endforeach; ?>
+					</select>
+					<label id="lb_quantity0" for="quantity0" class="required"><?php echo $this->__('Quantity') ?>:</label> 				
+					<input id="quantity0" type="number" name="quantity0" value="0" title="<?php echo $this->__('Quantity') ?>" class="input-number-small" min=1 max=5/>
+					<input id="counter" name="counter" type="hidden" />
+				</div>
+			</div>			
+		</li>
+  	</ul>
+  	<input class="button" id="addProduct" type="button" title="<?php echo $this->__('Add stock product') ?>" value="+ <?php echo $this->__('Add stock product') ?>"></input>
+		
+  	<div class="buttons-set">
+  		<a href="<?php echo $this->escapeUrl($this->getRequestsurl()) ?>"><?php echo $this->__('Overview Requests') ?></a>
+		<button type="submit" class="button" title="<?php echo $this->__('Submit') ?>"><?php echo $this->__('Request') ?></button>
+	</div>
+</div>
+
+</form>

@@ -25,13 +25,24 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     	return $userArray;
     }
     /**
-     * Prepare list for overview form select box
+     * Prepare list for overview form select box, returns only salesforce not linked to any other salesforce
      */
     public function getUserNamesOptions(){
     	$userArray = array();
     	$userArray[0] = Mage::helper('hearedfrom')->__('Not Selected');
     	foreach($this->getCollection()->addFieldToSelect("*")
     			->addFieldToFilter('linked_to', array("eq" => 0)) as $usr){
+    		$userArray[$usr->getEntityId()] = $usr->getUserNm();
+    	}
+    	return $userArray;
+    }
+    /**
+     * Prepare list of all salesforces for overview form select box
+     */
+    public function getAllUserNamesOptions(){
+    	$userArray = array();
+    	$userArray[0] = Mage::helper('hearedfrom')->__('Not Selected');
+    	foreach($this->getCollection()->addFieldToSelect("*") as $usr){
     		$userArray[$usr->getEntityId()] = $usr->getUserNm();
     	}
     	return $userArray;

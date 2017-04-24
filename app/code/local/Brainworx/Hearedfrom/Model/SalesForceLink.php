@@ -18,8 +18,8 @@ class Brainworx_Hearedfrom_Model_SalesForceLink extends Mage_Core_Model_Abstract
      * load salesForceLink by linked salesforce id
      * Load salesForceLink record in array with column names as key
      */
-    public function loadByLinkedSalesForceId($custid){
-    	return $this->_getResource()->loadByLinkedSalesForceId($custid);
+    public function loadByLinkedSalesForceId($sfid){
+    	return $this->_getResource()->loadByLinkedSalesForceId($sfid);
     }
     /**
      * load salesForceLink by customer id

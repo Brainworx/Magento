@@ -61,5 +61,20 @@ class Brainworx_Hearedfrom_Block_AddCustomerlink extends Mage_Customer_Block_Acc
 			
 		}
 	}
-	
+	/**
+	 * Add link to ristorno for salesforceStock (consignation) items
+	 */
+	public function addLinkToStockNav() {
+		$customer = Mage::getSingleton('customer/session')->getCustomer();
+		if(!empty($customer)){
+			$salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
+			if(!empty($salesforce)){
+				$this->addLink(
+						Mage::helper('customer')->__('Stock'),
+						"customer/stockpage/",
+						Mage::helper('customer')->__('Stock')
+				);
+			}
+		}
+	}
 }

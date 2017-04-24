@@ -47,7 +47,6 @@ class Brainworx_Rental_Model_RentedItem extends Mage_Core_Model_Abstract
     /**
      * Update the stock level for the product of this rentedItem.
      * To be used when a rentedItem has been returned.
-     * @param unknown $newQuantity
      */
    	public function updateStock(){
    		try{

@@ -27,13 +27,33 @@
                     <sort_order>3</sort_order>
                     <action>adminhtml/financialssupplier/index</action>
                 </suppliersalesoverview>
+            </children>
+        </hearedfrom>
+        <hearedfrom2 translate="title" module="hearedfrom">
+            <title>Zorgpunters</title>
+            <sort_order>10</sort_order>
+            <!--action>adminhtml/hearedfroml</action-->
+            <depends>
+                <module>Brainworx_Hearedfrom</module>
+            </depends>
+            <children>
                 <salesforceoverview>
-                    <title>Zorgpunt overview</title>
+                    <title>Zorgpunt Overview</title>
                     <sort_order>4</sort_order>
                     <action>adminhtml/salesforce/index</action>
                 </salesforceoverview>
+                 <salesforcestockoverview>
+                    <title>Zorgpunt Stock</title>
+                    <sort_order>5</sort_order>
+                    <action>adminhtml/salesforcestock/index</action>
+                </salesforcestockoverview>
+                <salesforcestockrequestoverview>
+                    <title>Zorgpunt Stock Requests</title>
+                    <sort_order>7</sort_order>
+                    <action>adminhtml/salesforcestockrequest/index</action>
+                </salesforcestockrequestoverview>
             </children>
-        </hearedfrom>
+        </hearedfrom2>
     </menu>
 
 <!--Access Control List-->
@@ -42,7 +62,7 @@
             <admin>
                 <children>                
                     <hearedfrom translate="title" module="hearedfrom">
-                        <title>Top Level Hearedfrom Menu Item</title>
+                        <title>Financial Hearedfrom Menu Item</title>
                         <sort_order>25</sort_order>
                         <children>
                             <salescommission>
@@ -54,11 +74,23 @@
                              <suppliersalesoverview>
                                 <title>Supplier Turnover Menu Item</title>
                             </suppliersalesoverview>
-                            <salesforceoverview>
-                            	<title>SalesFoce overview Menu Item</title>
-                            </salesforceoverview>
                         </children>
                     </hearedfrom>
+                    <hearedfrom2 translate="title" module="hearedfrom">
+                        <title>Zorgpunters Hearedfrom Menu Item</title>
+                        <sort_order>25</sort_order>
+                        <children>
+                            <salesforceoverview>
+                            	<title>SalesForce overview Menu Item</title>
+                            </salesforceoverview>
+                            <salesforcestockoverview>
+                            	<title>SalesForceStock overview Menu Item</title>
+                            </salesforcestockoverview>
+                            <salesforcestockrequestoverview>
+                            	<title>SalesForceStockRequest overview Menu Item</title>
+                            </salesforcestockrequestoverview>
+                        </children>
+                    </hearedfrom2>
                 </children>
             </admin>
         </resources>

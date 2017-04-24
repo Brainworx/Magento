@@ -28,14 +28,7 @@ class Brainworx_Rental_Model_Observer
 			// Retrieve the product being updated from the event observer
 			$order = $observer->getEvent()->getOrder();
 			// array_keys($order->getData() prints teh data keys in the order - can later be used to getData($key);
-			$skiprental = false;
-			if($order->getShippingMethod()=='flatrate_flatrate'){
-				Mage::log("Stocksupply order - no start for rental");
-				$skiprental = true;
-				$order->addStatusToHistory($order->getStatus(), 'Bevoorrading van zorgpunt.', true);
-				$order->save();
-			}		
-				
+							
 			//Check tax record		
 			$items=$order->getAllVisibleItems();
 			$count = 0;
@@ -50,20 +43,20 @@ class Brainworx_Rental_Model_Observer
 				}
 	
 				$rentaltosave = false;
-				if(!$skiprental){
-					if(!empty($item->getRentalitem())&&$item->getRentalitem() == true){
-						$rentaltosave = true;
-					}else{
-						//TODO remove this check as not needed
-						foreach($item->getProduct()->getCategoryIds() as $cat){
-							if($cat ==
-							  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text')){
-								$rentaltosave = true;						
-								break;
-							}
+				
+				if(!empty($item->getRentalitem())&&$item->getRentalitem() == true){
+					$rentaltosave = true;
+				}else{
+					//TODO remove this check as not needed
+					foreach($item->getProduct()->getCategoryIds() as $cat){
+						if($cat ==
+						  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text')){
+							$rentaltosave = true;						
+							break;
 						}
 					}
 				}
+				
 				if($rentaltosave){
 					$count++;
 					//saving new rental line to be invoiced monthly
@@ -281,75 +274,7 @@ class Brainworx_Rental_Model_Observer
 		}
 		
 	}
-	/**
-	 * Observer method configured for sales_order_place_after
-	 *
-	 * Update stock quantity and in rent quantity for salesforcestock.
-	 *
-	 * Magento passes a Varien_Event_Observer object as
-	 * the first parameter of dispatched events.
-	 */
-	public function checkNewConsignation(Varien_Event_Observer $observer)
-	{
-		try{
-			$order = $observer->getEvent()->getOrder();
-			$items=$order->getAllVisibleItems();
-			$cat = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_CONSIG')->getValue('text');
-			$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
-				
-			foreach ($items as  $item)
-			{
-				if(in_array($cat, $item->getProduct()->getCategoryIds())){
-					//update stock record as the order is to add stock item(s)
-					$stock = Mage::getModel('hearedfrom/salesForceStock')->loadByProdCodeAndSalesForce($item->getProduct()->getSku(),$_hearedfrom_salesforce["entity_id"]);
-					if(empty($stock)){
-						$stock = Mage::getModel('hearedfrom/salesForceStock');
-						$stock->setData("force_id",$_hearedfrom_salesforce["entity_id"]);
-						$stock->setData("article_pcd",$item->getProduct()->getSku());
-						$stock->setData("stock_quantity",$item->getQtyOrdered());
-						$stock->setData("inrent_quantity",0);
-					}else{
-						$qstock = $stock[0]['stock_quantity']+ $item->getQtyOrdered();
-						$stock['stock_quantity'] = $qstock;
-					}
-					$stockitem = Mage::getModel('hearedfrom/salesForceStock')->load($stock[0]['entity_id']);
-					$stockitem->setData('stock_quantity',$qstock);
-					$stockitem->save();
-					unset($stockitem);
-					unset($stock);
-				}else{
-					//check the zorgpunt stock and update if required
-					$stock = Mage::getModel('hearedfrom/salesForceStock')->loadByProdCodeAndSalesForce('cons'.$item->getProduct()->getSku(),$_hearedfrom_salesforce["entity_id"]);
-					if(!empty($stock)){
-						$qstock = $stock[0]['stock_quantity'];
-						$qinrent = $stock[0]['inrent_quantity'];
-						if($qstock >= $item->getQtyOrdered()){
-							$qstock = $qstock - $item->getQtyOrdered();
-						}else{
-							$qstock = 0;
-						}
-						$stock[0]['stock_quantity'] = $qstock;
-						$qinrent = $qinrent + $item->getQtyOrdered();
-						$stock[0]['inrent_quantity'] = $qinrent;
-						
-						$stockitem = Mage::getModel('hearedfrom/salesForceStock')->load($stock[0]['entity_id']);
-						$stockitem->setData('inrent_quantity',$qinrent);
-						$stockitem->setData('stock_quantity',$qstock);
-						$stockitem->save();
-						unset($stockitem);
-					}
-				}
-			}
-			
-		}catch(Exception $e){
-			Mage::log($e->getMessage());
-			//set error message in session
-			Mage::getSingleton('core/session')->addError('Sorry, er gebeurde een fout tijdens het wegschrijven van je bestelling.');
-			die;
-		}
-		
-		
-	}
+	
 	/**
 	 * Observer method configured for sales_quote_product_add_after
 	 * After adding a rental item or item invoiced by the supplier

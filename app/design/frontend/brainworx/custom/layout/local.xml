@@ -13,7 +13,8 @@
                 <action method="addLinkToInvoicesNav"></action> 
                 <action method="addLink" translate="label" module="customer"><name>account_edit</name><path>customer/account/edit/</path><label>Account Information</label></action>
                 <action method="addLink" translate="label" module="customer"><name>address_book</name><path>customer/address/</path><label>Address Book</label></action>
-            	<action method="addLinkToUserNav"></action> <!-- ristorno -->
+            	<action method="addLinkToUserNav"></action> <!-- ristorno and other custom pages in myaccount -->
+             	<action method="addLinkToStockNav"></action> 
              </block>   
         </reference>
     </customer_account>
