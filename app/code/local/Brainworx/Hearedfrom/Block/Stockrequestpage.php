@@ -59,6 +59,7 @@ class Brainworx_Hearedfrom_Block_Stockrequestpage extends Mage_Customer_Block_Ac
 	 * @return multitype:NULL multitype:string NULL  Ambigous <string, string, multitype:>
 	 */
 	function getStockItems(){
+		$catstock = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
 		/**
 		 * If you want to display products from any specific category
 		 */
@@ -80,8 +81,11 @@ class Brainworx_Hearedfrom_Block_Stockrequestpage extends Mage_Customer_Block_Ac
 		->addVisibleFilterToCollection($prodCollection);
 		
 		$options[0] = Mage::helper('hearedfrom')->__('Select');
+		$type = "";
 		foreach ($prodCollection as $val) {
-			$options[$val->getSku()]= $val->getName().' ('.$val->getSku().')';
+			$type = (in_array($catstock, $val->getCategoryIds()))?
+				Mage::helper('hearedfrom')->__('Verhuur'): Mage::helper('hearedfrom')->__('Verkoop');
+			$options[$val->getSku()]= $type.' - '.$val->getName();//.' ('.$val->getSku().')';
 		}
 		
 		
