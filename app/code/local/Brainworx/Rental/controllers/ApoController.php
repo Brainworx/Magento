@@ -23,7 +23,7 @@ class Brainworx_Rental_ApoController extends Mage_Core_Controller_Front_Action
 			$input = $this->getRequest()->getPost('items');
 			$orderid = $this->getRequest()->getPost('realorderid');
 			$order = Mage::getModel('sales/order')->loadByIncrementId($orderid);
-			$items = explode(",",$input);
+			$items = explode("-",$input);
 			$preferredDT = date('d-m-Y', strtotime('+3 day'));
 			
 			$rentalstoend=array();

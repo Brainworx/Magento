@@ -141,7 +141,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 				
 				
 			}else{
-				$stock->setData('force_id',$_hearedfrom_salesforce["user_id"]);
+				$stock->setData('force_id',$seller["user_id"]);
 				$stock->setData('article_pcd',$item->getProduct()->getSku());
 				$stock->setData('article',$item->getProduct()->getName());
 				$stock->setData('enabled',1);
