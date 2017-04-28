@@ -68,6 +68,29 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Edit_Form extends Mage_Adm
         		'name'      => 'cust_id'
         		//TODO check options
         ));
+        $fieldset->addField('street_nr', 'text', array(
+        		'label'     => Mage::helper('hearedfrom')->__('Street and number'),
+        		'name'      => 'street_nr'
+        ));
+        $fieldset->addField('zip_cd', 'text', array(
+        		'label'     => Mage::helper('hearedfrom')->__('ZipCode'),
+        		'name'      => 'zip_cd'
+        ));
+        $fieldset->addField('city', 'text', array(
+        		'label'     => Mage::helper('hearedfrom')->__('City_'),
+        		'name'      => 'city'
+        ));
+        /*
+        $fieldset->addField('country', 'text', array(
+        		'label'     => Mage::helper('hearedfrom')->__('Country_'),
+        		'name'      => 'country',
+        		'value'		=> 'BE',
+        ));
+        */
+        $fieldset->addField('phone', 'text', array(
+        		'label'     => Mage::helper('hearedfrom')->__('Phone'),
+        		'name'      => 'country',
+        ));
         $fieldset->addField('linked_to', 'select', array(
         		'label'     => Mage::helper('hearedfrom')->__('Linked to Seller'),
         		'values'	=> Mage::getModel('hearedfrom/salesForce')->getUserNamesOptions(),

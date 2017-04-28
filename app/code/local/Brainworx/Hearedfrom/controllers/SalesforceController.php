@@ -64,6 +64,9 @@ class Brainworx_Hearedfrom_SalesforceController extends Mage_Adminhtml_Controlle
 				//unset id as otherwise null will be applied an no insert will be done
 				unset($data['entity_id']);
 			}
+			if(!isset($data['country']) || empty($data['country'])){
+				$data['country']='BE';
+			}
 			$model->setData ( $data );
 				
 			Mage::getSingleton ( 'adminhtml/session' )->setFormData ( $data );

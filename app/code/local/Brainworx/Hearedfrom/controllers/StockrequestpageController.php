@@ -45,6 +45,26 @@ class Brainworx_Hearedfrom_StockrequestpageController extends Mage_Core_Controll
 	    		$deliveryhelper = Mage::helper("hearedfrom/delivery");
 	    		$shippinglist=array();
 	    		$stockrequestids="";
+	    		$street = $salesforce['street_nr'];
+	    		if(empty($street)){
+	    			$street=$customer->getPrimaryShippingAddress()->getStreetFull();
+	    		}
+	    		$zipcode = $salesforce['zip_cd'];
+	    		if(empty($zipcode)){
+	    			$zipcode=$customer->getPrimaryShippingAddress()->getPostcode();
+	    		}
+	    		$city=$salesforce['city'];
+	    		if(empty($city)){
+	    			$city=$customer->getPrimaryShippingAddress()->getCity();
+	    		}
+	    		$country=$salesforce['country'];
+	    		if(empty($country)){
+	    			$country=$customer->getPrimaryShippingAddress()->getCountry();
+	    		}
+	    		$phone=$salesforce['phone'];
+	    		if(empty($phone)){
+	    			$phone=$customer->getPrimaryShippingAddress()->getTelephone();
+	    		}
 	    		
 	    		for($i = 0; $i <= $counter ; $i++){
 	    			if(!empty($model)){
@@ -73,11 +93,11 @@ class Brainworx_Hearedfrom_StockrequestpageController extends Mage_Core_Controll
 	    			$shippingitem['Stockrequest #']=$model->getEntityId();
 	    			$shippingitem['Leverdatum']=date('d-m-Y', strtotime('+ 3 weekday'));
 	    			$shippingitem['Naam']=$salesforce['user_nm'];
-	    			$shippingitem['Adres (straat + nr)']=$customer->getPrimaryShippingAddress()->getStreetFull();
-	    			$shippingitem['Gemeente']=$customer->getPrimaryShippingAddress()->getCity();
-	    			$shippingitem['Postcode']=$customer->getPrimaryShippingAddress()->getPostcode();
-	    			$shippingitem['Land']=$customer->getPrimaryShippingAddress()->getCountry();
-	    			$shippingitem['Telefoon']=$customer->getPrimaryShippingAddress()->getTelephone();
+	    			$shippingitem['Adres (straat + nr)']=$street;
+	    			$shippingitem['Gemeente']=$city;
+	    			$shippingitem['Postcode']=$zipcode;
+	    			$shippingitem['Land']=$country;
+	    			$shippingitem['Telefoon']=$phone;
 	    			 
 	    			$shippingitem['Artikel']=$_product->getName();
 	    			$shippingitem['Aantal']=$quantity;
