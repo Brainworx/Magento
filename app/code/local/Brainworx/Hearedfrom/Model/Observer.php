@@ -33,15 +33,35 @@ class Brainworx_Hearedfrom_Model_Observer
 		$incrementId = Mage::getSingleton('checkout/session')->getLastRealOrderId();
 		$order->loadByIncrementId($incrementId);
 		
-		//Fetch the data from select box and throw it here- added to session in OnePageController
-		$_hearedfrom_salesforce = null;
-		$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
+		//For a mederi user, commission goes to him/her
+		$groupId = explode(",",Mage::getSingleton('customer/session')->getCustomerGroupId());
+		$seller_custid = 0;
+		if(in_array(Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_GID')->getValue('text'),$groupId)) {
+			$mederisellerid = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_FORCE_ID')->getValue('text');
+			$_hearedfrom_salesforce = Mage::getModel('hearedfrom/salesForce')->load($mederisellerid);
+			$seller_custid = Mage::getSingleton('customer/session')->getCustomerId();
+		}else{		
+			//Fetch the data from select box and throw it here- added to session in OnePageController
+			$_hearedfrom_salesforce = null;
+			$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
+			$seller_custid = $_hearedfrom_salesforce["cust_id"];
+		}
 
-		//Create new salesCommission
+		//Create new salesCommission		
 		$newsalesseller = Mage::getModel('hearedfrom/salesSeller');
 		$newsalesseller->setData("order_id",$order->getIncrementId());
 		$newsalesseller->setData("user_id",$_hearedfrom_salesforce["entity_id"]);
-		$newsalesseller->save();
+		$newsalesseller->setData("seller_cust_id",$seller_custid);		
+		$newsalesseller->save();			
+		
+		$check = Mage::getModel('hearedfrom/salesSeller')->load($newsalesseller['entity_id']);
+		if($check->getSellerCustId() != $seller_custid){
+			Mage::log('seller cust not save correctly for '.$newsalesseller['entity_id'].'  - correcting to '.$seller_custid);
+			Mage::getModel('hearedfrom/salesSeller')->updateSellerDetails($newsalesseller['entity_id'],$seller_custid);
+		}else{
+			Mage::log('seller cust saved correctly for '.$newsalesseller['entity_id'].'  - to '.$seller_custid);
+		}
+		
 
 		$shippinglist = null;
 		$zorgpunt_shippinglist = null;
@@ -68,7 +88,7 @@ class Brainworx_Hearedfrom_Model_Observer
 				self::saveCommission($_hearedfrom_salesforce,$order->getEntityId(),$item->getItemId(),
 				$type,($item->getOriginalPrice()*$item->getQtyOrdered()),
 						($item->getOriginalPrice()*$item->getQtyOrdered()*(1+$item->getTaxPercent()/100))
-						,$item->getRistorno()*$item->getQtyOrdered(),false);
+						,$item->getRistorno()*$item->getQtyOrdered(),false,$seller_custid);
 			}elseif (!empty($item->getSupplierneworderemail())){
 				Mage::log("No need to send shipment exl as shipment done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
 			}
@@ -104,153 +124,6 @@ class Brainworx_Hearedfrom_Model_Observer
 		}	
 		
 	}
-	/**
-	 * Create an excel with items to be shipped + send it to transporter via email
-	 *
-	public function createShipmentsExcel($list,$order,$to_external,$seller=null)
-	{
-		try{
-			require_once Mage::getBaseDir('lib').'/Excel/PHPExcel.php'; 
-			
-			$objPHPExcel = new PHPExcel();
-			$objPHPExcel->getProperties()->setCreator("Brainworx for Zorgpunt")
-			->setLastModifiedBy("Zorgpunt")
-			->setTitle("Zorgpunt levernota");
-			//header
-			$line=1;
-			$objPHPExcel->setActiveSheetIndex(0)
-			->setCellValue('A'.$line, 'Bestelling #')
-			->setCellValue('B'.$line, 'Leverdatum ')
-			//->setCellValue('C'.$line, 'Leverdatum tot')
-			->setCellValue('c'.$line, 'Naam')
-			->setCellValue('D'.$line, 'Adres (straat + nr)')
-			->setCellValue('E'.$line, 'Gemeente')
-			->setCellValue('F'.$line, 'Postcode')
-			->setCellValue('G'.$line, 'Land')
-			->setCellValue('H'.$line, 'Telefoon')
-			->setCellValue('I'.$line, 'Artikel')
-			->setCellValue('J'.$line, 'Aantal')
-			->setCellValue('K'.$line, 'Artikelnr.')
-			->setCellValue('L'.$line, 'Gewicht')
-			->setCellValue('M'.$line, 'Info aan Zorgpunt')
-			->setCellValue('N'.$line, 'Type');
-			$objPHPExcel->getActiveSheet()->getStyle("A1:O1")->getFont()->setBold(true);
-			foreach(range('A','N') as $columnID) {
-				$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
-				->setAutoSize(true);
-			}
-			//lines
-			foreach($list as $item){
-				$line +=1;
-				$objPHPExcel->setActiveSheetIndex(0)
-				->setCellValue('A'.$line, $item['Bestelling #'])
-				->setCellValue('B'.$line, $item['Leverdatum'])
-				//->setCellValue('C'.$line, $item['Leverdatum tot'])
-				->setCellValue('C'.$line, $item['Naam'])
-				->setCellValue('D'.$line, $item['Adres (straat + nr)'])
-				->setCellValue('E'.$line, $item['Gemeente'])
-				->setCellValue('F'.$line, $item['Postcode'])
-				->setCellValue('G'.$line, $item['Land'])
-				->setCellValue('H'.$line, $item['Telefoon'])
-				->setCellValue('I'.$line, $item['Artikel'])
-				->setCellValue('J'.$line, $item['Aantal'])
-				->setCellValue('K'.$line, $item['Artikelnr.'])
-				->setCellValue('L'.$line, $item['Gewicht'])
-				->setCellValue('M'.$line, $item['Info aan Zorgpunt'])
-				->setCellValue('N'.$line, $item['Type']);
-			}
-			//write file
-			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-			if($to_external){
-				$filename = 'levering_ext_'.$order->getIncrementId().'.xlsx';				
-			}else{
-				$filename = 'levering_zp_'.$order->getIncrementId().'.xlsx';
-			}
-			$file = Mage::getBaseDir('export').'/'.$filename;
-			$objWriter->save($file);
-			Mage::log('file written '.$file);
-			
-			//send email
-			// This is the template name from your etc/config.xml
-			$template_id = 'supplier_new_shipment';
-			$storeId = Mage::app()->getStore()->getId();
-		
-			//send new shipment email to supplier
-						
-			// Who were sending to...
-			if($to_external){
-				$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
-				$email_to = explode(",",$emails);
-				//check external shipment or Bruno
-				if($seller!=null){
-					$sellerids = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_SPECIALSELLER')->getValue('text');
-					$ids = explode(',',$sellerids);
-					if(in_array($seller,$ids)){
-						$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_SPECIAL_EMAIL')->getValue('text');
-						$email_to = explode(",",$emails);
-					}
-				}
-			}else{
-				$email_to = Mage::getStoreConfig('trans_email/ident_general/email');
-			}
-			// Load our template by template_id
-			$email_template  = Mage::getModel('core/email_template')->loadDefault($template_id);
-				
-			// Here is where we can define custom variables to go in our email template!
-			$email_template_variables = array(
-					'order'        => $order
-			);
-				
-			// I'm using the Store Name as sender name here.
-			$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);
-			// I'm using the general store contact here as the sender email.
-			$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
-			$email_template->setSenderName($sender_name);
-			$email_template->setSenderEmail($sender_email);
-			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_custom1/email'));
-			
-			//Add attachement
-			$fileContents = file_get_contents($file); 
-			$attachment = $email_template->getMail()->createAttachment($fileContents);
-			$attachment->filename = $filename;
-				
-			//Send the email!
-			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Deliveries'), $email_template_variables);
-			
-			Mage::log('Email for delivery sent: '.$filename.' from '.$sender_email.' ('.$sender_name.')');
-			
-		}catch(Exception $e){
-			Mage::log('Fout create lever excel: ' . $e->getMessage());
-			try{
-				// This is the template name from your etc/config.xml
-				$template_id = 'problem_zorgpunt';
-				$storeId = Mage::app()->getStore()->getId();
-				
-				// Who were sending to...
-				$email_to = 'info@brainworx.be';
-				// Load our template by template_id
-				$email_template  = Mage::getModel('core/email_template')->loadDefault($template_id);
-				
-				// Here is where we can define custom variables to go in our email template!
-				$email_template_variables = array(
-						'info'        => 'Probleem creatie lever excel '.$order->getIncrementId().' - '.$e->getMessage()
-				);
-				
-				// I'm using the Store Name as sender name here.
-				$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);
-				// I'm using the general store contact here as the sender email.
-				$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
-				$email_template->setSenderName($sender_name);
-				$email_template->setSenderEmail($sender_email);
-				
-				//Send the email!
-				$email_template->send($email_to, Mage::helper('hearedfrom')->__('Deliveries'), $email_template_variables);
-					
-			}catch(Exception $e){
-				Mage::log('fout bij verzenden problem mail: '.$e->getMessage());
-			}
-		}
-	}*/
 	
 	/**
 	 * Hook to sales_order_invoice_register
@@ -295,10 +168,11 @@ class Brainworx_Hearedfrom_Model_Observer
 								}
 							}
 						}
+						
 						$sales_force = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id']);
 						self::saveCommission($sales_force,$order->getEntityId(),
 						$item->getOrderItemId(),$type,$item->getRowTotal(),
-						$item->getRowTotalInclTax(),$orderitem->getRistorno()*$item->getQty(),true);
+						$item->getRowTotalInclTax(),$orderitem->getRistorno()*$item->getQty(),true,$seller['seller_cust_id']);
 						
 					}
 				}		
@@ -326,14 +200,24 @@ class Brainworx_Hearedfrom_Model_Observer
 		$order->setDeliveryUntilDt(Mage::getSingleton('core/session')->getDeliveryBefore());
 		$order->save();		
 	}
-	private function saveCommission($seller,$orderid,$orderitemid,$type,$netamt,$brutamt,$rst,$invoiced ){
+	private function saveCommission($seller,$orderid,$orderitemid,$type,$netamt,$brutamt,$rst,$invoiced,$sellercustid ){
 		$sellerid = $seller["entity_id"];
 		$linkedtosellerid = $seller['linked_to'];
+		$_perc = $seller['ristorno_split_perc'];			
 		$ristorno = $rst;
+		$ristorno = $rst * ($_perc/100);
+		$sellerdetails = "";
+		//mederi
+		if(!empty($sellercustid)){
+			$cust = Mage::getModel('customer/customer')->load($sellercustid);
+			if(!empty($cust)&&
+					(Mage::getModel('core/variable')->setStoreId(
+							Mage::app()->getStore()->getId())->loadByCode('MEDERI_GID')->getValue('text'))==$cust->getGroupId()){
+				$sellerdetails = $cust->getFirstname().' '.$cust->getLastname();
+			}
+		}
 		//todo insert if linked
-		if(!empty($linkedtosellerid) && $linkedtosellerid>0){
-			$_perc = $seller['ristorno_split_perc'];
-			$ristorno = $rst * ($_perc/100);
+		if(!empty($linkedtosellerid) && $linkedtosellerid>0){			
 			$ristorno2 = $rst - $ristorno;
 			$newsalescomm = Mage::getModel('hearedfrom/salesCommission');
 			$newsalescomm->setData('user_id',$linkedtosellerid);
@@ -344,6 +228,9 @@ class Brainworx_Hearedfrom_Model_Observer
 			$newsalescomm->setData('brut_amount',$brutamt);
 			$newsalescomm->setData('ristorno',$ristorno2);
 			$newsalescomm->setData('invoiced',$invoiced);
+			if(!empty($sellerdetails)){
+				$newsalescomm->setData('sold_by',$sellerdetails);
+			}
 			$newsalescomm->save();
 			Mage::log("Saving ristono for linked Zorgpunt ".$linkedtosellerid." - seller ".$sellerid);
 		}
@@ -357,12 +244,22 @@ class Brainworx_Hearedfrom_Model_Observer
 		$newsalescomm->setData('brut_amount',$brutamt);
 		$newsalescomm->setData('ristorno',$ristorno);
 		$newsalescomm->setData('invoiced',$invoiced);
+		if(!empty($sellerdetails)){
+			$newsalescomm->setData('sold_by',$sellerdetails);
+		}
 		$newsalescomm->save();
 	}
 	public function login()
 	{
 		$_perc = 100;
-		$seller = Mage::getModel('hearedfrom/salesForce')->loadByCustid(Mage::getSingleton('customer/session')->getId());
+		$groupId = explode(",",Mage::getSingleton('customer/session')->getCustomerGroupId());
+		if(in_array(Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_GID')->getValue('text'),$groupId)) {
+			$mederisellerid = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_FORCE_ID')->getValue('text');
+			$seller = Mage::getModel('hearedfrom/salesForce')->load($mederisellerid);
+			
+		}else{
+			$seller = Mage::getModel('hearedfrom/salesForce')->loadByCustid(Mage::getSingleton('customer/session')->getId());
+		}
 		if(!empty($seller)){
 			$_perc = $seller['ristorno_split_perc'];
 		}

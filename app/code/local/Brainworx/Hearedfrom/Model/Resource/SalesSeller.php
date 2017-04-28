@@ -16,4 +16,13 @@ class Brainworx_Hearedfrom_Model_Resource_SalesSeller extends Mage_Core_Model_Re
     
     	return $adapter->fetchRow($select);
     }
+    public function updateSellerDetails($entity_id,$sellercustid){
+    	$adapter = $this->_getWriteAdapter();
+    	
+    	$adapter->update($this->getMainTable(), 
+    			array("seller_cust_id" => $sellercustid),
+    			"entity_id=".$entity_id);
+    	
+    	return true;
+    }
 }

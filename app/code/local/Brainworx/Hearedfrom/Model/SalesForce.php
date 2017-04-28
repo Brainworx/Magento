@@ -66,6 +66,5 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     	}else {
     		return $seller['user_nm'];
     	}
-    }
-     
+    }     
 }

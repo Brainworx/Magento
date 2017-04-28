@@ -20,9 +20,16 @@ class Brainworx_Hearedfrom_Block_Onepage_Hearedfrom extends Mage_Checkout_Block_
         $cid='';
         if(Mage::getSingleton('customer/session')->isLoggedIn()){
         	$cid = Mage::getSingleton('customer/session')->getCustomer()->getEntityId();
+        	$groupId = explode(",",Mage::getSingleton('customer/session')->getCustomerGroupId());
+        	if(in_array(Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_GID')->getValue('text'),$groupId)) {
+        		$mederisellerid = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_FORCE_ID')->getValue('text');
+        		$this->setSellerValue(Mage::getModel("hearedfrom/salesForce")->load($mederisellerid)['user_nm']);        		
+        	}else{
+        		$this->setSellerValue(Mage::getModel("hearedfrom/salesForce")->loadSellerNameByCustid($cid));
+        	}
         }
-        $this->setSellerValue(Mage::getModel("hearedfrom/salesForce")->loadSellerNameByCustid($cid));
-
+        
+        
         parent::_construct();
     }
 }

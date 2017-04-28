@@ -80,6 +80,13 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         		'type'  => 'options',
         		'options'	=>  Mage::getModel('hearedfrom/salesForce')->getUserNames(),
         ));
+        $this->addColumn('sold_by', array(
+        		'header'    => Mage::helper('hearedfrom')->__('Seller detail'),
+        		'align'     =>'left',
+        		'width'     => '100px',
+        		'index'     => 'sold_by',
+        		'filter_index' => 'sold_by',
+        ));
         $this->addColumn('category_ids',array(
         		'header'=> Mage::helper('hearedfrom')->__('Category'),
         		'type'  => 'text',

@@ -36,6 +36,7 @@ class Brainworx_Hearedfrom_Model_Resource_SalesForce extends Mage_Core_Model_Res
     
     	return $adapter->fetchRow($select);
     }
+   
     /**
      * Load foreign key related data to include in the model when selected
      * (showed in admin form)
