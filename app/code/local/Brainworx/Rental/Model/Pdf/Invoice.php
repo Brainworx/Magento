@@ -193,11 +193,11 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.25));//0.25
 		
 		$this->_setFontBold($page,10);
-		$linesContent[]='Gelieve het saldo van '.$this->euro.'binnen de 10 dagen te betalen op bankrekening:';
+		$linesContent[]='TOTAAL van '.$this->euro.' te betalen binnen 10 dagen na ontvangst de factuur.';
 		$iban =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('IBAN')->getValue('text');
 		$bicc =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('BICC')->getValue('text');		
-		$linesContent[]=$iban.' '.$bicc;
-		$linesContent[]='OMG/mededeling: factuur '.$invnr;
+		$linesContent[]='op rekening '.$iban.' '.$bicc;
+		$linesContent[]='met mededeling: factuur '.$invnr;
 		//write first block 
 		foreach($linesContent as $c){
 			$flineBlock['lines'][] = array(array('text'      => $c,
@@ -210,6 +210,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$this->y -= 20;
 		$page = $this->drawLineBlocks($page, array($flineBlock));
 		
+		
 		//footnote *******************************************************************
 		$flineBlock = array(
 				'lines'  => array(),
@@ -221,6 +222,15 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		}else{
 			$sellerNm = '.';
 		}
+		$linesContent[]=Mage::helper('rental')->__('Onze facturen zijn contant betaalbaar.');
+		$linesContent[]=Mage::helper('rental')->__('In geval van laattijdige betaling zijn van rechtswege en zonder ingebrekestelling verwijlintresten van 12%');
+		$linesContent[]=Mage::helper('rental')->__('vanaf factuurdatum en een forfaitaire schadevergoeding van 15% met een minimum van 50,00 euro verschuldigd.');
+		$linesContent[]=Mage::helper('rental')->__('Bovendien vervallen dan alle betalingstermijnen ook voor alle andere facturen.');
+		$linesContent[]=Mage::helper('rental')->__('Alle betwistingen omtrent onze facturen dienen binnen de 8 dagen na ontvangst van de factuur');
+		$linesContent[]=Mage::helper('rental')->__('schriftelijk ter kennis gebracht te worden.');
+		$linesContent[]=Mage::helper('rental')->__('Voor elke geschil zijn allen de rechtbanken van Leuven bevoegd.');
+		$linesContent[]=Mage::helper('rental')->__('');
+		$linesContent[]=Mage::helper('rental')->__('');
 		$linesContent[] = Mage::helper('sales')->__('Thank you for trusting ').$name.$sellerNm;
 		foreach($linesContent as $c){
 			$flineBlock['lines'][] = array(array('text'      => $c,
@@ -325,18 +335,18 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		/* Billing Address */
 		$billingAddress = $this->_formatAddress($order->getBillingAddress()->format('pdf'));
 	
-		/* Payment */
-		$paymentInfo = Mage::helper('payment')->getInfoBlock($order->getPayment())
-		->setIsSecureMode(true)
-		->toPdf();
-		$paymentInfo = htmlspecialchars_decode($paymentInfo, ENT_QUOTES);
-		$payment = explode('{{pdf_row_separator}}', $paymentInfo);
-		foreach ($payment as $key=>$value){
-			if (strip_tags(trim($value)) == '') {
-				unset($payment[$key]);
-			}
-		}
-		reset($payment);
+// 		/* Payment */
+// 		$paymentInfo = Mage::helper('payment')->getInfoBlock($order->getPayment())
+// 		->setIsSecureMode(true)
+// 		->toPdf();
+// 		$paymentInfo = htmlspecialchars_decode($paymentInfo, ENT_QUOTES);
+// 		$payment = explode('{{pdf_row_separator}}', $paymentInfo);
+// 		foreach ($payment as $key=>$value){
+// 			if (strip_tags(trim($value)) == '') {
+// 				unset($payment[$key]);
+// 			}
+// 		}
+// 		reset($payment);
 	
 		/* Shipping Address and Method */
 		if (!$order->getIsVirtual()) {
@@ -352,9 +362,9 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 	
 		if (!$order->getIsVirtual()) {
 			$page->drawText(Mage::helper('sales')->__('Ship to:'), 35, ($top - 15), 'UTF-8');
-		} else {
-			$page->drawText(Mage::helper('sales')->__('Payment Method:'), 285, ($top - 15), 'UTF-8');
-		}
+		} //else {
+// 			$page->drawText(Mage::helper('sales')->__('Payment Method:'), 285, ($top - 15), 'UTF-8');
+// 		}
 	
 		$addressesHeight = $this->_calcAddressHeight($billingAddress);
 		if (isset($shippingAddress)) {
@@ -403,118 +413,118 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			$addressesEndY = min($addressesEndY, $this->y);
 			$this->y = $addressesEndY;
 	
-			$page->setFillColor(new Zend_Pdf_Color_Rgb(0.93, 0.92, 0.92));
-			$page->setLineWidth(0.5);
-			$page->drawRectangle(25, $this->y, 275, $this->y-25);
-			$page->drawRectangle(275, $this->y, 570, $this->y-25);
+// 			$page->setFillColor(new Zend_Pdf_Color_Rgb(0.93, 0.92, 0.92));
+// 			$page->setLineWidth(0.5);
+// 			$page->drawRectangle(25, $this->y, 275, $this->y-25);
+// 			$page->drawRectangle(275, $this->y, 570, $this->y-25);
 	
-			$this->y -= 15;
-			$this->_setFontBold($page, 12);
-			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0));
-			$page->drawText(Mage::helper('sales')->__('Payment Method'), 35, $this->y, 'UTF-8');
-			$page->drawText(Mage::helper('sales')->__('Shipping Method:'), 285, $this->y , 'UTF-8');
+// 			$this->y -= 15;
+// 			$this->_setFontBold($page, 12);
+// 			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0));
+// 			$page->drawText(Mage::helper('sales')->__('Payment Method'), 35, $this->y, 'UTF-8');
+// 			$page->drawText(Mage::helper('sales')->__('Shipping Method:'), 285, $this->y , 'UTF-8');
 	
-			$this->y -=10;
-			$page->setFillColor(new Zend_Pdf_Color_GrayScale(1));
+// 			$this->y -=10;
+// 			$page->setFillColor(new Zend_Pdf_Color_GrayScale(1));
 	
-			$this->_setFontRegular($page, 10);
-			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0));
+// 			$this->_setFontRegular($page, 10);
+// 			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0));
 	
-			$paymentLeft = 35;
-			$yPayments   = $this->y - 15;
-		}
-		else {
-			$yPayments   = $addressesStartY;
-			$paymentLeft = 285;
-		}
+// 			$paymentLeft = 35;
+// 			$yPayments   = $this->y - 15;
+// 		}
+// 		else {
+// 			$yPayments   = $addressesStartY;
+// 			$paymentLeft = 285;
+// 		}
 	
-		foreach ($payment as $value){
-			if (trim($value) != '') {
-				//Printing "Payment Method" lines
-				$value = preg_replace('/<br[^>]*>/i', "\n", $value);
-				foreach (Mage::helper('core/string')->str_split($value, 45, true, true) as $_value) {
-					$page->drawText(strip_tags(trim($_value)), $paymentLeft, $yPayments, 'UTF-8');
-					$yPayments -= 15;
-				}
-			}
-		}
+// 		foreach ($payment as $value){
+// 			if (trim($value) != '') {
+// 				//Printing "Payment Method" lines
+// 				$value = preg_replace('/<br[^>]*>/i', "\n", $value);
+// 				foreach (Mage::helper('core/string')->str_split($value, 45, true, true) as $_value) {
+// 					$page->drawText(strip_tags(trim($_value)), $paymentLeft, $yPayments, 'UTF-8');
+// 					$yPayments -= 15;
+// 				}
+// 			}
+// 		}
 	
-		if ($order->getIsVirtual()) {
+// 		if ($order->getIsVirtual()) {
+// 			// replacement of Shipments-Payments rectangle block
+// 			$yPayments = min($addressesEndY, $yPayments);
+// 			$page->drawLine(25,  ($top - 25), 25,  $yPayments);
+// 			$page->drawLine(570, ($top - 25), 570, $yPayments);
+// 			$page->drawLine(25,  $yPayments,  570, $yPayments);
+	
+// 			$this->y = $yPayments - 15;
+// 		} else {
+// 			$topMargin    = 15;
+// 			$methodStartY = $this->y;
+// 			$this->y     -= 15;
+	
+// 			foreach (Mage::helper('core/string')->str_split($shippingMethod, 45, true, true) as $_value) {
+// 				$page->drawText(strip_tags(trim($_value)), 285, $this->y, 'UTF-8');
+// 				$this->y -= 15;
+// 			}
+	
+// 			$yShipments = $this->y;
+// 			$totalShippingChargesText = "(" . Mage::helper('sales')->__('Total Shipping Charges') . " "
+// 					. $order->formatPriceTxt($order->getShippingAmount()) . ")";
+	
+// 			$page->drawText($totalShippingChargesText, 285, $yShipments - $topMargin, 'UTF-8');
+// 			$yShipments -= $topMargin + 10;
+	
+// 			$tracks = array();
+// 			if ($shipment) {
+// 				$tracks = $shipment->getAllTracks();
+// 			}
+// 			if (count($tracks)) {
+// 				$page->setFillColor(new Zend_Pdf_Color_Rgb(0.93, 0.92, 0.92));
+// 				$page->setLineWidth(0.5);
+// 				$page->drawRectangle(285, $yShipments, 510, $yShipments - 10);
+// 				$page->drawLine(400, $yShipments, 400, $yShipments - 10);
+// 				//$page->drawLine(510, $yShipments, 510, $yShipments - 10);
+	
+// 				$this->_setFontRegular($page, 9);
+// 				$page->setFillColor(new Zend_Pdf_Color_GrayScale(0));
+// 				//$page->drawText(Mage::helper('sales')->__('Carrier'), 290, $yShipments - 7 , 'UTF-8');
+// 				$page->drawText(Mage::helper('sales')->__('Title'), 290, $yShipments - 7, 'UTF-8');
+// 				$page->drawText(Mage::helper('sales')->__('Number'), 410, $yShipments - 7, 'UTF-8');
+	
+// 				$yShipments -= 20;
+// 				$this->_setFontRegular($page, 8);
+// 				foreach ($tracks as $track) {
+	
+// 					$CarrierCode = $track->getCarrierCode();
+// 					if ($CarrierCode != 'custom') {
+// 						$carrier = Mage::getSingleton('shipping/config')->getCarrierInstance($CarrierCode);
+// 						$carrierTitle = $carrier->getConfigData('title');
+// 					} else {
+// 						$carrierTitle = Mage::helper('sales')->__('Custom Value');
+// 					}
+	
+// 					//$truncatedCarrierTitle = substr($carrierTitle, 0, 35) . (strlen($carrierTitle) > 35 ? '...' : '');
+// 					$maxTitleLen = 45;
+// 					$endOfTitle = strlen($track->getTitle()) > $maxTitleLen ? '...' : '';
+// 					$truncatedTitle = substr($track->getTitle(), 0, $maxTitleLen) . $endOfTitle;
+// 					//$page->drawText($truncatedCarrierTitle, 285, $yShipments , 'UTF-8');
+// 					$page->drawText($truncatedTitle, 292, $yShipments , 'UTF-8');
+// 					$page->drawText($track->getNumber(), 410, $yShipments , 'UTF-8');
+// 					$yShipments -= $topMargin - 5;
+// 				}
+// 			} else {
+// 				$yShipments -= $topMargin - 5;
+// 			}
+	
+// 			$currentY = min($yPayments, $yShipments);
+	
 			// replacement of Shipments-Payments rectangle block
-			$yPayments = min($addressesEndY, $yPayments);
-			$page->drawLine(25,  ($top - 25), 25,  $yPayments);
-			$page->drawLine(570, ($top - 25), 570, $yPayments);
-			$page->drawLine(25,  $yPayments,  570, $yPayments);
+// 			$page->drawLine(25,  $methodStartY, 25,  $currentY); //left
+// 			$page->drawLine(25,  $currentY,     570, $currentY); //bottom
+// 			$page->drawLine(570, $currentY,     570, $methodStartY); //right
 	
-			$this->y = $yPayments - 15;
-		} else {
-			$topMargin    = 15;
-			$methodStartY = $this->y;
-			$this->y     -= 15;
-	
-			foreach (Mage::helper('core/string')->str_split($shippingMethod, 45, true, true) as $_value) {
-				$page->drawText(strip_tags(trim($_value)), 285, $this->y, 'UTF-8');
-				$this->y -= 15;
-			}
-	
-			$yShipments = $this->y;
-			$totalShippingChargesText = "(" . Mage::helper('sales')->__('Total Shipping Charges') . " "
-					. $order->formatPriceTxt($order->getShippingAmount()) . ")";
-	
-			$page->drawText($totalShippingChargesText, 285, $yShipments - $topMargin, 'UTF-8');
-			$yShipments -= $topMargin + 10;
-	
-			$tracks = array();
-			if ($shipment) {
-				$tracks = $shipment->getAllTracks();
-			}
-			if (count($tracks)) {
-				$page->setFillColor(new Zend_Pdf_Color_Rgb(0.93, 0.92, 0.92));
-				$page->setLineWidth(0.5);
-				$page->drawRectangle(285, $yShipments, 510, $yShipments - 10);
-				$page->drawLine(400, $yShipments, 400, $yShipments - 10);
-				//$page->drawLine(510, $yShipments, 510, $yShipments - 10);
-	
-				$this->_setFontRegular($page, 9);
-				$page->setFillColor(new Zend_Pdf_Color_GrayScale(0));
-				//$page->drawText(Mage::helper('sales')->__('Carrier'), 290, $yShipments - 7 , 'UTF-8');
-				$page->drawText(Mage::helper('sales')->__('Title'), 290, $yShipments - 7, 'UTF-8');
-				$page->drawText(Mage::helper('sales')->__('Number'), 410, $yShipments - 7, 'UTF-8');
-	
-				$yShipments -= 20;
-				$this->_setFontRegular($page, 8);
-				foreach ($tracks as $track) {
-	
-					$CarrierCode = $track->getCarrierCode();
-					if ($CarrierCode != 'custom') {
-						$carrier = Mage::getSingleton('shipping/config')->getCarrierInstance($CarrierCode);
-						$carrierTitle = $carrier->getConfigData('title');
-					} else {
-						$carrierTitle = Mage::helper('sales')->__('Custom Value');
-					}
-	
-					//$truncatedCarrierTitle = substr($carrierTitle, 0, 35) . (strlen($carrierTitle) > 35 ? '...' : '');
-					$maxTitleLen = 45;
-					$endOfTitle = strlen($track->getTitle()) > $maxTitleLen ? '...' : '';
-					$truncatedTitle = substr($track->getTitle(), 0, $maxTitleLen) . $endOfTitle;
-					//$page->drawText($truncatedCarrierTitle, 285, $yShipments , 'UTF-8');
-					$page->drawText($truncatedTitle, 292, $yShipments , 'UTF-8');
-					$page->drawText($track->getNumber(), 410, $yShipments , 'UTF-8');
-					$yShipments -= $topMargin - 5;
-				}
-			} else {
-				$yShipments -= $topMargin - 5;
-			}
-	
-			$currentY = min($yPayments, $yShipments);
-	
-			// replacement of Shipments-Payments rectangle block
-			$page->drawLine(25,  $methodStartY, 25,  $currentY); //left
-			$page->drawLine(25,  $currentY,     570, $currentY); //bottom
-			$page->drawLine(570, $currentY,     570, $methodStartY); //right
-	
-			$this->y = $currentY;
-			$this->y -= 15;
+// 			$this->y = $currentY;
+// 			$this->y -= 15;
 		}
 	}
 	/**
@@ -562,4 +572,67 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			}
 		}
 	}
+	/**
+	 * Draw header for item table
+	 *
+	 * @param Zend_Pdf_Page $page
+	 * @return void
+	 */
+	protected function _drawHeader(Zend_Pdf_Page $page)
+	{
+		/* Add table head */
+		$this->_setFontRegular($page, 10);
+		$page->setFillColor(new Zend_Pdf_Color_RGB(0.93, 0.92, 0.92));
+		$page->setLineColor(new Zend_Pdf_Color_GrayScale(0.5));
+		$page->setLineWidth(0.5);
+		$page->drawRectangle(25, $this->y, 570, $this->y -15);
+		$this->y -= 10;
+		$page->setFillColor(new Zend_Pdf_Color_RGB(0, 0, 0));
+	
+		//columns headers
+		$lines[0][] = array(
+				'text' => Mage::helper('sales')->__('Products'),
+				'feed' => 35
+		);
+	
+		$lines[0][] = array(
+				'text'  => Mage::helper('sales')->__('SKU'),
+				'feed'  => 300,
+				'align' => 'right'
+		);
+	
+		$lines[0][] = array(
+				'text'  => Mage::helper('sales')->__('Qty'),
+				'feed'  => 455,
+				'align' => 'right'
+		);
+	
+		$lines[0][] = array(
+				'text'  => Mage::helper('sales')->__('Price'),
+				'feed'  => 390,
+				'align' => 'right'
+		);
+	
+		$lines[0][] = array(
+				'text'  => Mage::helper('sales')->__('Tax'),
+				'feed'  => 495,
+				'align' => 'right'
+		);
+	
+		$lines[0][] = array(
+				'text'  => Mage::helper('sales')->__('Subtotal'),
+				'feed'  => 565,
+				'align' => 'right'
+		);
+	
+		$lineBlock = array(
+				'lines'  => $lines,
+				'height' => 5
+		);
+	
+		$this->drawLineBlocks($page, array($lineBlock), array('table_header' => true));
+		$page->setFillColor(new Zend_Pdf_Color_GrayScale(0));
+		$this->y -= 20;
+	}
+	
 }
