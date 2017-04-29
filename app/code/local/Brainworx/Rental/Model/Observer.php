@@ -206,6 +206,10 @@ class Brainworx_Rental_Model_Observer
 					$email_template->setSenderName($sender_name);
 					$email_template->setSenderEmail($sender_email);
 					$email_template->addBcc($sender_email);
+					$extramail =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('EXTRA_MAIL')->getValue('text');
+					if(!empty($extramail)){
+						$email_template->addBcc($extramail);
+					}
 					
 					//Send the email!
 					$email_template->send($email_to, Mage::helper('rental')->__('Supplier'), $email_template_variables);
