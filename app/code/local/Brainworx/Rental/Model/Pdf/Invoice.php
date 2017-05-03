@@ -39,7 +39,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			$this->insertInvoiceDate($page, 
 					Mage::helper('sales')->__('Invoice Date: ') .
 					Mage::helper('core')->formatDate($invoice->getCreatedAt(), 'medium', false));
-								/* Add table */
+			/* Add table */
 			$this->_drawHeader($page);
 			/* Add body */
 			foreach ($invoice->getAllItems() as $item){
@@ -130,16 +130,21 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 				
 				$size;
 				$last_key_2 = count($total->getTotalsForDisplay())-1;
+				$label = "";
 				foreach ($total->getTotalsForDisplay() as $key2=>$totalData) {
 					$size = $totalData['font_size'];
 					if($last_key === $key && $last_key_2 === $key2){
 						$size = 14;
 						$this->euro = $totalData['amount'].' ';
 					}
+					$label = $totalData['label'];
+					if($label == "Subtotaal:"){
+						$label = Mage::helper('Sales')->__('SubTotal (Excl. Tax)');
+					}
 					$this->totalsh += 15;
 					$lineBlock['lines'][] = array(
 							array(
-									'text'      => $totalData['label'],
+									'text'      => $label,
 									'feed'      => 475,
 									'align'     => 'right',
 									'font_size' => $size,
@@ -222,15 +227,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		}else{
 			$sellerNm = '.';
 		}
-		$linesContent[]=Mage::helper('rental')->__('Onze facturen zijn contant betaalbaar.');
-		$linesContent[]=Mage::helper('rental')->__('In geval van laattijdige betaling zijn van rechtswege en zonder ingebrekestelling verwijlintresten van 12%');
-		$linesContent[]=Mage::helper('rental')->__('vanaf factuurdatum en een forfaitaire schadevergoeding van 15% met een minimum van 50,00 euro verschuldigd.');
-		$linesContent[]=Mage::helper('rental')->__('Bovendien vervallen dan alle betalingstermijnen ook voor alle andere facturen.');
-		$linesContent[]=Mage::helper('rental')->__('Alle betwistingen omtrent onze facturen dienen binnen de 8 dagen na ontvangst van de factuur');
-		$linesContent[]=Mage::helper('rental')->__('schriftelijk ter kennis gebracht te worden.');
-		$linesContent[]=Mage::helper('rental')->__('Voor elke geschil zijn allen de rechtbanken van Leuven bevoegd.');
-		$linesContent[]=Mage::helper('rental')->__('');
-		$linesContent[]=Mage::helper('rental')->__('');
+		
 		$linesContent[] = Mage::helper('sales')->__('Thank you for trusting ').$name.$sellerNm;
 		foreach($linesContent as $c){
 			$flineBlock['lines'][] = array(array('text'      => $c,
@@ -238,7 +235,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 					'align'     => 'center')
 			);
 		}
-		$this->y -= 20;
+		$this->y -= 30;//20->30 update 3/5/2017
 		$page = $this->drawLineBlocks($page, array($flineBlock));
 		//end footnote
 		
@@ -286,6 +283,36 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		}
 		$this->y -= 20;
 		$page = $this->drawLineBlocks($page, array($flineBlock));
+		
+		//legal footnote *******************************************************************
+		// update 3/5/2017
+		$this->y -= 55;
+		
+		$flineBlock = array(
+				'lines'  => array(),
+				'height' => 10,
+				'align'     => 'center'
+		);
+		$linesContent = array();
+		
+		$linesContent[]=Mage::helper('rental')->__('Onze facturen zijn contant betaalbaar.');
+		$linesContent[]=Mage::helper('rental')->__('In geval van laattijdige betaling zijn van rechtswege en zonder ingebrekestelling verwijlintresten van 12%');
+		$linesContent[]=Mage::helper('rental')->__('vanaf factuurdatum en een forfaitaire schadevergoeding van 15% met een minimum van 50,00 euro verschuldigd.');
+		$linesContent[]=Mage::helper('rental')->__('Bovendien vervallen dan alle betalingstermijnen ook voor alle andere facturen.');
+		$linesContent[]=Mage::helper('rental')->__('Alle betwistingen omtrent onze facturen dienen binnen de 8 dagen na ontvangst van de factuur');
+		$linesContent[]=Mage::helper('rental')->__('schriftelijk ter kennis gebracht te worden.');
+		$linesContent[]=Mage::helper('rental')->__('Voor elke geschil zijn allen de rechtbanken van Leuven bevoegd.');
+		
+		foreach($linesContent as $c){
+			$flineBlock['lines'][] = array(array('text'      => $c,
+					'feed'      => 50,
+					'align'     => 'center',
+					'font_size' => 8,
+			)
+			);
+		}
+		$page = $this->drawLineBlocks($page, array($flineBlock));
+		//end footnote
 		
 	}
 	protected function insertOrder(&$page, $obj, $putOrderId = true)
@@ -615,12 +642,12 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 	
 		$lines[0][] = array(
 				'text'  => Mage::helper('sales')->__('Tax'),
-				'feed'  => 495,
+				'feed'  => 490,
 				'align' => 'right'
 		);
 	
 		$lines[0][] = array(
-				'text'  => Mage::helper('sales')->__('Subtotal'),
+				'text'  => Mage::helper('sales')->__('SubTotal Excl. Tax'),//Subtotal
 				'feed'  => 565,
 				'align' => 'right'
 		);
