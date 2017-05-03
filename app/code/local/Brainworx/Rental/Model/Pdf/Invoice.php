@@ -286,12 +286,11 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		
 		//legal footnote *******************************************************************
 		// update 3/5/2017
-		$this->y -= 55;
+		$this->y -= 25;
 		
 		$flineBlock = array(
 				'lines'  => array(),
 				'height' => 10,
-				'align'     => 'center'
 		);
 		$linesContent = array();
 		
@@ -306,8 +305,8 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		foreach($linesContent as $c){
 			$flineBlock['lines'][] = array(array('text'      => $c,
 					'feed'      => 50,
-					'align'     => 'center',
 					'font_size' => 8,
+					'font'		=> 'italic'
 			)
 			);
 		}
