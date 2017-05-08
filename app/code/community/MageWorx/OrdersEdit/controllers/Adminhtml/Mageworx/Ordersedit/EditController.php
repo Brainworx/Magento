@@ -89,71 +89,6 @@ class MageWorx_OrdersEdit_Adminhtml_Mageworx_Ordersedit_EditController extends M
         $this->getResponse()->setBody(Zend_Json::encode($customer->getData()));
     }
 
-    /**
-     * @todo Move processing code to models
-     */
-    public function applyChangesAction()
-    {
-
-        try {
-            $orderId = $this->getRequest()->getParam('order_id');
-            /** @var Mage_Sales_Model_Order $order */
-            $order = Mage::getModel('sales/order')->load($orderId);
-            Mage::register('ordersedit_order', $order);
-            /** @var Mage_Sales_Model_Quote $quote */
-            $quote = Mage::getModel('mageworx_ordersedit/edit')->getQuoteByOrder($order);
-
-            $data = $this->getRequest()->getPost();
-
-            $pendingChanges = $this->getMwEditHelper()->addPendingChanges($orderId, $data);
-            /** @var Mage_Sales_Model_Quote $quote */
-            $quote = Mage::getSingleton('mageworx_ordersedit/edit_quote')->applyDataToQuote($quote, $pendingChanges);
-
-            $order->addData($data);
-
-            $blockId = $this->getRequest()->getParam('edited_block');
-            $blockData = $this->getMwEditHelper()->getBlockById($blockId);
-            $block = $this->getLayout()->createBlock($blockData['changedBlock']);
-
-            if ($blockId == 'shipping_address') {
-                $block->setAddressType('shipping');
-            } elseif ($blockId == 'billing_address') {
-                $block->setAddressType('billing');
-            }
-
-            $block->setQuote($quote);
-            $block->setOrder($order);
-
-            $noticeHtml = $this->getLayout()->createBlock('core/template')
-                ->setTemplate('mageworx/ordersedit/changed/notice.phtml')
-                ->toHtml();
-            $result[$blockId] = $noticeHtml . $block->toHtml();
-
-            // Render temp totals (preview)
-            /** @var array $totals */
-            $totals = $quote->getTotals();
-            $tempTotalsBlock = Mage::getSingleton('core/layout')->createBlock(
-                'mageworx_ordersedit/adminhtml_sales_order_totals',
-                'temp_totals',
-                array(
-                    'totals' => $totals,
-                    'order'  => $order,
-                    'quote'  => $quote
-                )
-            );
-            $tempTotalsHtml = $tempTotalsBlock->toHtml();
-            $result['temp_totals'] = $tempTotalsHtml;
-            $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
-
-        } catch (Exception $e) {
-            $result = array('exception' => '1');
-            Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
-            $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
-        }
-
-        return $this;
-    }
-
     public function saveOrderAction()
     {
         try {
@@ -213,6 +148,138 @@ class MageWorx_OrdersEdit_Adminhtml_Mageworx_Ordersedit_EditController extends M
 
         $this->_redirectReferer();
     }
+    /**
+     * @todo Move processing code to models
+     */
+    public function applyChangesAction()
+    {
+
+    	$orderId = $this->getRequest()->getParam('order_id');
+    
+    	try {
+    		/** @var Mage_Sales_Model_Order $order */
+    		$order = Mage::getModel('sales/order')->load($orderId);
+    		Mage::register('ordersedit_order', $order);
+    		/** @var Mage_Sales_Model_Quote $quote */
+    		$quote = Mage::getModel('mageworx_ordersedit/edit')->getQuoteByOrder($order);
+    
+    		$data = $this->getRequest()->getPost();
+    
+    		$pendingChanges = $this->getMwEditHelper()->addPendingChanges($orderId, $data);
+    		/** @var Mage_Sales_Model_Quote $quote */
+    		$quote = Mage::getSingleton('mageworx_ordersedit/edit_quote')->applyDataToQuote($quote, $pendingChanges);
+    
+    		$order->addData($data);
+    		
+    		Mage::getSingleton('mageworx_ordersedit/edit')->saveOrder($quote, $order, $pendingChanges);
+    		
+    		$this->getMwEditHelper()->resetPendingChanges($orderId);
+    
+//     		$blockId = $this->getRequest()->getParam('edited_block');
+//     		$blockData = $this->getMwEditHelper()->getBlockById($blockId);
+//     		$block = $this->getLayout()->createBlock($blockData['changedBlock']);
+    
+//     		if ($blockId == 'shipping_address') {
+//     			$block->setAddressType('shipping');
+//     		} elseif ($blockId == 'billing_address') {
+//     			$block->setAddressType('billing');
+//     		}
+    
+//     		$block->setQuote($quote);
+//     		$block->setOrder($order);
+    
+//     		$noticeHtml = $this->getLayout()->createBlock('core/template')
+//     		->setTemplate('mageworx/ordersedit/changed/notice.phtml')
+//     		->toHtml();
+//     		$result[$blockId] = $noticeHtml . $block->toHtml();
+    
+//     		// Render temp totals (preview)
+//     		/** @var array $totals */
+//     		$totals = $quote->getTotals();
+//     		$tempTotalsBlock = Mage::getSingleton('core/layout')->createBlock(
+//     				'mageworx_ordersedit/adminhtml_sales_order_totals',
+//     				'temp_totals',
+//     				array(
+//     						'totals' => $totals,
+//     						'order'  => $order,
+//     						'quote'  => $quote
+//     				)
+//     		);
+//     		$tempTotalsHtml = $tempTotalsBlock->toHtml();
+//     		$result['temp_totals'] = $tempTotalsHtml;
+//     		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    
+    	} catch (Exception $e) {
+    		Mage::getSingleton ( 'adminhtml/session' )->addError ( $e->getMessage () );
+    	}
+    	//$this->_redirect('sales/order/view', array('order_id' => $orderId));
+    	return Mage::getUrl('sales/order/view', array('order_id' => $orderId));
+    }
+    
+//     /**
+//      * @todo Move processing code to models
+//      */
+//     public function applyChangesAction()
+//     {
+    
+//     	try {
+//     		$orderId = $this->getRequest()->getParam('order_id');
+//     		/** @var Mage_Sales_Model_Order $order */
+//     		$order = Mage::getModel('sales/order')->load($orderId);
+//     		Mage::register('ordersedit_order', $order);
+//     		/** @var Mage_Sales_Model_Quote $quote */
+//     		$quote = Mage::getModel('mageworx_ordersedit/edit')->getQuoteByOrder($order);
+    
+//     		$data = $this->getRequest()->getPost();
+    
+//     		$pendingChanges = $this->getMwEditHelper()->addPendingChanges($orderId, $data);
+//     		/** @var Mage_Sales_Model_Quote $quote */
+//     		$quote = Mage::getSingleton('mageworx_ordersedit/edit_quote')->applyDataToQuote($quote, $pendingChanges);
+    
+//     		$order->addData($data);
+    
+//     		$blockId = $this->getRequest()->getParam('edited_block');
+//     		$blockData = $this->getMwEditHelper()->getBlockById($blockId);
+//     		$block = $this->getLayout()->createBlock($blockData['changedBlock']);
+    
+//     		if ($blockId == 'shipping_address') {
+//     			$block->setAddressType('shipping');
+//     		} elseif ($blockId == 'billing_address') {
+//     			$block->setAddressType('billing');
+//     		}
+    
+//     		$block->setQuote($quote);
+//     		$block->setOrder($order);
+    
+//     		$noticeHtml = $this->getLayout()->createBlock('core/template')
+//     		->setTemplate('mageworx/ordersedit/changed/notice.phtml')
+//     		->toHtml();
+//     		$result[$blockId] = $noticeHtml . $block->toHtml();
+    
+//     		// Render temp totals (preview)
+//     		/** @var array $totals */
+//     		$totals = $quote->getTotals();
+//     		$tempTotalsBlock = Mage::getSingleton('core/layout')->createBlock(
+//     				'mageworx_ordersedit/adminhtml_sales_order_totals',
+//     				'temp_totals',
+//     				array(
+//     						'totals' => $totals,
+//     						'order'  => $order,
+//     						'quote'  => $quote
+//     				)
+//     		);
+//     		$tempTotalsHtml = $tempTotalsBlock->toHtml();
+//     		$result['temp_totals'] = $tempTotalsHtml;
+//     		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    
+//     	} catch (Exception $e) {
+//     		$result = array('exception' => '1');
+//     		Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+//     		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+//     	}
+    
+//     	return $this;
+//     }
 
     /**
      * @return bool

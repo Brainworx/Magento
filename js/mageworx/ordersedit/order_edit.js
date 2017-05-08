@@ -157,73 +157,90 @@ OrdersEditEdit.prototype = {
 
         return params;
     },
+    saveOrder : function(){
+    	var url = this.saveOrderUrl;
+      var params = this.getFormParams();
+      var parent = this;
 
-    saveOrder : function() {
-
-        var url = this.saveOrderUrl;
-        var params = this.getFormParams();
-        var parent = this;
-
-        url = url.replace('%edited_block%', this.currentBlock);
-
-        new Ajax.Request(url, {
-            parameters : params,
-            onComplete : function(transport) {
-
-                var result = transport.responseText.evalJSON();
-                var element = '';
-
-                if (typeof result.exception != 'undefined')
-                {
-                    try {
-                        if (parent.currentBlock == 'order_items')
-                        {
-                            element = $$('#sales_order_view_tabs_order_info_content').first().querySelector('.head-products').up().querySelector('.tools > a');
-                        } else {
-                            element = $$('#sales_order_view_tabs_order_info_content .hidden-fieldset').first().up()
-                                .querySelector('.tools > a');
-                        }
-                        parent.showException(result.exception, parent.currentBlock, element);
-                    } catch(e) {
-                        console.log(e);
-                    }
-                } else {
-                    var changedBlockHtml = result[parent.currentBlock];
-                    var origFieldset = $$('#sales_order_view_tabs_order_info_content .hidden-fieldset').first();
-                    if (origFieldset) {
-                        origFieldset.update(changedBlockHtml);
-                    }
-                    parent.cancel();
-                    parent.hasChanges = true;
-
-                    if (typeof result.temp_totals != 'undefined')
-                    {
-                        parent.showTempTotals(result.temp_totals);
-                    }
-
-                    parent.decorateChangedBlocks();
-                }
+      url = url.replace('%edited_block%', this.currentBlock);
+      console.log("editing "+this.currentBlock);
+    	new Ajax.Request(url, {
+            method:'post',
+            parameters: params,
+            onSuccess: function() {
+            	location.reload();
             }
-        });
+        }); 
     },
 
-    changeCustomer : function() {
-        this.showOverlay();
-        var parent = this;
-        new Ajax.Request(this.customersGridUrl, {
-           onComplete : function(transport) {
-               parent.showPopup(transport.responseText);
-
-               $$('#customerGrid tr[title^="submit_customer_"]').each(function(el){
-                   el.observe('click', function(event) {
-                       customerId = el.title.replace('submit_customer_', '');
-                       parent.submitCustomer(customerId);
-                       $(el).stopObserving('click');
-                   });
-               });
-           }
-        });
-    },
+//    saveOrder : function() {
+//
+//        var url = this.saveOrderUrl;
+//        var params = this.getFormParams();
+//        var parent = this;
+//
+//        url = url.replace('%edited_block%', this.currentBlock);
+//
+//        new Ajax.Request(url, {
+//            parameters : params,
+//            
+//            onComplete : function(transport) {
+//
+//                var result = transport.responseText.evalJSON();
+//                var element = '';
+//
+//                if (typeof result.exception != 'undefined')
+//                {
+//                    try {
+//                        if (parent.currentBlock == 'order_items')
+//                        {
+//                            element = $$('#sales_order_view_tabs_order_info_content').first().querySelector('.head-products').up().querySelector('.tools > a');
+//                        } else {
+//                            element = $$('#sales_order_view_tabs_order_info_content .hidden-fieldset').first().up()
+//                                .querySelector('.tools > a');
+//                        }
+//                        parent.showException(result.exception, parent.currentBlock, element);
+//                    } catch(e) {
+//                        console.log(e);
+//                    }
+//                } else {
+//                	
+//                    var changedBlockHtml = result[parent.currentBlock];
+//                    var origFieldset = $$('#sales_order_view_tabs_order_info_content .hidden-fieldset').first();
+//                    if (origFieldset) {
+//                        origFieldset.update(changedBlockHtml);
+//                    }
+//                    parent.cancel();
+//                    parent.hasChanges = true;
+//
+//                    if (typeof result.temp_totals != 'undefined')
+//                    {
+//                        parent.showTempTotals(result.temp_totals);
+//                    }
+//
+//                    parent.decorateChangedBlocks();
+//                }
+//            }
+//        });
+//    },
+//
+//    changeCustomer : function() {
+//        this.showOverlay();
+//        var parent = this;
+//        new Ajax.Request(this.customersGridUrl, {
+//           onComplete : function(transport) {
+//               parent.showPopup(transport.responseText);
+//
+//               $$('#customerGrid tr[title^="submit_customer_"]').each(function(el){
+//                   el.observe('click', function(event) {
+//                       customerId = el.title.replace('submit_customer_', '');
+//                       parent.submitCustomer(customerId);
+//                       $(el).stopObserving('click');
+//                   });
+//               });
+//           }
+//        });
+//    },
 
     searchProducts : function() {
         new Ajax.Request(this.productGridUrl, {

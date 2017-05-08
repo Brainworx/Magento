@@ -18,7 +18,7 @@
             <action method="addItem" ifconfig="mageworx_ordersmanagement/ordersedit/show_thumbnails"><type>js_css</type><name>mageworx/lightbox/css/lightbox-ie.css</name><params/><if>lt IE 8</if></action>
             <action method="addItem" ifconfig="mageworx_ordersmanagement/ordersedit/show_thumbnails"><type>js</type><name>mageworx/lightbox/js/lightbox.js</name><params/><if/></action>
 
-            <action method="addItem"><type>js</type><name>mageworx/ordersedit/order_edit.js</name><params/><if/></action>
+            <action method="addItem"><type>js</type><name>mageworx/ordersedit/order_edit.js?ver=1.1</name><params/><if/></action>
 
             <action method="addJs"><file>mage/adminhtml/product/composite/configure.js</file></action>
             <action method="addJs"><file>varien/configurable.js</file></action>

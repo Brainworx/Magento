@@ -102,8 +102,11 @@ class MageWorx_OrdersEdit_Block_Adminhtml_Sales_Order_Totals extends Mage_Adminh
         $totals = $this->getData('totals');
 
         //for shipping incl. tax on "New Totals" block
-        if (Mage::helper('tax')->displayShippingPriceIncludingTax()) {
-            $totals['shipping']->setValue($this->getSource()->getShippingAddress()->getShippingInclTax());
+        if (Mage::helper('tax')->displayShippingPriceIncludingTax() && isset($totals['shipping'])) { //Stijn 20170508 Ticket 196 added check isset
+        	$totals['shipping']->setValue($this->getSource()->getShippingAddress()->getShippingInclTax());        	
+        	
+        	//$totals['shipping']->setValue($this->getOrder()->getShippingAddress()->getShippingInclTax());
+            //$totals['shipping']->setValue($this->getSource()->getShippingAddress()->getShippingInclTax());
            // $totals['shipping']->setValue($this->getQuote()->getShippingAddress()->getShippingInclTax());      //SHE       
         }
 
