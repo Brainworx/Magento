@@ -89,7 +89,7 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Edit_Form extends Mage_Adm
         */
         $fieldset->addField('phone', 'text', array(
         		'label'     => Mage::helper('hearedfrom')->__('Phone'),
-        		'name'      => 'country',
+        		'name'      => 'phone',
         ));
         $fieldset->addField('linked_to', 'select', array(
         		'label'     => Mage::helper('hearedfrom')->__('Linked to Seller'),
