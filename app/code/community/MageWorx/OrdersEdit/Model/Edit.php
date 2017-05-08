@@ -529,92 +529,92 @@ class MageWorx_OrdersEdit_Model_Edit extends Mage_Core_Model_Abstract
             unset($changes['shipping_address']);
         }
 
-        if (isset($changes['payment'])) {
-            $this->savePayment($quote->getPayment(), $order->getPayment());
-            unset($changes['payment']);
-        }
+//         if (isset($changes['payment'])) {
+//             $this->savePayment($quote->getPayment(), $order->getPayment());
+//             unset($changes['payment']);
+//         }
 
-        $this->_savedOrderItems = array();
+//         $this->_savedOrderItems = array();
 
-        if (isset($changes['product_to_add']) && !empty($changes['product_to_add'])) {
-            $this->saveNewOrderItems($quote, $order, $changes['product_to_add']);
-        }
+//         if (isset($changes['product_to_add']) && !empty($changes['product_to_add'])) {
+//             $this->saveNewOrderItems($quote, $order, $changes['product_to_add']);
+//         }
 
-        if (isset($changes['quote_items'])) {
-            $this->saveOldOrderItems($quote, $order, $changes['quote_items']);
-        }
+//         if (isset($changes['quote_items'])) {
+//             $this->saveOldOrderItems($quote, $order, $changes['quote_items']);
+//         }
 
-        $address = $quote->getIsVirtual() ? $quote->getBillingAddress() : $quote->getShippingAddress();
-        Mage::helper('core')->copyFieldset('sales_convert_quote_address', 'to_order', $address, $order);
-        $address->save();
+//         $address = $quote->getIsVirtual() ? $quote->getBillingAddress() : $quote->getShippingAddress();
+//         Mage::helper('core')->copyFieldset('sales_convert_quote_address', 'to_order', $address, $order);
+//         $address->save();
 
-        /** @var Mage_Sales_Model_Quote_Item $quoteItem */
-        foreach ($quote->getAllVisibleItems() as $quoteItem) {
+//         /** @var Mage_Sales_Model_Quote_Item $quoteItem */
+//         foreach ($quote->getAllVisibleItems() as $quoteItem) {
 
-            /** @var Mage_Sales_Model_Order_Item $orderItem */
-            $orderItem = $order->getItemByQuoteItemId($quoteItem->getItemId());
+//             /** @var Mage_Sales_Model_Order_Item $orderItem */
+//             $orderItem = $order->getItemByQuoteItemId($quoteItem->getItemId());
 
-            if (isset($orderItem) && (in_array($orderItem->getItemId(), $this->_savedOrderItems) || !isset($changes['quote_items']))) {
-                continue;
-            }
+//             if (isset($orderItem) && (in_array($orderItem->getItemId(), $this->_savedOrderItems) || !isset($changes['quote_items']))) {
+//                 continue;
+//             }
 
-            /** @var Mage_Sales_Model_Order_Item $orderItem */
-            $orderItem = $this->getConvertor()->itemToOrderItem($quoteItem, $orderItem);
-            $orderItem->setOrderId($order->getId());
-            $orderItem->save();
+//             /** @var Mage_Sales_Model_Order_Item $orderItem */
+//             $orderItem = $this->getConvertor()->itemToOrderItem($quoteItem, $orderItem);
+//             $orderItem->setOrderId($order->getId());
+//             $orderItem->save();
 
-            $quoteChildrens = $quoteItem->getChildren();
-            $orderChildrens = array();
-            foreach ($quoteChildrens as $childQuoteItem) {
+//             $quoteChildrens = $quoteItem->getChildren();
+//             $orderChildrens = array();
+//             foreach ($quoteChildrens as $childQuoteItem) {
 
-                /** @var Mage_Sales_Model_Order_Item $childOrderItem */
-                $childOrderItem = $order->getItemByQuoteItemId($childQuoteItem->getItemId());
+//                 /** @var Mage_Sales_Model_Order_Item $childOrderItem */
+//                 $childOrderItem = $order->getItemByQuoteItemId($childQuoteItem->getItemId());
 
-                if (isset($childOrderItem) && in_array($childOrderItem->getItemId(), $this->_savedOrderItems)) {
-                    continue;
-                }
+//                 if (isset($childOrderItem) && in_array($childOrderItem->getItemId(), $this->_savedOrderItems)) {
+//                     continue;
+//                 }
 
-                /** @var Mage_Sales_Model_Order_Item $childOrderItem */
-                $childOrderItem = $this->getConvertor()->itemToOrderItem($childQuoteItem, $childOrderItem);
-                $childOrderItem->setOrderId($order->getId());
-                $childOrderItem->setParentItem($orderItem);
-                $childOrderItem->setParentItemId($orderItem->getId());
-                $childOrderItem->save();
-                $orderChildrens[] = $childOrderItem;
-            }
+//                 /** @var Mage_Sales_Model_Order_Item $childOrderItem */
+//                 $childOrderItem = $this->getConvertor()->itemToOrderItem($childQuoteItem, $childOrderItem);
+//                 $childOrderItem->setOrderId($order->getId());
+//                 $childOrderItem->setParentItem($orderItem);
+//                 $childOrderItem->setParentItemId($orderItem->getId());
+//                 $childOrderItem->save();
+//                 $orderChildrens[] = $childOrderItem;
+//             }
 
-            if (!empty($orderChildrens)) {
-                foreach ($orderChildrens as $child) {
-                    $orderItem->addChildItem($child);
-                }
-                $orderItem->save();
-            }
+//             if (!empty($orderChildrens)) {
+//                 foreach ($orderChildrens as $child) {
+//                     $orderItem->addChildItem($child);
+//                 }
+//                 $orderItem->save();
+//             }
 
-            /*** Add new items to log ***/
-            $changedItem = $quoteItem;
-            $itemChange = array(
-                'name'       => $changedItem->getName(),
-                'qty_before' => 0,
-                'qty_after'  => $changedItem->getQty()
-            );
-            $this->getLogModel()->addItemChange($changedItem->getId(), $itemChange);
-        }
+//             /*** Add new items to log ***/
+//             $changedItem = $quoteItem;
+//             $itemChange = array(
+//                 'name'       => $changedItem->getName(),
+//                 'qty_before' => 0,
+//                 'qty_after'  => $changedItem->getQty()
+//             );
+//             $this->getLogModel()->addItemChange($changedItem->getId(), $itemChange);
+//         }
 
-        if (empty($changes['customer_id'])) {
-            $changes['customer_id'] = $order->getCustomerId();
-        }
+//         if (empty($changes['customer_id'])) {
+//             $changes['customer_id'] = $order->getCustomerId();
+//         }
 
-        // Collect order all items qty
-        $changes['total_qty_ordered'] = 0;
-        foreach ($order->getAllItems() as $orderItem) {
-            $changes['total_qty_ordered'] += $orderItem['qty_ordered'] - $orderItem['qty_canceled'];
-        }
-        $order->addData($changes);
+//         // Collect order all items qty
+//         $changes['total_qty_ordered'] = 0;
+//         foreach ($order->getAllItems() as $orderItem) {
+//             $changes['total_qty_ordered'] += $orderItem['qty_ordered'] - $orderItem['qty_canceled'];
+//         }
+//         $order->addData($changes);
 
         $this->getLogModel()->commitOrderChanges($order);
 
-        $quote->save();
-        $order->save();
+//         $quote->save();
+//         $order->save();
 
         return $this;
     }
