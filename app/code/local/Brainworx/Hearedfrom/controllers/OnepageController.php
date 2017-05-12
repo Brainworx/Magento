@@ -322,10 +322,17 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 			}else{
 				//default delivery date = next day
 				Mage::log("ERROR -- DELIVERY NOT SET".$_comment_tozorgpunt);
-				Mage::getSingleton('core/session')->setDeliveryBefore(date('d-m-Y', strtotime('+1 day')));
+				Mage::getSingleton('core/session')->setDeliveryBefore(date('d-m-Y', strtotime('+1 weekday')));
 				Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
 			}
 			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
+			
+			//birthdate patient
+			$_patient_bdate = $this->getRequest()->getPost('patientbdt');
+			if(!empty($_patient_bdate)){
+				Mage::getSingleton('core/session')->setPatientBirthDate($_patient_bdate);
+			}
+			 
 
 			$result = array();
             

@@ -18,7 +18,13 @@
 $_comment = $_order->getCommentToZorgpunt();
 if(empty($_comment)){ $_comment= Mage::helper('sales')->__('No comment provided');}	
 $seller = Mage::getModel("hearedfrom/salesSeller")->loadByOrderId($_order->getIncrementId());
-$_sellername = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])->getData("user_nm");				  
+$_sellername = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])->getData("user_nm");	
+$_birthdate = null;
+if(!empty($_order->getPatientBirthDate())){
+	$_birthdate = $this->formatDate($_order->getPatientBirthDate(), 'medium');
+}else{
+	$_birthdate = Mage::helper('checkout')->__('Not provided'); 
+}		  
 ?>
 <input id="realorderid" type="hidden" value="<?php echo $_order->getRealOrderId()?>" />
 <div class="page-title title-buttons">
@@ -79,6 +85,7 @@ $_sellername = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])
             </div>
             <div class="box-content">
                 <address><?php echo $_order->getBillingAddress()->format('html') ?></address>
+                <p>
             </div>
         </div>
     </div>
@@ -103,12 +110,16 @@ $_sellername = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id'])
                 	<label class="normal" ><?php echo Mage::helper('sales')->__('Who told you about us:') ?></label>
 		       		<strong><?php echo$_sellername;?> </strong>
 		       	</p>	
+		       	<br>
 				<p>
 			        <label class="normal" for="”myCustomerOrderComment”"><?php echo Mage::helper('sales')->__('Comment for Zorgpunt:') ?></label>
 			        <textarea id="myCustomerOrderComment" name="myCustomerOrderComment" style="height:6em; width:99%;" disabled><?php echo $_comment;?></textarea>
 		    	</p>
-		  	</div>
-		  	
+		    	<br>
+		    	<p>
+		    		<label class="normal" ><?php echo Mage::helper('checkout')->__('Birth Date Patient: ') ?></label>
+		       		<strong><?php echo $_birthdate?></strong>
+		  	</div>		  	
         </div>
     </div>
 </div>

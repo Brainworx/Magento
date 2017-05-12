@@ -357,6 +357,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$page->drawRectangle(275, $top, 570, ($top - 25));
 	
 		/* Calculate blocks info */
+		$patientBirthdate = $order->getPatientBirthDate();
 	
 		/* Billing Address */
 		$billingAddress = $this->_formatAddress($order->getBillingAddress()->format('pdf'));
@@ -395,6 +396,10 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$addressesHeight = $this->_calcAddressHeight($billingAddress);
 		if (isset($shippingAddress)) {
 			$addressesHeight = max($addressesHeight, $this->_calcAddressHeight($shippingAddress));
+			//add one line for birthdate
+			if(!empty($patientBirthdate)){
+				$addressesHeight += 15;
+			}
 		}
 	
 		$page->setFillColor(new Zend_Pdf_Color_GrayScale(1));
@@ -416,6 +421,12 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 					$this->y -= 15;
 				}
 			}
+		}
+		//draw patient birth date if available
+		if(!empty($patientBirthdate)){
+			$birthdatetext = Mage::helper('sales')->__('BirthDate Patient:').Mage::helper('core')->formatDate($patientBirthdate, 'medium', false);
+			$page->drawText(strip_tags(ltrim(utf8_encode($birthdatetext))), 285, $this->y, 'UTF-8');
+			$this->y -= 15;
 		}
 	
 		$addressesEndY = $this->y;

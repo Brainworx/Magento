@@ -4,7 +4,11 @@
 $orderAdminDate = $this->formatDate($_order->getCreatedAtDate(), 'medium', true);
 $orderStoreDate = $this->formatDate($_order->getCreatedAtStoreDate(), 'medium', true);
 $_comment = $_order->getCommentToZorgpunt();
-if(empty($_comment)){ $_comment= Mage::helper('sales')->__('No comment provided');}			       
+if(empty($_comment)){ $_comment= Mage::helper('sales')->__('No comment provided');}		
+$_birthdate = null;
+if(!empty($_order->getPatientBirthDate())){
+	$_birthdate = $_order->getPatientBirthDate();
+}
 ?>
 <div class="box-left">
     <!--Order Information-->
@@ -187,6 +191,38 @@ if(empty($_comment)){ $_comment= Mage::helper('sales')->__('No comment provided'
 			        <textarea id="myCustomerOrderComment" name="myCustomerOrderComment" style="height:6em; width:99%;" disabled><?php echo $_comment;?></textarea>
 			    	</span>
 		    	</p>
+	    	</div>
+	    	<div id="birthdate_block">
+	    		<div id="birthdateblock" class="">
+	    		<p>
+	    			<span class="field-row">
+			        <label class="normal" for="patientBirthDate"><?php echo Mage::helper('checkout')->__('Birth Date Patient: ') ?></label>
+			        <?php if($_birthdate != null){echo $this->formatDate($_birthdate, 'medium');}
+			        else{echo Mage::helper('checkout')->__('Not provided'); }?>
+			    	</span>
+	    		</p>
+	    		</div>
+	    		<!-- Brainworx: make seller editable -->
+				  <div id="birthdateblockedit" class="hidden">
+				  	<span class="field-row">
+				  	  <input type="hidden" id="ooid" value="<?php echo$_order->getIncrementId()?>"/>
+					  <label class="normal" for="patientBirthDate"><?php echo Mage::helper('checkout')->__('Birth Date Patient: ') ?></label>
+			          <input id="patientBirthDate" name="patientBirthDate" value='<?php echo date("d-m-Y", strtotime($_birthdate));?>'></input>
+					  <br><br>
+					  <span class="left">
+					  <button class="f-right" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Change') ?>" 
+					   onclick="loadHearedfromDefault()" >
+					        <span><span><?php echo $this->__('MageWorx_OrdersEdit::Cancel') ?></span></span>
+					   </button>
+					   </span>
+					   <span class="right">
+					   <button type="submit" class="f-right" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Change') ?>" 
+					   onclick="updateBirthdate('<?php echo Mage::helper("adminhtml")->getUrl('adminhtml/hearedfrom/updateBirthDate');?>')" >
+					        <span><span><?php echo $this->__('MageWorx_OrdersEdit::Submit') ?></span></span>
+					    </button>
+					    </span>
+					    <br><br>
+				  </div>
 	    	</div>
 		</fieldset>
     </div>

@@ -4,7 +4,14 @@
 	$j('#hearedfrom-buttons-container button').click(validate);
   });
  function setup(){
-	 /*flatrate for consignation stock supply*/
+	 /*patient birth date*/
+	 $j("#patientbdt").prop('readonly', true);
+	 $j("#patientbdt").datepicker({
+    	 changeMonth: true,
+    	 changeYear:true,
+    	 dateFormat: "dd-mm-yy",
+    	 yearRange: (new Date().getFullYear()-115)+':'+new Date().getFullYear()
+     });
 	 if($j('#s_method_freeshipping_freeshipping').is(':checked')){ 
 		 /*pickup*/
 		$j("#dateoptions").append('<li id="delrange2"> <input id="rsel2" required type="radio" class="radio" name="delrange" value="'+dateToText(determineDeliveryDay(0))+'"></input><label class="elong"> Onmiddellijk meegenomen <input class="tsmall" type="text" name="" id="dummy" value="'+dateToText(determineDeliveryDay(0))+'" disabled/></label></li>');
@@ -19,6 +26,7 @@
 	       		$j("#rsel").prop('checked', true);
 	       		$j("#rsel").val(dateText);
 	    }});
+	    $j("#pddate").prop('readonly', true);		 
 	    $j("#rsel2").prop('checked', true);
 	 }else {
 		 /*delivered*/
@@ -34,6 +42,7 @@
         		$j("#rsel").prop('checked', true);
         		$j("#rsel").val(dateText);
             }});
+	    $j("#pddate").prop('readonly', true);
         $j("#rsel").prop('checked', true);
 	 }
  }
@@ -70,8 +79,10 @@
  function resetView(){
 	 $j('#pddatelbl').removeClass("error");
 	 $j('#deloptiontext').removeClass("error");
+	 $j('#bdoptiontext').removeClass("error");
 	 $j('#vlbl').removeClass("error");
 	 $j('#pddate').val('');
+	 $j("#patientbdt").val('');
 	 $j('#rsel').val(0);
 	 removeLI();
 	 setup();
@@ -113,7 +124,11 @@
  function validate(){
 	 $j('#deloptiontext').removeClass("error");
 	 $j('#vlbl').removeClass("error");
-	 if(getDeliveryTermValue() ==0){
+	 $j('#bdoptiontext').removeClass("error");
+	 if($j("#patientbdt").val()==''){
+		 $j('#bdoptiontext').addClass("error");
+	 }
+	 else if(getDeliveryTermValue() ==0){
 		 $j('#deloptiontext').addClass("error");
 	 }
 	 else if($j("#getvoice option:selected").val() == "Selecteer"){

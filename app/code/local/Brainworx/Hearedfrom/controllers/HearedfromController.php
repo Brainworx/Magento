@@ -156,4 +156,15 @@ class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controlle
 		Mage::log('update order '.$orderid.' to seller '.$sellernm);
 		
 	}
+	/**
+	 * Action to update the patients birth date for an order
+	 */
+	public function updateBirthDateAction(){
+		$birthdate = $this->getRequest()->getParam('patientBirthDate');
+		$orderIncrementId = $this->getRequest()->getParam('ooid');
+		$order = Mage::getModel('sales/order')->loadByIncrementId($orderIncrementId);
+		$order->setPatientBirthDate($birthdate);
+		$order->save();
+		Mage::log('update order '.$orderid.' birthdate patient to '.$birthdate);	
+	}
 }

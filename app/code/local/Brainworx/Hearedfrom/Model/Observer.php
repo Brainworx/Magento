@@ -198,6 +198,10 @@ class Brainworx_Hearedfrom_Model_Observer
 		$order->setCommentToZorgpunt(Mage::getSingleton('core/session')->getCommentToZorgpunt());
 		$order->setPreferredDeliveryDt(Mage::getSingleton('core/session')->getDeliveryBefore());
 		$order->setDeliveryUntilDt(Mage::getSingleton('core/session')->getDeliveryBefore());
+		$birthdate=Mage::getSingleton('core/session')->getPatientBirthDate();
+		if(!empty($birthdate)){
+			$order->setPatientBirthDate($birthdate);
+		}
 		$order->save();		
 	}
 	private function saveCommission($seller,$orderid,$orderitemid,$type,$netamt,$brutamt,$rst,$invoiced,$sellercustid ){
