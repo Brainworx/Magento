@@ -84,6 +84,7 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 			$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
 			$email_template->setSenderName($sender_name);
 			$email_template->setSenderEmail($sender_email);
+			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_general/email'));
 			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_custom1/email'));
 	
 			//Add attachement
@@ -203,6 +204,7 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 			$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
 			$email_template->setSenderName($sender_name);
 			$email_template->setSenderEmail($sender_email);
+			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_general/email'));
 			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_custom1/email'));
 				
 			//Add attachement

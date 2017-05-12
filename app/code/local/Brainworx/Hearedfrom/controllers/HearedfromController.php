@@ -165,6 +165,6 @@ class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controlle
 		$order = Mage::getModel('sales/order')->loadByIncrementId($orderIncrementId);
 		$order->setPatientBirthDate($birthdate);
 		$order->save();
-		Mage::log('update order '.$orderid.' birthdate patient to '.$birthdate);	
+		Mage::log('update order '.$orderIncrementId.' birthdate patient to '.$birthdate);	
 	}
 }

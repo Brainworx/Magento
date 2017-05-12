@@ -253,6 +253,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 			$email_template->setSenderName($sender_name);
 			$email_template->setSenderEmail($sender_email);
 			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_custom1/email'));
+			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_general/email'));
 			$extramail =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('EXTRA_MAIL')->getValue('text');
 			if(!empty($extramail)){
 				$email_template->addBcc($extramail);
