@@ -96,6 +96,8 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Deliveries'), $email_template_variables);
 	
 			Mage::log('Email for stockdelivery sent: '.$filename.' from '.$sender_email.' ('.$sender_name.')');
+			Mage::log('Email for stockdelivery sent to '.$email_to.' - by '.Mage::getStoreConfig('system/smtp/host'));
+				
 	
 		}catch(Exception $e){
 			Mage::log('Fout create stocklever excel: ' . $e->getMessage());
@@ -216,6 +218,7 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Deliveries'), $email_template_variables);
 				
 			Mage::log('Email for delivery sent: '.$filename.' from '.$sender_email.' ('.$sender_name.')');
+			Mage::log('Email for delivery sent to '.$email_to.' - by '.Mage::getStoreConfig('system/smtp/host'));
 				
 		}catch(Exception $e){
 			Mage::log('Fout create lever excel: ' . $e->getMessage());

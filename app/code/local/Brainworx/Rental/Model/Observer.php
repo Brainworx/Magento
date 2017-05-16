@@ -215,6 +215,9 @@ class Brainworx_Rental_Model_Observer
 					//Send the email!
 					$email_template->send($email_to, Mage::helper('rental')->__('Supplier'), $email_template_variables);
 					
+
+					Mage::log('Email for supplier sent to '.$email_to.' - by '.Mage::getStoreConfig('system/smtp/host'));
+					
 					//via queu
 					
 					// Get the destination email addresses to send copies to
