@@ -51,7 +51,6 @@ class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
         $user= Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MAIL_USER')->getValue('text');
         $passw= Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MAIL_PASSW')->getValue('text');
          
-        Mage::log('Preparing mail via:'.$smtp.':'.$port.'/'.$ssl.'/auth: '.$auth.'/usr: '.$user, null, 'email.log');
         $config = array(
         		'ssl'      => $ssl,      // option of none, ssl or tls
         		'port'     => $port,     // TLS 587 - SSL 465 - default 25
@@ -70,7 +69,10 @@ class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
 
         /** @var $message Mage_Core_Model_Email_Queue */
         foreach ($collection as $message) {
+        	
             if ($message->getId()) {
+            	Mage::log('Preparing mail for queue via:'.$smtp.':'.$port.'/'.$ssl.'/auth: '.$auth.'/usr: '.$user, null, 'email.log');
+            	 
                 $parameters = new Varien_Object($message->getMessageParameters());
                 if ($parameters->getReturnPathEmail() !== null) {
                     $mailTransport = new Zend_Mail_Transport_Sendmail("-f" . $parameters->getReturnPathEmail());
@@ -115,7 +117,7 @@ class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
                     unset($mailer);
                     $message->setProcessedAt(Varien_Date::formatDate(true));
                     $message->save();
-                    Mage::log('Mailed from: ' . $parameters->getFromEmail() . ' to:' . $to . ' ' .$parameters->getSubject(), null, 'email.log');
+                    Mage::log('Mailed via queue from: ' . $parameters->getFromEmail() . ' to:' . $to . ' ' .$parameters->getSubject(), null, 'email.log');
                 }
                 catch (Exception $e) {
                     unset($mailer);
@@ -125,12 +127,15 @@ class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
                     Mage::setIsDeveloperMode($oldDevMode);
 
                     Mage::helper("hearedfrom/error")->sendErrorMail('Probleem versturen mail van queue - '.$e->getMessage());
-
+                    Mage::log('Mailed via queue error ', null, 'email.log');
+                     
                     return false;
                 }
+
+                Mage::log('Mailed via queue end',null, 'email.log');
             }
         }
-
+         
         return $this;
     }
 }

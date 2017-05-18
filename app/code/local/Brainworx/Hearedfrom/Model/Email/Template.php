@@ -175,10 +175,12 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
             $this->_mail = null;
             Mage::logException($e);
             Mage::helper("hearedfrom/error")->sendErrorMail('Probleem versturen mail - '.$e->getMessage());
-            
+            Mage::log('Mail error '.$e->getMessage(), null, 'email.log');
+             
             return false;
         }
-
+        Mage::log('Mail end ', null, 'email.log');
+        
         return true;
     }
 
