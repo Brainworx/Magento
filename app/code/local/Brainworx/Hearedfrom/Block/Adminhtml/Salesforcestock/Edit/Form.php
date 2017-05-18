@@ -29,10 +29,15 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforcestock_Edit_Form extends Mag
 				'value' => null,
 				'label' => Mage::helper('hearedfrom')->__('Not Selected')
 		);
+		$type = "";
+		$catstock = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
+		
 		foreach ($prodCollection as $val) {
+			$type = (in_array($catstock, $val->getCategoryIds()))?
+			Mage::helper('hearedfrom')->__('Verhuur'): Mage::helper('hearedfrom')->__('Verkoop');
 			$options[] = array(
 					'value' => $val->getSku(),
-					'label' => $val->getSku().' /id:'.$val->getID().'/ - '.$val->getName()
+					'label' => $type.' - '.$val->getName()
 			);
 		}
 	
