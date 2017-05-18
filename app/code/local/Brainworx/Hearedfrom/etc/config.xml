@@ -58,6 +58,14 @@
 				<class>Brainworx_Hearedfrom_Controller</class>
 			</brainworxadminthemecontroller>
 			
+			<core>
+				<rewrite>
+					<email_template>Brainworx_Hearedfrom_Model_Email_Template</email_template>
+				</rewrite>
+				<rewrite>
+					<email_queue>Brainworx_Hearedfrom_Model_Email_Queue</email_queue>
+				</rewrite>
+			</core>
 		</models>
 
 		<helpers>

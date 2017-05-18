@@ -266,7 +266,7 @@ class Brainworx_Rental_Model_Observer
 
 // 					$mailer->setQueue($emailQueue);
 // 					$mailer->send();
-					Mage::log('Email to supplier '.$email.' sent. order '.$order->getEntityId());
+					Mage::log('Email to supplier '.$email.' sent. order '.$order->getEntityId(), null, 'email.log');
 				}
 			}		
 			Mage::Log("Sale done: nr rental items : " . $count . " for order ".$order->getEntityId());
