@@ -267,7 +267,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 			//Send the email!
 			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Retrieval'), $email_template_variables);
 	
-			Mage::log('Email for retrieval sent: '.$filename.' - by '.Mage::getStoreConfig('system/smtp/host'));
+			Mage::log('Email for retrieval sent: '.$filename);
 	
 		}catch(Exception $e){
 			Mage::log('Fout create ophaal excel: ' . $e->getMessage());
