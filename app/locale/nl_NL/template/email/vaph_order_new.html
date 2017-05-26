@@ -1,0 +1,90 @@
+<!--@subject Nieuwe VAPH aanvraag geplaatst via {{var store.getFrontendName()}} @-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"var logo_alt":"Email Logo Image Alt",
+"htmlescape var=$order.getCustomerName()":"Customer Name",
+"var store.getFrontendName()":"Store Name",
+"var order.increment_id":"Order Id",
+"var order.getCreatedAtFormated('long')":"Order Created At (datetime)",
+"var order.getShippingDescription()":"Shipping Description",
+"var order.getEmailCustomerNote()":"Email Order Note",
+"var seller":"Zorgpunt",
+"var order.getCommentToZorgpunt()":"Comment To Zorgpunt"}
+@-->
+<!--@styles
+@-->
+
+{{template config_path="design/email/header"}}
+{{inlinecss file="email-inline.css"}}
+
+<table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td>
+            <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td class="email-heading">
+                        <h1>VAPH aanvraag via {{var store.getFrontendName()}}.</h1>
+                    </td>
+                    <td class="store-info">
+                         <h4>Vragen?</h4>
+                        <p>
+                            {{depend store_phone}}
+                            <b>Bel ons:</b>
+                            <a href="tel:{{var phone}}">{{var store_phone}}</a><br>
+                            {{/depend}}
+                            {{depend store_hours}}
+                            <span class="no-link">{{var store_hours}}</span><br>
+                            {{/depend}}
+                            {{depend store_email}}
+                            <b>Mail ons:</b> <a href="mailto:{{var store_email}}">{{var store_email}}</a>
+                            {{/depend}}
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="order-details">
+            <h3>Aanvraag tot activatie VAPH <span class="no-link">#{{var order.increment_id}} geplaatst op {{var order.getCreatedAtFormated('long')}}</span></h3>
+        </td>
+    </tr>
+    <tr class="order-information">    		
+        <td>
+         	{{if seller}}
+            <table cellspacing="0" cellpadding="0" class="message-container">
+                <tr>
+                    <td>Aanvraag tot VAPH via: {{var seller}}</td>
+                </tr>
+            </table>
+            {{/if}}
+        	{{if order.getCommentToZorgpunt()}}
+            <table cellspacing="0" cellpadding="0" class="message-container">
+                <tr>
+                    <td><h6>Opmerking van klant:</h6>
+                    <p>{{var order.getCommentToZorgpunt()}}</p></td>
+                </tr>
+            </table>
+            {{/if}}
+        </td>
+    </tr>
+    <tr class="order-information">
+        <td>
+     		<table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td class="address-details">
+                        <h6>Factuuradres:</h6>
+                        <p><span class="no-link">{{var order.getBillingAddress().format('html')}}</span></p>
+                    </td>
+                    <td class="address-details">
+                        <h6>Verzendadres:</h6>
+                        <p><span class="no-link">{{var order.getShippingAddress().format('html')}}</span></p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer"}}

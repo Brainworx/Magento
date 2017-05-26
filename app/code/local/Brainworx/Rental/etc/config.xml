@@ -165,6 +165,21 @@
                     </rental>
                 </observers>
             </sales_order_place_after>
+            <controller_action_predispatch_checkout_cart_add>
+            <!--sales_order_save_commit_after 
+                / sales_order_save_after (triggered after every order save- status change etc
+                / sales_order_place_after: triggered 1 time when order has been placed-->
+                <!-- Defining an observer for this event -->
+                <observers>
+                    <rental>
+                        <class>rental/observer</class> 
+                        <!-- The method of the class to be called -->
+                        <method>checkVAPH</method>
+                        <!-- The type of class to instantiate -->
+                        <type>singleton</type>
+                    </rental>
+                </observers>
+            </controller_action_predispatch_checkout_cart_add>
         </events>
         <!--convert your custom product attribute "supplierinvoice", "rentalitem" from quote item to order item-->
 		<fieldsets>

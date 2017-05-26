@@ -80,44 +80,71 @@ class Brainworx_Hearedfrom_Model_Observer
 		//TODO add to transaction
 		//save commission for articles invoiced and delivered by the supplier - marked invoiced false
 		$items = $order->getAllItems();
+		$catvaph = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_VAPH')->getValue('text');	
+		
 		foreach($items as $item){
-			if(!empty($item->getSupplierinvoice())&&$item->getSupplierinvoice()>0){
-				Mage::log("No need to send shipment exl as shipment + invoice done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
-				
-				$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
-				self::saveCommission($_hearedfrom_salesforce,$order->getEntityId(),$item->getItemId(),
-				$type,($item->getOriginalPrice()*$item->getQtyOrdered()),
-						($item->getOriginalPrice()*$item->getQtyOrdered()*(1+$item->getTaxPercent()/100))
-						,$item->getRistorno()*$item->getQtyOrdered(),false,$seller_custid);
-			}elseif (!empty($item->getSupplierneworderemail())){
-				Mage::log("No need to send shipment exl as shipment done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
+			// Checking VAPH
+			if(in_array($catvaph,$item->getProduct()->getCategoryIds())){
+				//Load sellername
+				$seller = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
+				try{
+					$sellerName = $seller['user_nm'];
+					if($sellerName != null && $sellerName != 'Zorgpunt' && $sellerName != ''&& $sellerName != 'Selecteer'){//add translation
+						$sellerName = 'Zorgpunt '.$sellerName.'.';
+					}else{
+						$sellerName = 'Zorgpunt';
+					}
+				}catch(Exception $e){
+					$sellerName = 'Zorgpunt';
+					Mage::log('No hearedfrom set when sending supplier order - exception on order '.$order->getId());
+				}
+				$emails_to = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('VAPH_MAILS')->getValue('text');	
+				$template_id = 'vaph_order_new';
+				$email_template_variables= array(
+							 'order'        => $order,
+							 'seller'		=> $sellerName
+					);		
+				Mage::helper("hearedfrom/mailer")->sendMail($emails_to,$template_id,$email_template_variables);
+							
+			}else{
+				if(!empty($item->getSupplierinvoice())&&$item->getSupplierinvoice()>0){
+					Mage::log("No need to send shipment exl as shipment + invoice done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
+					
+					$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
+					self::saveCommission($_hearedfrom_salesforce,$order->getEntityId(),$item->getItemId(),
+					$type,($item->getOriginalPrice()*$item->getQtyOrdered()),
+							($item->getOriginalPrice()*$item->getQtyOrdered()*(1+$item->getTaxPercent()/100))
+							,$item->getRistorno()*$item->getQtyOrdered(),false,$seller_custid);
+				}elseif (!empty($item->getSupplierneworderemail())){
+					Mage::log("No need to send shipment exl as shipment done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
+				}
+				else{
+					$shippingitem = array();
+					//items not supplied by supplier
+					$shippingitem['Bestelling #']=$order->getIncrementId();
+					//Added in OnePageController
+					$shippingitem['Leverdatum']=$deliveryBefore; 
+					//$shippingitem['Leverdatum tot']=$deliveryBefore;
+					if($delivery_to_report){
+						$shippingitem['Naam']=$order->getShippingAddress()->getFirstname().' '.$order->getShippingAddress()->getLastname();
+					}else{
+						$shippingitem['Naam']=$_hearedfrom_salesforce['user_nm'];
+					}					
+					$shippingitem['Adres (straat + nr)']=$order->getShippingAddress()->getStreetFull();
+					$shippingitem['Gemeente']=$order->getShippingAddress()->getCity();
+					$shippingitem['Postcode']=$order->getShippingAddress()->getPostcode();
+					$shippingitem['Land']=$order->getShippingAddress()->getCountry();
+					$shippingitem['Telefoon']=$order->getShippingAddress()->getTelephone();
+					$shippingitem['Artikel']=$item->getName();
+					$shippingitem['Aantal']=$item->getQtyOrdered();
+					$shippingitem['Artikelnr.']=$item->getSku();
+					$shippingitem['Info aan Zorgpunt']=$comment;
+					$shippingitem['Gewicht']=$item->getWeight();
+					$shippingitem['Type']=(!empty($item->getRentalitem())&&$item->getRentalitem() == true)? Mage::helper('hearedfrom')->__('Verhuur'): Mage::helper('hearedfrom')->__('Verkoop');
+					$shippinglist[]=$shippingitem;
+					unset($shippingitem);
+				}		
 			}
-			else{
-				$shippingitem = array();
-				//items not supplied by supplier
-				$shippingitem['Bestelling #']=$order->getIncrementId();
-				//Added in OnePageController
-				$shippingitem['Leverdatum']=$deliveryBefore; 
-				//$shippingitem['Leverdatum tot']=$deliveryBefore;
-				if($delivery_to_report){
-					$shippingitem['Naam']=$order->getShippingAddress()->getFirstname().' '.$order->getShippingAddress()->getLastname();
-				}else{
-					$shippingitem['Naam']=$_hearedfrom_salesforce['user_nm'];
-				}					
-				$shippingitem['Adres (straat + nr)']=$order->getShippingAddress()->getStreetFull();
-				$shippingitem['Gemeente']=$order->getShippingAddress()->getCity();
-				$shippingitem['Postcode']=$order->getShippingAddress()->getPostcode();
-				$shippingitem['Land']=$order->getShippingAddress()->getCountry();
-				$shippingitem['Telefoon']=$order->getShippingAddress()->getTelephone();
-				$shippingitem['Artikel']=$item->getName();
-				$shippingitem['Aantal']=$item->getQtyOrdered();
-				$shippingitem['Artikelnr.']=$item->getSku();
-				$shippingitem['Info aan Zorgpunt']=$comment;
-				$shippingitem['Gewicht']=$item->getWeight();
-				$shippingitem['Type']=(!empty($item->getRentalitem())&&$item->getRentalitem() == true)? Mage::helper('hearedfrom')->__('Verhuur'): Mage::helper('hearedfrom')->__('Verkoop');
-				$shippinglist[]=$shippingitem;
-				unset($shippingitem);
-			}		
 		}
 		if(!empty($shippinglist)){
 			Mage::helper("hearedfrom/delivery")->createShipmentsExcel($shippinglist,$order,$delivery_to_report,$_hearedfrom_salesforce["entity_id"]);

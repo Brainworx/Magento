@@ -279,6 +279,56 @@ class Brainworx_Rental_Model_Observer
 		}
 		
 	}
+	public function checkVAPH(Varien_Event_Observer $observer){
+		try{
+			if ($observer->getEvent()->getControllerAction()->getFullActionName() == 'checkout_cart_add') {
+				$productId = Mage::app()->getRequest()->getParam('product');
+				$product = Mage::getModel('catalog/product')->load($productId);
+			
+				$cartHelper = Mage::helper('checkout/cart');
+				$cart = $cartHelper->getCart();
+				$cartitems = $cart->getItems();
+				$nr_items = sizeof($cartitems);
+			
+				$vaphnotice = 0;
+				$catvaph = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_VAPH')->getValue('text');
+					
+				// Checking VAPH
+				if(in_array($catvaph,$product->getCategoryIds())){
+					$vaphnotice = 1;
+					//new is VAPH, no other products allowed
+					if($nr_items == 0){
+						//first item is VAPH
+						Mage::log("VAPH item added");
+						return;
+					}else{
+						//earlier added non-vaph item -- remove vaph
+						Mage::app()->getRequest()->setParam('product', false);
+						Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('Combo not allowed.'));
+						Mage::app()->getResponse()->setRedirect('checkout/cart');
+					}
+				}else{
+					//check other article for VAPH
+					foreach($cartitems as $citem){
+						if(in_array($catvaph,$citem->getProduct()->getCategoryIds())){
+							//removing the newly added one as the other one is a vaph
+							Mage::app()->getRequest()->setParam('product', false);
+							Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('Combo with unique not allowed.'));
+							Mage::app()->getResponse()->setRedirect('checkout/cart');
+						}
+					}
+				}
+			}
+			
+			
+			//end check VAPH
+		}catch(Exception $e){
+			Mage::log($e->getMessage());
+			//set error message in session
+			Mage::getSingleton('core/session')->addError('Sorry, er gebeurde een fout tijdens het aanpassen van je bestelling.');
+			die;
+		}
+	}
 	
 	/**
 	 * Observer method configured for sales_quote_product_add_after
@@ -290,13 +340,24 @@ class Brainworx_Rental_Model_Observer
 	public function addDiscountToRental(Varien_Event_Observer $observer)
 	{
 		try{
+
+			Mage::getSingleton('core/session')->setVAPH(false);
 			//Mage::log('sales_quote_product_add_after event occurred');
+			$catvaph = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_VAPH')->getValue('text');
 			
 			$items = $observer->getItems();
 			$item = $items[0];
 			if ($item->getParentItem()) {
 				$item = $item->getParentItem();
 			}
+			
+			//directly move to checkout after adding the VAPH article
+			if(in_array($catvaph,$item->getProduct()->getCategoryIds())){
+				Mage::getSingleton('core/session')->setVAPH(true);
+				Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getUrl('checkout/onepage'));
+				Mage::getSingleton('checkout/session')->setNoCartRedirect(true);
+			}
+			
 			$rnotice = 0;
 			$catrental = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
 			$sinotice = 0;

@@ -95,7 +95,11 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     						'html' => $this->_getPaymentMethodsHtml()
     				);
     			} elseif (isset($data['use_for_shipping']) && $data['use_for_shipping'] == 1) {
-    				$result['goto_section'] = 'shipping_method';
+//     				if(Mage::getSingleton('core/session')->getVAPH()){
+//     					$result['goto_section'] = 'hearedfrom';
+//     				}else{
+    					$result['goto_section'] = 'shipping_method';
+//     				}
     				$result['update_section'] = array(
     						'name' => 'shipping-method',
     						'html' => $this->_getShippingMethodsHtml()
@@ -150,10 +154,14 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 // 	    			}
 // 	    		}
 //     		}
-    		
-    
-    		if (!isset($result['error'])) {
-    			$result['goto_section'] = 'shipping_method';
+
+    		//For VAPH we can skip shipping method and payment
+    		if(!isset($result['error'])) {
+//     			if(Mage::getSingleton('core/session')->getVAPH()){
+//     				$result['goto_section'] = 'hearedfrom';
+//     			}else{
+	    			$result['goto_section'] = 'shipping_method';
+    			//}
     			$result['update_section'] = array(
     					'name' => 'shipping-method',
     					'html' => $this->_getShippingMethodsHtml()
@@ -335,12 +343,12 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 			 
 
 			$result = array();
-            
-                $result['goto_section'] = 'payment';
-                $result['update_section'] = array(
-                		'name' => 'payment-method',
-                		'html' => $this->_getPaymentMethodsHtml()
-                );
+			$result['goto_section'] = 'payment';
+			
+            $result['update_section'] = array(
+            	'name' => 'payment-method',
+                'html' => $this->_getPaymentMethodsHtml()
+            );
 
             $this->getResponse()->setBody(Zend_Json::encode($result));
         }

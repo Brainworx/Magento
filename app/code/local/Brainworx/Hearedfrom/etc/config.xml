@@ -305,6 +305,11 @@
                     <file>problem_zorgpunt.html</file>
                     <type>html</type>
                 </problem_zorgpunt>
+                <vaph_order_new>
+                    <label>Zorgpunt VAPH</label>
+                    <file>vaph_order_new.html</file>
+                    <type>html</type>
+                </vaph_order_new>
             </email>
         </template>
 	</global>
