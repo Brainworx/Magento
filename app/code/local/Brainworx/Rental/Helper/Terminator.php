@@ -120,6 +120,11 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	 */
 	private function updateSalesForceStock($order,$item, $rental, $overrule = false){
 		try{
+			$catconsig = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_CONSIG')->getValue('text');
+			//check if overrule is possible - can only be done for consignation items
+			if($overrule && !in_array($catconsig,$item->getProduct()->getCategoryIds())){
+				$overrule=false;
+			}
 			if(!$overrule && ($order->getShippingMethod()=='tablerate_bestway'|| $order->getShippingInclTax()>0)){
 				Mage::log("items delivered at home so never stockupdate. ".$order->getIncrementId());
 				return;
