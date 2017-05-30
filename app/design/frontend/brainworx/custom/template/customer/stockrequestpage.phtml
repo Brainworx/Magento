@@ -5,7 +5,7 @@
     <h1><?php echo $this->__('Stock Request') ?></h1>
 </div>
 <?php echo $this->getMessagesBlock()->toHtml() ?>
-<form action="<?php echo $this->getAction() ?>" method="post" id="form-validate" class="scaffold-form">
+<form method="post" id="form-validate" class="scaffold-form">
 <div class="fieldset">
     <h2 class="legend"><?php echo $this->__('Request delivery of stock item') ?></h2>
     <p class="required"><?php echo $this->__('* Required input') ?></p>
@@ -30,7 +30,8 @@
 		
   	<div class="buttons-set">
   		<a href="<?php echo $this->escapeUrl($this->getRequestsurl()) ?>"><?php echo $this->__('Overview Requests') ?></a>
-		<button type="submit" class="button" title="<?php echo $this->__('Submit') ?>"><?php echo $this->__('Request') ?></button>
+		<button id="btn-stock-submit" type="button" class="button" title="<?php echo $this->__('Submit') ?>"><?php echo $this->__('Request') ?></button>
+	<div id="loaderDiv"><img src="<?php echo  Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)?>wysiwyg/ajax-loader.gif" alt="Wait" /></div>
 	</div>
 </div>
 

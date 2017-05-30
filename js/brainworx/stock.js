@@ -1,9 +1,37 @@
 var count;
 $j(function() {
 	count = 0;
+	$j("#loaderDiv").hide();
 	$j('#counter').val(count);
 	$j('#addProduct').click(addProduct);
+	$j('#btn-stock-submit' ).click(submitform);
 });
+
+function submitform(event){
+	if(validateForm()){
+		$j('#btn-stock-submit').prop('disabled', true);
+		$j.ajax({
+		   url: BASE_URL + 'customer/stockrequestpage/requestPost',
+	       type: 'POST',
+	       data: $j("#form-validate").serialize(), // serializes the form's elements.
+	       beforeSend: function(){
+               $j("#loaderDiv").show();
+           },
+	       success: function(response){
+	    	   $j("#loaderDiv").hide();
+		    	  var result = JSON.parse(response);
+		    	  alert(result.message);// ==> geeft undefined
+		    	  $j('#btn-stock-submit').prop('disabled', false);
+		    	  location.replace(BASE_URL+'customer/stockpage/');
+		    	  },       //location.reload()
+		   error: function(){
+			   $j("#loaderDiv").hide();
+			   $j('#btn-stock-submit').prop('disabled', false);
+			   alert("Fout bij verwerking");
+		       location.reload();}
+	     });
+	}
+}
 function addProduct(){
 	count++;
 	var text = '<li id="prodli'+count+'" class="fields">'
@@ -33,4 +61,38 @@ function addProduct(){
 function removeProduct(){
 	console.log($j(this).data('counter'));
 	$j('#prodli'+$j(this).data('counter')+'').remove();
+}
+
+function validateForm() {
+//	var validator = new Validation('form-validate', {immediate : true});
+//	return validator.validate();
+	
+	$j('input').each(function(){
+		$j(this).removeClass('validation-failed');
+		$j(this).removeClass('error');
+	});
+	$j('select').each(function(){
+		$j(this).removeClass('validation-failed');
+		$j(this).removeClass('error');
+	});
+	var valid = true;
+	$j('select.validate-select').each(function(){		
+		if($j(this).val() == ""){
+			valid = false;
+			$j(this).addClass('validation-failed');
+			$j(this).addClass('error');
+			alert("Selecteer een product.");
+		}
+	});
+	if(valid){
+		$j('input.input-number-small').each(function(){
+			if($j(this).val() < parseInt($j(this).attr('min')) || $j(this).val() > parseInt($j(this).attr('max'))){
+				valid = false;
+				$j(this).addClass('validation-failed');
+				$j(this).addClass('error');
+				alert("Selecteer een aantal van "+ parseInt($j(this).attr('min'))+" tot "+ parseInt($j(this).attr('max')));
+			}
+		});
+	}
+	return valid;
 }

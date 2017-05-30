@@ -37,6 +37,8 @@ class Brainworx_Hearedfrom_Block_Stockrequestpage extends Mage_Customer_Block_Ac
 		$collection = Mage::getModel('hearedfrom/salesForceStockRequest')->getCollection();		
 		$collection->addFieldToFilter('force_id', $salesforce['entity_id']);
 		
+		$collection->setOrder('entity_id','DESC');
+		
 		$this->setCollection($collection);
 		return $collection;
 	}
