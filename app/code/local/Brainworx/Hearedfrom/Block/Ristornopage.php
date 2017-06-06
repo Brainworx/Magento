@@ -47,7 +47,7 @@ class Brainworx_Hearedfrom_Block_Ristornopage extends Mage_Customer_Block_Accoun
 		$collection = Mage::getModel('hearedfrom/salesCommission')->getCollection();
 		
 		$collection->addFieldToFilter('user_id', 
-				Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId()));
+				Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId())['entity_id']);
 			
 		// add joined data to the collection
 			
@@ -80,7 +80,7 @@ class Brainworx_Hearedfrom_Block_Ristornopage extends Mage_Customer_Block_Accoun
 		*/
 		
 		$collection->addFieldToFilter('user_id', 
-				Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId()));
+				Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId())['entity_id']);
 		
 		$select = $collection->getSelect();
 		
