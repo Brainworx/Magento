@@ -27,6 +27,7 @@ class Brainworx_Hearedfrom_Block_Onepage_Hearedfrom extends Mage_Checkout_Block_
         	}else{
         		$this->setSellerValue(Mage::getModel("hearedfrom/salesForce")->loadSellerNameByCustid($cid));
         	}
+        	$this->setVaphOrder(Mage::getSingleton('core/session')->getVaphOrder());
         }
         
         

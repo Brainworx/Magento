@@ -119,6 +119,13 @@ if(!empty($_order->getPatientBirthDate())){
 		    	<p>
 		    		<label class="normal" ><?php echo Mage::helper('checkout')->__('Birth Date Patient: ') ?></label>
 		       		<strong><?php echo $_birthdate?></strong>
+		       	</p>
+		       	<?php if(!empty($_order->getVaphDocNr())){?>
+		       	<p>
+		    		<label class="normal" ><?php echo Mage::helper('checkout')->__('VAPH documentnr.: ') ?></label>
+		       		<strong><?php echo $_order->getVaphDocNr()?></strong>
+		       	</p>
+		       	<?php }?>
 		  	</div>		  	
         </div>
     </div>

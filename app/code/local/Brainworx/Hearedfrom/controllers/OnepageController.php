@@ -308,6 +308,10 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
         	//delivery before is the date generated after picking or 24hrs or within 3 days
         	$_delivery_before = $this->getRequest()->getPost('delrange');
         	
+        	//for VAPH optional input
+        	$_vaph_nr = $this->getRequest()->getPost('vaph_doc_nr');
+        	Mage::getSingleton('core/session')->setVaphDocNr($_vaph_nr);
+        	
         	//set preferred delivery day with selection as made in radio buttons
         	Mage::getSingleton('core/session')->setPreferredDeliveryDate($_delivery_before);
         	Mage::getSingleton('core/session')->setDeliveryBefore($_delivery_before);
@@ -316,23 +320,26 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
         	$seller = Mage::getModel("hearedfrom/salesForce")->loadByUsername($_brainworx_hearedfrom);
 			Mage::getSingleton('core/session')->setBrainworxHearedfrom($seller);
 			$cmt = false;
-			if(!empty($_delivery_before)){
-				if(!empty($_comment_tozorgpunt)){
-					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
-					$cmt = $_comment_tozorgpunt;
+			if(empty($_vaph_nr)){				
+				if(!empty($_delivery_before)){
+					if(!empty($_comment_tozorgpunt)){
+						Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
+						$cmt = $_comment_tozorgpunt;
+					}else{
+						Mage::getSingleton('core/session')->setOrigCommentToZorgpunt('');						
+					}
+					$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivery on %s',$_delivery_before);
+					if(!empty($cmt)){
+							$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
+					}
 				}else{
-					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt('');						
+					//default delivery date = next day
+					Mage::log("ERROR -- DELIVERY NOT SET".$_comment_tozorgpunt);
+					Mage::getSingleton('core/session')->setDeliveryBefore(date('d-m-Y', strtotime('+1 weekday')));
+					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
 				}
-				$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivery on %s',$_delivery_before);
-				if(!empty($cmt)){
-						$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
-				}
-			}else{
-				//default delivery date = next day
-				Mage::log("ERROR -- DELIVERY NOT SET".$_comment_tozorgpunt);
-				Mage::getSingleton('core/session')->setDeliveryBefore(date('d-m-Y', strtotime('+1 weekday')));
-				Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
 			}
+			
 			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
 			
 			//birthdate patient

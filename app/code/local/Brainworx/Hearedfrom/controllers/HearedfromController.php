@@ -167,4 +167,15 @@ class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controlle
 		$order->save();
 		Mage::log('update order '.$orderIncrementId.' birthdate patient to '.$birthdate);	
 	}
+	/**
+	 * Action to update the vaph doc nr for an order
+	 */
+	public function updateVaphDocnrAction(){
+		$vaphdocnr = $this->getRequest()->getParam('vaphdocnr');
+		$orderIncrementId = $this->getRequest()->getParam('ooid');
+		$order = Mage::getModel('sales/order')->loadByIncrementId($orderIncrementId);
+		$order->setVaphDocNr($vaphdocnr);
+		$order->save();
+		Mage::log('update order '.$orderIncrementId.' vaph docnr to '.$vaphdocnr);
+	}
 }

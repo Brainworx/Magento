@@ -9,6 +9,7 @@
 "var order.getCreatedAtFormated('long')":"Order Created At (datetime)",
 "var order.getShippingDescription()":"Shipping Description",
 "var order.getEmailCustomerNote()":"Email Order Note",
+"var vaph_doc_nr":"Vaph dossier nr",
 "var seller":"Zorgpunt",
 "var order.getCommentToZorgpunt()":"Comment To Zorgpunt"}
 @-->
@@ -61,8 +62,11 @@
             {{/if}}
         	{{if order.getCommentToZorgpunt()}}
             <table cellspacing="0" cellpadding="0" class="message-container">
+            	<tr>
+                    <td>Vaph dossiernr.: {{var vaph_doc_nr}}</td>
+                </tr>
                 <tr>
-                    <td><h6>Opmerking van klant:</h6>
+                    <td>Opmerking van klant:
                     <p>{{var order.getCommentToZorgpunt()}}</p></td>
                 </tr>
             </table>

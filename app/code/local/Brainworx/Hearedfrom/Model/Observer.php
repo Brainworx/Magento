@@ -77,6 +77,7 @@ class Brainworx_Hearedfrom_Model_Observer
 			//need to create excel to send to external delivery party
 			$delivery_to_report = true;
 		}
+		 
 		//TODO add to transaction
 		//save commission for articles invoiced and delivered by the supplier - marked invoiced false
 		$items = $order->getAllItems();
@@ -100,9 +101,14 @@ class Brainworx_Hearedfrom_Model_Observer
 				}
 				$emails_to = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('VAPH_MAILS')->getValue('text');	
 				$template_id = 'vaph_order_new';
+				$vaph = $order->getVaphDocNr();
+				if(empty($vaph)){
+					$vaph=Mage::helper('checkout')->__('Not provided');
+				}
 				$email_template_variables= array(
 							 'order'        => $order,
-							 'seller'		=> $sellerName
+							 'seller'		=> $sellerName,
+							 'vaph_doc_nr'	=> $vaph
 					);		
 				Mage::helper("hearedfrom/mailer")->sendMail($emails_to,$template_id,$email_template_variables);
 							
@@ -229,6 +235,7 @@ class Brainworx_Hearedfrom_Model_Observer
 		if(!empty($birthdate)){
 			$order->setPatientBirthDate($birthdate);
 		}
+		$order->setVaphDocNr(Mage::getSingleton('core/session')->getVaphDocNr());
 		$order->save();		
 	}
 	private function saveCommission($seller,$orderid,$orderitemid,$type,$netamt,$brutamt,$rst,$invoiced,$sellercustid ){

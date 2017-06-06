@@ -5,8 +5,13 @@
 	 </p>
 	<br/>
 	<p> 
-		<label id="deloptiontext" class=""><?php echo $this->__('Select a delivery option:') ?></label>
+	<?php if($this->getVaphOrder()){?>
+		<label id="bdoptiontext" class="elong"><?php echo $this->__('VAPH documentnr.: ') ?><input class="input-text" type="text" name="vaph_doc_nr" id="vaph_doc_nr" value=""/></label>
+		<div class="hidden">
+	<?php }?> 
+			<label id="deloptiontext" class=""><?php echo $this->__('Select a delivery option:') ?></label>
 		<ul class="form-list"><ul id="dateoptions" class="control"></ul></ul>
+	<?php if($this->getVaphOrder()){?></div><?php }?>
 	 </p>
 	<br/>
 	

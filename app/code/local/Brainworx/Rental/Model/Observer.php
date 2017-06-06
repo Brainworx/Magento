@@ -282,6 +282,9 @@ class Brainworx_Rental_Model_Observer
 	public function checkVAPH(Varien_Event_Observer $observer){
 		try{
 			if ($observer->getEvent()->getControllerAction()->getFullActionName() == 'checkout_cart_add') {
+
+				Mage::getSingleton('core/session')->setVaphOrder(0);
+				
 				$productId = Mage::app()->getRequest()->getParam('product');
 				$product = Mage::getModel('catalog/product')->load($productId);
 			
@@ -300,8 +303,10 @@ class Brainworx_Rental_Model_Observer
 					if($nr_items == 0){
 						//first item is VAPH
 						Mage::log("VAPH item added");
+						Mage::getSingleton('core/session')->setVaphOrder(1);
 						return;
 					}else{
+						Mage::getSingleton('core/session')->setVaphOrder(0);
 						//earlier added non-vaph item -- remove vaph
 						Mage::app()->getRequest()->setParam('product', false);
 						Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('Combo not allowed.'));
@@ -311,6 +316,7 @@ class Brainworx_Rental_Model_Observer
 					//check other article for VAPH
 					foreach($cartitems as $citem){
 						if(in_array($catvaph,$citem->getProduct()->getCategoryIds())){
+							Mage::getSingleton('core/session')->setVaphOrder(1);
 							//removing the newly added one as the other one is a vaph
 							Mage::app()->getRequest()->setParam('product', false);
 							Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('Combo with unique not allowed.'));

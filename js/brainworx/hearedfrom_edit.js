@@ -27,6 +27,22 @@ function updateBirthdate(url)
 		alert("Gelieve een datum te selecteren.");
 	}
 }
+function updateVaphDocnr(url)
+{
+	if($j('#vaphdocnr').val() != ''){
+	    new Ajax.Request(url, {
+	        method:'post',
+	        parameters: { vaphdocnr: $j('#vaphdocnr').val()  ,
+	        	ooid: $j("#ooid").val()}
+	        , requestHeaders: {Accept: 'application/json'},
+	        onSuccess: function() {
+	        	location.reload();
+	        }
+	    }); 
+	}else{
+		alert("Gelieve een documentnr in te voeren.");
+	}
+}
 function loadHearedfromEdit(){
 	$j("#patientBirthDate").prop('readonly', true);
 	$j('#patientBirthDate').datepicker({
@@ -41,6 +57,9 @@ function loadHearedfromEdit(){
 	
 	document.getElementById("birthdateblock").className += " hidden";
 	document.getElementById("birthdateblockedit").className = " ";
+
+	document.getElementById("vaphblock").className += " hidden";
+	document.getElementById("vaphblockedit").className = " ";
 	
 }
 function loadHearedfromDefault(){
@@ -49,5 +68,7 @@ function loadHearedfromDefault(){
 
 	document.getElementById("birthdateblock").className = " ";
 	document.getElementById("birthdateblockedit").className += " hidden";
-	
+
+	document.getElementById("vaphblock").className = " ";
+	document.getElementById("vaphblockedit").className += " hidden";
 }

@@ -224,6 +224,38 @@ if(!empty($_order->getPatientBirthDate())){
 					    <br><br>
 				  </div>
 	    	</div>
+	    	<div id="vaph_block">
+	    		<div id="vaphblock" class="">
+	    		<p>
+	    			<span class="field-row">
+			        <label class="normal" for="vaphdocnr"><?php echo Mage::helper('hearedfrom')->__('VAPH Documentnr.: ') ?></label>
+			        <?php if($_order->getVaphDocNr() != null){echo $_order->getVaphDocNr();}
+			        else{echo Mage::helper('checkout')->__('Not provided'); }?>
+			    	</span>
+	    		</p>
+	    		</div>
+	    		<!-- Brainworx: make vaph editable -->
+				  <div id="vaphblockedit" class="hidden">
+				  	<span class="field-row">
+				  	  <input type="hidden" id="ooid" value="<?php echo$_order->getIncrementId()?>"/>
+					  <label class="normal" for="vaphdocnr"><?php echo Mage::helper('checkout')->__('VAPH Documentnr.: ') ?></label>
+			          <input id="vaphdocnr" name="vaphdocnr" value='<?php echo $_order->getVaphDocNr()?>'></input>
+					  <br><br>
+					  <span class="left">
+					  <button class="f-right" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Change') ?>" 
+					   onclick="loadHearedfromDefault()" >
+					        <span><span><?php echo $this->__('MageWorx_OrdersEdit::Cancel') ?></span></span>
+					   </button>
+					   </span>
+					   <span class="right">
+					   <button type="submit" class="f-right" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Change') ?>" 
+					   onclick="updateVaphDocnr('<?php echo Mage::helper("adminhtml")->getUrl('adminhtml/hearedfrom/updateVaphDocnr');?>')" >
+					        <span><span><?php echo $this->__('MageWorx_OrdersEdit::Submit') ?></span></span>
+					    </button>
+					    </span>
+					    <br><br>
+				  </div>
+	    	</div>
 		</fieldset>
     </div>
 </div>
