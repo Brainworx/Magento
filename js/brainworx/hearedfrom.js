@@ -128,7 +128,7 @@
 	 if($j("#patientbdt").val()==''){
 		 $j('#bdoptiontext').addClass("error");
 	 }
-	 else if(getDeliveryTermValue() ==0){
+	 else if($j('#vaph_order_id').val()!=1 && getDeliveryTermValue() ==0){
 		 $j('#deloptiontext').addClass("error");
 	 }
 	 else if($j("#getvoice option:selected").val() == "Selecteer"){
