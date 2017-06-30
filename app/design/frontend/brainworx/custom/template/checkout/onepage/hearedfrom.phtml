@@ -5,6 +5,7 @@
 	 </p>
 	<br/>
 	<p> 
+	<input id="vaph_order_id"  type="hidden" value="<?php echo $this->getVaphOrder() ?>"/>
 	<?php if($this->getVaphOrder()){?>
 		<label id="bdoptiontext" class="elong"><?php echo $this->__('VAPH documentnr.: ') ?><input class="input-text" type="text" name="vaph_doc_nr" id="vaph_doc_nr" value=""/></label>
 		<div class="hidden">
@@ -30,7 +31,7 @@
 	</p>
 	<br/>
 	<p><label for="myCustomerOrderComment"><?php echo $this->__('Add comment for Zorgpunt (optional):'); ?></label></p>
-	<textarea name="myCustomerOrderComment" id="myCustomerOrderComment" style=”width:450px;height:100px;”></textarea>
+	<textarea name="myCustomerOrderComment" id="myCustomerOrderComment" style=â€width:450px;height:100px;â€></textarea>
 	
 	<div class="buttons-set" id="hearedfrom-buttons-container">
         <p class="back-link"><a href="#" onclick="checkout.back(); return false;"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
