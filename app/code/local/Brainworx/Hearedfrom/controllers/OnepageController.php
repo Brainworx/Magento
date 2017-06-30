@@ -17,7 +17,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 		}		
     }
     /*
-     * Bepaal leveropties op basis van categorieën
+     * Bepaal leveropties op basis van categorieÃ«n
      * in design frontend/checkout/onepage/shipment_method/available wordt dit gebruikt
      * custom var nodig
      */
@@ -288,8 +288,10 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
         $this->_expireAjax();
         if ($this->getRequest()->isPost()) {
         	if(empty($this->getRequest()->getPost('getvoice'))||
+		   ((!empty($this->getRequest()->getPost('vaph_order_id')) && $this->getRequest()->getPost('vaph_order_id')!=1)
+		     && empty($this->getRequest()->getPost('delrange')))){
         		//	empty($this->getRequest()->getPost('pddate')||
-        					empty($this->getRequest()->getPost('delrange'))){
+        		//			empty($this->getRequest()->getPost('delrange'))){
         		$this->loadLayout('checkout_onepage_hearedfrom');
         		$result['error'] = $this->__('Please complete all fields.');
         		$result['goto_section'] = 'hearedfrom';
