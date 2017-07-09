@@ -45,6 +45,9 @@
 					<salesForceStockRequest>
 						<table>hearedfrom_salesforcestockrequest</table>
 					</salesForceStockRequest>
+					<commissionView>
+						<table>vw_hearedfrom_commission_grouped</table>
+					</commissionView>
 				</entities>
 			</hearedfrom_resource>
 
@@ -106,6 +109,9 @@
 			<salesforcestockrequest>
 				<class>Brainworx_Hearedfrom_Block</class>
 			</salesforcestockrequest>
+			<commissionview>
+            	<class>Brainworx_Hearedfrom_Block</class>
+            </commissionview>
 			<!-- Add block for checkout step -->
 			<hearedfromonepage>
 				<class>Brainworx_Hearedfrom_Block_Onepage</class>
@@ -407,6 +413,9 @@
             <salesforcestockrequest>
             	<file>salesforcestockrequest.xml</file>
             </salesforcestockrequest>
+            <commissionview>
+            	<file>commissionview.xml</file>
+            </commissionview>
           </updates>
         </layout>
         <translate>

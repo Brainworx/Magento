@@ -11,12 +11,17 @@
             <children>            
                 <salescommission>
                     <title>Sales commission</title>
-                    <sort_order>1</sort_order>
+                    <sort_order>0</sort_order>
                     <action>adminhtml/hearedfrom/index</action>
 					 <!--adminhtml will be replaced by admin due to the route config of adminhtml in app/code/core/Mage/Adminhtml/etc/config.xml-->
 					 <!--rental for controllername-->
 					 <!--index is action method in the HearedfromController-->
                 </salescommission>
+                <commissionView>
+                    <title>Commission evolution</title>
+                    <sort_order>1</sort_order>
+                    <action>adminhtml/commissionview/index</action>
+                </commissionView>
                  <salesoverview>
                     <title>Invoices overview</title>
                     <sort_order>2</sort_order>
@@ -61,6 +66,9 @@
                             <salescommission>
                                 <title>Commission Menu Item</title>
                             </salescommission>
+                             <commissionview>
+                                <title>Commission Menu Item 2</title>
+                            </commissionview>
                              <salesoverview>
                                 <title>Financial Overview Menu Item</title>
                             </salesoverview>
