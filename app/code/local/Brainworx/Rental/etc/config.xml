@@ -180,6 +180,26 @@
                     </rental>
                 </observers>
             </controller_action_predispatch_checkout_cart_add>
+            <controller_action_predispatch>
+            	<observers>
+                    <rental>
+                        <class>rental/observer</class> 
+                        <!-- The method of the class to be called -->
+                        <method>checkcustomer</method>
+                        <!-- The type of class to instantiate -->
+                        <type>singleton</type>
+                    </rental>
+                </observers>
+            </controller_action_predispatch>
+            <customer_logout>
+	            <observers>
+	                <hooksystem_customer_logout>
+	                    <class>rental/observer</class>
+	                    <method>logout</method>
+	                    <type>singleton</type>
+	                </hooksystem_customer_logout>
+	            </observers>
+	        </customer_logout>
         </events>
         <!--convert your custom product attribute "supplierinvoice", "rentalitem" from quote item to order item-->
 		<fieldsets>

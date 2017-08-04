@@ -440,4 +440,49 @@ class Brainworx_Rental_Model_Observer
 			}
 		}
 	}
+	/**
+	 * Function to check customer session, when not logged in and bitcheck cookie exists we need to log him in as it's for Mederi
+	 */
+	public function checkcustomer(){
+		try{
+			$cookies = Mage::getSingleton('core/cookie')->get();
+			//test
+			$csession = Mage::getSingleton('customer/session');
+			if (!$csession->isLoggedIn()) {
+				if(array_key_exists('bitcheck',$cookies)){
+					$sess = $cookies['bitcheck'];
+					if(!empty($sess)){
+						Mage::log('Customer not logged in by api cookie -- login in by id');
+						$pieces = explode('|',$sess);
+						//$session = Mage::getSingleton('customer/session');
+						if(count($pieces > 1)){
+						$csession->loginById($pieces[1]);
+						if ($csession->isLoggedIn()) {
+							Mage::log('Customer from API logged in by id');
+						}else{
+							Mage::log('FAIL: Customer from API not logged in by id');
+						}
+						}else{
+							Mage::log('Bitcheck message nok - no pipe, only 1 element');
+						}
+					}
+				}
+			}
+		}catch(Exception $e){
+			Mage::log($e->getMessage());
+		}
+	
+	}
+	/**
+	 * remove cookie from api login when customer logs out
+	 */
+	public function logout()
+	{
+		Mage::log('deleting cookie bitcheck');
+		Mage::getModel('core/cookie')->delete('bitcheck');
+		setcookie('bitcheck', '', time() - 3600,'/');
+		if (isset($_COOKIE['bitcheck'])) {
+			unset($_COOKIE['bitcheck']);
+		}
+	}
 }

@@ -117,7 +117,7 @@ class Brainworx_Rental_Customer_Model_Customer_Api extends Mage_Customer_Model_C
 			$session->loginById($customer->getId());
 			if ($session->isLoggedIn()) {
 				Mage::log('Login succesfull/session started: '.$log);
-				return $session->getSessionId();
+				return $session->getSessionId().'|'.$customer->getId().'|21';
 			}
 			Mage::log('Login Failed/session NOT started: '.$log);
 			
