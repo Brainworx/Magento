@@ -470,6 +470,7 @@ class Brainworx_Rental_Model_Observer
 			}
 		}catch(Exception $e){
 			Mage::log($e->getMessage());
+			Mage::helper("rental/error")->sendErrorMail("Error login session from api: ". $e->getMessage());
 		}
 	
 	}
