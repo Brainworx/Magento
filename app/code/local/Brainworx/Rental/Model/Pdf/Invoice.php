@@ -413,6 +413,9 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			if ($value !== '') {
 				$text = array();
 				foreach (Mage::helper('core/string')->str_split($value, 45, true, true) as $_value) {
+					if($_value == ','){
+						continue;
+					}
 					$text[] = $_value;
 				}
 				foreach ($text as $part) {
@@ -440,6 +443,9 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 						$text[] = $_value;
 					}
 					foreach ($text as $part) {
+						if($part == ','){
+							continue;
+						}
 						//switched postition on pdf from 285 to 35
 						$page->drawText(strip_tags(ltrim($part)), 35, $this->y, 'UTF-8');
 						$this->y -= 15;
