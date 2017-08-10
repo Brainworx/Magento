@@ -71,7 +71,7 @@ class Brainworx_Hearedfrom_Block_AddCustomerlink extends Mage_Customer_Block_Acc
 			if(!empty($salesforce)){
 				$this->addLink(
 						Mage::helper('customer')->__('Stock'),
-						"customer/stockpage/",
+						"customer/stockrequestpage/",
 						Mage::helper('customer')->__('Stock')
 				);
 			}

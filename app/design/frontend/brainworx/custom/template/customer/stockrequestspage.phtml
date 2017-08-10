@@ -14,6 +14,12 @@
 <?php echo $this->getMessagesBlock()->toHtml() ?>
 <?php echo $this->getChildHtml('info');?>
 <?php if($_stockrequests->getSize()): ?>
+
+<div class="">
+<p class=""><strong><a href="<?php echo $this->escapeUrl($this->getRequesturl()) ?>"><?php echo $this->__('New Request') ?></a></strong></p>
+<br>
+</div>
+
 <table class="data-table orders" id="my-mstockrequest-table">
     <col width="1" />
     <col width="1" />
@@ -47,8 +53,3 @@
 <?php else: ?>
     <p><?php echo $this->__('You have no stockrequest for the moment.'); ?></p>
 <?php endif ?>
-<div class="buttons-set">
-<p class=""><a href="<?php echo $this->escapeUrl($this->getRequesturl()) ?>"><?php echo $this->__('New Request') ?></a></p>
-<p class=""><a href="<?php echo $this->getUrl('customer/stockpage/') ?>"><?php echo $this->__('Stockoverview') ?></a></p>
-
-</div>

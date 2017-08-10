@@ -22,7 +22,7 @@ function submitform(event){
 		    	  var result = JSON.parse(response);
 		    	  alert(result.message);// ==> geeft undefined
 		    	  $j('#btn-stock-submit').prop('disabled', false);
-		    	  location.replace(BASE_URL+'customer/stockpage/');
+		    	  location.replace(BASE_URL+'customer/stockrequestpage/');
 		    	  },       //location.reload()
 		   error: function(){
 			   $j("#loaderDiv").hide();
