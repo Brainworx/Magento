@@ -157,7 +157,7 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
 //         	'filter_index' => 'item.sku'
 //         ));
         $this->addColumn('product', array(
-        		'header'    => Mage::helper('rental')->__('Produkt'),
+        		'header'    => Mage::helper('rental')->__('Product'),
         		'align'     =>'left',
         		'index'     => 'product',
         		'filter_index' => 'item.name'

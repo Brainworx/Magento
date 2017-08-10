@@ -97,7 +97,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         		'filter_condition_callback' => array($this, '_categoryFilter')
         ));
         $this->addColumn('product', array(
-        		'header'    => Mage::helper('hearedfrom')->__('Produkt'),
+        		'header'    => Mage::helper('hearedfrom')->__('Product'),
         		'align'     =>'left',
         		'width'     => '100px',
         		'index'     => 'product',
