@@ -198,7 +198,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.25));//0.25
 		
 		$this->_setFontBold($page,10);
-		$linesContent[]='TOTAAL van '.$this->euro.' te betalen binnen 10 dagen na ontvangst de factuur.';
+		$linesContent[]='TOTAAL van '.$this->euro.' te betalen binnen 10 dagen na ontvangst van de factuur.';
 		$iban =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('IBAN')->getValue('text');
 		$bicc =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('BICC')->getValue('text');		
 		$linesContent[]='op rekening '.$iban.' '.$bicc;
