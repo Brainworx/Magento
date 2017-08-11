@@ -430,6 +430,7 @@ class Brainworx_Rental_Model_Observer
 						.' van ' . round($block->getInvoice()->getGrandTotal(),2).' euro werd betaald?');
 				//$url = Mage::getModel('adminhtml/url')->getUrl('*/*/markpaid', array('invoice_id'=>$block->getInvoice()->getId()));
 				$url = Mage::helper("adminhtml")->getUrl("adminhtml/rental/markpaid/",array("iid"=>$block->getInvoice()->getId()));
+				$block->removeButton('capture');
 				$block->addButton('mark_paid', array(
 						'label'     => Mage::helper('rental')->__('Markeer als betaald'),
 						//'onclick'   => "confirmSetLocation('De maandelijkse facturen aanmaken?', '{$this->getUrl('*/*/createInvoices')}')",

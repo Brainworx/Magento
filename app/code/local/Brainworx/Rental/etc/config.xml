@@ -79,6 +79,11 @@
 			    		<session>Brainworx_Rental_Model_Session</session>
 			    	</rewrite>
 			    </checkout>
+			    <payment>
+                	<rewrite>
+                    	<method_banktransfer>Brainworx_Rental_Model_Payment_Method_Banktransfer</method_banktransfer>
+                	</rewrite>
+            </payment>
 		</models>
 		
 		<!-- update totals section on pdf -->
