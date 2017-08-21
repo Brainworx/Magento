@@ -136,7 +136,7 @@ class Brainworx_Hearedfrom_StockrequestpageController extends Mage_Core_Controll
 	    		
 	    		
 	    		//$this->_getSession()->addSuccess($this->__('The request has been saved.'));
-	    		$this->_redirectSuccess(Mage::getUrl('*/stockpage/index', array('_secure'=>true)));
+	    		$this->_redirectSuccess(Mage::getUrl('*/stockrequestpage/', array('_secure'=>true)));
 	    		return;
     			
     		} catch (Mage_Core_Exception $e) {
