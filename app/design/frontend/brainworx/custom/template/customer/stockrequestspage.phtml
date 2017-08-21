@@ -1,6 +1,8 @@
-<div class="buttons-set">
-   <p class="back-link"><a href="<?php echo $this->getUrl('customer/stockpage/') ?>"><small>&laquo; </small><?php echo $this->__('Terug') ?></a></p>
+<div class="">
+	<p class=""><strong><a href="<?php echo $this->escapeUrl($this->getRequesturl()) ?>"><?php echo $this->__('New Request') ?></a></strong></p>
+	<br>
 </div>
+
 <div class="page-title">
 <h1><?php echo $this->__('Stock Request Overview') ?></h1>
 </div>
@@ -14,11 +16,6 @@
 <?php echo $this->getMessagesBlock()->toHtml() ?>
 <?php echo $this->getChildHtml('info');?>
 <?php if($_stockrequests->getSize()): ?>
-
-<div class="">
-<p class=""><strong><a href="<?php echo $this->escapeUrl($this->getRequesturl()) ?>"><?php echo $this->__('New Request') ?></a></strong></p>
-<br>
-</div>
 
 <table class="data-table orders" id="my-mstockrequest-table">
     <col width="1" />
