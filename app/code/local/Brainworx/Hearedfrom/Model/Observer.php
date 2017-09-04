@@ -131,11 +131,7 @@ class Brainworx_Hearedfrom_Model_Observer
 					//Added in OnePageController
 					$shippingitem['Leverdatum']=$deliveryBefore; 
 					//$shippingitem['Leverdatum tot']=$deliveryBefore;
-					if($delivery_to_report){
-						$shippingitem['Naam']=$order->getShippingAddress()->getFirstname().' '.$order->getShippingAddress()->getLastname();
-					}else{
-						$shippingitem['Naam']=$_hearedfrom_salesforce['user_nm'];
-					}					
+					$shippingitem['Naam']=$order->getShippingAddress()->getFirstname().' '.$order->getShippingAddress()->getLastname();					
 					$shippingitem['Adres (straat + nr)']=$order->getShippingAddress()->getStreetFull();
 					$shippingitem['Gemeente']=$order->getShippingAddress()->getCity();
 					$shippingitem['Postcode']=$order->getShippingAddress()->getPostcode();
