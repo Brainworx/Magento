@@ -164,8 +164,20 @@ class MageWorx_OrdersEdit_Adminhtml_Mageworx_Ordersedit_EditController extends M
     		$quote = Mage::getModel('mageworx_ordersedit/edit')->getQuoteByOrder($order);
     
     		$data = $this->getRequest()->getPost();
+    		
+    		//she
+    		if(array_key_exists('shipping_amount',$data)){
+    			 unset($data['shipping_amount']);
+    			 Mage::log('Shipping amount found in order edit data - skipped - order '.$order->getEntityId());
+    		}
     
     		$pendingChanges = $this->getMwEditHelper()->addPendingChanges($orderId, $data);
+    		
+    		//she
+    		if(array_key_exists('shipping_amount',$pendingChanges)){
+    			unset($pendingChanges['shipping_amount']);
+    			Mage::log('Shipping amount found in order edit pendingchanges - skipped - order '.$order->getEntityId());
+    		}
     		/** @var Mage_Sales_Model_Quote $quote */
     		$quote = Mage::getSingleton('mageworx_ordersedit/edit_quote')->applyDataToQuote($quote, $pendingChanges);
     
