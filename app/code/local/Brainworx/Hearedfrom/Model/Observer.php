@@ -102,10 +102,7 @@ class Brainworx_Hearedfrom_Model_Observer
 				}
 				$emails_to = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('OUDERENZORG_MAILS')->getValue('text');	
 				$template_id = 'ouderenzorg_order_new';
-				$vaph = $order->getVaphDocNr();
-				if(empty($vaph)){
-					$vaph=Mage::helper('checkout')->__('Not provided');
-				}
+				
 				$email_template_variables= array(
 							 'order'        => $order,
 							 'seller'	=> $sellerName
