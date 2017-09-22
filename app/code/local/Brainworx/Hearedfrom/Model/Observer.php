@@ -114,7 +114,7 @@ class Brainworx_Hearedfrom_Model_Observer
 							
 			}
 			// Checking VAPH
-			if(in_array($catvaph,$item->getProduct()->getCategoryIds())){
+			elseif(in_array($catvaph,$item->getProduct()->getCategoryIds())){
 				//Load sellername
 				$seller = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
 				try{
