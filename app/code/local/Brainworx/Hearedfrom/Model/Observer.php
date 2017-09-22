@@ -82,8 +82,37 @@ class Brainworx_Hearedfrom_Model_Observer
 		//save commission for articles invoiced and delivered by the supplier - marked invoiced false
 		$items = $order->getAllItems();
 		$catvaph = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_VAPH')->getValue('text');	
+		$catouderenzorg = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_OUDERENZORG')->getValue('text');	
 		
 		foreach($items as $item){
+			//Check request ouderenzorg
+			if(in_array($catouderenzorg,$item->getProduct()->getCategoryIds())){
+				//Load sellername
+				$seller = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
+				try{
+					$sellerName = $seller['user_nm'];
+					if($sellerName != null && $sellerName != 'Zorgpunt' && $sellerName != ''&& $sellerName != 'Selecteer'){//add translation
+						$sellerName = 'Zorgpunt '.$sellerName.'.';
+					}else{
+						$sellerName = 'Zorgpunt';
+					}
+				}catch(Exception $e){
+					$sellerName = 'Zorgpunt';
+					Mage::log('No hearedfrom set when sending supplier order - exception on order '.$order->getId());
+				}
+				$emails_to = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('OUDERENZORG_MAILS')->getValue('text');	
+				$template_id = 'ouderenzorg_order_new';
+				$vaph = $order->getVaphDocNr();
+				if(empty($vaph)){
+					$vaph=Mage::helper('checkout')->__('Not provided');
+				}
+				$email_template_variables= array(
+							 'order'        => $order,
+							 'seller'	=> $sellerName
+					);		
+				Mage::helper("hearedfrom/mailer")->sendMail($emails_to,$template_id,$email_template_variables);
+							
+			}
 			// Checking VAPH
 			if(in_array($catvaph,$item->getProduct()->getCategoryIds())){
 				//Load sellername
