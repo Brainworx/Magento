@@ -316,6 +316,11 @@
                     <file>vaph_order_new.html</file>
                     <type>html</type>
                 </vaph_order_new>
+		<ouderenzorg_order_new>
+                    <label>Zorgpunt Ouderenzorg Thuis</label>
+                    <file>ouderenzorg_order_new.html</file>
+                    <type>html</type>
+                </ouderenzorg_order_new>
             </email>
         </template>
 	</global>
