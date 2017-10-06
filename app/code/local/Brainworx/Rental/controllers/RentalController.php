@@ -68,7 +68,8 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					if($basedt < $enddt){
 						$basedt = $data["end_dt"];
 					}
-					$preferredDT = date('d-m-Y', strtotime($basedt . ' + 3 day'));
+					
+					$preferredDT =date('d-m-Y', strtotime('+3 Weekdays'));
 				
 					$pickupsuccess = Mage::helper('rental/terminator')->TerminateRentals($preferredDT,$rentalstoend,null,$data["end_dt"]);
 						
