@@ -253,7 +253,17 @@
             </email>
         </template>
 	</global>
-	
+	<default>
+		<carriers>
+            <specialrate>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>rental/carrier_specialrate</model>
+                <name>Tarief</name>
+                <title>Speciaal - Bezorging aan huis</title>
+            </specialrate>
+        </carriers>
+	</default>
 	 <adminhtml>
         <layout>
           <updates>

@@ -11,6 +11,9 @@
         <Brainworx_Rental>
             <active>true</active>
             <codePool>local</codePool>
+            <depends>
+                <Mage_Shipping />
+            </depends>
         </Brainworx_Rental>
         <!-- 
         <Brainworx_RentalPay>  

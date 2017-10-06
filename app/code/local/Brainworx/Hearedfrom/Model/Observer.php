@@ -73,7 +73,10 @@ class Brainworx_Hearedfrom_Model_Observer
 		$comment=Mage::getSingleton('core/session')->getOrigCommentToZorgpunt();
 		$shippinglist = array();
 		//$order->getShippingInclTax()>0
-		if(  $order->getShippingMethod()=='tablerate_bestway'|| $order->getShippingMethod()=='flatrate_flatrate'){
+		if(  $order->getShippingMethod()=='tablerate_bestway'
+				||  $order->getShippingMethod()=='specialrate_flatrate'
+				||  $order->getShippingMethod()=='specialrate_free'
+				||  $order->getShippingMethod()=='flatrate_flatrate'){
 			//need to create excel to send to external delivery party
 			$delivery_to_report = true;
 		}
@@ -343,7 +346,11 @@ class Brainworx_Hearedfrom_Model_Observer
 		try{
 			$order = $observer->getEvent()->getOrder();
 			
-			if($order->getShippingMethod()=='tablerate_bestway'|| $order->getShippingInclTax()>0){
+			if($order->getShippingMethod()=='tablerate_bestway'
+					||  $order->getShippingMethod()=='specialrate_flatrate'
+					||  $order->getShippingMethod()=='specialrate_free'
+					||  $order->getShippingMethod()=='flatrate_flatrate'
+					||  $order->getShippingInclTax()>0){
 				Mage::log("items delivered at home so never stockupdate. ".$order->getIncrementId());
 				return;
 			}

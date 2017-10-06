@@ -35,6 +35,9 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 				if(!empty($itemModel->getSupplierneworderemail())){
 					$shippinglistSupplier[$itemModel->getSupplierneworderemail()][]=$shippingitem;
 				}elseif($orderModel->getShippingMethod()=='tablerate_bestway'
+						||  $orderModel->getShippingMethod()=='specialrate_flatrate'
+						||  $orderModel->getShippingMethod()=='specialrate_free'
+						||  $orderModel->getShippingMethod()=='flatrate_flatrate'
 						|| $orderModel->getShippingInclTax()>0){ //from earlier orders flatrate_flatrate can be found with shipping cost so pickup required
 					//check seller 
 					$seller = Mage::getModel('hearedfrom/salesSeller')->loadByOrderId($orderModel->getIncrementId());
@@ -125,7 +128,11 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 			if($overrule && !in_array($catconsig,$item->getProduct()->getCategoryIds())){
 				$overrule=false;
 			}
-			if(!$overrule && ($order->getShippingMethod()=='tablerate_bestway'|| $order->getShippingInclTax()>0)){
+			if(!$overrule && ($order->getShippingMethod()=='tablerate_bestway'
+					||  $order->getShippingMethod()=='specialrate_flatrate'
+					||  $order->getShippingMethod()=='specialrate_free'
+					||  $order->getShippingMethod()=='flatrate_flatrate'
+					||  $order->getShippingInclTax()>0)){
 				Mage::log("items delivered at home so never stockupdate. ".$order->getIncrementId());
 				return;
 			}
