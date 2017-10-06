@@ -21,7 +21,7 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
     <?php $shippingCodePrice = array(); ?>
     <?php $_sole = count($_shippingRateGroups) == 1; foreach ($_shippingRateGroups as $code => $_rates): ?>
         <dt><?php if($code == "freeshipping" && !$pickup){continue;} 
-        	else if(($code == "tablerate"||$code=="specialrate") && !$delivery){continue;}
+        	else if($code == "tablerate" && !$delivery){continue;}
         	else echo $this->escapeHtml($this->getCarrierName($code)); ?></dt>
         <dd>
             <ul>
