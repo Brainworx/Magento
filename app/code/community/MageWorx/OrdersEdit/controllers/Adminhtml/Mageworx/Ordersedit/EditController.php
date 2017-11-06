@@ -113,9 +113,11 @@ class MageWorx_OrdersEdit_Adminhtml_Mageworx_Ordersedit_EditController extends M
 
                 $invoices = $order->getInvoiceCollection();
                 if ($order->getGrandTotal() > ($origOrder->getGrandTotal() - $origOrder->getBaseTotalRefunded()) && count($invoices)) { // Create invoice if needed
-                    Mage::getSingleton('mageworx_ordersedit/edit_invoice')->invoiceChanges($origOrder, $order, $pendingChanges);
+                    Mage::log('orderedit invoicing after order changes');
+                	Mage::getSingleton('mageworx_ordersedit/edit_invoice')->invoiceChanges($origOrder, $order, $pendingChanges);
                 } elseif ($order->getGrandTotal() < ($origOrder->getGrandTotal() - $origOrder->getBaseTotalRefunded()) && count($invoices)) { // Create refund if needed
                     Mage::getSingleton('mageworx_ordersedit/edit_creditmemo')->refundChanges($origOrder, $order, $pendingChanges);
+                    Mage::log('orderedit refund after order changes');
                 }
 
                 $this->getMwEditHelper()->resetPendingChanges($orderId);

@@ -18,6 +18,7 @@ class MageWorx_OrdersEdit_Model_Observer
      */
     public function convertOrderItemToQuoteItem($observer)
     {
+    	Mage::log('orderedit convertOrderItemToQuoteItem');
         $helper = $this->getMwHelper();
         if (!$helper->isEnabled()) {
             return $this;
@@ -127,51 +128,52 @@ class MageWorx_OrdersEdit_Model_Observer
      */
     public function convertOrderToQuote($observer)
     {
-        $helper = $this->getMwHelper();
-        if (!$helper->isEnabled()) {
-            return $this;
-        }
+    	Mage::log('orderedit convertOrderToQuote');
+//         $helper = $this->getMwHelper();
+//         if (!$helper->isEnabled()) {
+//             return $this;
+//         }
 
-        /** @var Mage_Sales_Model_Order $order */
-        $order = $observer->getEvent()->getOrder();
-        /** @var Mage_Sales_Model_Quote $quote */
-        $quote = $observer->getEvent()->getQuote();
+//         /** @var Mage_Sales_Model_Order $order */
+//         $order = $observer->getEvent()->getOrder();
+//         /** @var Mage_Sales_Model_Quote $quote */
+//         $quote = $observer->getEvent()->getQuote();
 
-        $billing = $order->getBillingAddress();
-        $shipping = $order->getShippingAddress();
+//         $billing = $order->getBillingAddress();
+//         $shipping = $order->getShippingAddress();
 
-        // set same_as_billing = yes/no
-        if ($shipping) {
-            if ($billing->getFirstname() == $shipping->getFirstname()
-                && $billing->getMiddlename() == $shipping->getMiddlename()
-                && $billing->getSuffix() == $shipping->getSuffix()
-                && $billing->getCompany() == $shipping->getCompany()
-                && $billing->getStreet() == $shipping->getStreet()
-                && $billing->getCity() == $shipping->getCity()
-                && $billing->getRegion() == $shipping->getRegion()
-                && $billing->getRegionId() == $shipping->getRegionId()
-                && $billing->getPostcode() == $shipping->getPostcode()
-                && $billing->getCountryId() == $shipping->getCountryId()
-                && $billing->getTelephone() == $shipping->getTelephone()
-                && $billing->getFax() == $shipping->getFax()
-            ) {
-                $shipping->setSameAsBilling(1);
-                Mage::getSingleton('adminhtml/sales_order_create')->getShippingAddress()->setSameAsBilling(1);
-            } else {
-                Mage::getSingleton('adminhtml/sales_order_create')->setShippingAsBilling(0);
-            }
-        }
+//         // set same_as_billing = yes/no
+//         if ($shipping) {
+//             if ($billing->getFirstname() == $shipping->getFirstname()
+//                 && $billing->getMiddlename() == $shipping->getMiddlename()
+//                 && $billing->getSuffix() == $shipping->getSuffix()
+//                 && $billing->getCompany() == $shipping->getCompany()
+//                 && $billing->getStreet() == $shipping->getStreet()
+//                 && $billing->getCity() == $shipping->getCity()
+//                 && $billing->getRegion() == $shipping->getRegion()
+//                 && $billing->getRegionId() == $shipping->getRegionId()
+//                 && $billing->getPostcode() == $shipping->getPostcode()
+//                 && $billing->getCountryId() == $shipping->getCountryId()
+//                 && $billing->getTelephone() == $shipping->getTelephone()
+//                 && $billing->getFax() == $shipping->getFax()
+//             ) {
+//                 $shipping->setSameAsBilling(1);
+//                 Mage::getSingleton('adminhtml/sales_order_create')->getShippingAddress()->setSameAsBilling(1);
+//             } else {
+//                 Mage::getSingleton('adminhtml/sales_order_create')->setShippingAsBilling(0);
+//             }
+//         }
 
-        $store = Mage::getSingleton('adminhtml/session_quote')->getStore();
-        if (Mage::helper('tax')->shippingPriceIncludesTax($store)) {
-            $baseShippingAmount = $order->getBaseShippingInclTax();
-        } else {
-            $baseShippingAmount = $order->getBaseShippingAmount();
-        }
-        Mage::getSingleton('adminhtml/session_quote')->setBaseShippingCustomPrice($baseShippingAmount);
+//         $store = Mage::getSingleton('adminhtml/session_quote')->getStore();
+//         if (Mage::helper('tax')->shippingPriceIncludesTax($store)) {
+//             $baseShippingAmount = $order->getBaseShippingInclTax();
+//         } else {
+//             $baseShippingAmount = $order->getBaseShippingAmount();
+//         }
+//         Mage::getSingleton('adminhtml/session_quote')->setBaseShippingCustomPrice($baseShippingAmount);
 
-        // for collectShippingRates
-        $quote->setTotalsCollectedFlag(false);
+//         // for collectShippingRates
+//         $quote->setTotalsCollectedFlag(false);
     }
 
 
@@ -180,18 +182,19 @@ class MageWorx_OrdersEdit_Model_Observer
      */
     public function orderCreateProcessData($observer)
     {
-        $request = $observer->getEvent()->getRequest();
-        if (isset($request['order']['shipping_price'])) {
-            $shippingPrice = $request['order']['shipping_price'];
-            if ($shippingPrice == 'null') {
-                $shippingPrice = null;
-            } else {
-                $shippingPrice = floatval($shippingPrice);
-            }
-            Mage::getSingleton('adminhtml/session_quote')->setBaseShippingCustomPrice($shippingPrice);
-        }
-        // if no cancel reset_shipping - recollectShippingRates
-        Mage::getSingleton('adminhtml/sales_order_create')->collectShippingRates();
+    	Mage::log('orderedit orderCreateProcessData');
+//         $request = $observer->getEvent()->getRequest();
+//         if (isset($request['order']['shipping_price'])) {
+//             $shippingPrice = $request['order']['shipping_price'];
+//             if ($shippingPrice == 'null') {
+//                 $shippingPrice = null;
+//             } else {
+//                 $shippingPrice = floatval($shippingPrice);
+//             }
+//             Mage::getSingleton('adminhtml/session_quote')->setBaseShippingCustomPrice($shippingPrice);
+//         }
+//         // if no cancel reset_shipping - recollectShippingRates
+//         Mage::getSingleton('adminhtml/sales_order_create')->collectShippingRates();
     }
 
     /** Edit order set old coupone
@@ -201,6 +204,7 @@ class MageWorx_OrdersEdit_Model_Observer
      */
     public function quoteCollectTotalsAfter($observer)
     {
+    	Mage::log('orderedit quoteCollectTotalsAfter');
         if (!$this->getMwHelper()->isEnabled()) {
             return $this;
         }
@@ -209,48 +213,48 @@ class MageWorx_OrdersEdit_Model_Observer
         $quote = $observer->getEvent()->getQuote();
 
         // apply custom shipping price
-        if ($this->getMwHelper()->isShippingPriceEditEnabled() && Mage::app()->getStore()->isAdmin()) {
-            $address = $quote->getShippingAddress();
-            $baseShippingCustomPrice = Mage::getSingleton('adminhtml/session_quote')->getBaseShippingCustomPrice();
-            if ($address && !is_null($baseShippingCustomPrice)) {
-                if ($address->getShippingMethod()) {
+//         if ($this->getMwHelper()->isShippingPriceEditEnabled() && Mage::app()->getStore()->isAdmin()) {
+//             $address = $quote->getShippingAddress();
+//             $baseShippingCustomPrice = Mage::getSingleton('adminhtml/session_quote')->getBaseShippingCustomPrice();
+//             if ($address && !is_null($baseShippingCustomPrice)) {
+//                 if ($address->getShippingMethod()) {
 
-                    $origBaseShippingInclTax = $address->getBaseShippingInclTax();
-                    $origShippingInclTax = $address->getShippingInclTax();
+//                     $origBaseShippingInclTax = $address->getBaseShippingInclTax();
+//                     $origShippingInclTax = $address->getShippingInclTax();
 
-                    $address->setBaseTotalAmount('shipping', $baseShippingCustomPrice);
-                    $shippingCustomPrice = $quote->getStore()->convertPrice($baseShippingCustomPrice);
-                    $address->setTotalAmount('shipping', $shippingCustomPrice);
+//                     $address->setBaseTotalAmount('shipping', $baseShippingCustomPrice);
+//                     $shippingCustomPrice = $quote->getStore()->convertPrice($baseShippingCustomPrice);
+//                     $address->setTotalAmount('shipping', $shippingCustomPrice);
 
-                    $creditModel = null;
-                    $address->setAppliedTaxesReset(false);
+//                     $creditModel = null;
+//                     $address->setAppliedTaxesReset(false);
 
-                    foreach ($address->getTotalCollector()->getCollectors() as $code => $model) {
-                        // for calculate shipping tax
-                        if ($code == 'tax_shipping' || $code == 'tax') {
-                            $model->collect($address);
-                        }
-                        if ($code == 'customercredit') {
-                            $creditModel = $model;
-                        }
-                    }
+//                     foreach ($address->getTotalCollector()->getCollectors() as $code => $model) {
+//                         // for calculate shipping tax
+//                         if ($code == 'tax_shipping' || $code == 'tax') {
+//                             $model->collect($address);
+//                         }
+//                         if ($code == 'customercredit') {
+//                             $creditModel = $model;
+//                         }
+//                     }
 
-                    $address->setGrandTotal((float)$address->getGrandTotal() + ($address->getShippingInclTax() - $origShippingInclTax));
-                    $address->setBaseGrandTotal((float)$address->getBaseGrandTotal() + ($address->getBaseShippingInclTax() - $origBaseShippingInclTax));
+//                     $address->setGrandTotal((float)$address->getGrandTotal() + ($address->getShippingInclTax() - $origShippingInclTax));
+//                     $address->setBaseGrandTotal((float)$address->getBaseGrandTotal() + ($address->getBaseShippingInclTax() - $origBaseShippingInclTax));
 
-                    // for recollect customer credit and authorizenet in admin
-                    if ($creditModel && $address->getBaseCustomerCreditAmount() > 0) {
-                        $baseCreditLeft = $address->getBaseCustomerCreditAmount();
-                        $creditLeft = $address->getCustomerCreditAmount();
-                        $address->setBaseGrandTotal($address->getBaseGrandTotal() + $baseCreditLeft);
-                        $address->setGrandTotal($address->getGrandTotal() + $creditLeft);
-                        $creditModel->collect($address);
-                    }
+//                     // for recollect customer credit and authorizenet in admin
+//                     if ($creditModel && $address->getBaseCustomerCreditAmount() > 0) {
+//                         $baseCreditLeft = $address->getBaseCustomerCreditAmount();
+//                         $creditLeft = $address->getCustomerCreditAmount();
+//                         $address->setBaseGrandTotal($address->getBaseGrandTotal() + $baseCreditLeft);
+//                         $address->setGrandTotal($address->getGrandTotal() + $creditLeft);
+//                         $creditModel->collect($address);
+//                     }
 
-                }
-            }
-        }
-        Mage::getSingleton('adminhtml/session_quote')->setBaseShippingCustomPrice(null);
+//                 }
+//             }
+//         }
+//         Mage::getSingleton('adminhtml/session_quote')->setBaseShippingCustomPrice(null);
 
         $quote = $this->applyFreeShippingCartRule($quote);
 
@@ -497,20 +501,21 @@ class MageWorx_OrdersEdit_Model_Observer
             $appliedRuleIds = explode(',', $quote->getAppliedRuleIds());
             $rules =  Mage::getModel('salesrule/rule')->getCollection()->addFieldToFilter('rule_id' , array('in' => $appliedRuleIds));
             foreach ($rules as $rule) {
+            	Mage::log('Appliing shipping rule orderedit');
                 //check and apply free shipping shopping cart rule
-                if($rule->getSimpleFreeShipping() == Mage_SalesRule_Model_Rule::FREE_SHIPPING_ADDRESS) {
-                    $address = $quote->getShippingAddress();
-                    $address->setGrandTotal((float)$address->getGrandTotal() - ($address->getTotalAmount('shipping') + $address->getShippingTaxAmount()));
-                    $address->setBaseGrandTotal((float)$address->getBaseGrandTotal() - ($address->getBaseTotalAmount('shipping') + $address->getBaseShippingTaxAmount()));
+//                 if($rule->getSimpleFreeShipping() == Mage_SalesRule_Model_Rule::FREE_SHIPPING_ADDRESS) {
+//                     $address = $quote->getShippingAddress();
+//                     $address->setGrandTotal((float)$address->getGrandTotal() - ($address->getTotalAmount('shipping') + $address->getShippingTaxAmount()));
+//                     $address->setBaseGrandTotal((float)$address->getBaseGrandTotal() - ($address->getBaseTotalAmount('shipping') + $address->getBaseShippingTaxAmount()));
 
-                    $address->setBaseTotalAmount('shipping', 0);
-                    $address->setTotalAmount('shipping', 0);
-                    $address->setBaseShippingInclTax(0);
-                    $address->setShippingInclTax(0);
-                    $address->setBaseShippingTaxAmount(0);
-                    $address->setShippingTaxAmount(0);
-                    break;
-                }
+//                     $address->setBaseTotalAmount('shipping', 0);
+//                     $address->setTotalAmount('shipping', 0);
+//                     $address->setBaseShippingInclTax(0);
+//                     $address->setShippingInclTax(0);
+//                     $address->setBaseShippingTaxAmount(0);
+//                     $address->setShippingTaxAmount(0);
+//                     break;
+//                 }
             }
         }
         Mage::getSingleton('adminhtml/session')->setShippingEdited(false);
