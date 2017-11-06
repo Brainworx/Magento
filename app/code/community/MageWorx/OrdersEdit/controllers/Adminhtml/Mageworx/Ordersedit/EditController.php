@@ -159,6 +159,7 @@ class MageWorx_OrdersEdit_Adminhtml_Mageworx_Ordersedit_EditController extends M
     	$orderId = $this->getRequest()->getParam('order_id');
     
     	try {
+    		
     		/** @var Mage_Sales_Model_Order $order */
     		$order = Mage::getModel('sales/order')->load($orderId);
     		Mage::register('ordersedit_order', $order);
@@ -167,61 +168,21 @@ class MageWorx_OrdersEdit_Adminhtml_Mageworx_Ordersedit_EditController extends M
     
     		$data = $this->getRequest()->getPost();
     		
-    		//she
-    		if(array_key_exists('shipping_amount',$data)){
-    			 unset($data['shipping_amount']);
-    			 Mage::log('Shipping amount found in order edit data - skipped - order '.$order->getEntityId());
-    		}
-    
     		$pendingChanges = $this->getMwEditHelper()->addPendingChanges($orderId, $data);
     		
-    		//she
-    		if(array_key_exists('shipping_amount',$pendingChanges)){
-    			unset($pendingChanges['shipping_amount']);
-    			Mage::log('Shipping amount found in order edit pendingchanges - skipped - order '.$order->getEntityId());
+    		$changes=false;
+    		foreach ($data as $key => $value) {
+    			if ($key == 'shipping_address') {
+    				$this->setAddress($quote, $order, $value, 'shipping');
+    				$changes = true;
+    			} elseif ($key == 'billing_address') {
+    				$this->setAddress($quote, $order, $value, 'billing');
+    				$changes=true;
+    			} 
     		}
-    		/** @var Mage_Sales_Model_Quote $quote */
-    		$quote = Mage::getSingleton('mageworx_ordersedit/edit_quote')->applyDataToQuote($quote, $pendingChanges);
-    
-    		$order->addData($data);
-    		
-    		Mage::getSingleton('mageworx_ordersedit/edit')->saveOrder($quote, $order, $pendingChanges);
-    		
-    		$this->getMwEditHelper()->resetPendingChanges($orderId);
-    
-//     		$blockId = $this->getRequest()->getParam('edited_block');
-//     		$blockData = $this->getMwEditHelper()->getBlockById($blockId);
-//     		$block = $this->getLayout()->createBlock($blockData['changedBlock']);
-    
-//     		if ($blockId == 'shipping_address') {
-//     			$block->setAddressType('shipping');
-//     		} elseif ($blockId == 'billing_address') {
-//     			$block->setAddressType('billing');
-//     		}
-    
-//     		$block->setQuote($quote);
-//     		$block->setOrder($order);
-    
-//     		$noticeHtml = $this->getLayout()->createBlock('core/template')
-//     		->setTemplate('mageworx/ordersedit/changed/notice.phtml')
-//     		->toHtml();
-//     		$result[$blockId] = $noticeHtml . $block->toHtml();
-    
-//     		// Render temp totals (preview)
-//     		/** @var array $totals */
-//     		$totals = $quote->getTotals();
-//     		$tempTotalsBlock = Mage::getSingleton('core/layout')->createBlock(
-//     				'mageworx_ordersedit/adminhtml_sales_order_totals',
-//     				'temp_totals',
-//     				array(
-//     						'totals' => $totals,
-//     						'order'  => $order,
-//     						'quote'  => $quote
-//     				)
-//     		);
-//     		$tempTotalsHtml = $tempTotalsBlock->toHtml();
-//     		$result['temp_totals'] = $tempTotalsHtml;
-//     		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    		if($changes){
+    			Mage::getSingleton('mageworx_ordersedit/edit')->saveOrder($quote, $order, $pendingChanges);
+    		}
     
     	} catch (Exception $e) {
     		Mage::getSingleton ( 'adminhtml/session' )->addError ( $e->getMessage () );
@@ -229,6 +190,41 @@ class MageWorx_OrdersEdit_Adminhtml_Mageworx_Ordersedit_EditController extends M
     	//$this->_redirect('sales/order/view', array('order_id' => $orderId));
     	return Mage::getUrl('sales/order/view', array('order_id' => $orderId));
     }
+    /**
+     * Apply shipping/billing address to quote
+     *
+     * @param Mage_Sales_Model_Quote $quote
+     * @param $data
+     * @param $addressType
+     * @return $this
+     */
+    public function setAddress(Mage_Sales_Model_Quote $quote, Mage_Sales_Model_Order $order, $data, $addressType)
+    {
+    	$address = ($addressType == 'shipping') ? $quote->getShippingAddress() : $quote->getBillingAddress();
+    	$address->addData($data);
+    
+    	// fix for street fields
+    	$streetArray = array();
+    	for ($i = 0; $i < 4; $i++) {
+    		if (isset($data['street[' . $i]) && $data['street[' . $i]) {
+    			$streetArray[$i] = $data['street[' . $i];
+    		}
+    	}
+    	$street = implode(chr(10), $streetArray);
+    	$streetData = array('street' => $street);
+    	$address->addData($streetData);
+    	// fix end
+    	
+    	$converter = Mage::getSingleton('mageworx_ordersedit/edit_quote_convert');
+    	if($addressType == 'shipping'){
+    		$order->setShippingAddress($converter->addressToOrderAddress($address,$order->getShippingAddress()));
+    	}else{
+    		$order->setBillingAddress($converter->addressToOrderAddress($address,$order->getBillingAddress()));
+    	}
+    
+    	return $this;
+    }
+    
     
 //     /**
 //      * @todo Move processing code to models
