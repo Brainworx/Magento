@@ -200,28 +200,28 @@ class MageWorx_OrdersEdit_Helper_Edit extends Mage_Core_Helper_Abstract
         $session = Mage::getSingleton('adminhtml/session');
         $sessionKey = $this->getPendingChangesKey($orderId);
 
-        $oldChanges = $this->getPendingChanges($orderId);
+//         $oldChanges = $this->getPendingChanges($orderId);
 
-        if (is_null($oldChanges)) {
-            $oldChanges = array();
-        }
+//         if (is_null($oldChanges)) {
+//             $oldChanges = array();
+//         }
 
-        if (isset($newChanges['quote_items'])) {
-            foreach($newChanges['quote_items'] as $quoteId => $quoteItemData) {
-                if (isset($quoteItemData['configured']) && $quoteItemData['configured']) {
-                    $quoteItem = Mage::getModel('sales/quote_item')->load($quoteId);
-                    $productId = $quoteItem->getProductId();
-                    unset($quoteItemData['configured']);
-                    if (isset($quoteItemData['action'])) {
-                        unset($quoteItemData['action']);
-                    }
-                    $quoteItemData['product_id'] = $productId;
-                    $newChanges['product_to_add'][$quoteItem->getItemId()] = $quoteItemData;
-                }
-            }
-        }
+//         if (isset($newChanges['quote_items'])) {
+//             foreach($newChanges['quote_items'] as $quoteId => $quoteItemData) {
+//                 if (isset($quoteItemData['configured']) && $quoteItemData['configured']) {
+//                     $quoteItem = Mage::getModel('sales/quote_item')->load($quoteId);
+//                     $productId = $quoteItem->getProductId();
+//                     unset($quoteItemData['configured']);
+//                     if (isset($quoteItemData['action'])) {
+//                         unset($quoteItemData['action']);
+//                     }
+//                     $quoteItemData['product_id'] = $productId;
+//                     $newChanges['product_to_add'][$quoteItem->getItemId()] = $quoteItemData;
+//                 }
+//             }
+//         }
 
-        $changes = array_merge($oldChanges, $newChanges);
+        $changes = array();//array_merge($oldChanges, $newChanges);
 
         $session->setData($sessionKey, $changes);
 
