@@ -103,4 +103,25 @@ class Brainworx_Rental_Model_Order_Invoice extends Mage_Sales_Model_Order_Invoic
 	
 		return $this;
 	}
+	
+	/**
+	 * Retrieve invoice states array
+	 *
+	 * @return array
+	 */
+	public static function getStates()
+	{
+		
+		if (is_null(self::$_states)) {
+			self::$_states = array(
+					self::STATE_OPEN       => Mage::helper('sales')->__('Pending'),
+					11       => Mage::helper('sales')->__('Incasso'),
+					self::STATE_PAID       => Mage::helper('sales')->__('Paid'),
+					self::STATE_CANCELED   => Mage::helper('sales')->__('Canceled'),
+			);
+		}
+		return self::$_states;
+	}
+
+	
 }
