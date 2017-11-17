@@ -97,8 +97,8 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
         		'align'     =>'left',
         		'width'     => '50px',
         		'index'     => 'increment_id',
-        		'type'  => 'options',
-        		'options'	=>  Mage::getModel('rental/rentedItem')->getIncrementIds(),
+        		'type'  => 'text',
+        		'filter_index' => 'order.increment_id',
         ));
  
         $this->addColumn('customer_id', array(
