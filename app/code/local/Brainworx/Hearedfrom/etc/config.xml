@@ -352,6 +352,7 @@
 				<args>
 					<modules>
 						<hearedfromsales before="Mage_Sales">Brainworx_Hearedfrom</hearedfromsales>
+						<hearedfromadminhtml before="Mage_Adminhtml">Brainworx_Hearedfrom</hearedfromadminhtml>
 					</modules>
 				</args>
 			</sales>
