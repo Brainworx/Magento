@@ -40,9 +40,9 @@ class Brainworx_Hearedfrom_Block_AddCustomerlink extends Mage_Customer_Block_Acc
 			$salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
 			if(!empty($salesforce)){
 				$this->addLink(
-						Mage::helper('customer')->__('Patient Orders'),
+						Mage::helper('customer')->__('All Orders'),
 						"customer/patientorderpage/",
-						Mage::helper('customer')->__('Patient Orders')
+						Mage::helper('customer')->__('All Orders')
 				);
 			}
 		}
