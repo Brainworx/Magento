@@ -78,6 +78,7 @@
                     </div>
                     <div class="product-secondary">
                     <?php
+                    	$_catSI=false;
 	                    foreach($_product->getCategoryIds()as $cat){
 	                    	if(in_array($cat,$_catsviaapp)){
 	                    		$_catSI = true;
@@ -86,6 +87,7 @@
 	                    }
 						if($_catSI && !$_addOK){
 							$buttonTitle = $this->__('Exclusive for farmacie');
+							
 							?>
 							<p class="action"><button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->__('farmacielink')?>')"><span><span><?php echo $buttonTitle ?></span></span></button></p>
 							<?php                  
@@ -158,6 +160,7 @@
                     <?php endif; ?>
                     <div class="actions">
                      <?php
+                     $_catSI = false;
 						foreach($_product->getCategoryIds()as $cat){
 	                    	if(in_array($cat,$_catsviaapp)){
 	                    		$_catSI = true;
