@@ -494,6 +494,10 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			
 			$invoice = Mage::getModel ( 'sales/order_invoice')->load($invoiceId); 
 			
+			if($invoice->getState()==Brainworx_Rental_Model_Order_Invoice::STATE_INCASSO){
+				$invoice->setState(Mage_Sales_Model_Order_Invoice::STATE_OPEN);
+			}
+			
 			if($invoice->getState() == Mage_Sales_Model_Order_Invoice::STATE_OPEN){
 				$grandTotal = $invoice->getGrandTotal();
 				$order = $invoice->getOrder();

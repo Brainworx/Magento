@@ -425,7 +425,8 @@ class Brainworx_Rental_Model_Observer
 		//Add button to mark invoices as paid on the invoice page
 		if ($block instanceof Mage_Adminhtml_Block_Sales_Order_Invoice_View) {
 			//only add markpaid button when invoice state is open
-			if($block->getInvoice()->getState() == Mage_Sales_Model_Order_Invoice::STATE_OPEN){
+			if($block->getInvoice()->getState() == Mage_Sales_Model_Order_Invoice::STATE_OPEN
+					|| $block->getInvoice()->getState() == Brainworx_Rental_Model_Order_Invoice::STATE_INCASSO){
 				$message = Mage::helper('rental')->__('Factuur '.$block->getInvoice()->getIncrementId()
 						.' van ' . round($block->getInvoice()->getGrandTotal(),2).' euro werd betaald?');
 				//$url = Mage::getModel('adminhtml/url')->getUrl('*/*/markpaid', array('invoice_id'=>$block->getInvoice()->getId()));

@@ -27,16 +27,16 @@ class Brainworx_Hearedfrom_Sales_Order_InvoiceController extends Mage_Adminhtml_
             $comment = "";
             if(isset($data['incasso'])&&$data['incasso']==1){
             	$invoice->setIncasso($data['incasso']);
-            	if($invoice->getState()==1){
-            		$invoice->setState(11);
+            	if($invoice->getState()==Mage_Sales_Model_Order_Invoice::STATE_OPEN){
+            		$invoice->setState(Brainworx_Rental_Model_Order_Invoice::STATE_INCASSO);
             		$comment = $this->__('Incasso actief.');
             	}else{
             		$comment = $this->__('Incasso actief maar status niet wachtende.');
             	}
             }else{
             	$invoice->setIncasso(false);
-            	if($invoice->getState()==11){
-            		$invoice->setState(1);
+            	if($invoice->getState()==Brainworx_Rental_Model_Order_Invoice::STATE_INCASSO){
+            		$invoice->setState(Mage_Sales_Model_Order_Invoice::STATE_OPEN);
             		$comment = $this->__('Incasso gedeactiveerd.');
             	}
             }
