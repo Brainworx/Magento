@@ -69,6 +69,8 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
             return false;
         }
         
+        try{
+        
         /* Set up mail transport to Email Hosting Provider SMTP Server via SSL/TLS */
         $port= Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MAIL_PORT')->getValue('text');
         $smtp= Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MAIL_SMTP')->getValue('text');
@@ -105,6 +107,32 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
         $this->setUseAbsoluteLinks(true);
         $text = $this->getProcessedTemplate($variables, true);
         $subject = $this->getProcessedTemplateSubject($variables);
+        
+        /*check new order to add seller*/
+        $pos=strpos($subject,"#");
+        $bcc = $this->_bccEmails;
+        if($pos!==FALSE){
+        	//pos is start pos of #
+        	$groupId = explode(",",Mage::getSingleton('customer/session')->getCustomerGroupId());
+        	$seller_custid = 0;
+        	if(in_array(Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_GID')->getValue('text'),$groupId)) {
+        		$mederisellerid = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_FORCE_ID')->getValue('text');
+        		$_hearedfrom_salesforce = Mage::getModel('hearedfrom/salesForce')->load($mederisellerid);
+        		$seller_custid = Mage::getSingleton('customer/session')->getCustomerId();
+        	}else{
+        		//Fetch the data from select box and throw it here- added to session in OnePageController
+        		$_hearedfrom_salesforce = null;
+        		$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
+        		$seller_custid = $_hearedfrom_salesforce["cust_id"];
+        	}
+        	$sellercust = Mage::getModel('customer/customer')->load($seller_custid);
+        	$selleremail = $sellercust->getEmail();
+        	if(strpos($selleremail,"zorgpunt")!==FALSE && !in_array($selleremail,$emails)){
+        		$bcc[]=$selleremail;
+        		Mage::log('Added zorgpunter in bcc: '.$selleremail, null, 'email.log');
+        	}
+        }
+        
 
         $setReturnPath = Mage::getStoreConfig(self::XML_PATH_SENDING_SET_RETURN_PATH);
         switch ($setReturnPath) {
@@ -133,10 +161,10 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
                     'return_to'         => $this->getMail()->getReturnPath(),
                 ))
                 ->addRecipients($emails, $names, Mage_Core_Model_Email_Queue::EMAIL_TYPE_TO)
-                ->addRecipients($this->_bccEmails, array(), Mage_Core_Model_Email_Queue::EMAIL_TYPE_BCC);
+                ->addRecipients($bcc, array(), Mage_Core_Model_Email_Queue::EMAIL_TYPE_BCC);
             $emailQueue->addMessageToQueue();
             
-            Mage::log('Mail added to queue from: ' . $this->getSenderEmail() . ' to:' . implode(" ",$emails) . ' ' .$this->getProcessedTemplateSubject($variables), null, 'email.log');
+            Mage::log('Mail added to queue from: ' . $this->getSenderEmail() . ' to:' . implode(" ",$emails) . ' bcc:' . implode(" ",$bcc).' ' .$this->getProcessedTemplateSubject($variables), null, 'email.log');
             
 
             return true;
@@ -178,6 +206,15 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
             Mage::log('Mail error '.$e->getMessage(), null, 'email.log');
              
             return false;
+        }
+        }
+        catch (Exception $e) {
+        	$this->_mail = null;
+        	Mage::logException($e);
+        	Mage::helper("hearedfrom/error")->sendErrorMail('Probleem versturen mail - '.$e->getMessage());
+        	Mage::log('Mail error '.$e->getMessage(), null, 'email.log');
+        	 
+        	return false;
         }
         Mage::log('Mail end ', null, 'email.log');
         

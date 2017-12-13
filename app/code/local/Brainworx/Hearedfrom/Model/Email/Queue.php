@@ -101,7 +101,9 @@ class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
                 } else {
                     $mailer->setBodyHTML($message->getMessageBody());
                 }
-
+                
+                Mage::log($parameters->getSubject().' to '.$to, null, 'email.log');
+                 
                 $mailer->setSubject('=?utf-8?B?' . base64_encode($parameters->getSubject()) . '?=');
                 $mailer->setFrom($parameters->getFromEmail(), $parameters->getFromName());
                 if ($parameters->getReplyTo() !== null) {
