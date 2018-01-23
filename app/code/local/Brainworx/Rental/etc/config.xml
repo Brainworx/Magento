@@ -84,6 +84,11 @@
                     	<method_banktransfer>Brainworx_Rental_Model_Payment_Method_Banktransfer</method_banktransfer>
                 	</rewrite>
             </payment>
+            <shipping>
+	            <rewrite>
+	           		 <carrier_tablerate>Brainworx_Rental_Model_Carrier_Tablerate</carrier_tablerate>
+	            </rewrite>
+            </shipping>
 		</models>
 		
 		<!-- update totals section on pdf -->
