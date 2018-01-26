@@ -1,0 +1,29 @@
+@CHARSET "ISO-8859-1";
+div.homebar p{
+	width:116px;
+	color:#ffffff;
+	text-align:center;
+	position:absolute;
+	margin-left: 45%;
+}
+div.homebar.verkoop{
+	
+}
+div.homebar p.verhuur{	
+	background-color: #F26522; /*orange*/
+	margin-bottom
+}
+div.homebar p.verkoop{
+	background-color: #1E2D8A; /*blue*/
+}
+.homebar {
+    /* Force visibility */
+    border-bottom: 1px solid #636363;; /*##F26522 = orange -- 1E2D8A = blue*/
+    position:relative;
+    height:21px;
+  }
+ .subcat-listing{
+ }
+ .blok{
+ 	display	:	grid;
+ }
