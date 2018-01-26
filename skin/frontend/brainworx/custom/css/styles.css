@@ -1307,7 +1307,7 @@ a.button:hover {
 @media only screen and (min-width: 480px) {
   .main-container,
   .footer-container {
-    padding: 30px;
+    padding: 0 30px 30px 30px;
   }
 }
 .footer-container {
@@ -8832,7 +8832,7 @@ div.paypal-logo span > img {
   position: relative;
   display: block;
   width: 100%;
-  margin: 10px 0;
+  margin: 0 0 10px 0;
   text-align: center;
 }
 .slideshow-container .slideshow {
