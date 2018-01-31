@@ -23,7 +23,8 @@ div.homebar p.verkoop{
     height:21px;
   }
  .subcat-listing{
+	display: table;
  }
  .blok{
- 	display	:	grid;
+ 	display	: grid;
  }
