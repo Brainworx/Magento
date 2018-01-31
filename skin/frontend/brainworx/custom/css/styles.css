@@ -10632,8 +10632,8 @@ div.calendar table td.button {
 }
 img.cat_img
 {
-	/*width: 75%;*/
-	/*display:contents;*/
+	margin-left: 7.5px;
+	margin-right: 7.5px;
 }
 input.tsmall{
 	width: 150px;
