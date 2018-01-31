@@ -77,7 +77,7 @@ audio:not([controls]) {
  *    user zoom.
  */
 html {
-  font-family: "Helvetica Neue", Verdana, Arial, sans-serif;
+  font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
   /* 1 */
   -webkit-text-size-adjust: 100%;
   /* 2 */
@@ -1137,13 +1137,13 @@ a.button:hover {
  */
 .breadcrumbs {
   overflow: hidden;
-  margin: -15px 0 15px;
+  margin: 5px 0 15px;
 }
 
 .breadcrumbs li {
   float: left;
   font-size: 12px;
-  font-family: "Helvetica Neue", Verdana, Arial, sans-serif;
+  font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
   text-transform: uppercase;
 }
 
@@ -10628,12 +10628,12 @@ div.calendar table td.button {
 .floated_img
 {
     float: left;
-    margin-left: 1%;
+    /*margin-left: 1%;*/
 }
 img.cat_img
 {
-	width: 75%;
-	display:contents;
+	/*width: 75%;*/
+	/*display:contents;*/
 }
 input.tsmall{
 	width: 150px;
