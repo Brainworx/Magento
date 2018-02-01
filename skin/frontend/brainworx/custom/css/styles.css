@@ -3496,6 +3496,9 @@ a.skip-link {
 .nav-primary li {
   position: relative;
 }
+.nav-primary li.level0 {
+  width : 12.5%;
+}
 .nav-primary li.level1 a {
   color:#1E2D8A;
 }
@@ -4008,7 +4011,7 @@ a.skip-link {
   width: 100%;
   border-top: 1px solid #cccccc;
   padding-top: 30px;
-  padding-left:30%;
+  padding-left:28%;
   
   
   /* -------------------------------------------- *
@@ -4034,8 +4037,7 @@ a.skip-link {
 .footer .links {
   float: left;
   width: 17%;
-  padding: 0 30px 0 0;
-  margin: 0 15px 30px 15px;
+  margin: 0 25px 30px 25px;
 }
 .footer .links li {
   word-break: break-all;
