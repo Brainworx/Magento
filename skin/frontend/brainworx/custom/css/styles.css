@@ -3579,31 +3579,39 @@ a.skip-link {
   .nav-primary li.level0,
   .nav-primary a.level0 {
     display: inline-block;
-    padding : 0 20px 0 20px;
   }
   .nav-primary li:last-child > a {
     border-bottom: none;
   }
 
-  .nav-primary li.level0 a:hover {
+  .nav-primary li.level0:hover {
     background-color: #1E2D8A; /*she*/
   }
-   .nav-primary li.level1 a:hover {
+   .nav-primary li.level1:hover {
     background-color: #F26522; /*she*/
+    color: #ffffff;
+    border: 1px solid #F26522;
+  }
+  .nav-primary li.level1 a:hover {
     color: #ffffff;
   }
   .nav-primary li:hover {
-    background-color: #F26522; /*she*/
+   
   }
   .nav-primary li.level1{
   	padding-left:10px;
+  	text-align : left;
+  	border: 1px solid #cccccc;
+  }
+  .nav-primary li.level0.menu-active {
+     background-color: #1E2D8A; /*she*/
+      z-index: 200;    
   }
   .nav-primary .menu-active {
-    background-color: #1E2D8A; /*she*/
-     z-index: 200;
+      z-index: 200;    
   }
   .nav-primary li.level0 ul {
-    background: #FBFBFB;
+    background: #ffffff;
     position: absolute;
     left: 0;
     top: 30px;
