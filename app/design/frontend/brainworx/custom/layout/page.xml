@@ -53,7 +53,6 @@ SHE: added facebook sharing on top
 
                 <!-- Add stylesheets with media queries for use by modern browsers -->
                 <action method="addItem"><type>skin_css</type><name>css/styles.css</name><params/><if><![CDATA[<!--[if (gte IE 9) | (IEMobile)]><!-->]]></if></action>
-                <action method="addItem"><type>skin_css</type><name>css/madisonisland.css</name><params/><if><![CDATA[<!--[if (gte IE 9) | (IEMobile)]><!-->]]></if></action>
 				<action method="addItem"><type>skin_css</type><name>css/extrastyle.css</name><params/></action>
 				<action method="addItem"><type>skin_css</type><name>css/custom1.css</name><params/></action>
                 
