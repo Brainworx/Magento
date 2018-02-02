@@ -3489,7 +3489,7 @@ a.skip-link {
   color: #ffffff;
   line-height: 30px;
   font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
-  font-size: 1.1em;
+  font-size: 1.4em;
   
 }
 
@@ -3497,7 +3497,7 @@ a.skip-link {
   position: relative;
 }
 .nav-primary li.level0 {
-  width : 12.5%;
+  width : 150px;
 }
 .nav-primary li.level1 a {
   color:#1E2D8A;
