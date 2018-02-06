@@ -40,3 +40,50 @@ div.homebar p.verkoop{
     clear: both;
     text-align:right;
 }
+span.highlight{
+	color:red;
+}
+a.highlight{
+	color:red;
+	text-decoration: underline;
+}
+div.dnst-link a{
+	color:#F26522;
+	font-weight: bold;
+}
+div.dnst-link{
+	padding: 20px 0px 30px 0px;
+	border-top: 1px solid #cccccc;
+}
+div.dnst-link.last{	
+	border-bottom: 1px solid #cccccc;
+}
+.col-main-left{
+	float: left;
+    	width: 50%;
+    	margin-left: 25%;
+}
+.col-main-right{
+	float: left;
+	width: 25%;
+	margin-top:50px;
+}
+.dnst-link-left{
+	float: left;
+	width: 25%;
+}
+.dnst-link-right{
+	
+}
+img.round{
+	
+}
+.imgbox{
+    display: flex;
+    margin-bottom: 30px;
+}
+.imgwrap{
+    flex-basis: 183px;
+    flex: 1;
+    padding: 10px;
+}
