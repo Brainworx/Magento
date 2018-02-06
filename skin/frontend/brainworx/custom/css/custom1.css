@@ -18,9 +18,9 @@ div.homebar p.verkoop{
 }
 .homebar {
     /* Force visibility */
-    border-top: 1px solid #cccccc; /*##F26522 = orange -- 1E2D8A = blue*/
+    border-bottom: 1px solid #cccccc; /*##F26522 = orange -- 1E2D8A = blue*/
     position:relative;
-    height:25px;
+    height:1.4em;
     font-size:1.4em;
   }
  .subcat-listing{
