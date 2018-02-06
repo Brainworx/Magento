@@ -88,3 +88,10 @@ img.round{
     flex: 1;
     padding: 10px;
 }
+.col-main-leftsidebar{
+	float: left;
+    margin-left: -25%;
+    width: 25%;
+    position: absolute;
+    bottom: 0px;
+}
