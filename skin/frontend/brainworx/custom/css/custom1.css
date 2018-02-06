@@ -52,7 +52,7 @@ div.dnst-link a{
 	font-weight: bold;
 }
 div.dnst-link{
-	padding: 20px 0px 30px 0px;
+	padding: 20px 0px 40px 15px;
 	border-top: 1px solid #cccccc;
 }
 div.dnst-link.last{	
@@ -67,6 +67,7 @@ div.dnst-link.last{
 	float: left;
 	width: 25%;
 	margin-top:50px;
+	padding-left: 10px;
 }
 .dnst-link-left{
 	float: left;
