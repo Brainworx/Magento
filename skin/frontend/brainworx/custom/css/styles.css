@@ -864,7 +864,7 @@ body:not(.customer-account) .block:first-child .block-title {
 }
 .block-account li a:hover,
 .block-cms-menu li a:hover {
-  color: #2B3990;/*#2B3990;*/
+  color: #2B3990;
 }
 
 /* ============================================ *
@@ -929,7 +929,7 @@ body:not(.customer-account) .block:first-child .block-title {
 .cart-table .product-cart-actions .button:hover,
 #co-shipping-method-form .buttons-set .button:hover,
 .footer .button:hover {
-  background: #2e8ab8;
+  background: #2B3990;
   cursor: pointer;
 }
 .button:active,
@@ -995,7 +995,7 @@ a.button:hover {
 .button2 span:hover,
 .button2 span span:hover {
   text-decoration: none;
-  color: #246b8f;
+  color: #2B3990;
 }
 
 @media only screen and (max-width: 770px) {
@@ -2269,7 +2269,7 @@ span.weee {
   display: block;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-left: 4px solid #246b8f;
+  border-left: 4px solid #2B3990;
   border-right: none;
 }
 
@@ -2296,7 +2296,7 @@ span.weee {
   display: block;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-right: 4px solid #246b8f;
+  border-right: 4px solid #2B3990;
   border-left: none;
 }
 
@@ -2397,7 +2397,7 @@ body.customer-account .data-table .summary-collapse:hover:before {
   display: block;
   border-right: 7px solid transparent;
   border-left: 7px solid transparent;
-  border-top: 7px solid #246b8f;
+  border-top: 7px solid #2B3990;
   border-bottom: none;
   position: static;
   display: inline-block;
@@ -2429,7 +2429,7 @@ body.customer-account .data-table .show-details .summary-collapse:hover:before {
   display: block;
   border-right: 7px solid transparent;
   border-left: 7px solid transparent;
-  border-bottom: 7px solid #246b8f;
+  border-bottom: 7px solid #2B3990;
   border-top: none;
   position: static;
   display: inline-block;
@@ -4884,7 +4884,7 @@ p.product-name a:hover {
     margin-top: -5px;
   }
   .block-layered-nav .block-subtitle--filter:hover {
-    background-color: #2e8ab8;
+    background-color: #2B3990;
     color: #FFFFFF;
   }
   .block-layered-nav .block-subtitle--filter.active:after {
@@ -8899,7 +8899,7 @@ div.paypal-logo span > img {
   position: relative;
 }
 .slideshow-pager span:hover:before {
-  background-color: #2e8ab8;
+  background-color: #2B3990;
 }
 .slideshow-pager span.cycle-pager-active:before {
   background-color: #297aa3;
@@ -8957,7 +8957,7 @@ div.paypal-logo span > img {
   left: 10px;
 }
 .slideshow-prev:hover:before {
-  border-color: transparent #2e8ab8 transparent transparent;
+  border-color: transparent #2B3990 transparent transparent;
 }
 
 .slideshow-next {
@@ -8970,7 +8970,7 @@ div.paypal-logo span > img {
   right: 10px;
 }
 .slideshow-next:hover:before {
-  border-color: transparent transparent transparent #2e8ab8;
+  border-color: transparent transparent transparent #2B3990;
 }
 
 .cycle-caption {
@@ -9582,7 +9582,7 @@ div.paypal-logo span > img {
   text-align: left;
 }
 .search-autocomplete ul li:hover {
-  color: #2e8ab8;
+  color: #2B3990;
 }
 .search-autocomplete ul li.selected {
   background-color: #2B3990;
