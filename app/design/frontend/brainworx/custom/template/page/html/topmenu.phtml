@@ -20,10 +20,10 @@
 <?php if($_menu): ?>
     <nav id="nav">
         <ol class="nav-primary">
-            <?php echo $_menu ?>   
+            <?php echo $_menu ?>  
+             <li class="level0 parent"><a href="<?php echo $this->getUrl('incontinentie') ?>" class="level0">Incontinentie</a></li>
              <li class="level0 parent"><a href="" class="level0">Diensten</a>
              	<ul class="level0">
-             		<li class="level1 view-all"><a class="level1" href="http://localhost/magento/verhuur.html">Alle Verhuur</a></li>
              		<li  class="level1 nav-1-1 first"><a class="level1" href="<?php echo $this->getUrl('vaph') ?>" class="level1 ">VAPH</a></li>
              		<li  class="level1 nav-1-2 last"><a class="level1" href="<?php echo $this->getUrl('zorg-au-pairs') ?>" class="level1 ">Zorg au-pairs</a></li>
              		<li  class="level1 nav-1-1 first"><a class="level1" href="<?php echo $this->getUrl('nursing') ?>" class="level1 ">Verpleging</a></li>
