@@ -69,7 +69,7 @@ div.dnst-link.last{
 	width: 25%;
 }
 .dnst-link-right{
-	
+	font-size: 16px;
 }
 img.round{
 	
@@ -89,4 +89,8 @@ img.round{
     width: 25%;
     position: absolute;
     bottom: 0px;
+}
+.underline{
+	text-decoration:underline;
+}
 }
