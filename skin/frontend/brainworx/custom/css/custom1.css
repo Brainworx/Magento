@@ -14,11 +14,11 @@ div.homebar p.verhuur{
 	background-color: #F26522; /*orange*/
 }
 div.homebar p.verkoop{
-	background-color: #1E2D8A; /*blue*/
+	background-color: #2B3990; /*blue #2B3990 old 1E2D8A*/
 }
 .homebar {
     /* Force visibility */
-    border-bottom: 1px solid #cccccc; /*##F26522 = orange -- 1E2D8A = blue*/
+    border-bottom: 1px solid #cccccc; /*##F26522 = orange -- 2B3990 = blue*/
     position:relative;
     height:1.4em;
     font-size:1.4em;
@@ -29,7 +29,7 @@ div.homebar p.verkoop{
  .blok{	
  }
  div.slideshow-container p{
- 	color : #1E2D8A;
+ 	color : #2B3990;
  	font-size: 2em;
  	margin-top:15px;
  	font-family: "Trebuchet MS";
@@ -41,14 +41,9 @@ div.homebar p.verkoop{
     text-align:right;
 }
 span.highlight{
-	color:red;
-}
-a.highlight{
-	color:red;
-	text-decoration: underline;
+	color:#F26522;
 }
 div.dnst-link a{
-	color:#F26522;
 	font-weight: bold;
 }
 div.dnst-link{
