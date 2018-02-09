@@ -3490,8 +3490,8 @@ a.skip-link {
   position: relative;
 }
 .nav-primary li.level0 {
-  width : 150px;
-  margin-left: -15px; 
+  width : 14%;
+  min-width: 150px;
 }
 .nav-primary li.level1 a {
   color:#2B3990;
@@ -3614,7 +3614,7 @@ a.skip-link {
     top: 30px;
     /* Height of ".nav-primary a.level0" */
     z-index: 10;
-    width: 150px;
+    width: 100%;
     display: none;
     /* Hide until displayed. */
   }
