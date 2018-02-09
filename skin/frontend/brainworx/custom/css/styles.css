@@ -3246,7 +3246,7 @@ body {
   min-width: 100px;
   min-height: 44px;
   text-align: center;
-  padding: 10px;
+  padding: 10px 10px 20px 10px;
 }
 .logo img {
   max-width: 100%;
@@ -3409,7 +3409,7 @@ a.skip-link {
 }
 .account-cart-wrapper {
   position: absolute;
-  top: 0px;
+  bottom: 120px;
   right: 0px;
 }
 @media only screen and (max-width: 770px) {
@@ -3460,8 +3460,6 @@ a.skip-link {
 @media only screen and (min-width: 771px) {
   #header-nav {
     display: block;
-    /* Force visibility */
-    border-bottom: 1px solid #CC6933; /*she added orange line*/
   }
 }
 /* ============================================ *
@@ -3493,6 +3491,7 @@ a.skip-link {
 }
 .nav-primary li.level0 {
   width : 150px;
+  margin-left: -15px; 
 }
 .nav-primary li.level1 a {
   color:#2B3990;
@@ -3689,7 +3688,7 @@ a.skip-link {
   #header-search {
     display: block;
     position: absolute;
-    top: 55px;
+    bottom: 50px;
     right: 0;
     width: 25%;
     height: 50px;
@@ -4040,6 +4039,7 @@ a.skip-link {
 }
 .footer .links a {
   color: #636363;
+  text-decoration: none;
 }
 .footer .links a:hover {
   color: #2B3990;
@@ -10632,12 +10632,10 @@ div.calendar table td.button {
 .floated_img
 {
     float: left;
-    /*margin-left: 1%;*/
 }
 img.cat_img
 {
-	margin-left: 7.5px;
-	margin-right: 7.5px;
+
 }
 input.tsmall{
 	width: 150px;

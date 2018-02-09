@@ -15,6 +15,8 @@ div.homebar p.verhuur{
 }
 div.homebar p.verkoop{
 	background-color: #2B3990; /*blue #2B3990 old 1E2D8A*/
+}div.floated_img.first{
+	margin-left:8%
 }
 .homebar {
     /* Force visibility */
@@ -25,6 +27,7 @@ div.homebar p.verkoop{
   }
  .subcat-listing{
 	display: table;
+	width:100%;
  }
  .blok{	
  }
@@ -92,5 +95,4 @@ img.round{
 }
 .underline{
 	text-decoration:underline;
-}
 }
