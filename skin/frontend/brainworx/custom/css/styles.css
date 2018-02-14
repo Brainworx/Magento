@@ -2050,7 +2050,7 @@ span.weee {
 }
 
 .std ul li {
-  margin-left: 2em;
+  margin-left: 1.5em;
 }
 
 .std .note {
@@ -9697,9 +9697,6 @@ div.paypal-logo span > img {
 /* ============================================ *
  * CMS Pages
  * ============================================ */
-.cms_content_grid li{
-	font-size:12px;
-}
 .cms-page-view .page-title h1,
 .cms-page-view .page-title h3,
 .cms-page-view .page-head h1,
@@ -9734,8 +9731,6 @@ div.paypal-logo span > img {
 .cms-no-route .std li {
   color: #636363;
   font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
-  font-size: 16px;
-  /*font-style: italic; changes SHE*/
   line-height: 24px;
 }
 .cms-page-view .col-left:after,
