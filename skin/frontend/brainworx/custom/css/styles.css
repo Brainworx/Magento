@@ -2735,6 +2735,7 @@ p.required,
  * ============================================ */
 .form-list > li {
   margin-bottom: 10px;
+  list-style: none;
 }
 .form-list select {
   margin-top: 4px;
