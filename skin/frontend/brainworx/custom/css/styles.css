@@ -861,6 +861,7 @@ body:not(.customer-account) .block:first-child .block-title {
 .block-account li a,
 .block-cms-menu li a {
   color: #636363;
+  text-decoration: none;
 }
 .block-account li a:hover,
 .block-cms-menu li a:hover {
