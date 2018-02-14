@@ -100,13 +100,13 @@ img.round{
 .cms_content_grid{
 	display:flex;
 }
-.cms_content_grid li{
-	font-size:12px;
-}
 .cms_content_1{
 	
 }
 .cms_content_2{
 	
+}
+li.apolist{
+	font-size:12px;
 }
 
