@@ -9697,6 +9697,9 @@ div.paypal-logo span > img {
 /* ============================================ *
  * CMS Pages
  * ============================================ */
+.cms_content_grid li{
+	font-size:12px;
+}
 .cms-page-view .page-title h1,
 .cms-page-view .page-title h3,
 .cms-page-view .page-head h1,
