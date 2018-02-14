@@ -97,3 +97,16 @@ img.round{
 .underline{
 	text-decoration:underline;
 }
+.cms_content_grid{
+	display:flex;
+}
+.cms_content_grid li{
+	font-size:12px;
+}
+.cms_content_1{
+	
+}
+.cms_content_2{
+	
+}
+
