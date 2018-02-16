@@ -2552,7 +2552,7 @@ li.centinel-logos div.input-box img {
  */
 label {
   display: inline-block;
-  font-size: 13px;
+  font-size: 16px;
   font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
   font-weight: 600;
   -moz-user-select: none;
@@ -4031,8 +4031,8 @@ a.skip-link {
 }
 .footer .links {
   float: left;
-  width: 17%;
-  margin: 0 25px 30px 25px;
+  width: 25%;
+  margin: 0 5px 5px 0;
 }
 .footer .links li {
   word-break: break-all;

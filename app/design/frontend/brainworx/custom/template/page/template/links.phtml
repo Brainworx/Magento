@@ -1,0 +1,28 @@
+<?php
+/**
+ * Magento
+Updated quicklinks, replaced by custom links
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * @see Mage_Page_Block_Template_Links
+ */
+?>
+<?php $_links = $this->getLinks(); ?>
+<?php if(count($_links)>0): ?>
+<div class="links">
+    <?php if($this->getTitle()): ?>
+    <div class="block-title"><strong><span>Webshop</span></strong></div>
+    <?php endif; ?>
+    <ul>       
+		<li><a href="/verhuur.html"><span>Verhuur</span></a></li>
+		<li><a href="/verkoop.html"><span>Verkoop</span></a></li>
+    </ul>
+</div>
+<?php endif; ?>

@@ -124,7 +124,7 @@ SHE: added facebook sharing on top
                 </block>
                 <block type="page/switch" name="store_switcher" as="store_switcher" after="*" template="page/switch/stores.phtml"/>
                 <block type="page/template_links" name="footer_links" as="footer_links" template="page/template/links.phtml">
-                    <action method="setTitle"><title>Quick Links</title></action>
+                    <action method="setTitle"><title>Webshop</title></action>
                 </block>
                 <block type="page/template_links" name="footer_links2" as="footer_links2" template="page/template/links.phtml">
                     <action method="setTitle"><title>Account</title></action>
