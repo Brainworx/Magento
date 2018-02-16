@@ -119,4 +119,14 @@ li.apolist{
 .left{
 	float:left;
 }
-	
+.buttons-set-left{
+	clear: both;
+    margin: 10px 0 0 20px;
+    padding-top: 10px;
+    border-top: 1px solid #ededed;
+}
+.buttons-set-left button.button {
+    margin-left: 5px;
+    margin-top:5px;
+    min-width: 140px;
+}

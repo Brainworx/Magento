@@ -17,7 +17,6 @@
 <form action="<?php echo $this->getFormAction(); ?>" id="contactForm" method="post" class="scaffold-form">
     <div class="fieldset">
         <h2 class="legend"><?php echo Mage::helper('contacts')->__('Contact Information') ?></h2>
-        <p class="required"><?php echo Mage::helper('contacts')->__('* Required Fields') ?></p>
         <ul class="form-list">
             <li class="fields">
                 <div class="field">
@@ -46,8 +45,9 @@
                 </div>
             </li>
         </ul>
-    </div>
-    <div class="buttons-set">
+    </div>    
+    <div class="buttons-set-left">  
+    	<p class="required"><?php echo Mage::helper('contacts')->__('* Required Fields') ?></p>  
         <input type="text" name="hideit" id="hideit" value="" style="display:none !important;" />
         <?php if(!empty($_GET["bur"])){ ?>
         <a href="<?php echo $_GET["bur"] ?>"><?php echo Mage::helper('contacts')->__('Cancel')?></a>
