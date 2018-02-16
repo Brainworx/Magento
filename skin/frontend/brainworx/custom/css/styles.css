@@ -3616,7 +3616,7 @@ a.skip-link {
     top: 30px;
     /* Height of ".nav-primary a.level0" */
     z-index: 10;
-    width: 250px;
+    width: 315px;
     display: none;
     /* Hide until displayed. */
   }
