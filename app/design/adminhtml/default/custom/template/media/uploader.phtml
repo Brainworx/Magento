@@ -70,7 +70,8 @@ if (empty($surl)){
 	//'https://www.zorgpunt.eu/skin/adminhtml/default/default/media/uploader.swf '
 }else{
 	$surl = $surl .'skin/adminhtml/default/default/media/uploader.swf';
-}?>
+}
+?>
 <?php echo $this->getJsObjectName() ?> = new Flex.Uploader('<?php echo $this->getHtmlId() ?>', '<?php echo $surl;?>', <?php echo $this->getConfigJson() ?>);
 
 if (varienGlobalEvents) {
