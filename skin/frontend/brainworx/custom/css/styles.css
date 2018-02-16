@@ -2050,7 +2050,7 @@ span.weee {
 }
 
 .std ul li {
-  margin-left: 1.5em;
+  /*margin-left: 1.5em;*/
 }
 
 .std .note {
@@ -9731,7 +9731,7 @@ div.paypal-logo span > img {
 .cms-no-route .std li {
   color: #636363;
   font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
-  line-height: 24px;
+  /*line-height: 24px;*/
 }
 .cms-page-view .col-left:after,
 .cms-no-route .col-left:after {

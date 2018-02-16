@@ -101,13 +101,17 @@ img.round{
 	display:flex;
 }
 .cms_content_1{
-	
+    width: 50%;
 }
 .cms_content_2{
+	padding-left: 5%;
+    width: 50%;
 	
 }
 li.apolist{
-	font-size:12px;
+	font-size:13px;
+	list-style:none;
+	with:310px;
 }
 .link-left{
 	height:100px;
