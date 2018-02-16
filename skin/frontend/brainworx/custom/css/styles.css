@@ -861,6 +861,7 @@ body:not(.customer-account) .block:first-child .block-title {
 .block-account li a,
 .block-cms-menu li a {
   color: #636363;
+  text-decoration: none;
 }
 .block-account li a:hover,
 .block-cms-menu li a:hover {
@@ -2049,7 +2050,7 @@ span.weee {
 }
 
 .std ul li {
-  margin-left: 2em;
+  margin-left: 1.5em;
 }
 
 .std .note {
@@ -2734,6 +2735,7 @@ p.required,
  * ============================================ */
 .form-list > li {
   margin-bottom: 10px;
+  list-style: none;
 }
 .form-list select {
   margin-top: 4px;
@@ -9729,8 +9731,6 @@ div.paypal-logo span > img {
 .cms-no-route .std li {
   color: #636363;
   font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
-  font-size: 16px;
-  /*font-style: italic; changes SHE*/
   line-height: 24px;
 }
 .cms-page-view .col-left:after,
