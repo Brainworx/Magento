@@ -3777,7 +3777,7 @@ a.skip-link {
     display: block;
     position: absolute;
     z-index: 200;
-    top: 40px;
+    top: 110px;
     right: 115px;
     width: 200px;
   }
@@ -3806,6 +3806,8 @@ a.skip-link {
   padding: 5px 10px;
   line-height: 23px;
   text-align: center;
+  text-decoration: none;
+  font-size: 16px;
 }
 
 #header-account a:hover {
