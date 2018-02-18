@@ -124,7 +124,7 @@ li.apolist{
 	float:left;
 }
 .buttons-set-left{
-	clear: both;
+    clear: both;
     margin: 10px 0 0 20px;
     padding-top: 10px;
     border-top: 1px solid #ededed;
@@ -136,4 +136,11 @@ li.apolist{
 }
 .account-login img{
     max-width:100%
+}
+.account-login .buttons-set-left{
+    border-bottom: 1px solid #ededed;	
+    border-top:0px;
+}
+.account-login .col1{
+    padding-left:40px;
 }
