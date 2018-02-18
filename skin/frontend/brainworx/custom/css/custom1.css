@@ -137,10 +137,13 @@ li.apolist{
 .account-login img{
     max-width:100%
 }
-.account-login .buttons-set-left{
-    border-bottom: 1px solid #ededed;	
+.account-login .buttons-set-left{	
     border-top:0px;
 }
-.account-login .col1{
+#login-form{
     padding-left:40px;
+}
+.new-users{
+    margin-top:40px;
+    border-top: 1px solid #ededed;
 }
