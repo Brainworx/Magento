@@ -137,6 +137,9 @@ li.apolist{
 .account-login img{
     max-width:100%
 }
+.account-create img{
+    max-width:100%
+}
 .account-login .buttons-set-left{	
     border-top:0px;
 }
@@ -146,4 +149,7 @@ li.apolist{
 .new-users{
     margin-top:40px;
     border-top: 1px solid #ededed;
+}
+.account-create .back-link{
+        margin-top: 20px;
 }
