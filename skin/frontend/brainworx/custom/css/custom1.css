@@ -134,3 +134,6 @@ li.apolist{
     margin-top:5px;
     min-width: 140px;
 }
+.account-login img{
+    max-width:100%
+}
