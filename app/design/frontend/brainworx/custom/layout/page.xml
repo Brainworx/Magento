@@ -123,7 +123,7 @@ SHE: added facebook sharing on top
                     <action method="setElementClass"><value>bottom-container</value></action>
                 </block>
                 <block type="page/switch" name="store_switcher" as="store_switcher" after="*" template="page/switch/stores.phtml"/>
-                <block type="page/template_links" name="footer_links" as="footer_links" template="page/template/links.phtml">
+                <block type="page/template_links" name="footer_links" as="footer_links" template="page/template/webshoplinks.phtml">
                     <action method="setTitle"><title>Webshop</title></action>
                 </block>
                 <block type="page/template_links" name="footer_links2" as="footer_links2" template="page/template/links.phtml">
