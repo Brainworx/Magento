@@ -3790,7 +3790,8 @@ a.skip-link {
   }
 
   #header-account a:hover {
-    color: #2B3990;
+    color: #2B3990; 
+    text-decoration: underline;
   }
 }
 /* -------------------------------------------- *
