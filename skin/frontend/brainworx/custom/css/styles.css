@@ -3473,7 +3473,7 @@ nav{
  * ============================================ */
 @media only screen and (min-width: 771px) {
   .nav-primary {
-    display: block;
+    display: flex; /*block;*/
     background-color: #F26522; 
     text-align	:	center;
   }
@@ -3496,7 +3496,7 @@ nav{
   position: relative;
 }
 .nav-primary li.level0 {
-  width : 14%;
+  /*width : 14%;*/
   min-width: 150px;
 }
 .nav-primary li.level1 a {
