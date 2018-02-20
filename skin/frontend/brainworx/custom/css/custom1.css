@@ -150,7 +150,8 @@ li.apolist{
     padding-left:40px;
 }
 .new-users{
-    margin-top:40px;
+    padding-top: 20px;
+    margin-top: 20px;
     border-top: 1px solid #ededed;
 }
 .account-create .back-link{
@@ -159,4 +160,7 @@ li.apolist{
 .password .back-link{
     margin-top: 20px;
     margin-bottom: 40px;
+}
+.registered-users h1{
+	margin-bottom:20px
 }
