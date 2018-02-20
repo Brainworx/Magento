@@ -491,7 +491,7 @@ table,
 textarea { 
   font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
   color: #636363;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
 }
 
@@ -2047,6 +2047,7 @@ span.weee {
 .std ul {
   list-style: disc outside;
   margin-bottom: 1.5em;
+  margin-left: 15px;
 }
 
 .std ul li {
@@ -3387,6 +3388,9 @@ a.skip-link {
 /* ============================================ *
  * Global Header Navigation
  * ============================================ */
+nav{
+    font-size:14px;
+}
 @media only screen and (max-width: 770px) {
   #header-account li a,
   .nav-primary a.level0 {
