@@ -4799,6 +4799,7 @@ p.product-name a:hover {
 .block-layered-nav dl dd ol > li > span, .block-layered-nav dl dd ol > li > a {
   padding: 5px 15px;
   display: block;
+  text-decoration: none;
 }
 .block-layered-nav dl dd ol > li > a .count {
   color: #a0a0a0;
