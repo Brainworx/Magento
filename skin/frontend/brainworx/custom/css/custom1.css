@@ -98,20 +98,14 @@ img.round{
 	text-decoration:underline;
 }
 .cms_content_grid{
-	display:flex;
+	display:block;
 }
 .cms_content_1{
-    width: 50%;
 }
-.cms_content_2{
-	padding-left: 5%;
-    width: 50%;
-	
+.cms_content_2{	
 }
 li.apolist{
-	font-size:13px;
 	list-style:none;
-	with:310px;
 }
 .link-left{
 	height:100px;
