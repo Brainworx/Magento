@@ -26,9 +26,9 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label for="email" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Email') ?></label>
+                    <label for="email" class="required"><em>*</em><?php echo Mage::helper('customer')->__('Email Address') ?></label>
                     <div class="input-box">
-                        <input name="email" id="email" title="<?php echo Mage::helper('contacts')->__('Email') ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserEmail()) ?>" class="input-text required-entry validate-email" type="email" autocapitalize="off" autocorrect="off" spellcheck="false" />
+                        <input name="email" id="email" title="<?php echo Mage::helper('customer')->__('Email Address') ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserEmail()) ?>" class="input-text required-entry validate-email" type="email" autocapitalize="off" autocorrect="off" spellcheck="false" />
                     </div>
                 </div>
             </li>
