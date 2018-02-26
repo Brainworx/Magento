@@ -729,7 +729,7 @@ body:not(.customer-account) .block:first-child .block-title {
   margin-right: 5px;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .sidebar .block:not(.block-layered-nav) {
     margin-bottom: 0;
   }
@@ -999,7 +999,7 @@ a.button:hover {
   color: #2B3990;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .col2-set .buttons-set .button,
   .col2-set .buttons-set .button2 {
     float: none;
@@ -1161,7 +1161,7 @@ a.button:hover {
   padding: 0 7px;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .breadcrumbs {
     display: none;
   }
@@ -1404,7 +1404,7 @@ a.button:hover {
     width: 25%;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .col-left,
   .col-right,
   .col-main,
@@ -1450,7 +1450,7 @@ a.button:hover {
   width: 50%;
   padding: 20px;
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .col2-set .col-1,
   .col2-set .col-2 {
     padding: 10px;
@@ -1489,7 +1489,7 @@ a.button:hover {
 /* -------------------------------------------- *
  * Top Container
  */
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .top-container {
     max-width: 1260px;
     margin: 0 auto;
@@ -1988,7 +1988,7 @@ span.weee {
   border: 1px solid #ededed;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   body .product-img-box .product-image:hover {
     border-color: #ededed;
   }
@@ -2315,7 +2315,7 @@ span.weee {
     display: none;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .col1-layout .sorter,
   .col1-layout .pager {
     width: 100%;
@@ -3165,7 +3165,7 @@ body {
 /* ============================================ *
  * Header
  * ============================================ */
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .page-header {
     max-width: 1260px;
     margin: 0 auto;
@@ -3234,7 +3234,7 @@ body {
   color: #e6e6e6;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .header-language-background {
     display: none;
   }
@@ -3265,7 +3265,7 @@ body {
   opacity: 0.8;
 }
 
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .logo {
     max-width: 300px;
     min-height: 90px;
@@ -3287,7 +3287,7 @@ body {
   border-bottom: 1px solid #EDEDED;
 }
 
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .skip-links {
     border: 0;
   }
@@ -3314,7 +3314,7 @@ a.skip-link {
   opacity: 0.8;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .skip-link {
     border-right: 1px solid #EDEDED;
   }
@@ -3331,7 +3331,7 @@ a.skip-link {
 /* -------------------------------------------- *
  * Skip Link - Active
  */
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .skip-link.skip-active {
     background: #EDEDED;
     color: inherit;
@@ -3391,7 +3391,7 @@ a.skip-link {
 nav{
     font-size:14px;
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   #header-account li a,
   .nav-primary a.level0 {
     padding: 0 15px 0 25px;
@@ -3418,7 +3418,7 @@ nav{
   bottom: 120px;
   right: 0px;
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .account-cart-wrapper {
     position: static;
   }
@@ -3450,7 +3450,7 @@ nav{
     width: 25%;
   }
 }
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .skip-nav {
     display: none;
   }
@@ -3458,12 +3458,12 @@ nav{
 /* ============================================ *
  * Nav - Skip Content
  * ============================================ */
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   #header-nav {
     padding: 5px 0;
   }
 }
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   #header-nav {
     display: block;
   }
@@ -3471,7 +3471,7 @@ nav{
 /* ============================================ *
  * Nav Primary
  * ============================================ */
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .nav-primary {
     display: flex; /*block;*/
     background-color: #F26522; 
@@ -3496,8 +3496,8 @@ nav{
   position: relative;
 }
 .nav-primary li.level0 {
-  /*width : 14%;*/
-  min-width: 150px;
+	width: 170px;
+  min-width: 110px;
 }
 .nav-primary li.level1 a {
   color:#2B3990;
@@ -3515,7 +3515,7 @@ nav{
 /* ============================================ *
  * Small Viewports - Accordion Style Menu
  * ============================================ */
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .nav-primary a.level0,
   .nav-primary a {
     line-height: 35px;
@@ -3568,7 +3568,7 @@ nav{
 /* ============================================ *
  * Large Viewports - Dropdown Menu
  * ============================================ */
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .nav-primary {
     /* Default styles for 1+ drop-down menus */
     /* Level 2+ */
@@ -3677,7 +3677,7 @@ nav{
   background-position: 4px -146px;
 }
 
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .skip-search {
     display: none;
   }
@@ -3689,7 +3689,7 @@ nav{
   padding: 20px;
 }
 
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   #header-search {
     display: block;
     position: absolute;
@@ -3764,7 +3764,7 @@ nav{
   background-position: 4px -44px;
 }
 
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .skip-account {
     float: none;
     width: auto;
@@ -3831,7 +3831,7 @@ nav{
   background-position: 0px -95px;
 }
 
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .skip-cart {
     width: auto;
     padding: 0 10px;
@@ -3885,7 +3885,7 @@ nav{
     margin-left: -12px;
   }
 }
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .skip-cart {
     text-transform: uppercase;
   }
@@ -4186,7 +4186,7 @@ nav{
     margin: 0 auto 30px auto;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .footer .form-language,
   .footer .currency-switcher {
     display: block;
@@ -4805,7 +4805,7 @@ p.product-name a:hover {
   color: #a0a0a0;
 }
 
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .block-layered-nav .block-content > dl > dt {
     padding-left: 10px;
   }
@@ -4813,7 +4813,7 @@ p.product-name a:hover {
     display: none;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .sidebar .block.block-layered-nav {
     border-bottom: none;
   }
@@ -5096,7 +5096,7 @@ p.product-name a:hover {
     font-size: 18px;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .product-view .add-to-cart-wrapper {
     float: none;
     width: 100%;
@@ -5399,7 +5399,7 @@ p.product-name a:hover {
   clear: both;
 }
 
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .product-collateral .toggle-tabs {
     display: block;
     width: 100%;
@@ -5465,7 +5465,7 @@ p.product-name a:hover {
     display: block;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .product-collateral .toggle-tabs {
     display: none;
   }
@@ -5567,7 +5567,7 @@ p.product-name a:hover {
     display: block;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .product-view .product-shop,
   .product-view .add-to-cart-wrapper,
   .product-view .block-related,
@@ -5579,7 +5579,7 @@ p.product-name a:hover {
     padding-left: 0;
   }
 }
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .product-view .product-shop .product-name {
     display: block;
   }
@@ -5953,7 +5953,7 @@ p.product-name a:hover {
   width: 450px;
   z-index: 100;
 }
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .map-popup.map-popup-right {
     left: 10px !important;
   }
@@ -5962,7 +5962,7 @@ p.product-name a:hover {
     right: 10px !important;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .map-popup {
     width: 100%;
     left: 0px !important;
@@ -6482,7 +6482,7 @@ p.product-name a:hover {
   padding-left: 15px;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .cart-table th {
     font-size: 12px;
   }
@@ -6730,7 +6730,7 @@ p.product-name a:hover {
   background-color: #dbdbdb;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .shipping .shipping-form .form-list > li {
     width: 100%;
     float: none;
@@ -6791,7 +6791,7 @@ p.product-name a:hover {
     text-align: right;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .cart .cart-totals table tfoot td {
     font-size: 18px;
   }
@@ -7087,7 +7087,7 @@ p.product-name a:hover {
   padding-top: 5px;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .opc #opc-login .description,
   .opc #opc-login p.required {
     display: none;
@@ -7454,7 +7454,7 @@ body:not(.opc-has-progressed-from-login) .opc.opc-firststep-login .section#opc-l
   margin-left: 200px;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .gift-message-form .giftmessage-area {
     max-width: 100%;
   }
@@ -7621,7 +7621,7 @@ body:not(.opc-has-progressed-from-login) .opc.opc-firststep-login .section#opc-l
   padding: 0;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   #narrow-by-list dd .configurable-swatch-list li:nth-child(odd) {
     clear: left;
   }
@@ -7744,7 +7744,7 @@ body:not(.opc-has-progressed-from-login) .opc.opc-firststep-login .section#opc-l
     border-left: 1px solid #ededed;
   }
 }
-@media only screen and (min-width: 770px) {
+@media only screen and (min-width: 1019px) {
   .customer-account-login .col2-set .col-1 {
     padding-right: 0;
   }
@@ -7762,7 +7762,7 @@ body:not(.opc-has-progressed-from-login) .opc.opc-firststep-login .section#opc-l
     border-top: 1px solid #ededed;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .customer-account-login .col2-set p.required {
     display: none;
   }
@@ -8053,7 +8053,7 @@ body.customer-account .sidebar .block-reorder ol#cart-sidebar-reorder p.product-
 .my-account .addresses-list .item p {
   margin-top: 10px;
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .my-account .addresses-list .col-1,
   .my-account .addresses-list .col-2 {
     width: 100%;
@@ -8242,7 +8242,7 @@ ol#cart-sidebar-reorder p.product-name {
     top: -12px;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   body.customer-account .data-table.orders th.ship,
   body.customer-account .data-table.orders td.ship,
   body.customer-account .data-table.orders td.status,
@@ -8411,7 +8411,7 @@ body.newsletter-manage-index .my-account .form-list {
 /* ============================================ *
  * PayPal
  * ============================================ */
-@media only screen and (max-width: 870px) and (min-width: 771px) {
+@media only screen and (max-width: 870px) and (min-width: 1020px) {
   .paypal-review-order .col2-set .col-1,
   .paypal-review-order .col2-set .col-2 {
     padding: 0px;
@@ -8430,7 +8430,7 @@ body.newsletter-manage-index .my-account .form-list {
 .paypal-review-order .buttons-set button {
   margin-bottom: 10px;
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .paypal-review-order .col-1 {
     padding-bottom: 0;
   }
@@ -8477,12 +8477,12 @@ body.newsletter-manage-index .my-account .form-list {
   margin: 0;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .bml-ad.small {
     display: block;
   }
 }
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .bml-ad.large {
     display: block;
   }
@@ -8746,7 +8746,7 @@ div.paypal-logo span > img {
   text-indent: -9999px;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   body.review-product-list .product-view .product-shop .price-info {
     padding-left: 0;
   }
@@ -8833,7 +8833,7 @@ div.paypal-logo span > img {
   width: 100%;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .review-product-view .product-review .product-img-box {
     max-width: 100%;
   }
@@ -9159,7 +9159,7 @@ div.paypal-logo span > img {
     font-size: 13px;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   #wishlist-table:after {
     content: '';
     display: table;
@@ -9300,7 +9300,7 @@ div.paypal-logo span > img {
 .header-minicart {
   display: inline-block;
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .header-minicart {
     display: block;
   }
@@ -9482,7 +9482,7 @@ div.paypal-logo span > img {
   display: block;
 }
 
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .checkout-types.minicart {
     float: none;
     text-align: center;
@@ -9493,7 +9493,7 @@ div.paypal-logo span > img {
     z-index: 1;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .header-minicart .subtotal .label {
     color: #636363;
   }
@@ -9685,7 +9685,7 @@ div.paypal-logo span > img {
   font-size: 13px;
 }
 
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .product-review .ratings-table tr {
     float: none;
   }
@@ -9870,7 +9870,7 @@ div.paypal-logo span > img {
   margin: 0;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   #contactForm {
     padding-left: 0;
   }
@@ -9933,7 +9933,7 @@ div.paypal-logo span > img {
     max-width: 86%;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .notice-cookie {
     padding: 0 20px;
   }
@@ -10015,7 +10015,7 @@ div.paypal-logo span > img {
   color: white;
 }
 
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   .tags-list > li,
   .tags-list {
     float: none;
@@ -10249,7 +10249,7 @@ body.customer-account .my-account .title-buttons.recurring-profiles-title-button
 .sidebar .widget-addbysku .sku-table .input-text:not(.qty) {
   width: 100%;
 }
-@media only screen and (min-width: 771px) {
+@media only screen and (min-width: 1020px) {
   .sidebar .widget-addbysku .sku-table .input-text:not(.qty) {
     max-width: 100px;
   }
@@ -10354,7 +10354,7 @@ body.customer-account .my-account .title-buttons.recurring-profiles-title-button
     margin-right: 0;
   }
 }
-@media only screen and (min-width: 770px) {
+@media only screen and (min-width: 1019px) {
   .col1-layout .col-main .widget {
     /* Config: Columns + flexible gutter */
     /* Undo three-column config */
@@ -10576,7 +10576,7 @@ body[class*="checkout-multishipping-"] #review-buttons-container {
     padding-left: 0;
   }
 }
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 1019px) {
   body[class*="checkout-multishipping-"] .checkout-progress span {
     width: 12px;
   }
