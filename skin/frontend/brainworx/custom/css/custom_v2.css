@@ -1,0 +1,163 @@
+@CHARSET "ISO-8859-1";
+div.homebar p{
+	width:116px;
+	color:#ffffff;
+	text-align:center;
+	position:absolute;
+	margin-left: 45%;
+	margin-top: -1px;
+	border-radius:  5px  5px  0px  0px;
+}
+div.homebar{
+	
+}
+div.homebar p.verhuur{	
+	background-color: #F26522; /*orange*/
+}
+div.homebar p.verkoop{
+	background-color: #2B3990; /*blue #2B3990 old 1E2D8A*/
+}div.floated_img.first{
+	margin-left:8%
+}
+.homebar {
+    /* Force visibility */
+    border-bottom: 1px solid #cccccc; /*##F26522 = orange -- 2B3990 = blue*/
+    position:relative;
+    height:1.4em;
+    font-size:1.4em;
+  }
+ .subcat-listing{
+	display: table;
+	width:100%;
+ }
+ .blok{	
+ }
+ div.slideshow-container p{
+ 	color : #2B3990;
+ 	font-size: 2em;
+ 	margin-top:15px;
+ 	font-family: "Trebuchet MS";
+ }
+.copyright {
+	border-top: 1px solid #cccccc;
+    color: #cccccc;
+    clear: both;
+    text-align:right;
+}
+span.highlight{
+	color:#F26522;
+}
+div.dnst-link a{
+	font-weight: bold;
+}
+div.dnst-link{
+	padding: 20px 0px 40px 15px;
+	border-top: 1px solid #cccccc;
+}
+div.dnst-link.last{	
+	border-bottom: 1px solid #cccccc;
+}
+.col-main-left{
+	float: left;
+    	width: 50%;
+    	margin-left: 25%;
+}
+.col-main-right{
+	float: left;
+	width: 25%;
+	margin-top:50px;
+	padding-left: 10px;
+}
+.dnst-link-left{
+	float: left;
+	width: 25%;
+}
+.dnst-link-right{
+	font-size: 16px;
+}
+img.round{
+	
+}
+.imgbox{
+    display: flex;
+    margin-bottom: 30px;
+}
+.imgwrap{
+    flex-basis: 183px;
+    flex: 1;
+    padding: 10px;
+}
+.col-main-leftsidebar{
+	float: left;
+    margin-left: -25%;
+    width: 25%;
+    position: absolute;
+    bottom: 0px;
+}
+.underline{
+	text-decoration:underline;
+}
+.cms_content_grid{
+	display:block;
+}
+.cms_content_1{
+}
+.cms_content_2{	
+}
+li.apolist{
+	list-style:none;
+}
+.link-left{
+	height:100px;
+	margin-bottom:15px
+}
+.logo-text{
+	padding-top:40px
+}
+.left{
+	float:left;
+}
+.buttons-set-left{
+    clear: both;
+    margin: 10px 0 0 20px;
+    padding-top: 10px;
+    border-top: 1px solid #ededed;
+}
+.buttons-set-left button.button {
+    margin-left: 5px;
+    margin-top:5px;
+    min-width: 140px;
+}
+.account-login img{
+    max-width:100%
+}
+.account-create img{
+    max-width:100%
+}
+.password img{
+    max-width:100%
+}
+.account-login .buttons-set-left{	
+    border-top:0px;
+}
+#login-form{
+    padding-left:40px;
+}
+.new-users{
+    padding-top: 20px;
+    margin-top: 20px;
+    border-top: 1px solid #ededed;
+}
+.account-create .back-link{
+        margin-top: 20px;
+}
+.password .back-link{
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+.registered-users h1{
+	margin-bottom:20px
+}
+.message-u-button{
+	margin: 20px 0px 20px 65px;
+}
