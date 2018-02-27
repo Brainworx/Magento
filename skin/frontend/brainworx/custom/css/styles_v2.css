@@ -3512,9 +3512,6 @@ nav{
 .nav-primary li.level0 > a {
   
 }
-.nav-primary li.view-all a:first-letter {
-  text-transform:uppercase;
-}
 
 /* ============================================ *
  * Small Viewports - Accordion Style Menu
@@ -3669,6 +3666,7 @@ nav{
 }
 
 .nav-primary li.view-all{
+   
 }
 
 /* ============================================ *
@@ -4249,7 +4247,6 @@ p.product-name {
   font-style: normal;
   line-height: 1.2;
   text-rendering: optimizeLegibility;
-  text-transform: uppercase;
   font-size: 13px;
   font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
   font-weight: normal;
@@ -4273,7 +4270,6 @@ p.product-name a:hover {
 
 .products-grid .product-name,
 .products-list .product-name {
-  text-transform: uppercase;
   margin-bottom: 5px;
   font-size: 14px;
   font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
@@ -4281,6 +4277,7 @@ p.product-name a:hover {
 .products-grid .product-name a,
 .products-list .product-name a {
   font-weight: 500;
+    text-decoration: none;
 }
 
 /* ============================================ *
