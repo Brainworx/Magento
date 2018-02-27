@@ -3512,6 +3512,9 @@ nav{
 .nav-primary li.level0 > a {
   
 }
+.nav-primary li.view-all a:first-letter {
+  text-transform:uppercase;
+}
 
 /* ============================================ *
  * Small Viewports - Accordion Style Menu
