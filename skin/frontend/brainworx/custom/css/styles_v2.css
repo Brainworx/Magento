@@ -3478,8 +3478,7 @@ nav{
     text-align	:	center;
   }
   .nav-primary li.level0 {
-	width: 170px;
-	}
+  }
 }
 /* ============================================ *
  * General Navigation Styles
@@ -3499,7 +3498,7 @@ nav{
   position: relative;
 }
 .nav-primary li.level0 {
-  min-width: 110px;
+  min-width: 150px;
 }
 .nav-primary li.level1 a {
   color:#2B3990;
