@@ -53,7 +53,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Invoicesview_Grid extends Mage_Adminh
         		'header'    => Mage::helper('hearedfrom')->__('InvoiceId'),
         		'align'     =>'left',
         		'type'  => 'text',
-         		'width' => '50px',
+         		'width' => '100px',
         		'index'     => 'Factuurnr',
         		'header_css_class'=>'a-left',
         ));
@@ -62,7 +62,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Invoicesview_Grid extends Mage_Adminh
         		'align'     =>'left',
         		'type'  => 'datetime',
         		'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
-         		'width' => '50px',
+         		'width' => '100px',
         		'index'     => 'Datum',
         		'header_css_class'=>'a-center',
         ));
@@ -205,9 +205,9 @@ class Brainworx_hearedfrom_Block_Adminhtml_Invoicesview_Grid extends Mage_Adminh
         ));
         
         //Add exort options on admin panel
-        $this->addExportType('*/*/exportCsv', Mage::helper('hearedfrom')->__('CSV'));
-        $this->addExportType('*/*/exportExcel', Mage::helper('hearedfrom')->__('Excel XML'));
+
         $this->addExportType('*/*/exportXml', Mage::helper('hearedfrom')->__('XML'));
+        $this->addExportType('*/*/exportCsv', Mage::helper('hearedfrom')->__('CSV'));
 		
         return parent::_prepareColumns();
     }    
