@@ -3478,8 +3478,7 @@ nav{
     text-align	:	center;
   }
   .nav-primary li.level0 {
-	width: 170px;
-	}
+  }
 }
 /* ============================================ *
  * General Navigation Styles
@@ -3499,7 +3498,7 @@ nav{
   position: relative;
 }
 .nav-primary li.level0 {
-  min-width: 110px;
+  min-width: 150px;
 }
 .nav-primary li.level1 a {
   color:#2B3990;
@@ -3667,6 +3666,7 @@ nav{
 }
 
 .nav-primary li.view-all{
+   
 }
 
 /* ============================================ *
@@ -4247,7 +4247,6 @@ p.product-name {
   font-style: normal;
   line-height: 1.2;
   text-rendering: optimizeLegibility;
-  text-transform: uppercase;
   font-size: 13px;
   font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
   font-weight: normal;
@@ -4271,14 +4270,14 @@ p.product-name a:hover {
 
 .products-grid .product-name,
 .products-list .product-name {
-  text-transform: uppercase;
   margin-bottom: 5px;
-  font-size: 14px;
+  font-size: 16px;
   font-family: "Trebuchet MS","Helvetica Neue", Verdana, Arial, sans-serif;
 }
 .products-grid .product-name a,
 .products-list .product-name a {
   font-weight: 500;
+    text-decoration: none;
 }
 
 /* ============================================ *
