@@ -78,7 +78,8 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Grid extends Mage_Adminhtm
 	            'align'     =>'center',
 	            'width'     => '50px',
 	            'index'     => 'create_dt',
-	        	'type'		=> 'date',
+	        	'type'		=> 'datetime',
+        		'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
         ));
  
         $this->addColumn('user_nm', array(
@@ -111,7 +112,8 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Grid extends Mage_Adminhtm
         	'header_css_class'=>'a-center',
             'align'     =>'center',
             'index'     => 'end_dt',
-        	'type'		=> 'date',
+        	'type'		=> 'datetime',
+        	'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
         ));
 				
         $this->addExportType('*/*/exportCsv', Mage::helper('rental')->__('CSV'));

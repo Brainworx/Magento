@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--app/design/adminhtml/default/custom/layout/salesforcestock.xml-->
+<layout>
+	<!--reference to your module/controller/action-->
+   <adminhtml_invoicesview_index>
+        <reference name="content">
+		<!--reference to block element in Block-->
+            <block type="hearedfrom/adminhtml_invoicesview" name="invoicesview" />
+        </reference>
+    </adminhtml_invoicesview_index>
+</layout>

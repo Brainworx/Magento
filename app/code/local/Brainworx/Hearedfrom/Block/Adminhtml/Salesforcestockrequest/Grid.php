@@ -98,7 +98,8 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforcestockrequest_Grid extends M
 	            'align'     =>'center',
 	            'width'     => '50px',
 	            'index'     => 'create_dt',
-	        	'type'		=> 'date',
+	        	'type'		=> 'datetime',
+        		'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
         ));
 				
         $this->addExportType('*/*/exportCsv', Mage::helper('hearedfrom')->__('CSV'));

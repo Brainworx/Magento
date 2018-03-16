@@ -149,7 +149,8 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         		'align'     =>'center',
         		'width'     => '50px',
         		'index'     => 'create_dt',
-        		'type'		=> 'date',
+        		'type'		=> 'datetime',
+        		'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
         		'filter_index'=>'main_table.create_dt'
         ));    
         

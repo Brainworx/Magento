@@ -104,7 +104,8 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforcestock_Grid extends Mage_Adm
 	            'align'     =>'center',
 	            'width'     => '50px',
 	            'index'     => 'create_dt',
-	        	'type'		=> 'date',
+	        	'type'		=> 'datetime',
+        		'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
         ));
         $this->addColumn('update_dt', array(
         		'header'    => Mage::helper('hearedfrom')->__('Updated'),
@@ -112,7 +113,8 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforcestock_Grid extends Mage_Adm
         		'align'     =>'center',
         		'width'     => '50px',
         		'index'     => 'update_dt',
-        		'type'		=> 'date',
+        		'type'		=> 'datetime',
+        		'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
         ));
         
         $this->addColumn('enabled', array(

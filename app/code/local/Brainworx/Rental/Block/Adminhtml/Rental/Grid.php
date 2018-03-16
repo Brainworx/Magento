@@ -172,7 +172,7 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
             'align'     =>'center',
             'width'     => '50px',
             'index'     => 'start_dt',
-        	'type'		=> 'date',
+        	'type'		=> 'datetime',
         ));
 		
         $this->addColumn('last_inv_dt', array(
@@ -180,7 +180,7 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
         	'header_css_class'=>'a-center',
             'align'     =>'center',
             'index'     => 'last_inv_dt',
-        	'type'		=> 'date',
+        	'type'		=> 'datetime',
         ));
 		
         $this->addColumn('end_dt', array(
@@ -188,7 +188,7 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
         	'header_css_class'=>'a-center',
             'align'     =>'center',
             'index'     => 'end_dt',
-        	'type'		=> 'date',
+        	'type'		=> 'datetime',
         ));
 				
         $this->addColumn('create_dt', array(
