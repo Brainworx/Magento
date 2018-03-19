@@ -130,29 +130,13 @@ class Brainworx_hearedfrom_Block_Adminhtml_Invoicesview_Grid extends Mage_Adminh
         		'width' => '25px',
         		'index'     => 'Btwnr',
         		'header_css_class'=>'a-left',
-        ));        
-        $this->addColumn('Subtotaal',array(
-        		'header'=> Mage::helper('hearedfrom')->__('Subtotal'),
+        ));      
+        $this->addColumn('Totaal_incl_Btw',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Total_vat_included'),
         		'header_css_class'=>'a-right',
         		'type'  => 'number',
         		'width' => '25px',
-        		'index' => 'Subtotaal',
-        		'filter'	=> false,
-        ));
-        $this->addColumn('Subtotaal_Verhuur',array(
-        		'header'=> Mage::helper('hearedfrom')->__('Subtotal_rental'),
-        		'header_css_class'=>'a-right',
-        		'type'  => 'number',
-        		'width' => '25px',
-        		'index' => 'Subtotaal_Verhuur',
-        		'filter'	=> false,
-        ));
-        $this->addColumn('Subtotaal_Verkoop',array(
-        		'header'=> Mage::helper('hearedfrom')->__('Subtotal_sale'),
-        		'header_css_class'=>'a-right',
-        		'type'  => 'number',
-        		'width' => '25px',
-        		'index' => 'Subtotaal_Verkoop',
+        		'index' => 'Totaal_incl_Btw',
         		'filter'	=> false,
         ));
         $this->addColumn('Totaal_Btw',array(
@@ -163,20 +147,12 @@ class Brainworx_hearedfrom_Block_Adminhtml_Invoicesview_Grid extends Mage_Adminh
         		'index' => 'Totaal_Btw',
         		'filter'	=> false,
         ));
-        $this->addColumn('Btw6',array(
-        		'header'=> Mage::helper('hearedfrom')->__('Vat_6%'),
+        $this->addColumn('Subtotaal',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Subtotal'),
         		'header_css_class'=>'a-right',
         		'type'  => 'number',
         		'width' => '25px',
-        		'index' => 'Btw6',
-        		'filter'	=> false,
-        ));
-        $this->addColumn('Btw21',array(
-        		'header'=> Mage::helper('hearedfrom')->__('Vat_21%'),
-        		'header_css_class'=>'a-right',
-        		'type'  => 'number',
-        		'width' => '25px',
-        		'index' => 'Btw21',
+        		'index' => 'Subtotaal',
         		'filter'	=> false,
         ));
         $this->addColumn('Verzendkosten',array(
@@ -187,12 +163,60 @@ class Brainworx_hearedfrom_Block_Adminhtml_Invoicesview_Grid extends Mage_Adminh
         		'index' => 'Verzendkosten',
         		'filter'	=> false,
         ));
-        $this->addColumn('Totaal_incl_Btw',array(
-        		'header'=> Mage::helper('hearedfrom')->__('Total_vat_included'),
+        $this->addColumn('Btw_verzendkosten',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Btw Verzendkosten'),
         		'header_css_class'=>'a-right',
         		'type'  => 'number',
         		'width' => '25px',
-        		'index' => 'Totaal_incl_Btw',
+        		'index' => 'Btw_verzendkosten',
+        		'filter'	=> false,
+        ));        
+        $this->addColumn('Subtotaal_Verhuur',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Subtotal_rental'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Subtotaal_Verhuur',
+        		'filter'	=> false,
+        ));
+        $this->addColumn('Btw6_verhuur',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Vat_6% Rental'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Btw6_verhuur',
+        		'filter'	=> false,
+        ));
+        $this->addColumn('Btw21_verhuu',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Vat_21% Rental'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Btw21_verhuur',
+        		'filter'	=> false,
+        ));
+        $this->addColumn('Subtotaal_Verkoop',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Subtotal_sale'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Subtotaal_Verkoop',
+        		'filter'	=> false,
+        ));
+        $this->addColumn('Btw6_verkoop',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Vat_6% Sale'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Btw6_verkoop',
+        		'filter'	=> false,
+        ));
+        $this->addColumn('Btw21_verkoop',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Vat_21% Sale'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Btw21_verkoop',
         		'filter'	=> false,
         ));
         $this->addColumn('ogm',array(
