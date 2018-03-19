@@ -182,7 +182,6 @@ class Brainworx_Hearedfrom_Model_Observer
 		}	
 		
 	}
-	
 	/**
 	 * Hook to sales_order_invoice_register
 	 *
@@ -198,7 +197,36 @@ class Brainworx_Hearedfrom_Model_Observer
 			//Mage::Log('sales_order_invoice_register');
 			
 			$invoice = $observer->getEvent()->getInvoice();
+			
 			$order = $observer->getEvent()->getOrder();
+			
+			//Add ogm to invoice
+			$ogm = date("yz");
+			$digits = strlen($ogm+"");
+			while ($digits < 5){
+				$ogm = "0".$ogm;
+				$digits++;
+			}
+			$digits = 0;
+			$oid = $order->getEntityId();
+			$digits = strlen($oid+"");
+			if ($digits > 5){
+				$oid = substr($oid,$digits-5);
+			}
+			$ogm = $ogm.$oid;
+			$digits = 0;
+			$check = $ogm%97;
+			if($check == 0 ){
+				$check = 97;
+			}
+			$digits = strlen($ogm+"");
+			while ($digits < 10){
+				$ogm = "0".$ogm;
+				$digits++;
+			}
+			$ogm = $ogm.$check;
+			$fogm = '+++'.substr($ogm,0,3).'/'.substr($ogm,3,4).'/'.substr($ogm,7).'+++';
+			$invoice->setOgm($fogm);
 			
 			$invitems = $invoice->getItemsCollection();
 			
