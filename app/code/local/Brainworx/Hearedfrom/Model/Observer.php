@@ -202,11 +202,6 @@ class Brainworx_Hearedfrom_Model_Observer
 			
 			//Add ogm to invoice
 			$ogm = date("yz");
-			$digits = strlen($ogm+"");
-			while ($digits < 5){
-				$ogm = "0".$ogm;
-				$digits++;
-			}
 			$digits = 0;
 			$oid = $order->getEntityId();
 			$digits = strlen($oid+"");
@@ -218,13 +213,17 @@ class Brainworx_Hearedfrom_Model_Observer
 			$check = $ogm%97;
 			if($check == 0 ){
 				$check = 97;
-			}
+			}			
 			$digits = strlen($ogm+"");
 			while ($digits < 10){
 				$ogm = "0".$ogm;
 				$digits++;
 			}
-			$ogm = $ogm.$check;
+			if($check < 10){
+				$ogm = $ogm."0".$check;
+			}else{
+				$ogm = $ogm.$check;
+			}
 			$fogm = '+++'.substr($ogm,0,3).'/'.substr($ogm,3,4).'/'.substr($ogm,7).'+++';
 			$invoice->setOgm($fogm);
 			
