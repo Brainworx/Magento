@@ -38,7 +38,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 						||  $orderModel->getShippingMethod()=='specialrate_flatrate'
 						||  $orderModel->getShippingMethod()=='specialrate_free'
 						||  $orderModel->getShippingMethod()=='flatrate_flatrate'
-						|| $orderModel->getShippingInclTax()>0){ //from earlier orders flatrate_flatrate can be found with shipping cost so pickup required
+						|| $orderModel->getShippingInclTax()>0){ //from other rates or earlier orders flatrate_flatrate can be found with shipping cost so pickup required
 					//check seller 
 					$seller = Mage::getModel('hearedfrom/salesSeller')->loadByOrderId($orderModel->getIncrementId());
 					if(isset($seller) && $seller != false && in_array($seller['user_id'],$specialsellerids)){
