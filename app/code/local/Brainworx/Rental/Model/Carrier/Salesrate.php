@@ -47,7 +47,7 @@ class Brainworx_Rental_Model_Carrier_Salesrate
      */
     public function collectRates(Mage_Shipping_Model_Rate_Request $request)
     {
-    	if(!Mage::getSingleton('core/session')->getVaphOrder()){
+    	if(Mage::getSingleton('core/session')->getVaphOrder()){
     		return false;
     	}
     	$allowed = true;
