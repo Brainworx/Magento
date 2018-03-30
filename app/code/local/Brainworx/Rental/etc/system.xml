@@ -176,14 +176,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </price>
-                        <availableifexclusivecat translate="label">
-                            <label>Available if product only from category (komma separated cat-id's)</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>8</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </availableifexclusivecat>
+                        
                         <!--
                             The sort order is used in Magento
                             to determine what order the carrier

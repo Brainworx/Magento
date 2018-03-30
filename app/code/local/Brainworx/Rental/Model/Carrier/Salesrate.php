@@ -47,25 +47,20 @@ class Brainworx_Rental_Model_Carrier_Salesrate
      */
     public function collectRates(Mage_Shipping_Model_Rate_Request $request)
     {
+    	if(!Mage::getSingleton('core/session')->getVaphOrder()){
+    		return false;
+    	}
     	$allowed = true;
-    	$cats_special_shipping = $this->getConfigData('availableifexclusivecat');
-    	
-    	if (!empty($cats_special_shipping) && Mage::getSingleton('customer/session')->isLoggedIn()) {
-    		$cats = explode(',',$cats_special_shipping);
+    	$catrental = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
+    	 
+    	if (!empty($catrental) && Mage::getSingleton('customer/session')->isLoggedIn()) {
     		// Load the customer's data
     		$items = $request->getAllItems();
-    		$found = 0;
     		foreach($items as $item){
-    			$found=0;
-    			foreach($cats as $cat){
-	    			if(in_array($cat,$item->getProduct()->getCategoryIds())){
-						$found = 1;
-					}
-    			}
-    			if($found == 0){
-    				$allowed = false;
-    				break;
-    			}
+	    		if(in_array($catrental,$item->getProduct()->getCategoryIds())){
+					$allowed = false;
+					break;
+				}    			
     		}
     	}
         if (!$allowed || !$this->getConfigFlag('active')) {
