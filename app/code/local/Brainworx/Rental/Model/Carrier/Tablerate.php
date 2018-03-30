@@ -80,11 +80,16 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
     	$allowed = false;
     	
     	$catrental = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
-    	 
+    	$skus = explode(',',$this->getConfigData('extraskus'));
+    	$chargeextra = false;
+    	
     	if (!empty($catrental) && Mage::getSingleton('customer/session')->isLoggedIn()) {
     		// Load the customer's data
     		$items = $request->getAllItems();
     		foreach($items as $item){
+    			if(!empty($skus)&&in_array($item->getSku(),$skus)){
+    				$chargeextra = true;
+    			}
 	    		if(in_array($catrental,$item->getProduct()->getCategoryIds())){
 					$allowed = true;
 					break;
@@ -174,6 +179,9 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
             } else {
                 $shippingPrice = $this->getFinalPriceWithHandlingFee($rate['price']);
             }
+            if($chargeextra){
+            	$shippingPrice += $this->getConfigData('extraskuprice');
+            }
 
             $method->setPrice($shippingPrice);
             $method->setCost($rate['cost']);
@@ -232,7 +240,11 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
 		         
 		        $method->setMethod('express');
 		        $method->setMethodTitle($this->getConfigData('expresstitle'));
-		        $method->setPrice($this->getConfigData('expressprice'));
+		        $shippingPrice = $this->getConfigData('expressprice');
+		        if($chargeextra){
+		        	$shippingPrice += $this->getConfigData('extraskuprice');
+		        }
+		        $method->setPrice($shippingPrice);
 		        $method->setCost(0);
 		         
 		        $result->append($method);
@@ -247,7 +259,11 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
         		 
         	$method->setMethod('weekend');
         	$method->setMethodTitle($this->getConfigData('weekendtitle'));
-        	$method->setPrice($this->getConfigData('weekendprice'));
+        	$shippingPrice = $this->getConfigData('weekendprice');
+        	if($chargeextra){
+        		$shippingPrice += $this->getConfigData('extraskuprice');
+        	}
+        	$method->setPrice($shippingPrice);
         	$method->setCost(0);
         		 
         	$result->append($method);
