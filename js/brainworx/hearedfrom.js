@@ -40,7 +40,7 @@ $j(function() {
 	     	minDate: (new Date().getHours()<15?1:2), dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
-	       		return [day == 0,''];
+	       		return [day == 6,''];
 	       		},
 	       	onSelect: function(dateText, inst) {
 	       		$j("#s_method_tablerate_weekend").prop('checked', true);
