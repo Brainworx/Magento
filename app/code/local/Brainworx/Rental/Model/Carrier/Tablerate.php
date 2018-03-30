@@ -92,7 +92,6 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
     			}
 	    		if(in_array($catrental,$item->getProduct()->getCategoryIds())){
 					$allowed = true;
-					break;
 				}    			
     		}
     	}
