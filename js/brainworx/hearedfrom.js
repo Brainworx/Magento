@@ -23,6 +23,7 @@ $j(function() {
 		
 		//set default
 		$j("#s_method_tablerate_bestway").prop('checked', true);
+		$j("#s_method_salesrate_flatrate").prop('checked', true);
 
 		/*standard= +2werkdagen + voor 15u + niet op zat of zon*/
 		$j("#tablerate_bestway_deldate" ).datepicker({ 
@@ -48,7 +49,7 @@ $j(function() {
 		$j("#tablerate_weekend_deldate").prop('readonly', true);
 		/*pickup = next day, not sunday*/
 		$j( "#freeshipping_freeshipping_deldate" ).datepicker({ 
-	     	minDate: 1, dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	     	minDate: (new Date().getHours()<15?0:1), dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
 	       		return [day != 0,''];
@@ -57,6 +58,17 @@ $j(function() {
 	       		$j("#s_method_freeshipping_freeshipping").prop('checked', true);
 	    }});
 		$j("#freeshipping_freeshipping_deldate").prop('readonly', true);
+		/*sales delivery any day*/
+		$j("#salesrate_flatrate_deldate" ).datepicker({ 
+	     	minDate: (new Date().getHours()<15?2:3), dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	      	beforeShowDay: function(date) {
+	      		var day = date.getDay();
+	       		return [day != 0,''];
+	       		},
+	       	onSelect: function(dateText, inst) {
+	       		$j("#s_method_salesrate_flatrate").prop('checked', true);
+	    }});
+		$j("#salesrate_flatrate_deldate").prop('readonly', true);
 	});
   });
  function setuphearedfrom(){

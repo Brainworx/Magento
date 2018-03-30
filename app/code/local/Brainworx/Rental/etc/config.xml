@@ -267,6 +267,13 @@
                 <name>Tarief</name>
                 <title>Speciaal - Bezorging aan huis</title>
             </specialrate>
+             <salesrate>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>rental/carrier_salesrate</model>
+                <name>Standaard</name>
+                <title>Bezorging aan huis</title>
+            </salesrate>
         </carriers>
 	</default>
 	 <adminhtml>

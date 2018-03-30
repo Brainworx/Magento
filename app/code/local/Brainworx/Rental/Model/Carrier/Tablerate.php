@@ -77,9 +77,23 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
      */
     public function collectRates(Mage_Shipping_Model_Rate_Request $request)
     {
-        if (!$this->getConfigFlag('active')) {
-            return false;
-        }
+    	$allowed = false;
+    	
+    	$catrental = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
+    	 
+    	if (!empty($catrental) && Mage::getSingleton('customer/session')->isLoggedIn()) {
+    		// Load the customer's data
+    		$items = $request->getAllItems();
+    		foreach($items as $item){
+	    		if(in_array($catrental,$item->getProduct()->getCategoryIds())){
+					$allowed = true;
+					break;
+				}    			
+    		}
+    	}
+    	if (!$allowed || !$this->getConfigFlag('active')) {
+    		return false;
+    	}
 
         // exclude Virtual products price from Package value if pre-configured
         if (!$this->getConfigFlag('include_virtual_price') && $request->getAllItems()) {
