@@ -20,8 +20,8 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
     <dl class="sp-methods">
     <?php $shippingCodePrice = array(); ?>
     <?php $_sole = count($_shippingRateGroups) == 1; foreach ($_shippingRateGroups as $code => $_rates): ?>
-        <dt><?php if($code == "freeshipping" && !$pickup){continue;} 
-        	else if($code == "tablerate" && !$delivery){continue;}
+        <dt><?php if($code == "freeshipping" && !$pickup ){continue;} 
+        	else if($code == "tablerate" &&!$delivery ){continue;}
         	else echo $this->escapeHtml($this->getCarrierName($code)); ?></dt>
         <dd>
             <ul>
@@ -45,27 +45,46 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
                         <?php endif; ?>
 
                         <?php endif; ?>
-                        <label for="s_method_<?php echo $_rate->getCode() ?>"><?php echo $this->escapeHtml($_rate->getMethodTitle()) ?>
+                        <label id="lb_<?php echo $_rate->getCode() ?>" for="s_method_<?php echo $_rate->getCode() ?>">
                         <?php $_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()); ?>
                         <?php $_incl = $this->getShippingPrice($_rate->getPrice(), true); ?>
                         <?php echo $_excl; ?>
                         <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
                             (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
                         <?php endif; ?>
+                        <?php echo $this->escapeHtml($_rate->getMethodTitle()) ?>
+                         <?php if ($_rate->getCode() === "tablerate_bestway" || $_rate->getCode() === "tablerate_weekend"): ?>
+                       		<?php echo $this->__('Select a delivery date:') ?>
+                       		<input class="tsmall labeldt" type="text" name="<?php echo $_rate->getCode() ?>_delrange" id="<?php echo $_rate->getCode() ?>_deldate" value="" required="true"/>  
+                         <?php elseif ($_rate->getCode() === "tablerate_express"): ?>
+                       		<?php echo $this->__('Delivery date:') ?>
+                       		<input class="tsmall labeldt" type="text" name="<?php echo $_rate->getCode() ?>_delrange" id="<?php echo $_rate->getCode() ?>_deldate" value="" required="true"/> 
+                        <?php elseif ($_rate->getCode() === "freeshipping_freeshipping" && !$this->getVaphOrder()): ?>
+                       		<?php echo $this->__('Delivery date:') ?>
+                       		<input class="tsmall labeldt" type="text" name="<?php echo $_rate->getCode() ?>_delrange" id="<?php echo $_rate->getCode() ?>_deldate" value="" required="true"/> 
+                       
+                        <?php endif; ?>                       
                         </label>
                    <?php endif ?>
                 </li>
             <?php endforeach; ?>
             </ul>
         </dd>
+        
+        <?php if ($code == "tablerate" && $delivery): ?>
+     <div><p class="shipmentinfo">
+     <?php echo $this->__('Deze transportprijs betaalt u eenmalig en omvat: levering en installatie, ophaling en professionele reiniging en een snelle hersteldienst. Met uitzondering van onze AD matras.') ?>
+    </p></div>
+     <?php endif; ?>
     <?php endforeach; ?>
     </dl>
+    
+     
 <script type="text/javascript">
 //<![CDATA[
     <?php if (!empty($shippingCodePrice)): ?>
         var shippingCodePrice = {<?php echo implode(',',$shippingCodePrice); ?>};
     <?php endif; ?>
-
     $$('input[type="radio"][name="shipping_method"]').each(function(el){
         Event.observe(el, 'click', function(){
             if (el.checked == true) {

@@ -234,6 +234,17 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 
                 $result['goto_section'] = 'hearedfrom';
     		}
+    		
+    		//preferred delivery date is selected from datepicker
+    		//$_preferred_delivery_date = $this->getRequest()->getPost('pddate');
+    		//delivery before is the date generated after picking or 24hrs or within 3 days
+    		$method = $this->getRequest()->getPost('shipping_method');
+    		if(!empty($method))
+    			$_delivery_before = $this->getRequest()->getPost($method.'_delrange');
+    		//set preferred delivery day with selection as made in radio buttons
+    		Mage::getSingleton('core/session')->setPreferredDeliveryDate($_delivery_before);
+    		Mage::getSingleton('core/session')->setDeliveryBefore($_delivery_before);
+    		
     		$this->getOnepage()->getQuote()->collectTotals()->save();
     		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
     	}
@@ -305,23 +316,17 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
         	if($_brainworx_hearedfrom == Mage::helper('checkout')->__('Select')){
         		$_brainworx_hearedfrom = "Zorgpunt";
         	}
-        	//preferred delivery date is selected from datepicker
-        	//$_preferred_delivery_date = $this->getRequest()->getPost('pddate');
-        	//delivery before is the date generated after picking or 24hrs or within 3 days
-        	$_delivery_before = $this->getRequest()->getPost('delrange');
         	
         	//for VAPH optional input
         	$_vaph_nr = $this->getRequest()->getPost('vaph_doc_nr');
         	Mage::getSingleton('core/session')->setVaphDocNr($_vaph_nr);
         	
-        	//set preferred delivery day with selection as made in radio buttons
-        	Mage::getSingleton('core/session')->setPreferredDeliveryDate($_delivery_before);
-        	Mage::getSingleton('core/session')->setDeliveryBefore($_delivery_before);
         	$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
         	//Add the seller and comment to the session
         	$seller = Mage::getModel("hearedfrom/salesForce")->loadByUsername($_brainworx_hearedfrom);
 			Mage::getSingleton('core/session')->setBrainworxHearedfrom($seller);
 			$cmt = false;
+			$_delivery_before = Mage::getSingleton('core/session')->getDeliveryBefore();
 			if(empty($_vaph_nr)){				
 				if(!empty($_delivery_before)){
 					if(!empty($_comment_tozorgpunt)){

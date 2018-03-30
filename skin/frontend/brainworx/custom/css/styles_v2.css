@@ -2638,6 +2638,9 @@ textarea {
 .input-text.validation-failed {
   border-color: #df280a;
 }
+input.validation-failed {
+  border-color: #df280a;
+}
 
 .input-text.validation-failed:focus {
   outline-color: #ef9384;
@@ -2808,6 +2811,13 @@ p.required,
   float: none;
   padding: 6px 10px 6px 40px;
   margin-bottom: 5px;
+}
+.form-list .control label.validation-failed,
+.sp-methods dt label.validation-failed,
+#checkout-shipping-method-load .sp-methods dd label.validation-failed,
+#co-shipping-method-form .sp-methods dd label.validation-failed,
+.product-options ul.options-list label.validation-failed{
+	color: red;
 }
 
 .form-list .control label:hover,
@@ -10648,6 +10658,9 @@ img.cat_img
 input.tsmall{
 	width: 150px;
 }
+input.labeldt{
+	height: 20px;
+}
 /* ============================================ *
  * style to add circular images on homepage
  * ============================================ */
@@ -10704,4 +10717,8 @@ input.tsmall{
 }
 input.input-number-small{
 	width:10%;
+}
+p.shipmentinfo{
+	font-size: 14px;
+}
 }
