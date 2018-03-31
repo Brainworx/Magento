@@ -49,7 +49,7 @@ $j(function() {
 		$j("#tablerate_weekend_deldate").prop('readonly', true);
 		/*pickup = next day, not sunday*/
 		$j( "#freeshipping_freeshipping_deldate" ).datepicker({ 
-	     	minDate: (new Date().getHours()<15?0:1), dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	     	minDate: 0, dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
 	       		return [day != 0,''];

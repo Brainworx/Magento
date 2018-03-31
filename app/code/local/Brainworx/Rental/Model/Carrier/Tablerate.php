@@ -220,34 +220,23 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
 
         //add express 
         if($this->getConfigFlag('expressoption')){
-        	$endtime_cfg = $this->getConfigData('expressoptiontime');
-        	$customers = explode(',',$this->getConfigData('expresscust'));
-        	$customerData = Mage::getSingleton('customer/session')->getCustomer();
-        	$cust_id= $customerData->getId();
-        	
-        	$date = new DateTime('now', new DateTimeZone('Europe/Brussels'));
- 			$currenthour = $date->format('H:i:s');
- 			$endtime = strtotime(str_replace(',', ':', $endtime_cfg));
- 			$currenttime = strtotime($currenthour);
- 			Mage::log('Can I set express option at '.$currenthour.' possible until '.$endtime_cfg. ':'.($currenttime<$endtime)?'Y':'N');
-	       
-	        if(in_array($cust_id,$customers) || $currenttime<$endtime){
-		        $method = $this->_getModel('shipping/rate_result_method');
-		         
-		        $method->setCarrier('tablerate');
-		        $method->setCarrierTitle($this->getConfigData('title'));
-		         
-		        $method->setMethod('express');
-		        $method->setMethodTitle($this->getConfigData('expresstitle'));
-		        $shippingPrice = $this->getConfigData('expressprice');
-		        if($chargeextra){
-		        	$shippingPrice += $this->getConfigData('extraskuprice');
-		        }
-		        $method->setPrice($shippingPrice);
-		        $method->setCost(0);
-		         
-		        $result->append($method);
+ 
+	        $method = $this->_getModel('shipping/rate_result_method');
+	         
+	        $method->setCarrier('tablerate');
+	        $method->setCarrierTitle($this->getConfigData('title'));
+	         
+	        $method->setMethod('express');
+	        $method->setMethodTitle($this->getConfigData('expresstitle'));
+	        $shippingPrice = $this->getConfigData('expressprice');
+	        if($chargeextra){
+	        	$shippingPrice += $this->getConfigData('extraskuprice');
 	        }
+	        $method->setPrice($shippingPrice);
+	        $method->setCost(0);
+	         
+	        $result->append($method);
+	      
         }
         //add weekend
         if($this->getConfigFlag('weekendoption')){
