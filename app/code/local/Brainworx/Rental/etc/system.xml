@@ -368,14 +368,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </expressoption>
-                         <expressoptiontime translate="label comment">
-                            <label>Express available untill Time</label>
-                            <frontend_type>time</frontend_type>
-                            <sort_order>62</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </expressoptiontime>
                         <expresstitle translate="label">
                             <label>Express option title</label>
                             <frontend_type>text</frontend_type>                            
@@ -393,14 +385,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </expressprice>
-                        <expresscust translate="label">
-                            <label>Customer nr without express time restrition</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>65</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </expresscust>
                          <weekendoption translate="label">
                             <label>Weekend option (saturday)</label>
                             <frontend_type>select</frontend_type>
