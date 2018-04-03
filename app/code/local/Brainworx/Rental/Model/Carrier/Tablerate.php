@@ -83,16 +83,16 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
     	$skus = explode(',',$this->getConfigData('extraskus'));
     	$chargeextra = false;
     	
-    	if (!empty($catrental) && Mage::getSingleton('customer/session')->isLoggedIn()) {
-    		// Load the customer's data
+    	if (!empty($catrental)) {
+    		// Load items, check extra rate for specific sku + allow option only for rental
     		$items = $request->getAllItems();
     		foreach($items as $item){
     			if(!empty($skus)&&in_array($item->getSku(),$skus)){
     				$chargeextra = true;
     			}
 	    		if(in_array($catrental,$item->getProduct()->getCategoryIds())){
-					$allowed = true;
-				}    			
+				$allowed = true;
+			}    			
     		}
     	}
     	if (!$allowed || !$this->getConfigFlag('active')) {
