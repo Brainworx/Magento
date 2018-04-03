@@ -53,8 +53,8 @@ class Brainworx_Rental_Model_Carrier_Salesrate
     	$allowed = true;
     	$catrental = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
     	 
-    	if (!empty($catrental) && Mage::getSingleton('customer/session')->isLoggedIn()) {
-    		// Load the customer's data
+    	if (!empty($catrental)) {
+    		// check items for rental - if 1 rental in basket --> salesrate not allowed
     		$items = $request->getAllItems();
     		foreach($items as $item){
 	    		if(in_array($catrental,$item->getProduct()->getCategoryIds())){
