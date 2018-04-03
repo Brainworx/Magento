@@ -148,7 +148,8 @@ $j(function() {
 	 $j('input:radio[name=shipping_method]').each(function(){
 		 $j('#lb_'+$j(this).val()).removeClass("validation-failed");
 	 });
-	 if($j('#vaph_order_id').val()==1 || $j('#'+$j('input:radio[name=shipping_method]:checked').val()+'_deldate').val().length>0){
+	 if($j('#vaph_order_id').val()==1 || 
+	    typeof $j('#'+$j('input:radio[name=shipping_method]:checked').val()+'_deldate').val() == 'undefined' || $j('#'+$j('input:radio[name=shipping_method]:checked').val()+'_deldate').val().length>0){
 		 shippingMethod.save();
 	 }else{
 		 $j('#'+$j('input:radio[name=shipping_method]:checked').val()+'_deldate').addClass("validation-failed");
