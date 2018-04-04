@@ -74,8 +74,11 @@ class Brainworx_Hearedfrom_Model_Observer
 		$shippinglist = array();
 		//$order->getShippingInclTax()>0
 		if(  $order->getShippingMethod()=='tablerate_bestway'
+				||  $order->getShippingMethod()=='tablerate_express'
+				||  $order->getShippingMethod()=='tablerate_weekend'
 				||  $order->getShippingMethod()=='specialrate_flatrate'
-				||  $order->getShippingMethod()=='specialrate_free'
+				||  $order->getShippingMethod()=='specialrate_free'				
+				||  $order->getShippingMethod()=='salesrate_flatrate'	
 				||  $order->getShippingMethod()=='flatrate_flatrate'){
 			//need to create excel to send to external delivery party
 			$delivery_to_report = true;
@@ -374,8 +377,11 @@ class Brainworx_Hearedfrom_Model_Observer
 			$order = $observer->getEvent()->getOrder();
 			
 			if($order->getShippingMethod()=='tablerate_bestway'
+					||  $order->getShippingMethod()=='tablerate_express'
+					||  $order->getShippingMethod()=='tablerate_weekend'
 					||  $order->getShippingMethod()=='specialrate_flatrate'
-					||  $order->getShippingMethod()=='specialrate_free'
+					||  $order->getShippingMethod()=='specialrate_free'				
+					||  $order->getShippingMethod()=='salesrate_flatrate'	
 					||  $order->getShippingMethod()=='flatrate_flatrate'
 					||  $order->getShippingInclTax()>0){
 				Mage::log("items delivered at home so never stockupdate. ".$order->getIncrementId());

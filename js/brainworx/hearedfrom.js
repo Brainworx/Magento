@@ -19,7 +19,7 @@ $j(function() {
 		/*express*/
 		$j("#tablerate_express_deldate").val(dateToText(determineDeliveryDay(new Date().getHours()<15?1:2)));
 		$j("#tablerate_express_deldate").prop('readonly', true);
-		$j("#tablerate_express_deldate").prop('disabled', true);	
+		//$j("#tablerate_express_deldate").prop('disabled', true);	
 		
 		//set default
 		$j("#s_method_tablerate_bestway").prop('checked', true);

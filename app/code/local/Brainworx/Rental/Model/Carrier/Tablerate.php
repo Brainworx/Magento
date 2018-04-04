@@ -332,7 +332,7 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
      */
     public function getAllowedMethods()
     {
-        return array('bestway' => $this->getConfigData('name'));
+        return array('bestway' => $this->getConfigData('name'),'express' => $this->getConfigData('name'),'weekend' => $this->getConfigData('name'));
     }
 
 }
