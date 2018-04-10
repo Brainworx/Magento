@@ -17,7 +17,7 @@ $j(function() {
 	$j('#checkout-shipping-method-load').change(function(changes, observer) {
 		
 		/*express*/
-		$j("#tablerate_express_deldate").val(dateToText(determineDeliveryDay(new Date().getHours()<15?1:2)));
+		$j("#tablerate_express_deldate").val(dateToText(determineExpressDeliveryDay()));
 		$j("#tablerate_express_deldate").prop('readonly', true);
 		//$j("#tablerate_express_deldate").prop('disabled', true);	
 		
@@ -27,7 +27,8 @@ $j(function() {
 
 		/*standard= +2werkdagen + voor 15u + niet op zat of zon*/
 		$j("#tablerate_bestway_deldate" ).datepicker({ 
-	     	minDate: (new Date().getHours()<15?2:3), dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	     	minDate: determineMinDaysNormal(),
+	     	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
 	       		return [day != 0 && day !=6,''];
@@ -60,7 +61,8 @@ $j(function() {
 		$j("#freeshipping_freeshipping_deldate").prop('readonly', true);
 		/*sales delivery any day*/
 		$j("#salesrate_flatrate_deldate" ).datepicker({ 
-	     	minDate: (new Date().getHours()<15?2:3), dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+			minDate:determineMinDaysNormal(),
+	     	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
 	       		return [day != 0,''];
@@ -86,14 +88,26 @@ $j(function() {
   * @param nrdays
   * @returns {Date}
   */
- function determineDeliveryDay(nrdays){
+ function determineExpressDeliveryDay(){
 	 var dt = new Date();
 	 var day = dt.getDay();
-	 if(nrdays < 6 && dt.getDay()>(6-nrdays)){
-		 nrdays++;
-	 }
+	 var hour = dt.getHours();
+	 var nrdays = day==0?2:day==6?3:day==5?(hour<15?3:4):			
+					day==4?(hour<15?1:4):hour<15?1:2;
 	 dt.setDate(dt.getDate()+nrdays);
 	 return dt;
+ }
+ function determineMinDaysNormal(){
+	 var dt = new Date();
+	 var day = dt.getDay();
+	 var hour = dt.getHours();
+	 var min = day==0?3:
+  		day==6?4:
+  			(day==5||day==4)?(hour<15?4:5):			
+  				day==3?(hour<15?2:5):
+  					hour<15?2:3;
+  	return min;
+  						
  }
 // function parseInputDt(dateText){
 //	 var dt = parseDate(dateText);
