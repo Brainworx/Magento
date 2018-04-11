@@ -80,16 +80,11 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
     	$allowed = false;
     	
     	$catrental = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
-    	$skus = explode(',',$this->getConfigData('extraskus'));
-    	$chargeextra = false;
     	
     	if (!empty($catrental)) {
     		// Load items, check extra rate for specific sku + allow option only for rental
     		$items = $request->getAllItems();
     		foreach($items as $item){
-    			if(!empty($skus)&&in_array($item->getSku(),$skus)){
-    				$chargeextra = true;
-    			}
 	    		if(in_array($catrental,$item->getProduct()->getCategoryIds())){
 				$allowed = true;
 			}    			
@@ -178,9 +173,6 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
             } else {
                 $shippingPrice = $this->getFinalPriceWithHandlingFee($rate['price']);
             }
-            if($chargeextra){
-            	$shippingPrice += $this->getConfigData('extraskuprice');
-            }
 
             $method->setPrice($shippingPrice);
             $method->setCost($rate['cost']);
@@ -229,9 +221,7 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
 	        $method->setMethod('express');
 	        $method->setMethodTitle($this->getConfigData('expresstitle'));
 	        $shippingPrice = $this->getConfigData('expressprice');
-	        if($chargeextra){
-	        	$shippingPrice += $this->getConfigData('extraskuprice');
-	        }
+	       
 	        $method->setPrice($shippingPrice);
 	        $method->setCost(0);
 	         
@@ -248,9 +238,7 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
         	$method->setMethod('weekend');
         	$method->setMethodTitle($this->getConfigData('weekendtitle'));
         	$shippingPrice = $this->getConfigData('weekendprice');
-        	if($chargeextra){
-        		$shippingPrice += $this->getConfigData('extraskuprice');
-        	}
+        	
         	$method->setPrice($shippingPrice);
         	$method->setCost(0);
         		 

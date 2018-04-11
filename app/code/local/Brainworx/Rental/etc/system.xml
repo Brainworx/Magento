@@ -411,31 +411,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </weekendprice>
-                         <extraskutitle translate="label">
-                            <label>Extra cleaning option title</label>
-                            <frontend_type>text</frontend_type>                            
-                            <sort_order>69</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </extraskutitle>
-                         <extraskuprice translate="label">
-                            <label>Exra cleaning option price</label>
-                            <frontend_type>text</frontend_type>
-                            <validate>validate-number validate-zero-or-greater</validate>
-                            <sort_order>70</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </extraskuprice>
-                        <extraskus translate="label">
-                            <label>SKU for which we charge extra (komma separated)</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>71</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </extraskus>
                     </fields>
                 </tablerate>
             </groups>
