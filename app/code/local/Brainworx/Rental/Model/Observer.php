@@ -346,7 +346,9 @@ class Brainworx_Rental_Model_Observer
 	public function addDiscountToRental(Varien_Event_Observer $observer)
 	{
 		try{
-
+			//check additional cleaning required
+			$skustocleanextra = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_REIN ')->getValue('text'));
+			
 			Mage::getSingleton('core/session')->setVAPH(false);
 			//Mage::log('sales_quote_product_add_after event occurred');
 			$catvaph = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_VAPH')->getValue('text');
@@ -356,12 +358,50 @@ class Brainworx_Rental_Model_Observer
 			if ($item->getParentItem()) {
 				$item = $item->getParentItem();
 			}
+			//when we're adding cleaning -- no need for further process
+			if($item->getSku()=='ADM-rein'){
+				return;
+			}
 			
 			//directly move to checkout after adding the VAPH article
 			if(in_array($catvaph,$item->getProduct()->getCategoryIds())){
 				Mage::getSingleton('core/session')->setVAPH(true);
 				Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getUrl('checkout/onepage'));
 				Mage::getSingleton('checkout/session')->setNoCartRedirect(true);
+			}
+			
+			//check cleaning available
+			$quoteitems = Mage::getModel('checkout/cart')->getQuote()->getAllItems();
+			$found = false;
+			$reinitem='';
+			$qty=0;
+			foreach ($quoteitems as  $qitem)
+			{
+				if(!empty($qitem->getSku()=='ADM-rein')){
+					$found=true;
+					$reinitem=$qitem->getId();
+					break;
+				}
+			}
+			//product to clean already in basket
+			if($found){
+				$cart = Mage::getModel('checkout/cart');
+				$product = Mage::getModel('catalog/product')->loadByAttribute('sku','ADM-rein');
+				if($found){
+					$cart->updateItem($reinitem, $item->getQty());
+					Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
+				}
+				
+			}
+			
+			//check extra cleaning
+			if(!$found && !empty($skustocleanextra)&&in_array($item->getSku(),$skustocleanextra)){
+				
+				// Below code will create instance of cart
+		        $cart = Mage::getModel('checkout/cart');
+		        $product = Mage::getModel('catalog/product')->loadByAttribute('sku','ADM-rein');
+		        $cart->addProduct($product->getEntityId());//, array('sku'=>'ADM-rein','qty' => 1))->save();
+		        Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
 			}
 			
 			$rnotice = 0;
@@ -398,7 +438,7 @@ class Brainworx_Rental_Model_Observer
 				$item->setCustomPrice(0);
 				$item->setOriginalCustomPrice(0);
 				$item->getProduct()->setIsSuperMode(true);
-			}
+			}			
 			if($rnotice > 0){
 				Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('The price of your rental article has been set to 0, you will pay for this article within 10 days after receiving the monthly invoice.'));
 				$item->setRentalitem(true);
@@ -486,6 +526,98 @@ class Brainworx_Rental_Model_Observer
 		setcookie('bitcheck', '', time() - 3600,'/');
 		if (isset($_COOKIE['bitcheck'])) {
 			unset($_COOKIE['bitcheck']);
+		}
+	}
+	/**
+	 * Observer method configured for sales_quote_remove_item
+	 * Add reiniging when required // prevent removal of reiniging
+	 */
+	public function hookToRemoveItem(Varien_Event_Observer $observer)
+	{
+		try{
+			
+			//check additional cleaning products removed from basket
+			$skustocleanextra = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_REIN ')->getValue('text'));
+			
+			 $item = $observer->getEvent()->getQuoteItem();
+			
+			//check extra cleaning
+			if(!empty($skustocleanextra)&&in_array($item->getSku(),$skustocleanextra)){
+				
+				//check item is here
+				$reinfound=false;
+				$reinitemid;
+				$items = Mage::getModel('checkout/cart')->getQuote()->getAllItems();
+				foreach ($items as  $iitem)
+				{
+					if($iitem->getSku()=='ADM-rein'){
+						$reinfound=true;
+						$reinitemid=$iitem->getId();
+						break;
+					}
+				}
+				if($reinfound){
+					$cart = Mage::getModel('checkout/cart');
+					$cart->removeItem($reinitemid)->save();
+					Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
+				}
+			}elseif($item->getSku()=='ADM-rein'){
+				//reiniging was removed
+				$items = Mage::getModel('checkout/cart')->getQuote()->getAllItems();
+				$found = false;
+				$qty=0;
+				foreach ($items as  $iitem)
+				{
+					if(!empty($skustocleanextra)&&in_array($iitem->getSku(),$skustocleanextra)){
+						$found=true;
+						$qty=$iitem->getQty();
+						break;
+					}
+				}
+				//product to clean still in basket -- adding it again // remove not allowed
+				if($found){
+					$cart = Mage::getModel('checkout/cart');
+					$product = Mage::getModel('catalog/product')->loadByAttribute('sku','ADM-rein');
+					$cart->addProduct($product->getEntityId(),$qty);//, array('sku'=>'ADM-rein','qty' => 1))->save();
+					Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
+				}
+			}
+			
+		}catch(Exception $e){
+			Mage::log($e->getMessage());
+			Mage::helper("rental/error")->sendErrorMail("Error remove item");
+		}
+			
+	}
+	function hookToCartUpdateItems(Varien_Event_Observer $observer){
+		try{
+			$skustocleanextra = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_REIN ')->getValue('text'));
+				
+			$cart=$observer->getCart();
+			$quoteItems = $cart->getQuote()->getAllVisibleItems();
+			
+			$qty=0;
+			$rqty=0;
+			$found=false;
+			$reinfound=false;
+			$reinitemid='';
+			foreach ($quoteItems as $item) {
+				if(!empty($skustocleanextra)&&in_array($item->getSku(),$skustocleanextra)){
+					$found=true;
+					$qty=$item->getQty();
+				}elseif($item->getSku()=='ADM-rein'){
+						$reinfound=true;
+						$reinitemid=$item->getId();
+						$rqty=$item->getQty();
+					}
+			}
+			if($qty!=$rqty){
+				$cart->updateItem($reinitemid, $qty);
+				Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
+			}
+		}catch(Exception $e){
+			Mage::log($e->getMessage());
+			Mage::helper("rental/error")->sendErrorMail("Error remove item");
 		}
 	}
 }

@@ -210,6 +210,24 @@
 	                </hooksystem_customer_logout>
 	            </observers>
 	        </customer_logout>
+	        <sales_quote_remove_item>
+	        <observers>
+	                <hooksystem_remove_item>
+	                    <class>rental/observer</class>
+	                    <method>hookToRemoveItem</method>
+	                    <type>singleton</type>
+	                </hooksystem_remove_item>
+	            </observers>
+	        </sales_quote_remove_item>
+	        <checkout_cart_update_items_after>
+	        <observers>
+	                <hooksystem_update_item>
+	                    <class>rental/observer</class>
+	                    <method>hookToCartUpdateItems</method>
+	                    <type>singleton</type>
+	                </hooksystem_update_item>
+	            </observers> 
+	        </checkout_cart_update_items_after>
         </events>
         <!--convert your custom product attribute "supplierinvoice", "rentalitem" from quote item to order item-->
 		<fieldsets>
