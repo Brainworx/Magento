@@ -75,15 +75,22 @@ class Brainworx_Rental_Model_Carrier_Salesrate
 
         $method->setCarrier('salesrate');
         $method->setCarrierTitle($this->getConfigData('title'));
-
-        $method->setMethod('flatrate');
+	$method->setMethod('flatrate');
         $method->setMethodTitle($this->getConfigData('name'));
+	    
+	if ($request->getFreeShipping() === true) {
+            /**
+             * was applied promotion rule for whole cart
+             * we must show method with 0$ price, 
+             */
+		$method->setPrice(0);
+        }else{
+        	$method->setPrice($this->getConfigData('price'));
+	}
         
-        $method->setPrice($this->getConfigData('price'));
         $method->setCost(0);
 
-        $result->append($method);
-        
+        $result->append($method);        
 
         return $result;
     }
