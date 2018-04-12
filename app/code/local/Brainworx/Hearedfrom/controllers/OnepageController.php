@@ -26,6 +26,13 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     	$afhfound=false;
     	$levfound=false;
     	$excllevfound=false;
+	$nodeloptionfound=false;
+	//per item to use in loop
+	$i_consigfound=false;
+    	$i_afhfound=false;
+    	$i_levfound=false;
+    	$i_excllevfound=false;
+	$i_nodeloptionfound=false;
     	
     	$catconsig = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_CONSIG')->getValue('text');
     	$catafh = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_AFH')->getValue('text');
@@ -36,21 +43,36 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		foreach ($items as  $item)
     		{
     			if(in_array($catconsig,$item->getProduct()->getCategoryIds())){
-    				$consigfound=true;
+    				$i_consigfound=true;
     			}
     			if(in_array($catafh,$item->getProduct()->getCategoryIds())){
-    				$afhfound = true;
+    				$i_afhfound = true;
     			}
     			if(in_array($catlev,$item->getProduct()->getCategoryIds())){
-    				$levfound = true;
-    				if(!($consigfound || $afhfound)){
-    					$excllevfound=true;
+    				$i_levfound = true;
+    				if(!($i_consigfound || $i_afhfound)){
+    					$i_excllevfound=true;
     				}
     			}
+			$i_nodeloptionfound=(!($i_consigfound||$i_afhfound||$i_levfound));
+			
+			$consigfound=$consigfound?$consigfound:$i_consigfound;
+    			$afhfound=$afhfound?$afhfound:$i_afhfound;
+    			$levfound=$levfound?$levfound:$i_levfound;
+    			$excllevfound=$excllevfound?$excllevfound:$i_excllevfound;
+			$nodeloptionfound=$nodeloptionfound?$nodeloptionfound:$i_nodeloptionfound;
+			
+			//reset
+			$i_consigfound=false;
+			$i_afhfound=false;
+			$i_levfound=false;
+			$i_excllevfound=false;
+			$i_nodeloptionfound=false;
     		}
     	}
-    	if($excllevfound){
-    		//develivery at home rules over other options when 1 art is delivery only
+	   
+    	if($excllevfound || $nodeloptionfound){
+    		//develivery at home rules over other options when 1 art is delivery at home only OR when an article has no delivery option set to home or pickup
     		Mage::getSingleton('core/session')->setPickupPossible(false);
     		Mage::getSingleton('core/session')->setDeliveryPossible(true);
     	}elseif($afhfound||$levfound||$consigfound){
