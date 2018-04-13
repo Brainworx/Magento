@@ -69,7 +69,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 						$basedt = $data["end_dt"];
 					}
 					
-					$preferredDT =date('d-m-Y', strtotime('+3 Weekdays'));
+					$preferredDT =date('d-m-Y', strtotime('+3 Weekdays',strtotime($basedt)));
 				
 					$pickupsuccess = Mage::helper('rental/terminator')->TerminateRentals($preferredDT,$rentalstoend,null,$data["end_dt"]);
 						
