@@ -61,7 +61,7 @@ $j(function() {
 		$j("#freeshipping_freeshipping_deldate").prop('readonly', true);
 		/*sales delivery any day*/
 		$j("#salesrate_flatrate_deldate" ).datepicker({ 
-			minDate:determineMinDaysNormal(),
+			minDate:determineMinDaysNormalNextDay(),
 	     	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
@@ -108,6 +108,14 @@ $j(function() {
   					hour<15?2:3;
   	return min;
   						
+ }
+ function determineMinDaysNormalNextDay(){
+	 var dt = new Date();
+	 var day = dt.getDay();
+	 var hour = dt.getHours();
+	 var min = day==0?2:day==6?3:day==5?(hour<15?3:4):			
+					day==4?(hour<15?1:4):hour<15?1:2;
+	 return min;
  }
 // function parseInputDt(dateText){
 //	 var dt = parseDate(dateText);
