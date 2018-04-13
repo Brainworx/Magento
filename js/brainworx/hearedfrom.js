@@ -61,7 +61,7 @@ $j(function() {
 		$j("#freeshipping_freeshipping_deldate").prop('readonly', true);
 		/*sales delivery any day*/
 		$j("#salesrate_flatrate_deldate" ).datepicker({ 
-			minDate:determineMinDaysNormalNextDay(),
+			minDate:determineMinDaysNormal(),
 	     	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
