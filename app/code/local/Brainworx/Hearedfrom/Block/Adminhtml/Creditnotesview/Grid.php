@@ -276,7 +276,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Creditnotesview_Grid extends Mage_Adm
     	$xml = '<?xml version="1.0" encoding="UTF-8"?>';
     	$xml.= '<'.$items.'>';
     	foreach ($this->getCollection() as $item) {
-    		$xml.= $item->toXml($indexes,Mage::helper('hearedfrom')->__('creditnotes'),false,false);
+    		$xml.= $item->toXml($indexes,Mage::helper('hearedfrom')->__('creditnote'),false,false);
     	}
     	if ($this->getCountTotals())
     	{
