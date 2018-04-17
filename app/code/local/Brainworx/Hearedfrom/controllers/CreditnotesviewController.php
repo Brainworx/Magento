@@ -35,7 +35,7 @@ class Brainworx_Hearedfrom_CreditnotesviewController extends Mage_Adminhtml_Cont
 	 */
 	public function exportCsvAction()
 	{
-		$fileName   = 'invoices_report.csv';
+		$fileName   = 'creditnotes_report.csv';
 		$grid       = $this->getLayout()->createBlock('hearedfrom/adminhtml_creditnotesview_grid');
 		$this->_prepareDownloadResponse($fileName, $grid->getCsvFile());
 	}
@@ -51,7 +51,7 @@ class Brainworx_Hearedfrom_CreditnotesviewController extends Mage_Adminhtml_Cont
 	}
 	public function exportXmlAction()
 	{
-		$fileName   = 'invoices_report.xml';
+		$fileName   = 'creditnotes_report.xml';
 		$grid       = $this->getLayout()->createBlock('hearedfrom/adminhtml_creditnotesview_grid');
 		$this->_prepareDownloadResponse($fileName, $grid->getXmlFile($fileName));
 	}
