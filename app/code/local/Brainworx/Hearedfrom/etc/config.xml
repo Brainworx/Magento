@@ -51,6 +51,9 @@
 					<invoicesView>
 						<table>vw_invoices_admisol_full</table>
 					</invoicesView>
+					<creditnotesView>
+						<table>vw_creditnotes_admisol</table>	
+					</creditnotesView>
 				</entities>
 			</hearedfrom_resource>
 
@@ -118,6 +121,9 @@
             <invoicesview>
             	<class>Brainworx_Hearedfrom_Block</class>
             </invoicesview>
+            <creditnotesview>
+            	<class>Brainworx_Hearedfrom_Block</class>
+            </creditnotesview>
 			<!-- Add block for checkout step -->
 			<hearedfromonepage>
 				<class>Brainworx_Hearedfrom_Block_Onepage</class>
@@ -322,7 +328,7 @@
                     <file>vaph_order_new.html</file>
                     <type>html</type>
                 </vaph_order_new>
-		<ouderenzorg_order_new>
+				<ouderenzorg_order_new>
                     <label>Zorgpunt Ouderenzorg Thuis</label>
                     <file>ouderenzorg_order_new.html</file>
                     <type>html</type>
@@ -431,6 +437,9 @@
             <invoicesview>
             	<file>invoicesview.xml</file>
             </invoicesview>
+             <creditnotesview>
+            	<file>creditnotesview.xml</file>
+            </creditnotesview>
           </updates>
         </layout>
         <translate>
