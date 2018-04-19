@@ -155,6 +155,8 @@ class Brainworx_Hearedfrom_Model_Observer
 							,$item->getRistorno()*$item->getQtyOrdered(),false,$seller_custid);
 				}elseif (!empty($item->getSupplierneworderemail())){
 					Mage::log("No need to send shipment exl as shipment done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
+				}elseif($item->getSku()=='ADM-rein'){
+					Mage::log("No need to send shipment for cleaning item ".$order->getIncrementId().' item '.$item->getSku());
 				}
 				else{
 					$shippingitem = array();
