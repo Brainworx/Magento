@@ -92,6 +92,21 @@ class Brainworx_Rental_Model_Carrier_Specialrate
 	        
 	        $result->append($method);
         }
+        //option3
+        if($this->getConfigFlag('urgentoption')){
+        	$method = $this->_getModel('shipping/rate_result_method');
+        	 
+        	$method->setCarrier('specialrate');
+        	$method->setCarrierTitle($this->getConfigData('title'));
+        	 
+        	$method->setMethod('urgent');
+        	 
+        	$method->setMethodTitle($this->getConfigData('urgenttitle'));
+        	$method->setPrice($this->getConfigData('urgentprice'));
+        	$method->setCost(0);
+        	 
+        	$result->append($method);
+        }
 
         return $result;
     }

@@ -10,7 +10,7 @@
  */
 
 /*
- * Class Brainworx_Rental_Model_Carrier_Specialrate based on Mage_Shipping_Model_Carrier_Tablerate
+ * Class Brainworx_Rental_Model_Carrier_Salesrate based on Mage_Shipping_Model_Carrier_Tablerate
  */
 class Brainworx_Rental_Model_Carrier_Salesrate
     extends Mage_Shipping_Model_Carrier_Abstract
@@ -75,7 +75,7 @@ class Brainworx_Rental_Model_Carrier_Salesrate
 
         $method->setCarrier('salesrate');
         $method->setCarrierTitle($this->getConfigData('title'));
-	$method->setMethod('flatrate');
+		$method->setMethod('flatrate');
         $method->setMethodTitle($this->getConfigData('name'));
 	    
 	if ($request->getFreeShipping() === true) {

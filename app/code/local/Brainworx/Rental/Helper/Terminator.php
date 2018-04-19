@@ -38,7 +38,8 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 						||  $orderModel->getShippingMethod()=='tablerate_express'
 						||  $orderModel->getShippingMethod()=='tablerate_weekend'
 						||  $orderModel->getShippingMethod()=='specialrate_flatrate'
-						||  $orderModel->getShippingMethod()=='specialrate_free'				
+						||  $orderModel->getShippingMethod()=='specialrate_free'						
+						||  $orderModel->getShippingMethod()=='specialrate_urgent'				
 						||  $orderModel->getShippingMethod()=='salesrate_flatrate'	
 						||  $orderModel->getShippingMethod()=='flatrate_flatrate'
 						|| $orderModel->getShippingInclTax()>0){ //from other rates or earlier orders flatrate_flatrate can be found with shipping cost so pickup required
@@ -135,7 +136,8 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 					||  $order->getShippingMethod()=='tablerate_express'
 					||  $order->getShippingMethod()=='tablerate_weekend'
 					||  $order->getShippingMethod()=='specialrate_flatrate'
-					||  $order->getShippingMethod()=='specialrate_free'				
+					||  $order->getShippingMethod()=='specialrate_free'						
+					||  $order->getShippingMethod()=='specialrate_urgent'			
 					||  $order->getShippingMethod()=='salesrate_flatrate'	
 					||  $order->getShippingMethod()=='flatrate_flatrate'
 					||  $order->getShippingInclTax()>0)){

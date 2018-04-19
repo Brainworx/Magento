@@ -71,6 +71,16 @@ $j(function() {
 	       		$j("#s_method_salesrate_flatrate").prop('checked', true);
 	    }});
 		$j("#salesrate_flatrate_deldate").prop('readonly', true);
+		$j("#specialrate_urgent_deldate" ).datepicker({ 
+			minDate:0,	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	      	beforeShowDay: function(date) {
+	      		var day = date.getDay();
+	       		return [day != 0,''];
+	       		},
+	       	onSelect: function(dateText, inst) {
+	       		$j("#s_method_specialrate_urgent").prop('checked', true);
+	    }});
+		$j("#specialrate_urgent_deldate").prop('readonly', true);
 	});
   });
  function setuphearedfrom(){
