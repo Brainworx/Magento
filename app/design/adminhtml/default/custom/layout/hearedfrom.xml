@@ -2,30 +2,35 @@
 <!--app/design/adminhtml/default/default/layout/hearedfrom.xml-->
 <layout>
 	<!--reference to your module/controller/action-->
-   <adminhtml_hearedfrom_index>
-        <reference name="content">
-		<!--reference to block element in Block-->
-            <block type="hearedfrom/adminhtml_hearedfrom" name="hearedfrom" />
-        </reference>
-    </adminhtml_hearedfrom_index>
+	<adminhtml_hearedfrom_index>
+		<reference name="content">
+			<!--reference to block element in Block-->
+			<block type="hearedfrom/adminhtml_hearedfrom" name="hearedfrom" />
+		</reference>
+	</adminhtml_hearedfrom_index>
     <!-- Add js and css to order edit page -->
-     <adminhtml_sales_order_view>
-        <reference name="head">
-           	<action method="addItem"><type>js</type><name>brainworx/hearedfrom_edit.js?ver=1.2</name><params/><if/></action>
-		   	<action method="addCss"><stylesheet>css/brainworx/hearedfromedit.css</stylesheet></action>
-            <action method="addJs"><script>lib/jquery/jquery-1.10.2.min.js</script></action>
-            <action method="addJs"><script>lib/jquery/noconflict.js</script></action>
-		  	<action method="addItem"><type>js</type><name>lib/jqueryUI/jquery-ui.js</name></action>	
+	<adminhtml_sales_order_view>
+		<reference name="head">
+			<action method="addItem"><type>js</type><name>brainworx/hearedfrom_edit.js?ver=1.2</name><params/><if/></action>
+			<action method="addCss"><stylesheet>css/brainworx/hearedfromedit.css</stylesheet></action>
+			<action method="addJs"><script>lib/jquery/jquery-1.10.2.min.js</script></action>
+			<action method="addJs"><script>lib/jquery/noconflict.js</script></action>
+			<action method="addItem"><type>js</type><name>lib/jqueryUI/jquery-ui.js</name></action>	
 			<action method="addItem"><type>js_css</type><name>lib/jqueryUI/jquery-ui.css</name></action>	
 			<action method="addItem"><type>js_css</type><name>lib/jqueryUI/jquery-ui.structure.css</name></action>	
 			<action method="addItem"><type>js_css</type><name>lib/jqueryUI/jquery-ui.theme.css</name></action>		
 		</reference>
 	</adminhtml_sales_order_view>
-	
-	 <adminhtml_sales_order_invoice_view>
-        <reference name="head">
-           <action method="addItem"><type>js</type><name>brainworx/hearedfrom_edit.js</name><params/><if/></action>
-		   <action method="addCss"><stylesheet>css/brainworx/hearedfromedit.css</stylesheet></action>
+	<adminhtml_sales_order_invoice_view>
+        	<reference name="head">
+           		<action method="addItem"><type>js</type><name>brainworx/hearedfrom_edit.js</name><params/><if/></action>
+		   	<action method="addCss"><stylesheet>css/brainworx/hearedfromedit.css</stylesheet></action>
 		</reference>
 	</adminhtml_sales_order_invoice_view>
+	<adminhtml_sales_order_creditmemo_view>
+        	<reference name="head">
+           		<action method="addItem"><type>js</type><name>brainworx/hearedfrom_edit.js</name><params/><if/></action>
+		   	<action method="addCss"><stylesheet>css/brainworx/hearedfromedit.css</stylesheet></action>
+		</reference>
+	</adminhtml_sales_order_creditmemo_view>
 </layout>
