@@ -102,8 +102,10 @@ $j(function() {
 	 var dt = new Date();
 	 var day = dt.getDay();
 	 var hour = dt.getHours();
-	 var nrdays = day==0?2:day==6?3:day==5?(hour<15?3:4):			
-					day==4?(hour<15?1:4):hour<15?1:2;
+	 var nrdays = day==0?2: /*zo -> +2d = di*/
+                    day==6?3: /*za -> +3d = di*/
+                        day==5?(hour<15?1:4): /*vr voor 15u --> +1d = za ANDERS +4d = di*/	
+                            hour<15?1:2; /*alle andere dagen voor 15u --> +1d = volgende dag ANDERS +2d (met levering op zaterdag*/
 	 dt.setDate(dt.getDate()+nrdays);
 	 return dt;
  }
@@ -111,13 +113,13 @@ $j(function() {
 	 var dt = new Date();
 	 var day = dt.getDay();
 	 var hour = dt.getHours();
-	 var min = day==0?3:
-  		day==6?4:
-  			(day==5||day==4)?(hour<15?4:5):			
-  				day==3?(hour<15?2:5):
-  					hour<15?2:3;
-  	return min;
-  						
+	 var min = day==0?3: /*zo -> +3d = woe*/
+  		        day==6?4: /*za --> +4d = woe */
+                    day==5?(hour<15?3:5):	/*vr -> voor 15u ma, na 15u wo	*/	
+  			           day==4?4:	/*do -> voor 15u en na 15u ma	*/	
+  				          day==3?(hour<15?2:5): /*woe -> voor 15u vr, na 15u ma */
+  					         hour<15?2:3; /*alle andere dagen voor 15u +2d, na 15u +3d -- geen levering op zaterdag*/
+  	return min;  						
  }
  function determineMinDaysNormalNextDay(){
 	 var dt = new Date();
@@ -127,16 +129,6 @@ $j(function() {
 					day==4?(hour<15?1:4):hour<15?1:2;
 	 return min;
  }
-// function parseInputDt(dateText){
-//	 var dt = parseDate(dateText);
-//	 if(dt.getMonth()==0){
-//		 dt.setMonth(11);
-//		 dt.setFullYear(dt.getFullYear()-1);
-//	 }else{
-//		 dt.setMonth(dt.getMonth()-1);
-//	 }
-//	 return dt;
-// }
 
  function validateshippingandresethearedfrom(){	 
 	 $j('#pddatelbl').removeClass("error");
@@ -212,4 +204,3 @@ $j(function() {
         return 0;
     } 
 }
- 
