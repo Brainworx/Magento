@@ -9,7 +9,9 @@
     });
   };
 })(jQuery); 
+var holidays;
 $j(function() {
+    loadDates(3);
 	setuphearedfrom(); 
 	$j('#shipping-method-buttons-container button').click(validateshippingandresethearedfrom);
 	$j('#hearedfrom-buttons-container button').click(validate);
@@ -31,7 +33,7 @@ $j(function() {
 	     	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
-	       		return [day != 0 && day !=6,''];
+	       		return [day != 0 && day !=6 && checkHoliday(date.getDate(),date.getMonth()+1,date.getFullYear())!=true,''];
 	       		},
 	       	onSelect: function(dateText, inst) {
 	       		$j("#s_method_tablerate_bestway").prop('checked', true);
@@ -42,7 +44,7 @@ $j(function() {
 	     	minDate: (new Date().getHours()<15?1:2), dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
-	       		return [day == 6,''];
+	       		return [day == 6 && checkHoliday(date.getDate(),date.getMonth()+1,date.getFullYear())!=true,''];
 	       		},
 	       	onSelect: function(dateText, inst) {
 	       		$j("#s_method_tablerate_weekend").prop('checked', true);
@@ -53,7 +55,7 @@ $j(function() {
 	     	minDate: 0, dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
-	       		return [day != 0,''];
+	       		return [day != 0 && checkHoliday(date.getDate(),date.getMonth()+1,date.getFullYear())!=true,''];
 	       		},
 	       	onSelect: function(dateText, inst) {
 	       		$j("#s_method_freeshipping_freeshipping").prop('checked', true);
@@ -65,7 +67,7 @@ $j(function() {
 	     	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
-	       		return [day != 0,''];
+	       		return [day != 0 && checkHoliday(date.getDate(),date.getMonth()+1,date.getFullYear())!=true,''];
 	       		},
 	       	onSelect: function(dateText, inst) {
 	       		$j("#s_method_salesrate_flatrate").prop('checked', true);
@@ -75,7 +77,7 @@ $j(function() {
 			minDate:0,	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
-	       		return [day != 0,''];
+	       		return [day != 0 && checkHoliday(date.getDate(),date.getMonth()+1,date.getFullYear())!=true,''];
 	       		},
 	       	onSelect: function(dateText, inst) {
 	       		$j("#s_method_specialrate_urgent").prop('checked', true);
@@ -107,6 +109,12 @@ $j(function() {
                         day==5?(hour<15?1:3): /*vr voor 15u --> +1d = za ANDERS +3d = ma*/	
                             hour<15?1:2; /*alle andere dagen voor 15u --> +1d = volgende dag ANDERS +2d (met levering op zaterdag*/
 	 dt.setDate(dt.getDate()+nrdays);
+	 if(checkHoliday(dt.getDate(),dt.getMonth()+1,dt.getFullYear())==true){
+		 dt.setDate(dt.getDate()+1);
+		 if(dt.getDay()==0){
+			 dt.setDate(dt.getDate()+1);
+		 }
+	 }
 	 return dt;
  }
  function determineMinDaysNormal(){
@@ -206,5 +214,48 @@ $j(function() {
     else {
         return 0;
     } 
+}
+function checkHoliday(day,month,year){
+    var isAHoliday = false;
+    if(day<10)day='0'+day;
+    var m = month;
+    if(month<10)month='0'+month;
+    
+    if(holidays!=null && holidays.length>0 && holidays[m]!=null){
+       if( holidays[m][year+'-'+month+'-'+day]!=null && holidays[m][year+'-'+month+'-'+day])
+    	   isAHoliday = true;
+    }
+    
+    return isAHoliday;
+}
+
+function loadDates(number=12){
+	var url = 'https://holidayapi.com/v1/holidays?key=9bfb66db-d453-4ca1-8b2a-79f9053be8dd&country=BE&year='+new Date().getFullYear();
+	var month = new Date().getMonth()+1;
+	var m = month;
+	if(holidays==null){
+		   holidays=new Array();
+	}
+
+	for(i=0;i<(number);i++,m++){
+		if(m>12){
+			m = m-12;
+		}
+		if(holidays[m]==null){
+			holidays[m]=new Array();
+		}
+		$j.ajax({
+		      url: url+'&month='+m,
+		      async: false,
+		      dataType: 'json',
+		      success: function (data) {
+		           if (data.status = 200) {
+		        	   for(j=0;j<data.holidays.length;j++){		        		   		        		   
+		        		   holidays[m][data.holidays[j]['date']]=data.holidays[j]['public'];
+		        	   }
+		            }
+		      }
+		    });
+	}
 }
  
