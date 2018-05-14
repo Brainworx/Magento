@@ -1,0 +1,93 @@
+<?php
+/**
+ * Magento
+ *
+ *Brainworx: added prefilled text and back url
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) Brainworx
+ */
+?>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->toHtml() ?></div>
+<div class="">
+    <h1><?php echo Mage::helper('contacts')->__('Requestform') ?></h1>
+</div>
+<form action="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).$this->getFormAction() ?>" id="contactForm" method="post" class="scaffold-form">
+<input name="type_id" id="type_id" type="hidden" value="<?php echo $this->getRequestTypeId($this->getRequestType()) ?>" />
+    <div class="fieldset">
+        <h2 class="legend"><?php echo Mage::helper('contacts')->__('Request Information') ?></h2>
+        <ul class="form-list">
+        	
+	        <li class="wide">
+                <label for="request" class=""><?php echo Mage::helper('contacts')->__('Info') ?></label>
+                <div class="input-box">
+                    <textarea name="request" id="request" title="<?php echo Mage::helper('contacts')->__('Info') ?>" class="required-entry input-text" cols="5" rows="2" readonly="true"><?php echo $this->getRequestInfo($this->getRequestType())?></textarea>
+                </div>
+            </li>
+            <li class="fields">	            
+                <div class="field">
+                    <label for="name" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Name') ?></label>
+                    <div class="input-box">
+                        <input name="name" id="name" title="<?php echo Mage::helper('contacts')->__('Name') ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserName()) ?>" class="input-text required-entry" type="text" />
+                    </div>
+                </div>
+                 <div class="field">
+                    <label for="address" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Address') ?></label>
+                    <div class="input-box">
+                        <input name="address" id="address" title="<?php echo Mage::helper('contacts')->__('Address') ?>" value="" class="input-text required-entry" type="text" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="email" class="required"><em>*</em><?php echo Mage::helper('customer')->__('Email Address') ?></label>
+                    <div class="input-box">
+                        <input name="email" id="email" title="<?php echo Mage::helper('customer')->__('Email Address') ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserEmail()) ?>" class="input-text required-entry validate-email" type="email" autocapitalize="off" autocorrect="off" spellcheck="false" />
+                    </div>
+                </div>
+            </li>
+            <li>
+                <label for="phone" class="required"><?php echo Mage::helper('contacts')->__('Telephone') ?></label>
+                <div class="input-box">
+                    <input name="phone" id="phone" title="<?php echo Mage::helper('contacts')->__('Telephone') ?>" value="" class="input-text required-entry" type="tel" />
+                </div>
+            </li>
+            <li>
+            	<div class="field">
+                	<label id="vlbl" for="seller" class="required"><em>*</em><?php echo $this->__('Who told you about us?'); ?></label><br/>
+					<div class="input-box">
+					<select id="seller" name="seller" class="select required-entry" required>
+						<?php  foreach($this->getHearedFromValues() as $_option): ?>
+							<option value="<?php echo $_option ?>"
+							<?php if((!empty($this->getSellerValue()) && $_option == $this->getSellerValue())
+							|| ((empty($this->getSellerValue()) && $_option == $this->__('Select')))){
+									echo 'selected';
+							}?>
+							><?php echo $_option ?></option>
+						<?php endforeach; ?>
+					</select>
+					</div>
+                
+                </div>
+            </li>
+            <li class="wide">
+                <label for="comment" class=""><?php echo Mage::helper('contacts')->__('Free Comment') ?></label>
+                <div class="input-box">
+                    <textarea name="comment" id="comment" title="<?php echo Mage::helper('contacts')->__('Free Comment') ?>" class="input-text" cols="5" rows="3" ><?php if(!empty($_GET["cmt"])) echo $this->escapeHtml($_GET["cmt"]) ?></textarea>
+                </div>
+            </li>
+        </ul>
+    </div>    
+    <div class="buttons-set-left">  
+    	<p class="required"><?php echo Mage::helper('contacts')->__('* Required Fields') ?></p>  
+        <input type="text" name="hideit" id="hideit" value="" style="display:none !important;" />
+        <?php if(!empty($_GET["bur"])){ ?>
+        <a href="<?php echo $_GET["bur"] ?>"><?php echo Mage::helper('contacts')->__('Cancel')?></a>
+        <?php }?>
+        <button type="submit" title="<?php echo Mage::helper('contacts')->__('Submit') ?>" class="button"><span><span><?php echo Mage::helper('contacts')->__('Submit') ?></span></span></button>
+    </div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var contactForm = new VarienForm('contactForm', true);
+//]]>
+</script>

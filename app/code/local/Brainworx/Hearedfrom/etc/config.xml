@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Brainworx_Hearedfrom>
-			<version>0.2.7</version>    <!-- Version number of your module -->
+			<version>0.2.8</version>    <!-- Version number of your module -->
 			<depends>Braiworx_Rental</depends>
 		</Brainworx_Hearedfrom>
 	</modules>
@@ -54,6 +54,12 @@
 					<creditnotesView>
 						<table>vw_creditnotes_admisol</table>	
 					</creditnotesView>
+					<requestform>
+						<table>hearedfrom_requestform</table>	
+					</requestform>
+					<requesttype>
+						<table>hearedfrom_requesttype</table>	
+					</requesttype>
 				</entities>
 			</hearedfrom_resource>
 
@@ -157,6 +163,9 @@
             		<order_recent>Brainworx_Hearedfrom_Block_Order_Recent</order_recent>
             	</rewrite>
             </sales>
+            <requestform>
+            	<class>Brainworx_Hearedfrom_Block</class>
+            </requestform>
 		</blocks>
 
 		<!-- Here we modify the checkout to our custom one -->
@@ -333,6 +342,11 @@
                     <file>ouderenzorg_order_new.html</file>
                     <type>html</type>
                 </ouderenzorg_order_new>
+                <contact_requestform>
+                    <label>Contact request form</label>
+                    <file>contact_requestform.html</file>
+                    <type>html</type>
+                </contact_requestform>
             </email>
         </template>
 	</global>
