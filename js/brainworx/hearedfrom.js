@@ -218,44 +218,42 @@ $j(function() {
 function checkHoliday(day,month,year){
     var isAHoliday = false;
     if(day<10)day='0'+day;
-    var m = month;
     if(month<10)month='0'+month;
-    
-    if(holidays!=null && holidays.length>0 && holidays[m]!=null){
-       if( holidays[m][year+'-'+month+'-'+day]!=null && holidays[m][year+'-'+month+'-'+day])
-    	   isAHoliday = true;
+ 
+     if(holidays!=null ){
+       if( holidays[year+'-'+month+'-'+day]!=null&&holidays[year+'-'+month+'-'+day][0]!=null)
+    	   isAHoliday = holidays[year+'-'+month+'-'+day][0]['public'];
     }
     
     return isAHoliday;
 }
 
-function loadDates(number=12){
-	var url = 'https://holidayapi.com/v1/holidays?key=9bfb66db-d453-4ca1-8b2a-79f9053be8dd&country=BE&year='+new Date().getFullYear();
+function loadDates(number){
+	var url = 'https://holidayapi.com/v1/holidays?key=9bfb66db-d453-4ca1-8b2a-79f9053be8dd&country=BE&year='+new Date().getFullYear()+'&public=true';
 	var month = new Date().getMonth()+1;
-	var m = month;
-	if(holidays==null){
-		   holidays=new Array();
-	}
-
-	for(i=0;i<(number);i++,m++){
-		if(m>12){
-			m = m-12;
-		}
-		if(holidays[m]==null){
-			holidays[m]=new Array();
-		}
-		$j.ajax({
-		      url: url+'&month='+m,
+    $j.ajax({
+		      url: url,
 		      async: false,
 		      dataType: 'json',
 		      success: function (data) {
 		           if (data.status = 200) {
-		        	   for(j=0;j<data.holidays.length;j++){		        		   		        		   
-		        		   holidays[m][data.holidays[j]['date']]=data.holidays[j]['public'];
-		        	   }
+                       holidays = data.holidays;
 		            }
 		      }
 		    });
-	}
+    
+    if(month>8){
+        url = 'https://holidayapi.com/v1/holidays?key=9bfb66db-d453-4ca1-8b2a-79f9053be8dd&country=BE&year='+(new Date().getFullYear()+1)+'&public=true';
+         $j.ajax({
+		      url: url,
+		      async: false,
+		      dataType: 'json',
+		      success: function (data) {
+		           if (data.status = 200) {
+                       holidays = $j.extend(holidays,data.holidays);
+		            }
+		      }
+		    });
+    }
 }
  
