@@ -14,15 +14,8 @@
 <form action="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).$this->getFormAction() ?>" id="contactForm" method="post" class="scaffold-form">
 <input name="type_id" id="type_id" type="hidden" value="<?php echo $this->getRequestTypeId($this->getRequestType()) ?>" />
     <div class="fieldset">
-        <h2 class="legend"><?php echo Mage::helper('contacts')->__('Request Information') ?></h2>
         <ul class="form-list">
         	
-	        <li class="wide">
-                <label for="request" class=""><?php echo Mage::helper('contacts')->__('Info') ?></label>
-                <div class="input-box">
-                    <textarea name="request" id="request" title="<?php echo Mage::helper('contacts')->__('Info') ?>" class="required-entry input-text" cols="5" rows="2" readonly="true"><?php echo $this->getRequestInfo($this->getRequestType())?></textarea>
-                </div>
-            </li>
             <li class="fields">	            
                 <div class="field">
                     <label for="name" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Name') ?></label>
