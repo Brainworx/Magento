@@ -38,12 +38,6 @@ class Brainworx_Hearedfrom_RequestformController extends Mage_Core_Controller_Fr
     			if (!Zend_Validate::is(trim($_POST['type_id']) , 'NotEmpty')) {
     				$error = true;
     			}
-    			if (!Zend_Validate::is(trim($_POST['request']) , 'NotEmpty')) {
-    				$error = true;
-    			}
-    			if (!Zend_Validate::is(trim($_POST['address']) , 'NotEmpty')) {
-    				$error = true;
-    			}
     			if (!Zend_Validate::is(trim($_POST['phone']) , 'NotEmpty')) {
     				$error = true;
     			}
@@ -51,11 +45,7 @@ class Brainworx_Hearedfrom_RequestformController extends Mage_Core_Controller_Fr
     			if (!Zend_Validate::is(trim($_POST['seller']) , 'NotEmpty')) {
     				$error = true;
     			}
-    			
-    			if (!Zend_Validate::is(trim($_POST['email']), 'EmailAddress')) {
-    				$error = true;
-    			}
-    			
+    			    			
     			if ($error) {
     				throw new Exception();
     			}
@@ -69,11 +59,10 @@ class Brainworx_Hearedfrom_RequestformController extends Mage_Core_Controller_Fr
 // 	    			$model->setData('cust_id',$customer->getEntityId());
 // 	    		}
 	    		$model->setData('type_id',$_POST['type_id']);
-	    		$model->setData('request',$_POST['request']);
+	    		$model->setData('request',$type->getType().' - '.$type->getDescription());
 	    		$model->setData('name',$_POST['name']);
-	    		$model->setData('address',$_POST['address']);
 	    		$model->setData('phone',$_POST['phone']);
-	    		$model->setData('email',$_POST['email']);
+	    		$model->setData('email',$type->getPartnerEmail());
 	    		$model->setData('comment',$_POST['comment']);
 	    		$model->setData('salesforce_id',$salesforce['entity_id']);
 	    		
@@ -91,7 +80,7 @@ class Brainworx_Hearedfrom_RequestformController extends Mage_Core_Controller_Fr
 	    			
 	    		// Here is where we can define custom variables to go in our email template!
 	    		$email_template_variables = array(
-	    				'data' => $postObject
+	    				'data' => $postObject, 'request' => $type->getType().' - '.$type->getDescription()
 	    		);
 	    			
 	    		$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);

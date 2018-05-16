@@ -1,0 +1,77 @@
+<?php
+/**
+ * Magento
+ *
+ * SHE update add link to requestform
+ *
+ * @category    design
+ * @package     brainworx_custom
+ * @copyright   Copyright (c) Brainworx 
+ */
+
+/** @var Mage_Page_Block_Html_Topmenu_Renderer $this */
+/** @var Varien_Data_Tree_Node $menuTree */
+/** @var string $childrenWrapClass */
+
+$html = '';
+
+$children = $menuTree->getChildren();
+$parentLevel = $menuTree->getLevel();
+$childLevel = is_null($parentLevel) ? 0 : $parentLevel + 1;
+
+$counter = 1;
+$childrenCount = $children->count();
+
+$parentPositionClass = $menuTree->getPositionClass();
+$itemPositionClassPrefix = $parentPositionClass ? $parentPositionClass . '-' : 'nav-';
+$addedone = false;
+foreach ($children as $child) {
+	//added link
+	if($childLevel==1 && $counter == $childrenCount 
+			&& (strpos($child->getUrl(), 'verkoop') !== false || strpos($child->getUrl(), 'partners') !== false)){
+		$addedone = true;
+		$childrenCount++;	
+	}
+    $child->setLevel($childLevel);
+    $child->setIsFirst($counter == 1);
+    $child->setIsLast($counter == $childrenCount);
+    $child->setPositionClass($itemPositionClassPrefix . $counter);
+
+    $outermostClassCode = 'level'. $childLevel;
+    $_hasChildren = ($child->hasChildren()) ? 'has-children' : '';
+
+    $html .= '<li '. $this->_getRenderedMenuItemAttributes($child) .'>';
+
+    $html .= '<a href="'. $child->getUrl() .'" class="'. $outermostClassCode .' '. $_hasChildren .'">'. $this->escapeHtml($this->__($child->getName())) .'</a>';
+
+    if (!empty($childrenWrapClass)) {
+        $html .= '<div class="'. $childrenWrapClass .'">';
+    }
+
+    $nextChildLevel = $childLevel + 1;
+
+    if (!empty($_hasChildren)) {
+        $html .= '<ul class="level'. $childLevel .'">';
+        $html .=     '<li class="level'. $nextChildLevel .' view-all">';
+        $html .=         '<a class="level'. $nextChildLevel .'" href="'. $child->getUrl() .'">';
+        $html .=             $this->__('View All') . ' ' . $this->escapeHtml($this->__($child->getName()));
+        $html .=         '</a>';
+        $html .=     '</li>';
+        $html .=     $this->render($child, $childrenWrapClass);
+        $html .= '</ul>';
+    }
+
+    if (!empty($childrenWrapClass)) {
+        $html .= '</div>';
+    }
+
+    $html .= '</li>';
+    
+    if($addedone){
+    	$html .= '<li class="level1 nav-1-1 last"><a href="'.Mage::getUrl('aanvraag-traplift').'" class="level1 ">Aanvraag traplift</a></li>';
+    }
+
+    $counter++;
+}
+
+return $html;

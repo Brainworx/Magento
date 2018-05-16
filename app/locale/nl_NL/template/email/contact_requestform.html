@@ -1,6 +1,6 @@
 <!--@subject Contact Form@-->
 <!--@vars
-{"var data.name":"Sender Name","var data.request":"Request info",
+{"var data.name":"Sender Name","var request":"Request info",
 "var data.address":"Sender Address",
 "var data.email":"Sender Email",
 "var data.telephone":"Sender Telephone",
@@ -40,16 +40,14 @@
     </tr>
     <tr>
         <td class="order-details">
-            <h3>Zorgpunt aanvraag</h3>
+            <h3>Zorgpunt aanvraag vrijblijvende offerte</h3>
         </td>
     </tr>
     <tr class="order-information">
         <td>
      		<ul>
-     			<li>Aanvraag: {{var data.request}}</li>
+     			<li>Aanvraag: {{var request}}</li>
      			<li>Naam: {{var data.name}}</li>
-     			<li>Address: {{var data.address}}</li>
-     			<li>Email: {{var data.email}}</li>
      			<li>Telefoon: {{var data.phone}}</li>
      			<li>Extra info: {{var data.comment}}</li>
      			<li>U hoorde van ons via: {{var data.seller}}</li>
