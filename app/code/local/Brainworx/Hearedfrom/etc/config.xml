@@ -49,7 +49,7 @@
 						<table>vw_hearedfrom_commission_grouped</table>
 					</commissionView>
 					<invoicesView>
-						<table>vw_invoices_admisol_full</table>
+						<table>vw_invoices_admisol_full2</table>
 					</invoicesView>
 					<creditnotesView>
 						<table>vw_creditnotes_admisol</table>	

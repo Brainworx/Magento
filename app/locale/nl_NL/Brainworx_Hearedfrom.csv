@@ -116,6 +116,8 @@
 "Vat_21% Rental","Btw_21% Verhuur"
 "Vat_6% Sale","Btw_6% Verkoop"
 "Vat_21% Sale","Btw_21% Verkoop"
+"Vat_6% Commission","Btw_6% Commissie"
+"Vat_21% Commission","Btw_21% Commissie"
 "Total_vat_included","Totaal_incl_btw"
 "invoice","factuur"
 "invoices","facturen"

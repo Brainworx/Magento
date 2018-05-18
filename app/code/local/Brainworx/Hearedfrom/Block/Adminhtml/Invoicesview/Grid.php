@@ -227,6 +227,22 @@ class Brainworx_hearedfrom_Block_Adminhtml_Invoicesview_Grid extends Mage_Adminh
         		'index' => 'ogm',
         		'filter'	=> false,
         ));
+        $this->addColumn('Btw6_commissie',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Vat_6% Commission'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Btw6_commissie',
+        		'filter'	=> false,
+        ));
+        $this->addColumn('Btw21_commissie',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Vat_21% Commission'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Btw21_commissie',
+        		'filter'	=> false,
+        ));
         
         //Add exort options on admin panel
 
