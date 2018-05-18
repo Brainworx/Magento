@@ -35,14 +35,15 @@
                 	<label id="vlbl" for="seller" class="required"><em>*</em><?php echo $this->__('Who told you about us?'); ?></label><br/>
 					<div class="input-box">
 					<select id="seller" name="seller" class="select required-entry" required>
+					 <option value="" selected disabled>Selecteer</option>
 						<?php  foreach($this->getHearedFromValues() as $_option): ?>
+						<?php if( $_option != $this->__('Select')){?>
 							<option value="<?php echo $_option ?>"
-							<?php if((!empty($this->getSellerValue()) && $_option == $this->getSellerValue())
-							|| ((empty($this->getSellerValue()) && $_option == $this->__('Select')))){
+							<?php if(!empty($this->getSellerValue()&&$_option == $this->getSellerValue())){
 									echo 'selected';
 							}?>
 							><?php echo $_option ?></option>
-						<?php endforeach; ?>
+						<?php }endforeach; ?>
 					</select>
 					</div>
                 
