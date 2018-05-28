@@ -115,6 +115,11 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforce_Grid extends Mage_Adminhtm
         	'type'		=> 'datetime',
         	'format' => Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT),
         ));
+        $this->addColumn('unique_link', array(
+        		'header'    => Mage::helper('hearedfrom')->__('Unique link'),
+        		'index'	=> 'unique_link',
+        		'filter' => false
+        ));
 				
         $this->addExportType('*/*/exportCsv', Mage::helper('rental')->__('CSV'));
         $this->addExportType('*/*/exportExcel', Mage::helper('rental')->__('Excel XML'));

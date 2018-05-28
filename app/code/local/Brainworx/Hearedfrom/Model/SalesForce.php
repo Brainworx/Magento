@@ -67,4 +67,21 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     		return $seller['user_nm'];
     	}
     }     
+    /**
+     * Load the seller user_nm by unique zorgpunt session id
+     * @param unknown $sessionid <timestampxid>
+     * @return string|null if not found
+     */
+    public function loadSellerNameByZorgpuntID($sessionid){
+    	$zorgpuntid;
+    	if (($pos = strpos($sessionid, "x")) !== FALSE) {
+    		$zorgpuntid = substr($sessionid, $pos+1);
+    	}
+    	$seller = $this->load($zorgpuntid);
+    	if(empty($seller)){
+    		return null;
+    	}else {
+    		return $seller['user_nm'];
+    	}
+    }
 }

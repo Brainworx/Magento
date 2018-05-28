@@ -16,6 +16,7 @@
 	<p>
 	<label id="vlbl" for="getvoice"><?php echo $this->__('Who told you about us:'); ?></label><br/>
 	<select id="getvoice" name="getvoice">
+	<?php if($this->getSellerChangePossible()){?>
 		<?php foreach($this->getHearedFromValues() as $_option): ?>
 			<option value="<?php echo $_option ?>"
 			<?php if((!empty($this->getSellerValue()) && $_option == $this->getSellerValue())
@@ -24,6 +25,7 @@
 			}?>
 			><?php echo $_option ?></option>
 		<?php endforeach; ?>
+		<?php }else{ ?><option value="<?php echo $this->getSellerValue() ?>" selected><?php echo $this->getSellerValue() ?></option><?php }?>
 	</select>
 	</p>
 	<br/>

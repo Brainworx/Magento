@@ -16,7 +16,23 @@ class Brainworx_Hearedfrom_Block_Onepage_Hearedfrom extends Mage_Checkout_Block_
         	array_push($_options,$salesForce->getUserNm());
         }
         $this->setHearedFromValues($_options);
-        //set the current seller
+        $this->setSellerChangePossible(true);
+        //set the current seller - can be based on customerID, set zorgpuntsessionid or mederi
+        //logged-in or guest: check for set zorgpuntcheck session
+        $cookies = Mage::getSingleton('core/cookie')->get();
+        $zorgpunt=null;
+        if(array_key_exists('zorgpuntcheck',$cookies)){
+        	$zorgpuntcheck = $cookies['zorgpuntcheck'];
+        	if(!empty($zorgpuntcheck)){
+        		$zorgpunt = Mage::getModel("hearedfrom/salesForce")->loadSellerNameByZorgpuntID($zorgpuntcheck);
+        		if(!empty($zorgpunt)){
+        			$this->setSellerValue($zorgpunt);
+        			$this->setSellerChangePossible(false);
+        		}
+        	}
+        }
+        
+        //Alwasy logged-in: check customer or mederi
         $cid='';
         if(Mage::getSingleton('customer/session')->isLoggedIn()){
         	$cid = Mage::getSingleton('customer/session')->getCustomer()->getEntityId();
@@ -25,7 +41,9 @@ class Brainworx_Hearedfrom_Block_Onepage_Hearedfrom extends Mage_Checkout_Block_
         		$mederisellerid = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_FORCE_ID')->getValue('text');
         		$this->setSellerValue(Mage::getModel("hearedfrom/salesForce")->load($mederisellerid)['user_nm']);        		
         	}else{
-        		$this->setSellerValue(Mage::getModel("hearedfrom/salesForce")->loadSellerNameByCustid($cid));
+        		if(empty($zorgpunt)){
+        			$this->setSellerValue(Mage::getModel("hearedfrom/salesForce")->loadSellerNameByCustid($cid));
+        		}
         	}
         	$this->setVaphOrder(Mage::getSingleton('core/session')->getVaphOrder());
         }
