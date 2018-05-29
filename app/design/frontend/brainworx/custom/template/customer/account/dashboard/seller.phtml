@@ -1,0 +1,33 @@
+<?php
+/**
+ * Magento
+
+ *
+ * @category    design
+ * @package     brainworx_custom
+ * @copyright   Copyright (c) Brainworx bvba
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="fieldset">
+    
+    <?php if( $this->isSeller() ): ?>
+    
+    <h3><?php echo $this->__('Seller Information') ?></h3>
+     
+        <ul class='form-list'>
+            <li class="fields">
+                <p>
+                    <label> <?php echo $this->__('Name: ') ?></label>
+                    <?php echo $this->escapeHtml($this->getSellerName()) ?>
+            </p></li>
+            <li class="fields">
+                <p>
+                    <label> <?php echo $this->__('Unique Link: ') ?></label>
+                    <a href='<?php echo $this->escapeHtml($this->getSellerUniqueLink()) ?>'><?php echo $this->escapeHtml($this->getSellerUniqueLink()) ?></a>
+            </p></li>
+    
+        </ul>
+    
+    <?php endif; ?>
+</div>
