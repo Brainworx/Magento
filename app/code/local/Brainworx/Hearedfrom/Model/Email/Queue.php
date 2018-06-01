@@ -29,6 +29,31 @@
  */
 class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
 {
+	private function sendMail($mail,$transport,$message,$parameters)
+	{
+			
+		try {
+			/*Add transport object for smtp*/
+			$mailer->send($transport);
+			unset($mailer);
+			$message->setProcessedAt(Varien_Date::formatDate(true));
+			$message->save();
+			Mage::log('Mailed via queue from: ' . $parameters->getFromEmail() . ' to:' . $to . ' ' .$parameters->getSubject(), null, 'email.log');
+		}
+		catch (Exception $e) {
+			unset($mailer);
+			$oldDevMode = Mage::getIsDeveloperMode();
+			Mage::setIsDeveloperMode(true);
+			Mage::logException($e);
+			Mage::setIsDeveloperMode($oldDevMode);
+
+			Mage::log('Mailed via queue error ', null, 'email.log');
+			 
+			return false;
+		}
+		 
+		return true;
+	}
     /**
      * Send all messages in a queue
      *
@@ -102,7 +127,7 @@ class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
                     $mailer->setBodyHTML($message->getMessageBody());
                 }
                 
-                Mage::log($parameters->getSubject().' to '.$to, null, 'email.log');
+                Mage::log('Mail via queue prepared: '.$parameters->getSubject().' to '.$to, null, 'email.log');
                  
                 $mailer->setSubject('=?utf-8?B?' . base64_encode($parameters->getSubject()) . '?=');
                 $mailer->setFrom($parameters->getFromEmail(), $parameters->getFromName());
@@ -112,14 +137,35 @@ class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
                 if ($parameters->getReturnTo() !== null) {
                     $mailer->setReturnPath($parameters->getReturnTo());
                 }
+                	
 
                 try {
-                	/*Add transport object for smtp*/
+                	/*Add transport object for smtp
                 	$mailer->send($transport);
                     unset($mailer);
                     $message->setProcessedAt(Varien_Date::formatDate(true));
                     $message->save();
                     Mage::log('Mailed via queue from: ' . $parameters->getFromEmail() . ' to:' . $to . ' ' .$parameters->getSubject(), null, 'email.log');
+                	*/
+                	$counter = 1;
+                	$result = false;
+                	do{
+                		if($counter>1){
+                			Mage::log('Mail via queue attempt '.$counter, null, 'email.log');
+                		}
+                		$result = $this->sendMail($mail, $transport, $message, $parameters);;
+                		$counter++;
+                	}while(!$result && $counter<4);
+                	 
+                	if(!$result){
+                		Mage::log('All Mail via queue attempts failed ', null, 'email.log');
+                		unset($mailer);
+                		$oldDevMode = Mage::getIsDeveloperMode();
+                		Mage::setIsDeveloperMode(true);
+                		Mage::setIsDeveloperMode($oldDevMode);
+                		Mage::helper("hearedfrom/error")->sendErrorMail('Probleem versturen mail via queue- retry failed');
+                		return false;
+                	}
                 }
                 catch (Exception $e) {
                     unset($mailer);
@@ -134,9 +180,10 @@ class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
                     return false;
                 }
 
-                Mage::log('Mailed via queue end',null, 'email.log');
+                Mage::log('Mailed via queue end ok',null, 'email.log');
             }
         }
+        Mage::log('All mail from queue processed',null, 'email.log');
          
         return $this;
     }
