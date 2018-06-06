@@ -63,7 +63,12 @@ class Brainworx_Hearedfrom_RequestformController extends Mage_Core_Controller_Fr
 	    		$model->setData('name',$_POST['name']);
 	    		$model->setData('phone',$_POST['phone']);
 	    		$model->setData('email',$type->getPartnerEmail());
-	    		$model->setData('comment',$_POST['comment']);
+	    		
+	    		if(isset($_POST['extra'])){
+	    			$model->setData('comment',$_POST['extrafieldnm'].': '.$_POST['extra'].' - '.$_POST['comment']);
+	    		}else{
+	    			$model->setData('comment',$_POST['comment']);
+	    		}
 	    		$model->setData('salesforce_id',$salesforce['entity_id']);
 	    		
 	    		$model->save();

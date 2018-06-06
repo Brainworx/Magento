@@ -30,6 +30,15 @@
                     <input name="phone" id="phone" title="<?php echo Mage::helper('contacts')->__('Telephone') ?>" value="" class="input-text required-entry" type="tel" />
                 </div>
             </li>
+            <?php if(!empty($this->getExtrafield())){ ?>
+             <li>
+                <label for="extra" class="required"><?php echo Mage::helper('contacts')->__($this->getExtrafield()) ?></label>
+                <div class="input-box">
+                    <input name="extra" id="extra" title="<?php echo Mage::helper('contacts')->__($this->getExtrafield()) ?>" value="" class="input-text required-entry" type="text" />
+                </div>
+                <input name="extrafieldnm" id="extrafieldnm" type="hidden" value="<?php echo Mage::helper('contacts')->__($this->getExtrafield()) ?>" />
+            </li>
+            <?php }?>
             <li>
             	<div class="field">
                 	<label id="vlbl" for="seller" class="required"><em>*</em><?php echo $this->__('Who told you about us?'); ?></label><br/>

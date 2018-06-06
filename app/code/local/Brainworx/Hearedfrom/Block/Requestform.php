@@ -6,6 +6,7 @@ class Brainworx_Hearedfrom_Block_Requestform extends Mage_Customer_Block_Account
         $requesttype = Mage::getModel("hearedfrom/requesttype")->loadByType($type);
         return ($requesttype["type"]." - ".$requesttype["description"]);
 	}
+	//returns request type id from database using the requesttype as provided from cms block config
 	public function getRequestTypeId($type){
 		$requesttype = Mage::getModel("hearedfrom/requesttype")->loadByType($type);
 		return ($requesttype["entity_id"]);
