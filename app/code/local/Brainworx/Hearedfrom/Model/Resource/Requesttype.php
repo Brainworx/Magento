@@ -12,7 +12,9 @@ class Brainworx_Hearedfrom_Model_Resource_Requesttype extends Mage_Core_Model_Re
     
     	$select = $adapter->select()
     	->from($this->getMainTable())
-    	->where($this->getMainTable().'.'.'type'.'=?',$type);
+    	->where($this->getMainTable().'.'.'type'.'=?',$type)
+    	->where($this->getMainTable().'.'.'end_dt'.' is null OR '.$this->getMainTable().'.'.'end_dt'.'>?',date('Y-m-d'))
+    	->order($this->getMainTable().'.'.'entity_id DESC');
     
     	return $adapter->fetchRow($select);
     }

@@ -6,7 +6,8 @@
 "var data.telephone":"Sender Telephone",
 "var data.extra":"Extra","var data.extrafieldnm":"Extrafieldname"
 "var data.comment":"Comment",
-"var data.seller":"Zorgpunt"}
+"var data.seller":"Zorgpunt",
+"var id":"Request Id"}
 @-->
 
 {{template config_path="design/email/header"}}
@@ -18,7 +19,7 @@
             <table cellpadding="0" cellspacing="0" border="0">
                 <tr>
                     <td class="email-heading">
-                        <h1>Contactaanvraag voor {{var store.getFrontendName()}}.</h1>
+                        <h1>Contactaanvraag {{var id}} voor {{var store.getFrontendName()}}.</h1>
                     </td>
                     <td class="store-info">
                          <h4>Vragen?</h4>
@@ -47,6 +48,7 @@
     <tr class="order-information">
         <td>
      		<ul>
+     			<li>Aanvraag nr.: {{var id}}</li>
      			<li>Aanvraag: {{var request}}</li>
      			<li>Naam: {{var data.name}}</li>
      			<li>Telefoon: {{var data.phone}}</li>

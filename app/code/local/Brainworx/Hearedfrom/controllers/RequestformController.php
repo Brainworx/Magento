@@ -85,7 +85,7 @@ class Brainworx_Hearedfrom_RequestformController extends Mage_Core_Controller_Fr
 	    			
 	    		// Here is where we can define custom variables to go in our email template!
 	    		$email_template_variables = array(
-	    				'data' => $postObject, 'request' => $type->getType().' - '.$type->getDescription()
+	    				'data' => $postObject, 'request' => $type->getType().' - '.$type->getDescription(),'id' => $model->getEntityId()
 	    		);
 	    			
 	    		$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);

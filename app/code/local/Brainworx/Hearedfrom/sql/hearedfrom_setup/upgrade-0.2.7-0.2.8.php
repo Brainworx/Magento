@@ -29,7 +29,7 @@ $table = $installer->getConnection()->newTable($installer->getTable('hearedfrom/
 		'nullable' => false,"default" => Varien_Db_Ddl_Table::TIMESTAMP_INIT_UPDATE,
 ), 'Update date')
 ->addColumn('end_dt', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(
-		'nullable' => false,
+		'nullable' => false,"default" => null,
 ), 'Create date');
 
 $table1 = $installer->getConnection()->newTable($installer->getTable('hearedfrom/requestform'))
@@ -73,7 +73,7 @@ $table1 = $installer->getConnection()->newTable($installer->getTable('hearedfrom
 		'nullable' => false,"default" => Varien_Db_Ddl_Table::TIMESTAMP_INIT_UPDATE,
 ), 'Update date')
 ->addColumn('completed_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(
-		'nullable' => false,
+		'nullable' => false,"default" => null,
 ), 'Completed date');
  
 $installer->getConnection()->createTable($table);

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--app/design/adminhtml/default/custom/layout/-->
+<layout>
+	<!--reference to your module/controller/action-->
+   <adminhtml_requestformoverview_index>
+        <reference name="content">
+		<!--reference to block element in Block-->
+            <block type="hearedfrom/adminhtml_requestformoverview" name="requestformoverview" />
+        </reference>
+    </adminhtml_requestformoverview_index>
+    <adminhtml_requestformoverview_edit>
+        <reference name="content">
+		<!--reference to block element in Block-->
+            <block type="hearedfrom/adminhtml_requestformoverview_edit" name="requestformoverview_edit" />
+        </reference>
+    </adminhtml_requestformoverview_edit>
+    <adminhtml_requesttype_index>
+        <reference name="content">
+		<!--reference to block element in Block-->
+            <block type="hearedfrom/adminhtml_requesttype" name="requesttype" />
+        </reference>
+    </adminhtml_requesttype_index>
+    <adminhtml_requesttype_edit>
+        <reference name="content">
+		<!--reference to block element in Block-->
+            <block type="hearedfrom/adminhtml_requesttype_edit" name="requesttype_edit" />
+        </reference>
+    </adminhtml_requesttype_edit>
+    <adminhtml_requesttype_new>
+        <reference name="content">
+		<!--reference to block element in Block-->
+            <block type="hearedfrom/adminhtml_requesttype_new" name="requesttype_new" />
+        </reference>
+    </adminhtml_requesttype_new>
+</layout>

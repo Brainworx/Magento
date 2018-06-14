@@ -150,6 +150,9 @@
             <stockrequestpage>
             	<class>Brainworx_Hearedfrom_Block</class>
             </stockrequestpage>
+            <requestformoverview>
+            	<class>Brainworx_Hearedfrom_Block</class>
+            </requestformoverview>
             <!-- Override account navigation to add custom links-->
             <customer>
                 <rewrite>
@@ -454,6 +457,9 @@
              <creditnotesview>
             	<file>creditnotesview.xml</file>
             </creditnotesview>
+            <requestformoverview>
+            	<file>requestformoverview.xml</file>
+            </requestformoverview>
           </updates>
         </layout>
         <translate>
