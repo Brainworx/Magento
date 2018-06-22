@@ -48,11 +48,18 @@
     <tr class="order-information">
         <td>
      		<ul>
-     			<li>Aanvraag nr.: {{var id}}</li>
+     			<li>Uniek nr.: {{var id}}</li>
      			<li>Aanvraag: {{var request}}</li>
      			<li>Naam: {{var data.name}}</li>
      			<li>Telefoon: {{var data.phone}}</li>
+     		</ul>
+     		<br>
+     		{{depend data.extra}}
+     		<ul>
      			<li>{{var data.extrafieldnm}}{{var data.extra}}</li>
+     		</ul>
+     		{{/depend}}
+     		<ul>
      			<li>Extra info: {{var data.comment}}</li>
      			<li>U hoorde van ons via: {{var data.seller}}</li>
      		</ul>

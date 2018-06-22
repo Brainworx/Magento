@@ -52,6 +52,11 @@ class Brainworx_Hearedfrom_RequestformController extends Mage_Core_Controller_Fr
     			
 	    		//$customer = $this->_getSession()->getCustomer();
 	    		$salesforce = Mage::getModel("hearedfrom/salesForce")->loadByUsername($_POST['seller']);
+	    		$seller_email;
+	    		//get the seller email
+	    		if(isset($salesforce['cust_id'])&&!empty($salesforce['cust_id'])){
+	    			$seller_email = Mage::getModel('customer/customer')->load($salesforce['cust_id'])->getEmail();
+	    		}
 	    		
 	    		$type = Mage::getModel('hearedfrom/requesttype')->load($_POST['type_id']);
 	    		$model = Mage::getModel ( 'hearedfrom/requestform' );
@@ -99,6 +104,9 @@ class Brainworx_Hearedfrom_RequestformController extends Mage_Core_Controller_Fr
 	    			foreach($emails as $m){
 	    				$email_template->addBcc($m);
 	    			}
+	    		}
+	    		if(isset($seller_email)){
+	    			$email_template->addBcc($seller_email);
 	    		}
 	    			
 	    		//Send the email!
