@@ -57,28 +57,18 @@
 			         <sort_order>9</sort_order>
 			         <action>adminhtml/creditnotesview/index</action>
 			     </creditnotesview>
-            </children>
-        </hearedfrom>
-         <requestforms translate="title" module="hearedfrom">
-            <title>Requestforms</title>
-            <sort_order>10</sort_order>
-            <!--action>adminhtml/hearedfroml</action-->
-            <depends>
-                <module>Brainworx_Hearedfrom</module>
-            </depends>
-            <children>
-                <requestformoverview>
-                    <title>Requests</title>
-                    <sort_order>1</sort_order>
-                    <action>adminhtml/requestformoverview/index</action>
-                </requestformoverview>
-                <requesttype>
-                    <title>Requesttypes</title>
-                    <sort_order>1</sort_order>
+			      <requesttype>
+                    <title>Contact Requesttypes</title>
+                    <sort_order>95</sort_order>
                     <action>adminhtml/requesttype/index</action>
                 </requesttype>
+			     <requestformoverview>
+                    <title>ContactRequests</title>
+                    <sort_order>99</sort_order>
+                    <action>adminhtml/requestformoverview/index</action>
+                </requestformoverview>               
             </children>
-        </requestforms>
+        </hearedfrom>
     </menu>
 
 <!--Access Control List-->
@@ -112,23 +102,19 @@
                             	<title>SalesForceStockRequest overview Menu Item</title>
                             </salesforcestockrequestoverview>
                             <invoicesview>
-                                <title>Invoices report Admisol</title>
+                                <title>Invoices report Admisol Menu Item</title>
                             </invoicesview>
                             <creditnotesview>
-                            	<title>Creditnotes report Admisol</title>
+                            	<title>Creditnotes report Admisol Menu Item</title>
                             </creditnotesview>
+                            <requesttype>
+                    			<title>Requesttype list Menu Item</title>
+                    		</requesttype>
+                            <requestformoverview>
+                    			<title>Requestforms list Menu Item</title>
+                    		</requestformoverview>                    		
                         </children>
                     </hearedfrom>
-                    <requestforms>
-                    	<children>
-                    		<requestformview>
-                    			<title>Requestforms list</title>
-                    		</requestformview>
-                    		<requesttype>
-                    			<title>Requesttype list</title>
-                    		</requesttype>
-                    	</children>
-                    </requestforms>
                 </children>
             </admin>
         </resources>

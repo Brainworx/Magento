@@ -4,7 +4,7 @@ class Brainworx_Hearedfrom_RequesttypeController extends Mage_Adminhtml_Controll
 	 * Update required for security for non-admin users after patch 6285
 	 */
 	protected function _isAllowed(){
-		return Mage::getSingleton('admin/session')->isAllowed('requests/requesttype');
+		return Mage::getSingleton('admin/session')->isAllowed('hearedfrom/requesttype');
 	}
 	public function indexAction() {
 		$this->_title ( $this->__ ( 'Overview' ) )->_title ( $this->__ ( 'Requesttype' ) );
