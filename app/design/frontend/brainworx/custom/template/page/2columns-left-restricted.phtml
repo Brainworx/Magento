@@ -1,0 +1,65 @@
+<?php
+/**
+ * 
+ *
+ * @category    design
+ * @package     custom
+ * @copyright   Copyright (c) Brainworx
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Template for Mage_Page_Block_Html
+ */
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->getLang() ?>" lang="<?php echo $this->getLang() ?>">
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+<body
+<?php
+$login = Mage::getSingleton( 'customer/session' )->isLoggedIn(); //Check if User is Logged In
+ if(!$login)
+ {
+    $msg = Mage::getSingleton('core/session')->addError($this->__('Please Sign in / Register first to access this page.'));
+    Mage::getSingleton('customer/session')->setBeforeAuthUrl(Mage::helper('core/url')->getCurrentUrl());  //will redirect to current loaded page after signin
+    header('Location: '. Mage::getUrl('customer/account/login'));
+    exit;
+ }else{
+     $customer = Mage::getSingleton('customer/session')->getCustomer();		
+     if(!empty($customer)){
+          $salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
+          if(empty($salesforce))
+            $msg = Mage::getSingleton('core/session')->addError($this->__('You don't have permission to view this page.'));
+            header('Location: '. Mage::getUrl(''));
+            exit;
+          }
+      }
+ }
+ ?>
+<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+<?php echo $this->getChildHtml('after_body_start') ?>
+<div class="wrapper">
+    <?php echo $this->getChildHtml('global_notices') ?>
+    <div class="page">
+        <?php echo $this->getChildHtml('header') ?>
+        <div class="main-container col2-left-layout">
+            <div class="main">
+                <?php echo $this->getChildHtml('breadcrumbs') ?>
+                <div class="col-main">
+                    <?php echo $this->getChildHtml('global_messages') ?>
+                    <?php echo $this->getChildHtml('content') ?>
+                </div>
+                <div class="col-left sidebar"><?php echo $this->getChildHtml('left') ?></div>
+            </div>
+        </div>
+        <?php echo $this->getChildHtml('footer') ?>
+        <?php echo $this->getChildHtml('global_cookie_notice') ?>
+        <?php echo $this->getChildHtml('before_body_end') ?>
+    </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>
