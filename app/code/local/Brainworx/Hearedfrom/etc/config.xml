@@ -352,7 +352,16 @@
                 </contact_requestform>
             </email>
         </template>
-	</global>
+	   <page>
+           <layouts>
+               <allowed_user translate="label">
+                 <label>2 columns with left bar - Only Zorgpunters</label>
+                 <template>page/2columns-left-restricted.phtml</template>
+                   <layout_handle>page_allowed_user</layout_handle>
+              </allowed_user>
+            </layouts>
+        </page>
+    </global>
 	<frontend>
 		<!-- setup the url path to our new module -->
 		<routers>
@@ -461,11 +470,6 @@
 			<file>requestformoverview.xml</file>
 		    </requestformoverview>
 		</updates>
-		<allowed_user module="page" translate="label">
-			 <label>Only Registerd / Sign in Zorgpunters</label>
-			 <template>page/2columns-left-restricted.phtml</template>
-			 <layout_handle>page_allowed_user</layout_handle>
-		</allowed_user>
         </layout>
         <translate>
 	        <modules>
