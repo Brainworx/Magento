@@ -18,4 +18,27 @@
              </block>   
         </reference>
     </customer_account>
+    <default>
+		<reference name="root">
+			<block type="core/text_list" name="cms_retricted_nav" as="cms_retricted_nav" translate="label">
+				<label>Restricted nav on cms page</label>
+			</block>
+		</reference>
+		<reference name="cms_retricted_nav">
+			 <block type="customer/account_navigation" name="customer_account_navigation" before="-" template="customer/account/navigation.phtml">
+                <action method="addLink" translate="label" module="customer"><name>account</name><path>customer/account/</path><label>Account Dashboard</label></action>
+                <action method="addLinkToPatientOrdersNav"></action><!-- block-AddCusomerLink to add if required -->
+             <!-- <action method="addLinkToDeliveriesNav"></action>-->
+             <action method="addLink" translate="label" module="sales"><name>orders</name><path>sales/order/history/</path><label>My Orders</label></action>
+                <action method="addLinkToInvoicesNav"></action>
+                <action method="addLink" translate="label" module="customer"><name>account_edit</name><path>customer/account/edit/</path><label>Account Information</label></action>
+                <action method="addLink" translate="label" module="customer"><name>address_book</name><path>customer/address/</path><label>Address Book</label></action>
+             <action method="addLinkToUserNav"></action> <!-- ristorno and other custom pages in myaccount -->
+              <action method="addLinkToStockNav"></action>
+         </block>
+         <block type="cms/block" name="document.menu">
+            	<action method="setBlockId"><block_id helper="hearedfrom/getDocMenuBlockId" /></action>
+            </block>
+		</reference>
+	</default>
 </layout>
