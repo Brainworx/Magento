@@ -32,7 +32,7 @@ $login = Mage::getSingleton( 'customer/session' )->isLoggedIn(); //Check if User
      if(!empty($customer)){
           $salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
           if(empty($salesforce))
-            $msg = Mage::getSingleton('core/session')->addError($this->__('You don't have permission to view this page.'));
+            $msg = Mage::getSingleton('core/session')->addError($this->__('You do not have permission to view this page.'));
             header('Location: '. Mage::getUrl(''));
             exit;
           }
@@ -52,7 +52,7 @@ $login = Mage::getSingleton( 'customer/session' )->isLoggedIn(); //Check if User
                     <?php echo $this->getChildHtml('global_messages') ?>
                     <?php echo $this->getChildHtml('content') ?>
                 </div>
-                <div class="col-left sidebar"><?php echo $this->getChildHtml('left') ?></div>
+                <div class="col-left sidebar"><?php echo $this->getChildHtml('cms_retricted_nav') ?></div>
             </div>
         </div>
         <?php echo $this->getChildHtml('footer') ?>
