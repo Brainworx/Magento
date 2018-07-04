@@ -429,38 +429,43 @@
 	</frontend>
 	<adminhtml>
         <layout>
-          <updates>
-            <hearedfrom>
-              <file>hearedfrom.xml</file>
-            </hearedfrom>
-             <financial>
-              <file>financial.xml</file>
-            </financial>
-             <financialssupplier>
-              <file>financialssupplier.xml</file>
-            </financialssupplier>
-            <salesforce>
-            	<file>salesforce.xml</file>
-            </salesforce>
-            <salesforcestock>
-            	<file>salesforcestock.xml</file>
-            </salesforcestock>
-            <salesforcestockrequest>
-            	<file>salesforcestockrequest.xml</file>
-            </salesforcestockrequest>
-            <commissionview>
-            	<file>commissionview.xml</file>
-            </commissionview>
-            <invoicesview>
-            	<file>invoicesview.xml</file>
-            </invoicesview>
-             <creditnotesview>
-            	<file>creditnotesview.xml</file>
-            </creditnotesview>
-            <requestformoverview>
-            	<file>requestformoverview.xml</file>
-            </requestformoverview>
-          </updates>
+		<updates>
+		    <hearedfrom>
+		      <file>hearedfrom.xml</file>
+		    </hearedfrom>
+		     <financial>
+		      <file>financial.xml</file>
+		    </financial>
+		     <financialssupplier>
+		      <file>financialssupplier.xml</file>
+		    </financialssupplier>
+		    <salesforce>
+			<file>salesforce.xml</file>
+		    </salesforce>
+		    <salesforcestock>
+			<file>salesforcestock.xml</file>
+		    </salesforcestock>
+		    <salesforcestockrequest>
+			<file>salesforcestockrequest.xml</file>
+		    </salesforcestockrequest>
+		    <commissionview>
+			<file>commissionview.xml</file>
+		    </commissionview>
+		    <invoicesview>
+			<file>invoicesview.xml</file>
+		    </invoicesview>
+		     <creditnotesview>
+			<file>creditnotesview.xml</file>
+		    </creditnotesview>
+		    <requestformoverview>
+			<file>requestformoverview.xml</file>
+		    </requestformoverview>
+		</updates>
+		<allowed_user module="page" translate="label">
+			 <label>Only Registerd / Sign in Zorgpunters</label>
+			 <template>page/2columns-left-restricted.phtml</template>
+			 <layout_handle>page_allowed_user</layout_handle>
+		</allowed_user>
         </layout>
         <translate>
 	        <modules>
