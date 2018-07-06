@@ -18,7 +18,6 @@ class MageWorx_OrdersEdit_Model_Observer
      */
     public function convertOrderItemToQuoteItem($observer)
     {
-    	Mage::log('orderedit convertOrderItemToQuoteItem');
         $helper = $this->getMwHelper();
         if (!$helper->isEnabled()) {
             return $this;
@@ -128,7 +127,6 @@ class MageWorx_OrdersEdit_Model_Observer
      */
     public function convertOrderToQuote($observer)
     {
-    	Mage::log('orderedit convertOrderToQuote');
 //         $helper = $this->getMwHelper();
 //         if (!$helper->isEnabled()) {
 //             return $this;
@@ -182,7 +180,6 @@ class MageWorx_OrdersEdit_Model_Observer
      */
     public function orderCreateProcessData($observer)
     {
-    	Mage::log('orderedit orderCreateProcessData');
 //         $request = $observer->getEvent()->getRequest();
 //         if (isset($request['order']['shipping_price'])) {
 //             $shippingPrice = $request['order']['shipping_price'];
@@ -204,7 +201,6 @@ class MageWorx_OrdersEdit_Model_Observer
      */
     public function quoteCollectTotalsAfter($observer)
     {
-    	Mage::log('orderedit quoteCollectTotalsAfter');
         if (!$this->getMwHelper()->isEnabled()) {
             return $this;
         }
@@ -501,7 +497,6 @@ class MageWorx_OrdersEdit_Model_Observer
             $appliedRuleIds = explode(',', $quote->getAppliedRuleIds());
             $rules =  Mage::getModel('salesrule/rule')->getCollection()->addFieldToFilter('rule_id' , array('in' => $appliedRuleIds));
             foreach ($rules as $rule) {
-            	Mage::log('Appliing shipping rule orderedit');
                 //check and apply free shipping shopping cart rule
 //                 if($rule->getSimpleFreeShipping() == Mage_SalesRule_Model_Rule::FREE_SHIPPING_ADDRESS) {
 //                     $address = $quote->getShippingAddress();
