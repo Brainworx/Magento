@@ -44,6 +44,8 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
 					'main_table.order_item_id = item.item_id',
 					array('product' => 'name', 'sku')
 			);
+			$collection->addFieldToFilter('main_table.ristorno',array('gt'=>0));
+			
 			$this->setCollection($collection);
 	        
 	        return parent::_prepareCollection();
@@ -87,15 +89,6 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         		'index'     => 'sold_by',
         		'filter_index' => 'sold_by',
         ));
-        $this->addColumn('category_ids',array(
-        		'header'=> Mage::helper('hearedfrom')->__('Category'),
-        		'type'  => 'text',
-        		'width'     => '100px',
-        		'index' => 'category_ids',
-        		//	'options' => $this->catOptions,
-        		'renderer'  => 'Brainworx_Hearedfrom_Block_Adminhtml_Hearedfrom_List_Cat',
-        		'filter_condition_callback' => array($this, '_categoryFilter')
-        ));
         $this->addColumn('product', array(
         		'header'    => Mage::helper('hearedfrom')->__('Product'),
         		'align'     =>'left',
@@ -111,12 +104,6 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         		'width'     => '50px',
         		'index'     => 'increment_id'
         ));
-//         $this->addColumn('orig_order_id', array(
-//         		'header'    => Mage::helper('hearedfrom')->__('Order #'),
-//         		'align'     =>'left',
-//         		'width'     => '50px',
-//         		'index'     => 'orig_order_id'
-//         ));
         $this->addColumn('type', array(
         		'header'    => Mage::helper('hearedfrom')->__('Type'),
         		'header_css_class'=>'a-center',
@@ -126,15 +113,15 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
         		'type'  => 'options',
         		'options'	=>  Mage::getModel('hearedfrom/salesCommission')->getTypes(),
         ));
-        $this->addColumn('net_amount', array(
-        		'header'    => Mage::helper('hearedfrom')->__('Amount ex VAT'),
-        		'header_css_class'=>'a-right',
-        		'width'     => '25px',
-        		'index'     => 'net_amount',
-        		'type'		=> 'number',//price
-        		//'currency_code' => Mage::app()->getStore(0)->getBaseCurrency()->getCode(),
+//         $this->addColumn('net_amount', array(
+//         		'header'    => Mage::helper('hearedfrom')->__('Amount ex VAT'),
+//         		'header_css_class'=>'a-right',
+//         		'width'     => '25px',
+//         		'index'     => 'net_amount',
+//         		'type'		=> 'number',//price
+//         		//'currency_code' => Mage::app()->getStore(0)->getBaseCurrency()->getCode(),
         		
-        ));
+//         ));
         $this->addColumn('ristorno', array(
         		'header'    => Mage::helper('hearedfrom')->__('Ristorno'),
         		'header_css_class'=>'a-right',
