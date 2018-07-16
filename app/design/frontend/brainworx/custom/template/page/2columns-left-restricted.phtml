@@ -31,7 +31,7 @@ $login = Mage::getSingleton( 'customer/session' )->isLoggedIn(); //Check if User
      $customer = Mage::getSingleton('customer/session')->getCustomer();		
      if(!empty($customer)){
           $salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
-          if(empty($salesforce))
+          if(empty($salesforce)){
             $msg = Mage::getSingleton('core/session')->addError($this->__('You do not have permission to view this page.'));
             header('Location: '. Mage::getUrl(''));
             exit;
