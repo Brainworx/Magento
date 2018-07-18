@@ -165,9 +165,16 @@ select{
 	height:30px;
 }
 .call_us{
-	padding: 0px 0px 10px 15px;
-	color: #2B3990;
+	color: #F26522;
+    position: absolute;
+    top: 20px;
+    right: 10px;
 }
 .block-account li, .block-cms-menu li>ul{
 	margin-left:15px;
+}
+@media only screen and (max-width: 1095px){
+.call_us {
+    top:200px;
+}
 }
