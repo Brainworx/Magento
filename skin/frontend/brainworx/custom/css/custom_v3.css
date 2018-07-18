@@ -179,6 +179,11 @@ select{
 }
 @media only screen and (max-width: 1095px){
 .call_us {
-    top:200px;
+    top:150px;
+}
+}
+@media only screen and (max-width: 500px){
+.call_us {
+    top:35px;
 }
 }
