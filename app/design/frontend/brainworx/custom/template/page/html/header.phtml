@@ -39,6 +39,8 @@
         <!-- Skip Links -->
 
         <div class="skip-links">
+            
+        <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('call_us')->toHtml() ?>
             <a href="#header-nav" class="skip-link skip-nav">
                 <span class="icon"></span>
                 <span class="label"><?php echo $this->__('Menu'); ?></span>
@@ -68,8 +70,6 @@
         <!-- Navigation -->
 
         <div id="header-nav" class="skip-content">
-        
-        <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('call_us')->toHtml() ?>
             <?php echo $this->getChildHtml('topMenu') ?>
         </div>
 
