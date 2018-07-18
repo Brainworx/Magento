@@ -165,10 +165,14 @@ select{
 	height:30px;
 }
 .call_us{
-	color: #F26522;
+    color: #F26522;
     position: absolute;
-    top: 20px;
+    top: 15px;
     right: 10px;
+    font-size: 23px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
 }
 .block-account li, .block-cms-menu li>ul{
 	margin-left:15px;
