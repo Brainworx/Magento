@@ -7,6 +7,8 @@
 $_item = $this->getItem();
 $isVisibleProduct = $_item->getProduct()->isVisibleInSiteVisibility();
 $canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage_Catalog_Model_Product_Attribute_Source_Msrp_Type::TYPE_BEFORE_ORDER_CONFIRM);
+$skustoaddextra = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_TOADD')->getValue('text'));
+$autoitem=!empty($skustoaddextra)&&in_array($_item->getSku(),$skustoaddextra);
 ?>
 <tr>
     <td class="product-cart-image">
@@ -185,10 +187,11 @@ $canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage
         <?php endif; ?>
     <?php endif; ?>
     <td class="product-cart-actions" data-rwd-label="<?php echo $this->__('Qty'); ?>">
-        <input type="text" pattern="\d*" name="cart[<?php echo $_item->getId() ?>][qty]" value="<?php echo $this->getQty() ?>" size="4" title="<?php echo $this->__('Qty') ?>" class="input-text qty" maxlength="12" />
-
+        <input type="text" pattern="\d*" name="cart[<?php echo $_item->getId() ?>][qty]" value="<?php echo $this->getQty() ?>" size="4" title="<?php echo $this->__('Qty') ?>" class="input-text qty" maxlength="12" <?php if($autoitem):?> disabled <?php endif;?>/>
+	<?php if(!$autoitem):?>
         <button type="submit" name="update_cart_action" value="update_qty" title="<?php echo $this->__('Update'); ?>" class="button btn-update"><span><span><?php echo $this->__('Update'); ?></span></span>
         </button>
+        <?php endif;?>
 
         <ul class="cart-links">
             <?php if ($isVisibleProduct): ?>
@@ -302,9 +305,11 @@ $canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage
         <?php endif; ?>
     </td>
     <?php endif; ?>
+    <?php if(!$autoitem):?>
     <td class="a-center product-cart-remove">
         <a href="<?php echo $this->getDeleteUrl() ?>" title="<?php echo $this->__('Remove Item') ?>" class="btn-remove btn-remove2"><?php echo $this->__('Remove Item') ?></a>
     </td>
+    <?php endif; ?>
 </tr>
 
 

@@ -347,8 +347,9 @@ class Brainworx_Rental_Model_Observer
 	{
 		try{
 			//check additional cleaning required
-			$skustocleanextra = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_REIN ')->getValue('text'));
-			
+			$skuswithextratoadd = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_REIN')->getValue('text'));
+			$skustoaddextra = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_TOADD')->getValue('text'));
+				
 			Mage::getSingleton('core/session')->setVAPH(false);
 			//Mage::log('sales_quote_product_add_after event occurred');
 			$catvaph = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_VAPH')->getValue('text');
@@ -358,8 +359,8 @@ class Brainworx_Rental_Model_Observer
 			if ($item->getParentItem()) {
 				$item = $item->getParentItem();
 			}
-			//when we're adding cleaning -- no need for further process
-			if($item->getSku()=='ADM-rein'){
+			//when we're adding auto products -- no need for further process
+			if(in_array($item->getSku(),$skustoaddextra)){
 				return;
 			}
 			
@@ -370,36 +371,44 @@ class Brainworx_Rental_Model_Observer
 				Mage::getSingleton('checkout/session')->setNoCartRedirect(true);
 			}
 			
-			//check cleaning available
-			if(!empty($skustocleanextra)&&in_array($item->getSku(),$skustocleanextra)){
+			//check to add additional productse
+			if(!empty($skuswithextratoadd)&&in_array($item->getSku(),$skuswithextratoadd)){
+				$counter=0;
+				foreach($skuswithextratoadd as $s){
+					if($s == $item->getSku()){
+						break;
+					}else{
+						$counter++;
+					}
+				}
+				
 				// additiona product required
 				$quoteitems = Mage::getModel('checkout/cart')->getQuote()->getAllItems();
+				$product = Mage::getModel('catalog/product')->loadByAttribute('sku',$skustoaddextra[$counter]);
+				$cart = Mage::getModel('checkout/cart');
+				
 				//check extra item present
 				$found = false;
 				$reinitem='';
 				$qty=0;
 				foreach ($quoteitems as  $qitem)
 				{
-					if(!empty($qitem->getSku()=='ADM-rein')){
+					if(!empty($qitem->getSku()==$skustoaddextra[$counter])){
 						$found=true;
 						$reinitem=$qitem->getId();
 						break;
 					}
 				}
+
 				//product to clean already in basket
 				if($found){
 					// update extra item
-					$cart = Mage::getModel('checkout/cart');
-					$product = Mage::getModel('catalog/product')->loadByAttribute('sku','ADM-rein');
-					$cart->updateItem($reinitem, $item->getQty());
-					Mage::getSingleton('checkout/session')->setCartWasUpdated(true);					
+					$cart->updateItem($reinitem, $item->getQty());					
 				}else{					
 					// add extra item
-			        $cart = Mage::getModel('checkout/cart');
-			        $product = Mage::getModel('catalog/product')->loadByAttribute('sku','ADM-rein');
 			        $cart->addProduct($product->getEntityId());
-			        Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
 				}
+				Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
 			}
 			
 			$rnotice = 0;
@@ -535,51 +544,40 @@ class Brainworx_Rental_Model_Observer
 		try{
 			
 			//check additional cleaning products removed from basket
-			$skustocleanextra = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_REIN ')->getValue('text'));
-			
-			 $item = $observer->getEvent()->getQuoteItem();
-			
-			//check extra cleaning
-			if(!empty($skustocleanextra)&&in_array($item->getSku(),$skustocleanextra)){
+			$skuswithextratoadd = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_REIN ')->getValue('text'));
+			$skustoaddextra = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_TOADD')->getValue('text'));
 				
+			$item = $observer->getEvent()->getQuoteItem();
+			
+			//check sku with extra is being removed
+			if(!empty($skuswithextratoadd)&&in_array($item->getSku(),$skuswithextratoadd)){
+				$counter=0;
+				foreach($skuswithextratoadd as $s){
+					if($s == $item->getSku()){
+						break;
+					}else{
+						$counter++;
+					}
+				}
 				//check item is here
-				$reinfound=false;
-				$reinitemid;
+				$extraitemfound=false;
+				$extraitemid;
 				$items = Mage::getModel('checkout/cart')->getQuote()->getAllItems();
 				foreach ($items as  $iitem)
 				{
-					if($iitem->getSku()=='ADM-rein'){
-						$reinfound=true;
-						$reinitemid=$iitem->getId();
+					if($iitem->getSku()==$skustoaddextra[$counter]){
+						$extraitemfound=true;
+						$extraitemid=$iitem->getId();
 						break;
 					}
 				}
-				if($reinfound){
+				if($extraitemfound){
 					$cart = Mage::getModel('checkout/cart');
-					$cart->removeItem($reinitemid)->save();
-					Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
-				}
-			}elseif($item->getSku()=='ADM-rein'){
-				//reiniging was removed
-				$items = Mage::getModel('checkout/cart')->getQuote()->getAllItems();
-				$found = false;
-				$qty=0;
-				foreach ($items as  $iitem)
-				{
-					if(!empty($skustocleanextra)&&in_array($iitem->getSku(),$skustocleanextra)){
-						$found=true;
-						$qty=$iitem->getQty();
-						break;
-					}
-				}
-				//product to clean still in basket -- adding it again // remove not allowed
-				if($found){
-					$cart = Mage::getModel('checkout/cart');
-					$product = Mage::getModel('catalog/product')->loadByAttribute('sku','ADM-rein');
-					$cart->addProduct($product->getEntityId(),$qty);//, array('sku'=>'ADM-rein','qty' => 1))->save();
+					$cart->removeItem($extraitemid)->save();
 					Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
 				}
 			}
+			
 			
 		}catch(Exception $e){
 			Mage::log($e->getMessage());
@@ -589,33 +587,49 @@ class Brainworx_Rental_Model_Observer
 	}
 	function hookToCartUpdateItems(Varien_Event_Observer $observer){
 		try{
-			$skustocleanextra = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_REIN ')->getValue('text'));
-				
+			$skuswithextratoadd = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_REIN ')->getValue('text'));
+			$skustoaddextra = explode(',',Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('SKU_EXTRA_TOADD')->getValue('text'));
+			
 			$cart=$observer->getCart();
 			$quoteItems = $cart->getQuote()->getAllVisibleItems();
 			
-			$qty=0;
-			$rqty=0;
-			$found=false;
-			$reinfound=false;
-			$reinitemid='';
+			$qty=[];
+			$cnt=0;
+			$rqty=[];
+			$extraitemid=[];
 			foreach ($quoteItems as $item) {
-				if(!empty($skustocleanextra)&&in_array($item->getSku(),$skustocleanextra)){
-					$found=true;
-					$qty=$item->getQty();
-				}elseif($item->getSku()=='ADM-rein'){
-						$reinfound=true;
-						$reinitemid=$item->getId();
-						$rqty=$item->getQty();
+				if(!empty($skuswithextratoadd)&&in_array($item->getSku(),$skuswithextratoadd)){
+					$cnt=0;
+					foreach($skuswithextratoadd as $s){
+						if($s == $item->getSku()){
+							$qty[$cnt]=$item->getQty();
+							break;
+						}
+						$cnt++;
 					}
+				}elseif(!empty($skustoaddextra)&&in_array($item->getSku(),$skustoaddextra)){
+					$cnt=0;
+					foreach($skustoaddextra as $s){
+						if($s == $item->getSku()){
+							$rqty[$cnt]=$item->getQty();
+							$extraitemid[$cnt]=$item->getId();
+							break;
+						}
+						$cnt++;
+					}
+				}
 			}
-			if($qty!=$rqty){
-				$cart->updateItem($reinitemid, $qty);
-				Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
+			//update the quantity of the auto added product if needed
+			for($i=0; $i < count($skuswithextratoadd);$i++){
+				if(!empty($qty[$i])&&$qty[$i]!=$rqty[$i]){
+					$cart->updateItem($extraitemid[$i], $qty[$i]);
+					Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
+				}
 			}
+			
 		}catch(Exception $e){
 			Mage::log($e->getMessage());
-			Mage::helper("rental/error")->sendErrorMail("Error remove item");
+			Mage::helper("rental/error")->sendErrorMail("Error update item: ".$e->getMessage());
 		}
 	}
 }
