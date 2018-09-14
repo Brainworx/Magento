@@ -371,37 +371,35 @@ class Brainworx_Rental_Model_Observer
 			}
 			
 			//check cleaning available
-			$quoteitems = Mage::getModel('checkout/cart')->getQuote()->getAllItems();
-			$found = false;
-			$reinitem='';
-			$qty=0;
-			foreach ($quoteitems as  $qitem)
-			{
-				if(!empty($qitem->getSku()=='ADM-rein')){
-					$found=true;
-					$reinitem=$qitem->getId();
-					break;
+			if(!empty($skustocleanextra)&&in_array($item->getSku(),$skustocleanextra)){
+				// additiona product required
+				$quoteitems = Mage::getModel('checkout/cart')->getQuote()->getAllItems();
+				//check extra item present
+				$found = false;
+				$reinitem='';
+				$qty=0;
+				foreach ($quoteitems as  $qitem)
+				{
+					if(!empty($qitem->getSku()=='ADM-rein')){
+						$found=true;
+						$reinitem=$qitem->getId();
+						break;
+					}
 				}
-			}
-			//product to clean already in basket
-			if($found){
-				$cart = Mage::getModel('checkout/cart');
-				$product = Mage::getModel('catalog/product')->loadByAttribute('sku','ADM-rein');
+				//product to clean already in basket
 				if($found){
+					// update extra item
+					$cart = Mage::getModel('checkout/cart');
+					$product = Mage::getModel('catalog/product')->loadByAttribute('sku','ADM-rein');
 					$cart->updateItem($reinitem, $item->getQty());
-					Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
+					Mage::getSingleton('checkout/session')->setCartWasUpdated(true);					
+				}else{					
+					// add extra item
+			        $cart = Mage::getModel('checkout/cart');
+			        $product = Mage::getModel('catalog/product')->loadByAttribute('sku','ADM-rein');
+			        $cart->addProduct($product->getEntityId());
+			        Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
 				}
-				
-			}
-			
-			//check extra cleaning
-			if(!$found && !empty($skustocleanextra)&&in_array($item->getSku(),$skustocleanextra)){
-				
-				// Below code will create instance of cart
-		        $cart = Mage::getModel('checkout/cart');
-		        $product = Mage::getModel('catalog/product')->loadByAttribute('sku','ADM-rein');
-		        $cart->addProduct($product->getEntityId());//, array('sku'=>'ADM-rein','qty' => 1))->save();
-		        Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
 			}
 			
 			$rnotice = 0;
