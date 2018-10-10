@@ -49,10 +49,10 @@
 						<table>vw_hearedfrom_commission_grouped</table>
 					</commissionView>
 					<invoicesView>
-						<table>vw_invoices_admisol_full2</table>
+						<table>vw_invoices_admisol_full3</table>
 					</invoicesView>
 					<creditnotesView>
-						<table>vw_creditnotes_admisol</table>	
+						<table>vw_creditnotes_admisol2</table>	
 					</creditnotesView>
 					<requestform>
 						<table>hearedfrom_requestform</table>	
