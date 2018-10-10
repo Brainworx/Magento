@@ -171,6 +171,22 @@ class Brainworx_hearedfrom_Block_Adminhtml_Creditnotesview_Grid extends Mage_Adm
         		'index' => 'Btw_verzendkosten',
         		'filter'	=> false,
         ));        
+	$this->addColumn('Extra_verzendkosten',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Extra Verzendkosten'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Extra_verzendkosten',
+        		'filter'	=> false,
+        ));
+        $this->addColumn('Extra_btw_verzendkosten',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Extra Btw Verzendkosten'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Extra_btw_verzendkosten',
+        		'filter'	=> false,
+        ));
         $this->addColumn('Subtotaal_Verhuur',array(
         		'header'=> Mage::helper('hearedfrom')->__('Subtotal_rental'),
         		'header_css_class'=>'a-right',
@@ -217,6 +233,22 @@ class Brainworx_hearedfrom_Block_Adminhtml_Creditnotesview_Grid extends Mage_Adm
         		'type'  => 'number',
         		'width' => '25px',
         		'index' => 'Btw21_verkoop',
+        		'filter'	=> false,
+        ));
+	$this->addColumn('Btw6_commissie',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Vat_6% Commission'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Btw6_commissie',
+        		'filter'	=> false,
+        ));
+        $this->addColumn('Btw21_commissie',array(
+        		'header'=> Mage::helper('hearedfrom')->__('Vat_21% Commission'),
+        		'header_css_class'=>'a-right',
+        		'type'  => 'number',
+        		'width' => '25px',
+        		'index' => 'Btw21_commissie',
         		'filter'	=> false,
         ));
         
