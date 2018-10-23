@@ -26,13 +26,13 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     	$afhfound=false;
     	$levfound=false;
     	$excllevfound=false;
-	$nodeloptionfound=false;
-	//per item to use in loop
-	$i_consigfound=false;
+		$nodeloptionfound=false;
+		//per item to use in loop
+		$i_consigfound=false;
     	$i_afhfound=false;
     	$i_levfound=false;
     	$i_excllevfound=false;
-	$i_nodeloptionfound=false;
+		$i_nodeloptionfound=false;
     	
     	$catconsig = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_CONSIG')->getValue('text');
     	$catafh = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_AFH')->getValue('text');
@@ -57,9 +57,9 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 			$i_nodeloptionfound=(!($i_consigfound||$i_afhfound||$i_levfound));
 			
 			$consigfound=$consigfound?$consigfound:$i_consigfound;
-    			$afhfound=$afhfound?$afhfound:$i_afhfound;
-    			$levfound=$levfound?$levfound:$i_levfound;
-    			$excllevfound=$excllevfound?$excllevfound:$i_excllevfound;
+    		$afhfound=$afhfound?$afhfound:$i_afhfound;
+    		$levfound=$levfound?$levfound:$i_levfound;
+    		$excllevfound=$excllevfound?$excllevfound:$i_excllevfound;
 			$nodeloptionfound=$nodeloptionfound?$nodeloptionfound:$i_nodeloptionfound;
 			
 			//reset
@@ -101,7 +101,15 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		if (isset($data['email'])) {
     			$data['email'] = trim($data['email']);
     		}
+    		if (isset($data['email2'])) {
+    			$data['fax'] = trim($data['email2']);
+    		}
     		$result = $this->getOnepage()->saveBilling($data, $customerAddressId);
+    		
+    		//birthdate patient
+    		if (isset($data['birthdate'])) {
+    			Mage::getSingleton('core/session')->setPatientBirthDate(trim($data['birthdate']));
+    		}    		
     		
     		$error = $this->determineDeliveryOptions($customerAddressId);
     		if($error){
@@ -116,22 +124,12 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     						'name' => 'payment-method',
     						'html' => $this->_getPaymentMethodsHtml()
     				);
-    			} elseif (isset($data['use_for_shipping']) && $data['use_for_shipping'] == 1) {
-//     				if(Mage::getSingleton('core/session')->getVAPH()){
-//     					$result['goto_section'] = 'hearedfrom';
-//     				}else{
-    					$result['goto_section'] = 'shipping_method';
-//     				}
+    			} else {
+    				$result['goto_section'] = 'shipping_method';
     				$result['update_section'] = array(
     						'name' => 'shipping-method',
     						'html' => $this->_getShippingMethodsHtml()
-    				);
-    
-    				$result['allow_sections'] = array('shipping');
-    				$result['duplicateBillingInfo'] = 'true';
-    				
-    			} else {
-    				$result['goto_section'] = 'shipping';
+    				);    				
     			}
     		}
     
@@ -182,12 +180,15 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 //     			if(Mage::getSingleton('core/session')->getVAPH()){
 //     				$result['goto_section'] = 'hearedfrom';
 //     			}else{
-	    			$result['goto_section'] = 'shipping_method';
+// 	    			$result['goto_section'] = 'shipping_method';
     			//}
-    			$result['update_section'] = array(
-    					'name' => 'shipping-method',
-    					'html' => $this->_getShippingMethodsHtml()
-    			);
+    			$this->loadLayout('checkout_onepage_hearedfrom');
+    			$result['goto_section'] = 'hearedfrom';
+    			
+//     			$result['update_section'] = array(
+//     					'name' => 'shipping-method',
+//     					'html' => $this->_getShippingMethodsHtml()
+//     			);
     		}
     		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
     	}
@@ -238,11 +239,15 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		return;
     	}
     	if ($this->getRequest()->isPost()) {
-    		$data = $this->getRequest()->getPost('shipping_method', '');
-    		Mage::getSingleton('customer/session')->setSeletedShipping($data);
+    		$method = $this->getRequest()->getPost('shipping_method', '');
     		
-    		$result = $this->getOnepage()->saveShippingMethod($data);
-    		// $result will contain error data if shipping method is empty
+    		$shipping = explode("_",$method);
+    		$_usebillingaddress = $this->getRequest()->getPost($shipping[0].'_use_for_shipping');
+    		
+    		Mage::getSingleton('customer/session')->setSeletedShipping($method);
+    		
+    		$result = $this->getOnepage()->saveShippingMethod($method,$_usebillingaddress);
+    		
     		if (!$result) {
     			Mage::dispatchEvent(
     			'checkout_controller_onepage_save_shipping_method',
@@ -251,16 +256,22 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     			'quote'   => $this->getOnepage()->getQuote()));
     			$this->getOnepage()->getQuote()->collectTotals();
     			$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
-    
-    			$this->loadLayout('checkout_onepage_hearedfrom');
-
-                $result['goto_section'] = 'hearedfrom';
+    			
+    			
+    			if (isset($_usebillingaddress) && $_usebillingaddress == 1){
+    				$this->loadLayout('checkout_onepage_hearedfrom');  
+    				$result['goto_section'] = 'hearedfrom';
+    				$result['allow_sections'] = array('shipping'); //used in oppcheckout.js from skin folder
+    				$result['duplicateBillingInfo'] = 'true';
+    			}else{
+    				$result['goto_section'] = 'shipping';
+    				
+    			}
     		}
     		
     		//preferred delivery date is selected from datepicker
     		//$_preferred_delivery_date = $this->getRequest()->getPost('pddate');
     		//delivery before is the date generated after picking or 24hrs or within 3 days
-    		$method = $this->getRequest()->getPost('shipping_method');
     		if(!empty($method))
     			$_delivery_before = $this->getRequest()->getPost($method.'_delrange');
     		//set preferred delivery day with selection as made in radio buttons
@@ -371,12 +382,6 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 			
 			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
 			
-			//birthdate patient
-			$_patient_bdate = $this->getRequest()->getPost('patientbdt');
-			if(!empty($_patient_bdate)){
-				Mage::getSingleton('core/session')->setPatientBirthDate($_patient_bdate);
-			}
-			 
 
 			$result = array();
 			$result['goto_section'] = 'payment';

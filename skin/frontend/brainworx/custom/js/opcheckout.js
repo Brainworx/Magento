@@ -36,7 +36,7 @@ Checkout.prototype = {
         this.method = '';
         this.payment = '';
         this.loadWaiting = false;
-        this.steps = ['login', 'billing', 'shipping', 'shipping_method', 'payment', 'review'];
+        this.steps = ['login', 'billing', 'shipping_method','shipping','hearedfrom', 'payment', 'review'];
         //We use billing as beginning step since progress bar tracks from billing
         this.currentStep = 'billing';
 
@@ -190,17 +190,9 @@ Checkout.prototype = {
     },
 
     setBilling: function() {
-        if (($('billing:use_for_shipping_yes')) && ($('billing:use_for_shipping_yes').checked)) {
-            shipping.syncWithBilling();
-            $('opc-shipping').addClassName('allow');
-            this.gotoSection('shipping_method', true);
-        } else if (($('billing:use_for_shipping_no')) && ($('billing:use_for_shipping_no').checked)) {
-            $('shipping:same_as_billing').checked = false;
-            this.gotoSection('shipping', true);
-        } else {
-            $('shipping:same_as_billing').checked = true;
-            this.gotoSection('shipping', true);
-        }
+    	//this.nextStep();
+        this.gotoSection('shipping_method', true);
+        //this.accordion.openNextSection(true);
 
         // this refreshes the checkout progress column
 
@@ -220,11 +212,26 @@ Checkout.prototype = {
 
     setShipping: function() {
         //this.nextStep();
-        this.gotoSection('shipping_method', true);
+        this.gotoSection('hearedfrom', true);
         //this.accordion.openNextSection(true);
     },
 
     setShippingMethod: function() {
+        
+        if (($('billing:use_for_shipping_yes')) && ($('billing:use_for_shipping_yes').checked)) {
+            shipping.syncWithBilling();
+            $('opc-shipping').addClassName('allow');
+            this.gotoSection('shipping_method', true);
+        } else if (($('billing:use_for_shipping_no')) && ($('billing:use_for_shipping_no').checked)) {
+            $('shipping:same_as_billing').checked = false;
+            this.gotoSection('shipping', true);
+        } else {
+            $('shipping:same_as_billing').checked = true;
+            this.gotoSection('shipping', true);
+        }
+    },
+    
+    setHearedfrom: function() {
         //this.nextStep();
         this.gotoSection('payment', true);
         //this.accordion.openNextSection(true);
@@ -332,12 +339,11 @@ Billing.prototype = {
             Field.clear('billing:address_id');  
             Field.clear('billing:company');
             Field.clear('billing:street1');
-            Field.clear('billing:street2');
             Field.clear('billing:vat_id');
             Field.clear('billing:city');
             Field.clear('billing:postcode');
             Field.clear('billing:telephone');
-            Field.clear('billing:fax');
+            Field.clear('billing:email2');
         }
     },
 
@@ -675,6 +681,95 @@ ShippingMethod.prototype = {
         }
 
         payment.initWhatIsCvvListeners();
+        
+        checkout.setStepResponse(response);
+
+//        if (response.goto_section) {
+//            checkout.gotoSection(response.goto_section, true);
+//            checkout.reloadProgressBlock();
+//            return;
+//        }
+
+
+//        checkout.setShippingMethod();
+    }
+}
+//hearedfrom
+var Hearedfrom = Class.create();
+Hearedfrom.prototype = {
+    initialize: function(form, saveUrl){
+        this.form = form;
+        if ($(this.form)) {
+            $(this.form).observe('submit', function(event){this.save();Event.stop(event);}.bind(this));
+        }
+        this.saveUrl = saveUrl;
+        this.validator = new Validation(this.form);
+        this.onSave = this.nextStep.bindAsEventListener(this);
+        this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
+    },
+
+    validate: function() {
+        var methods = document.getElementsByName('hearedfrom');
+        if (methods.length==0) {
+            alert(Translator.translate('Your order cannot be completed at this time. Please make necessary changes in your extra information.').stripTags());
+            return false;
+        }
+
+        if(!this.validator.validate()) {
+            return false;
+        }
+
+//        for (var i=0; i<methods.length; i++) {
+//            if (methods[i].checked) {
+//                return true;
+//            }
+//        }
+//        alert(Translator.translate('Please specify all extra information.').stripTags());
+        return false;
+    },
+
+    save: function(){
+
+        if (checkout.loadWaiting!=false) return;
+        if (this.validate()) {
+            checkout.setLoadWaiting('shipping-method');
+            var request = new Ajax.Request(
+                this.saveUrl,
+                {
+                    method:'post',
+                    onComplete: this.onComplete,
+                    onSuccess: this.onSave,
+                    onFailure: checkout.ajaxFailure.bind(checkout),
+                    parameters: Form.serialize(this.form)
+                }
+            );
+        }
+    },
+
+    resetLoadWaiting: function(transport){
+        checkout.setLoadWaiting(false);
+    },
+
+    nextStep: function(transport){
+        if (transport && transport.responseText){
+            try{
+                response = eval('(' + transport.responseText + ')');
+            }
+            catch (e) {
+                response = {};
+            }
+        }
+
+        if (response.error) {
+            alert(response.message);
+            return false;
+        }
+
+        if (response.update_section) {
+            $('checkout-'+response.update_section.name+'-load').update(response.update_section.html);
+        }
+
+        payment.initWhatIsCvvListeners();
 
         if (response.goto_section) {
             checkout.gotoSection(response.goto_section, true);
@@ -689,6 +784,7 @@ ShippingMethod.prototype = {
         checkout.setShippingMethod();
     }
 }
+
 
 
 // payment

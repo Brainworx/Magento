@@ -19,7 +19,8 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
 <?php else: ?>
     <dl class="sp-methods">
     <?php $shippingCodePrice = array(); ?>
-    <?php $_sole = count($_shippingRateGroups) == 1; foreach ($_shippingRateGroups as $code => $_rates): ?>
+    <?php $_sole = count($_shippingRateGroups) == 1; 
+    foreach ($_shippingRateGroups as $code => $_rates): ?>
         <dt><?php if($code == "freeshipping" && !$pickup ){continue;} 
         	else if($code == "tablerate" &&!$delivery ){continue;}
             else if($code == "salesrate" &&!$delivery ){continue;}
@@ -72,11 +73,22 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
             </ul>
         </dd>
         
+        <?php if(($delivery && ($code == "tablerate" || $code=="salesrate")) || $code="specialrate"): ?>
+     	<div id="onepage-checkout-shipping-method-address">
+     		<ul class="form-list">
+     			<li class="control">
+     				<input type="checkbox" name=<?php echo $code.'_use_for_shipping';?> id="billing:use_for_shipping" value="1" checked="checked" title="<?php echo  $this->__('Ship to billing address') ?>" class="checkbox" /><label for="use_for_shipping"><?php echo  $this->__('Ship to billing address') ?></label>
+     			</li>
+     		</ul>
+     	</div>
+        <?php endif;?>
+        
         <?php if ($code == "tablerate" && $delivery): ?>
-     <div><p class="shipmentinfo">
-     <?php echo $this->__('Deze transportprijs betaalt u eenmalig en omvat: levering en installatie, ophaling en professionele reiniging en een snelle hersteldienst. Voor onze AD matras is er een extra eindreiniging inbegrepen.') ?>
-    </p></div>
-     <?php endif; ?>
+        <div><p class="shipmentinfo">
+        <?php echo $this->__('Deze transportprijs betaalt u eenmalig en omvat: levering en installatie, ophaling en professionele reiniging en een snelle hersteldienst. Voor onze AD matras is er een extra eindreiniging inbegrepen.') ?>
+        </p></div>
+        <?php endif; ?>
+     
     <?php endforeach; ?>
     </dl>
     

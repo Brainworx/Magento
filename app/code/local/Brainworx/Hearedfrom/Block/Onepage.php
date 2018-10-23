@@ -10,7 +10,7 @@ class Brainworx_Hearedfrom_Block_Onepage extends Mage_Checkout_Block_Onepage
             $steps['login'] = $this->getCheckout()->getStepData('login');
         }
 
-        $stepCodes = array('billing', 'shipping', 'shipping_method','hearedfrom', 'payment', 'review');
+        $stepCodes = array('billing', 'shipping_method', 'shipping', 'hearedfrom', 'payment', 'review');
 
         foreach ($stepCodes as $step) {
             $steps[$step] = $this->getCheckout()->getStepData($step);
