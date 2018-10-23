@@ -100,6 +100,9 @@
 				<rewrite>
 					<onepage>Brainworx_Hearedfrom_Block_Onepage</onepage>
 				</rewrite>
+				<rewrite>
+					<onepage_billing>Brainworx_Hearedfrom_Block_Onepage_Billing</onepage_billing>
+				</rewrite>
 			</checkout>
 
 			<hearedfrom>
