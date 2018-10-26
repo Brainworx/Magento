@@ -107,8 +107,8 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		$result = $this->getOnepage()->saveBilling($data, $customerAddressId);
     		
     		//birthdate patient
-    		if (isset($data['birthdate'])) {
-    			Mage::getSingleton('core/session')->setPatientBirthDate(trim($data['birthdate']));
+    		if (isset($data['day'])) {
+    			Mage::getSingleton('core/session')->setPatientBirthDate($data['day']."-".$data['month']."-".$data['year']);
     		}    		
     		
     		$error = $this->determineDeliveryOptions($customerAddressId);

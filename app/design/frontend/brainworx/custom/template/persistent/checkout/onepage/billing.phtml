@@ -15,6 +15,8 @@
             </div>
         </li>
     <?php endif; ?>
+    <p><?php echo $this->__('Enter the billing info.') ?></p>
+	                        
     <li id="billing-new-address-form" class="scaffold-form">
         <div class="fieldset">
             <input type="hidden" name="billing[address_id]" value="<?php echo $this->getAddress()->getId() ?>" id="billing:address_id" />
@@ -59,7 +61,7 @@
                             <input type="text" title="<?php echo $this->__('City') ?>" name="billing[city]" value="<?php echo $this->escapeHtml($this->getAddress()->getCity()) ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('city') ?>" id="billing:city" />
                         </div>
                     </div>
-                    <div class="field">
+                    <div class="field" style="display:none;">
                         <label for="billing:region_id" class="required"><em>*</em><?php echo $this->__('State/Province') ?></label>
                         <div class="input-box">
                             <select id="billing:region_id" name="billing[region_id]" title="<?php echo $this->__('State/Province') ?>" class="validate-select" style="display:none;">
@@ -100,14 +102,24 @@
                     </div>
                 </li>
         		<?php endif; ?>
-        		<li class="fields">
-                <div class="field">
-                        <label for="billing:birthdate"><em>*</em><?php echo $this->__('Birth Date Patient') ?></label>
-                        <div class="input-box">
-                            <input type="date" id="billing:birthdate" name="billing[birthdate]" title="<?php echo $this->__('birthdate') ?>" class="input-date required-entry" />
-                        </div>
-                    </div>
-                 </li>
+        		
+        		<?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+        		<?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+            	<?php if ($_dob->isEnabled() || $_gender->isEnabled()): ?>
+                	<li class="fields">
+                	<?php if ($_dob->isEnabled()): ?>
+                    	<div class="field">
+                       		<?php echo $_dob->setDate($this->getQuote()->getCustomerDob())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+                    	</div>
+	                <?php endif; ?>
+	                <?php if ($_gender->isEnabled()): ?>
+	                    <div class="field">
+	                        <?php echo $_gender->setGender($this->getQuote()->getCustomerGender())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+	                    </div>
+	                <?php endif ?>
+	                </li>
+           		<?php endif ?>
+            
                 <li class="fields">
                 <div class="field">
                         <label for="billing:company"><?php echo $this->__('Company') ?></label>
@@ -125,44 +137,27 @@
                 </li>
                 <?php endif; ?>
 
-                <?php if(!$this->isCustomerLoggedIn()): ?>
+            	<?php if(!$this->isCustomerLoggedIn()): ?>
 
-        <?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
-        <?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
-            <?php if ($_dob->isEnabled() || $_gender->isEnabled()): ?>
-                <li class="fields">
-                <?php if ($_dob->isEnabled()): ?>
-                    <div class="field">
-                        <?php echo $_dob->setDate($this->getQuote()->getCustomerDob())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
-                    </div>
-                <?php endif; ?>
-                <?php if ($_gender->isEnabled()): ?>
-                    <div class="field">
-                        <?php echo $_gender->setGender($this->getQuote()->getCustomerGender())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
-                    </div>
-                <?php endif ?>
-                </li>
-            <?php endif ?>
-
-            <?php if ($this->isTaxvatEnabled()):?>
-                <li><?php echo $this->getTaxvatHtml() ?></li>
-            <?php endif; ?>
-
-                <li class="fields" id="register-customer-password">
-                    <div class="field">
-                        <label for="billing:customer_password" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
-                        <div class="input-box">
-                            <input type="password" name="billing[customer_password]" id="billing:customer_password" title="<?php echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label for="billing:confirm_password" class="required"><em>*</em><?php echo $this->__('Confirm Password') ?></label>
-                        <div class="input-box">
-                            <input type="password" name="billing[confirm_password]" title="<?php echo $this->__('Confirm Password') ?>" id="billing:confirm_password" class="input-text required-entry validate-cpassword" />
-                        </div>
-                    </div>
-                </li>
-                <?php echo $this->getChildHtml('persistent.remember.me'); ?>
+	            	<?php if ($this->isTaxvatEnabled()):?>
+	               		<li><?php echo $this->getTaxvatHtml() ?></li>
+	            	<?php endif; ?>
+	
+	                <li class="fields" id="register-customer-password">
+	                    <div class="field">
+	                        <label for="billing:customer_password" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
+	                        <div class="input-box">
+	                            <input type="password" name="billing[customer_password]" id="billing:customer_password" title="<?php echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
+	                        </div>
+	                    </div>
+	                    <div class="field">
+	                        <label for="billing:confirm_password" class="required"><em>*</em><?php echo $this->__('Confirm Password') ?></label>
+	                        <div class="input-box">
+	                            <input type="password" name="billing[confirm_password]" title="<?php echo $this->__('Confirm Password') ?>" id="billing:confirm_password" class="input-text required-entry validate-cpassword" />
+	                        </div>
+	                    </div>
+	                </li>
+	                <?php echo $this->getChildHtml('persistent.remember.me'); ?>
                 <?php endif; ?>
                 <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()):?>
                     <li class="control">

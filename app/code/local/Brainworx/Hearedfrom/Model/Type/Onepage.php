@@ -108,14 +108,37 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     		if ($this->_customerEmailExists($address->getEmail(), Mage::app()->getWebsite()->getId())) {
     			return array('error' => 1, 'message' => $this->_customerEmailExistsMessage);
     		}
-    	}
-    
+    	}   
     	
+    	if($this->getCheckout()->getStepData('shipping', 'complete') != true){
+    		$billing = clone $address;
+    		$billing->unsAddressId()->unsAddressType();
+    		$shipping = $this->getQuote()->getShippingAddress();
+    		$shippingMethod = $shipping->getShippingMethod();
+    		
+    		// Billing address properties that must be always copied to shipping address
+    		$requiredBillingAttributes = array('customer_address_id');
+    		
+    		// don't reset original shipping data, if it was not changed by customer
+    		foreach ($shipping->getData() as $shippingKey => $shippingValue) {
+    			if (!is_null($shippingValue) && !is_null($billing->getData($shippingKey))
+    					&& !isset($data[$shippingKey]) && !in_array($shippingKey, $requiredBillingAttributes)
+    			) {
+    				$billing->unsetData($shippingKey);
+    			}
+    		}
+    		$shipping->addData($billing->getData())
+    		->setSameAsBilling(1)
+    		->setSaveInAddressBook(0)
+    		->setShippingMethod($shippingMethod)
+    		->setCollectShippingRates(true);
+    		$this->getCheckout()->setStepData('shipping', 'complete', true);
+    	}
     
     	$this->getQuote()->collectTotals();
     	$this->getQuote()->save();
     
-    	if (!$this->getQuote()->isVirtual() && $this->getCheckout()->getStepData('shipping', 'complete') == true) {
+    	if (!$this->getQuote()->isVirtual()){// && $this->getCheckout()->getStepData('shipping', 'complete') == true) {
     		//Recollect Shipping rates for shipping methods
     		$this->getQuote()->getShippingAddress()->setCollectShippingRates(true);
     	}
@@ -163,7 +186,7 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     				$shippingMethod = $shipping->getShippingMethod();
     	
     				// Billing address properties that must be always copied to shipping address
-    				$requiredBillingAttributes = array('customer_address_id');
+    				$requiredBillingAttributes = array('customer_address_id','firstname','lastname','company','street','city','postcode','country_id','telephone','fax');
     	
     				// don't reset original shipping data, if it was not changed by customer
     				foreach ($shipping->getData() as $shippingKey => $shippingValue) {
