@@ -359,8 +359,11 @@ class Brainworx_Rental_Model_Observer
 			if ($item->getParentItem()) {
 				$item = $item->getParentItem();
 			}
-			//when we're adding auto products -- no need for further process
+			//when we're adding auto products -- no need for further process expect for adding supplier email when required
 			if(in_array($item->getSku(),$skustoaddextra)){
+				if(!empty($item->getProduct()->getSupplierOrderEmail())){
+					$item->setSupplierneworderemail($item->getProduct()->getSupplierOrderEmail());
+				}
 				return;
 			}
 			
