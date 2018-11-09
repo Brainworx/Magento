@@ -12,7 +12,12 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
      * @param unknown $name
      */
     public function loadByUsername($name){
-    	return $this->_getResource()->loadByUsername($name);
+    	$username=$name;
+    	//strip the zip and city from the name
+    	if (($pos = strpos($name, "*")) !== FALSE) {
+    		$username = substr($name, $pos+1);
+    	}
+    	return $this->_getResource()->loadByUsername($username);
     }
     /**
      * Prepare list for overview grid filter
@@ -32,7 +37,7 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     	$userArray[0] = Mage::helper('hearedfrom')->__('Not Selected');
     	foreach($this->getCollection()->addFieldToSelect("*")
     			->addFieldToFilter('linked_to', array("eq" => 0)) as $usr){
-    		$userArray[$usr->getEntityId()] = $usr->getUserNm();
+    		$userArray[$usr->getEntityId()] = $usr->getZipCd().' '.$usr->getCity().' * '.$usr->getUserNm();
     	}
     	return $userArray;
     }
@@ -43,7 +48,7 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     	$userArray = array();
     	$userArray[0] = Mage::helper('hearedfrom')->__('Not Selected');
     	foreach($this->getCollection()->addFieldToSelect("*") as $usr){
-    		$userArray[$usr->getEntityId()] = $usr->getUserNm();
+    		$userArray[$usr->getEntityId()] = $usr->getZipCd().' '.$usr->getCity().' * '.$usr->getUserNm();
     	}
     	return $userArray;
     }
@@ -55,7 +60,7 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     	return $this->_getResource()->loadByCustomerid($custid);
     }
     /**
-     * Loads the seller user_nm by customer id
+     * Loads the seller user_nm by customer id - to set autoselected value in select
      * @param unknown $custid
      * @return string|null if not found
      */
@@ -64,11 +69,11 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     	if(empty($seller)){
     		return null;
     	}else {
-    		return $seller['user_nm'];
+    		return $seller['zip_cd'].' '.$seller['city'].' * '.$seller['user_nm'];
     	}
     }     
     /**
-     * Load the seller user_nm by unique zorgpunt session id
+     * Load the seller user_nm by unique zorgpunt session id - to set autoselected value in select
      * @param unknown $sessionid <timestampxid>
      * @return string|null if not found
      */
@@ -81,7 +86,10 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     	if(empty($seller)){
     		return null;
     	}else {
-    		return $seller['user_nm'];
+    		return $seller['zip_cd'].' '.$eller['city'].' * '.$seller['user_nm'];
     	}
+    }
+    public function getUsernameForSelect(){
+    	return $this->getZipCd().' '.$this->getCity().' * '.$this->getUserNm();
     }
 }

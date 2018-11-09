@@ -1,0 +1,27 @@
+<?php
+/**
+ * Magento
+ *
+ * removed link
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php if ($this->getCheckout()->getStepData('shipping', 'complete')): ?>
+<?php $completeClass = $this->getCheckout()->getStepData('shipping', 'complete') ? 'complete' : ''; ?>
+<dt class="<?php echo $completeClass ?>">
+    <?php echo $this->__('Shipping Address') ?> 
+<dd class="<?php echo $completeClass ?>">
+    <?php if ($this->getCheckout()->getStepData('shipping', 'complete')): ?>
+    <address><?php echo $this->getShipping()->format('html') ?></address>
+    <?php endif; ?>
+</dd>
+<?php else: ?>
+<dt>
+    <?php echo $this->__('Shipping Address') ?>
+</dt>
+<?php endif; ?>
+

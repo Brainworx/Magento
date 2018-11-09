@@ -20,7 +20,7 @@ class Brainworx_Hearedfrom_Block_Requestform extends Mage_Customer_Block_Account
     	array_push($_options,Mage::helper('checkout')->__('Select'));
     	$collection = Mage::getModel("hearedfrom/salesForce")->getCollection();
     	foreach($collection as $salesForce){
-    		array_push($_options,$salesForce->getUserNm());
+    		array_push($_options,$salesForce->getUserNameForSelect());
     	}
     	$this->setHearedFromValues($_options);
     	//set the current seller

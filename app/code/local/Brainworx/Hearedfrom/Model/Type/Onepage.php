@@ -177,13 +177,13 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     			case 0:
     				$shipping = $this->getQuote()->getShippingAddress();
     				$shipping->setSameAsBilling(0);
+    				$shipping->setShippingMethod($shippingMethod);
     				break;
     			case 1:
     				$address = $this->getQuote()->getBillingAddress();
     				$billing = clone $address;
     				$billing->unsAddressId()->unsAddressType();
     				$shipping = $this->getQuote()->getShippingAddress();
-    				$shippingMethod = $shipping->getShippingMethod();
     	
     				// Billing address properties that must be always copied to shipping address
     				$requiredBillingAttributes = array('customer_address_id','firstname','lastname','company','street','city','postcode','country_id','telephone','fax');
@@ -206,10 +206,6 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     		}
     	}
     	//untill
-    	
-    	
-    	$this->getQuote()->getShippingAddress()
-    	->setShippingMethod($shippingMethod);
     
     	$this->getCheckout()
     	->setStepData('shipping_method', 'complete', true)

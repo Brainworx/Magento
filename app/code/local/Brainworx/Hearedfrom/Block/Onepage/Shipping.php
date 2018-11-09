@@ -43,7 +43,7 @@ class Brainworx_Hearedfrom_Block_Onepage_Shipping extends Mage_Checkout_Block_On
 			->setId($type.'-address-select')
 			->setClass('address-select')
 			->setExtraParams('onchange="'.$type.'.newAddress(!this.value)"')
-			->setValue($addressId)
+			->setValue('')
 			->setOptions($options);
 	
 			return $select->getHtml();

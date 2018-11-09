@@ -4,21 +4,23 @@
  */
 ?>
 <div class="page-title">
-    <h1><?php echo $this->__('Your order has been received.') ?></h1>
+    <h2><?php echo $this->__('Your order has been received.') ?></h2>
 </div>
 <?php echo $this->getMessagesBlock()->toHtml() ?>
-<h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
+
 
 <?php if ($this->getOrderId()):?>
 <?php if ($this->getCanViewOrder()) :?>
-    <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+ <p><?php echo $this->__('Your order has been received. You will receive an order confirmation email with for your order with number %s.',sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
 <?php  else :?>
-    <p><?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?></p>
+   <p><?php echo $this->__('Your order has been received. You will receive an order confirmation email with for your order with number %s.',$this->escapeHtml($this->getOrderId())); ?></p>
 <?php endif;?>
-    <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+   
 <?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) :?>
     <p>
         <?php echo $this->__('Klik <a href="%s" onclick="this.target=\'_blank\'">hier</a> om een kopie van je bestelling te printen.', $this->getPrintUrl()) ?>
+        <?php echo $this->__('In case you have chosen for home delivery, you will be contacted by us.')?>
+        <?php echo $this->__('We thank you for placing this order.')?>
         <?php echo $this->getChildHtml() ?>
     </p>
 <?php endif;?>
@@ -39,5 +41,5 @@
 <?php endif;?>
 
 <div class="buttons-set">
-    <button type="button" class="button" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+    <button type="button" class="button" title="<?php echo $this->__('To our homepage') ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('To our homepage') ?></span></span></button>
 </div>

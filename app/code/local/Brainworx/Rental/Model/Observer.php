@@ -450,10 +450,8 @@ class Brainworx_Rental_Model_Observer
 				$item->getProduct()->setIsSuperMode(true);
 			}			
 			if($rnotice > 0){
-				Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('The price of your rental article has been set to 0, you will pay for this article within 10 days after receiving the monthly invoice.'));
 				$item->setRentalitem(true);
 			}elseif($sinotice > 0){
-				Mage::getSingleton('core/session')->addNotice(Mage::helper('sales')->__('The price of your article has been set to 0, you will receive the invoice directly from the supplier.'));
 				$item->setSupplierinvoice(true);
 			}
 			if ($sinotice == 0 && $dsnotice > 0){

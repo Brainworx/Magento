@@ -102,6 +102,7 @@
 				</rewrite>
 				<rewrite>
 					<onepage_billing>Brainworx_Hearedfrom_Block_Onepage_Billing</onepage_billing>
+					<onepage_shipping>Brainworx_Hearedfrom_Block_Onepage_Shipping</onepage_shipping>
 				</rewrite>
 			</checkout>
 
