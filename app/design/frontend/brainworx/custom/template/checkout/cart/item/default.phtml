@@ -204,11 +204,7 @@ $autoitem=!empty($skustoaddextra)&&in_array($_item->getSku(),$skustoaddextra);
         <?php endif;?>
 
         <ul class="cart-links">
-            <?php if ($isVisibleProduct): ?>
-                <li>
-                    <a href="<?php echo $this->getConfigureUrl() ?>" title="<?php echo $this->__('Edit item parameters') ?>"><?php echo $this->__('Edit') ?></a>
-                </li>
-            <?php endif ?>
+            
 
             <?php if ($this->helper('wishlist')->isAllowInCart()) : ?>
             <li>
