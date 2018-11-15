@@ -276,15 +276,21 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
                     
                     $product = Mage::getModel ( 'catalog/product' )->load ($item->getProductId());
                     
-                    $rentalinterval = $rentalToInvoice->getInterval();
+                    $rentalinterval = $rentalToInvoice->getRentalinterval();
+                    $intervalcmt = "dagen";
                     if(!empty($rentalinterval) && $rentalinterval == "m"){
                         $qty_to_invoice = 1 + $interval->m + (12*$interval->y);
-                        Mage::log('Rental invoice per month '.$rental->getQuantity()." x " . $product->getSku(). " - ".$qty_to_invoice." dagen - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d"));
+                        if($qty_to_invoice > 1){
+                            $intervalcmt = "maanden";
+                        }else{
+                            $intervalcmt = "maand";
+                        }
+                        Mage::log('Rental invoice per month '.$rental->getQuantity()." x " . $product->getSku(). " - ".$qty_to_invoice." ".$intervalcmt." - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d"));
                     }else{
                         $qty_to_invoice = 1 + $interval->days;
                     }
 					$comment = $comment . "<br>*".$rental->getQuantity()." x " . $product->getSku() 
-					. " - ".$qty_to_invoice." dagen - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d") ;
+					. " - ".$qty_to_invoice." ".$intervalcmt." - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d") ;
                     
 					$qty_to_invoice = $qty_to_invoice * $rental->getQuantity();
 					
