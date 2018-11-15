@@ -9,8 +9,7 @@ $installer->getConnection()
 		'type'     => Varien_Db_Ddl_Table::TYPE_TEXT,
 		'visible'  => true,
 		'required' => false,
-		'nullable' => false,
-		'default'	=> 'd',
+		'nullable' => true,
 		'comment'   => 'Interval for rental invoice'
 ));
 $installer->endSetup();
