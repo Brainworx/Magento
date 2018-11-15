@@ -78,7 +78,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 						try{
 							Mage::helper('rental/terminator')->sendErrorMail('Probleem end rental - edit renteditem '.$id);
 						}catch (Exception $e){Mage::log("Error sending error mail - mass end rental");}
-						Mage::throwException ( Mage::helper('rental')->__('Er liep iets fout bij het beëindigen van de huur of maken van de excel.') );
+						Mage::throwException ( Mage::helper('rental')->__('Er liep iets fout bij het beï¿½indigen van de huur of maken van de excel.') );
 					}
 					Mage::log("ending rentals from edit rental form finished - rental".$id);
 				
@@ -159,7 +159,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 	public function massEndRentalAction() {
 		$rentalIds = $this->getRequest ()->getParam ( 'rentalitem_id' ); // Form field name zoals gebruikt in Brainworx_Rental_Block_Adminhtml_Rental_Grid prepareMassAction
 		if (! is_array ( $rentalIds )) {
-			Mage::getSingleton ( 'adminhtml/session' )->addError ( Mage::helper ( 'rental' )->__ ( 'Selecteer één of meerdere verhuuritem(s).' ) );
+			Mage::getSingleton ( 'adminhtml/session' )->addError ( Mage::helper ( 'rental' )->__ ( 'Selecteer ï¿½ï¿½n of meerdere verhuuritem(s).' ) );
 		} else {
 			try {
 				
@@ -221,6 +221,8 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				$grandTotalInclTax = 0;
 				$tax = 0; 
 				foreach ( $rentalsToInvoice as $rental ) {
+                    $product = null;
+                    
 					if(Mage::getModel ( 'sales/order' )->load ( $rental->getOrigOrderId() )->getStatus() == 'canceled'){
 						Mage::log('skipping invoice for '.$rental->getEntityId().' as order '.$rental->getOrigOrderId ().' is cancelled');
 						continue;
@@ -269,11 +271,21 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					}else{
 						$endrental = new DateTime($invoiceDt);
 					}			
-					//count days for rental
+					//count quatity for rental
 					$interval = $startrental->diff($endrental);
-					$qty_to_invoice = 1 + $interval->days;
-					$comment = $comment . "<br>*".$rental->getQuantity()." x " . Mage::getModel ( 'catalog/product' )->load ($item->getProductId())->getSku() 
+                    
+                    $product = Mage::getModel ( 'catalog/product' )->load ($item->getProductId());
+                    
+                    $rentalinterval = $rentalToInvoice->getInterval();
+                    if(!empty($rentalinterval) && $rentalinterval == "m"){
+                        $qty_to_invoice = 1 + $interval->m + (12*$interval->y);
+                        Mage::log('Rental invoice per month '.$rental->getQuantity()." x " . $product->getSku(). " - ".$qty_to_invoice." dagen - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d"));
+                    }else{
+                        $qty_to_invoice = 1 + $interval->days;
+                    }
+					$comment = $comment . "<br>*".$rental->getQuantity()." x " . $product->getSku() 
 					. " - ".$qty_to_invoice." dagen - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d") ;
+                    
 					$qty_to_invoice = $qty_to_invoice * $rental->getQuantity();
 					
 					//set q to invoice for this item - set to 0 if you dont want to invoice this item
