@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Brainworx_Rental>
-            <version>0.1.8</version>    <!-- Version number of your module -->
+            <version>0.1.9</version>    <!-- Version number of your module -->
         </Brainworx_Rental>
     </modules>
 	<admin>
@@ -241,6 +241,9 @@
 		        <supplierneworderemail>
 		             <to_order_item>*</to_order_item>
 		        </supplierneworderemail>
+		        <rentalinterval>
+		             <to_order_item>*</to_order_item>
+		        </rentalinterval>
 		    </sales_convert_quote_item>
 		    <sales_convert_order_item>
 		        <supplierinvoice>
@@ -250,8 +253,11 @@
 		            <to_quote_item>*</to_quote_item>
 		        </rentalitem>
 		         <supplierneworderemail>
-		             <to_order_item>*</to_order_item>
+		             <to_quote_item>*</to_quote_item>
 		        </supplierneworderemail>
+		        <rentalinterval>
+		             <to_quote_item>*</to_quote_item>
+		        </rentalinterval>
 		    </sales_convert_order_item>
 		</fieldsets>
 		<!-- for sending transactional email -->

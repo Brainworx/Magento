@@ -65,7 +65,7 @@ class Brainworx_Rental_Model_Observer
 					
 						$newrentalitem->setData('orig_order_id',$order->getEntityId());
 						$newrentalitem->setData('order_item_id',$item->getItemId());
-                        $itv = $item->getProduct()->getRentalinterval();
+                        $itv = $item->getRentalinterval();
                         if(!empty($itv)){
                             $newrentalitem->setData('rentalinterval',substr($itv,0,1));
                         }
@@ -431,6 +431,9 @@ class Brainworx_Rental_Model_Observer
 			
 			if(in_array($catrental,$item->getProduct()->getCategoryIds())){
 				$rnotice = 1;
+				$item->setRentalinterval($item->getProduct()->getAttributeText('rental_interval'));
+				Mage::log("rental interval set ".$item->getRentalinterval());
+				
 			}
 			if($rnotice == 0){
 				foreach($item->getProduct()->getCategoryIds() as $cat){	
