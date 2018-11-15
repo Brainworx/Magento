@@ -65,6 +65,10 @@ class Brainworx_Rental_Model_Observer
 					
 						$newrentalitem->setData('orig_order_id',$order->getEntityId());
 						$newrentalitem->setData('order_item_id',$item->getItemId());
+                        $itv = $item->getProduct()->getRentalinterval();
+                        if(!empty($itv)){
+                            $newrentalitem->setData('rentalinterval',substr($itv,0,1));
+                        }
 						$newrentalitem->setData('quantity',$item->getQtyOrdered());// nr of items - not days
 						//old rule: start verhuur bij levering is leverdatum, bij afhaling ingave order
 						//ticket 144 new rule: always delivery date
