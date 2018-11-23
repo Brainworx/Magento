@@ -431,9 +431,7 @@ class Brainworx_Rental_Model_Observer
 			
 			if(in_array($catrental,$item->getProduct()->getCategoryIds())){
 				$rnotice = 1;
-				$item->setRentalinterval($item->getProduct()->getAttributeText('rental_interval'));
-				Mage::log("rental interval set ".$item->getRentalinterval());
-				
+				$item->setRentalinterval($item->getProduct()->getAttributeText('rental_interval'));				
 			}
 			if($rnotice == 0){
 				foreach($item->getProduct()->getCategoryIds() as $cat){	
