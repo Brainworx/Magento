@@ -98,6 +98,9 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 		$rental->setEndDt($endDT);
 		$rental->setPickupDt($preferredDT);
 		$rental->save();
+		
+		$order->addStatusHistoryComment("Einde huur item ".$item->getSku()."-".$item->getName()." ophaling op ".$preferredDT,false)->save();
+			
 		$rental->updateStock();
 			
 		//prepare excel

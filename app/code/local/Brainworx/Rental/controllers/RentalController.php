@@ -46,6 +46,9 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 	public function saveAction() {
 		if ($data = $this->getRequest ()->getPost ()) {
 			$model = Mage::getModel ( 'rental/rentedItem' );
+			
+			$history = "[backend]";
+			
 			$id = $this->getRequest ()->getParam ( 'id' );
 			
 			foreach ( $data as $key => $value ) {
@@ -57,6 +60,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			$pickupsuccess=false;
 			
 			if ($id) {
+				$history = $history . " bewerk verhuur id ".$id;
 				$model->load ( $id );
 				
 				//check for ended rental item - not for edit
@@ -81,12 +85,26 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 						Mage::throwException ( Mage::helper('rental')->__('Er liep iets fout bij het be�indigen van de huur of maken van de excel.') );
 					}
 					Mage::log("ending rentals from edit rental form finished - rental".$id);
-				
+					$history = $history . " - einde huur ".$enddt." ophaling ".$preferredDT;
+				}elseif (empty($model->getEndDt())&& empty($data["end_dt"])){
+					$history = $history . " - verhuur blijft lopen";
+				}elseif(!empty($model->getEndDt()) && empty($data["end_dt"])){
+					$history = $history . " - eerder beeindigde huur heropend";
+				}else{
+					$history = $history . " - verhuur is reeds beeindigd, andere bewerking";
 				}
+			}else{
+				$history = $history . " nieuwe verhuur";
 			}
 						
-			$model->setData ( $data );
+			$model->setData ( $data );			
+
+			$order = Mage::getModel('sales/order')->load($model->getOrigOrderId());
+			$item = Mage::getModel('sales/order_item')->load($model->getOrderItemId());
 			
+
+			$history = $history . " - item ".$item->getSku()." ".$item->getName();
+						
 			Mage::getSingleton ( 'adminhtml/session' )->setFormData ( $data );
 			try {
 				if ($id) {
@@ -101,13 +119,16 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					Mage::throwException ( Mage::helper ( 'rental' )->__( 'Error saving rented item' ) );
 				}
 				$text = Mage::helper ( 'rental' )->__( 'Rented item was successfully saved.' );
+				
 				if($pickupsuccess){
 					$text = $text.' '.Mage::helper ( 'rental' )->__( 'Pickup excel mail was sent successfully.');
 				}
 				Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( $text);
 				
-				Mage::getSingleton ( 'adminhtml/session' )->setFormData ( false );
-				
+				Mage::getSingleton ( 'adminhtml/session' )->setFormData ( false );				
+
+				$order->addStatusHistoryComment($history,false)->save();
+
 				// The following line decides if it is a "save" or "save and continue"
 				if ($this->getRequest ()->getParam ( 'back' )) {
 					$this->_redirect ( '*/*/edit', array (
@@ -125,7 +146,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				} else {
 					$this->_redirect ( '*/*/' );
 				}
-			}
+			}				
 			
 			return;
 		}
@@ -159,13 +180,14 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 	public function massEndRentalAction() {
 		$rentalIds = $this->getRequest ()->getParam ( 'rentalitem_id' ); // Form field name zoals gebruikt in Brainworx_Rental_Block_Adminhtml_Rental_Grid prepareMassAction
 		if (! is_array ( $rentalIds )) {
-			Mage::getSingleton ( 'adminhtml/session' )->addError ( Mage::helper ( 'rental' )->__ ( 'Selecteer ��n of meerdere verhuuritem(s).' ) );
+			Mage::getSingleton ( 'adminhtml/session' )->addError ( Mage::helper ( 'rental' )->__ ( 'Selecteer 1 of meerdere verhuuritem(s).' ) );
 		} else {
 			try {
 				
 				$success = Mage::helper('rental/terminator')->TerminateRentals(date('d-m-Y', strtotime('+3 Weekdays')),$rentalIds);
 				if($success){
 					Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( Mage::helper ( 'rental' )->__ ( '%d verhuuritem(s) werden vandaag beeindigd.', count ( $rentalIds ) ) );
+					Mage::log(count ( $rentalIds ).' verhuuritem(s) werden vandaag beeindigd vanuit backend: '.implode(",", $rentalIds ));
 				}else{
 					Mage::getSingleton ( 'adminhtml/session' )->addError ( Mage::helper ( 'rental' )->__ ( 'Er liep iets fout, gelieve de resultaten te controleren.'));
 				}

@@ -47,9 +47,10 @@ class Brainworx_Rental_ApoController extends Mage_Core_Controller_Front_Action
 				}catch (Exception $e){Mage::log("Error sending error mail - account end rental ".$orderid);}
 			}
 			Mage::log("ending rentals from account finished - ".$orderid);
+			
+			$order->addStatusHistoryComment("Verhuur beeindigd vanuit account voor verhuuritems: ".implode(",",$rentalstoend)." ophaling op ".$preferredDT,false)->save();
 				
 			$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($response));
 		}
-		Mage::log("ending rentals calls but no items");
 	}	
 }
