@@ -216,7 +216,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 		try{
 			$invoiceDt  = date('Y-m-d', strtotime('last day of -1 month'));
 			$count = 0;
-			Mage::Log ( "creating invoices - " + $invoiceDt );
+			Mage::Log ( "creating invoices - " . $invoiceDt );
 			// select orders to invoice sorted by order id - exclude already invoiced 
 			$rentalsToInvoice = Mage::getModel ( 'rental/rentedItem' )->getCollection ()
 			->addFieldToFilter( //last inv dt null or -2 month or sooner 
@@ -412,7 +412,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				if($grandTotal > 0)
 					$this->createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt);		
 				
-				Mage::Log("Invoices processed : " +  count($rentalsToInvoice) + " rentalitems.");
+				Mage::Log("Invoices processed : " .  count($rentalsToInvoice) . " rentalitems.");
 			}else{
 				Mage::Log("No rentals to be invoiced.");
 				Mage::getSingleton('core/session')->addWarning('Sorry, er zijn geen facturen te maken voor '.$invoiceDt.'.');
