@@ -90,6 +90,14 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					$history = $history . " - verhuur blijft lopen";
 				}elseif(!empty($model->getEndDt()) && empty($data["end_dt"])){
 					$history = $history . " - eerder beeindigde huur heropend";
+					if(!empty($model->getClosedForInvoice())){
+						$data['closed_for_invoice']=0;
+					}
+				}elseif(!empty($model->getEndDt()) && !empty($data["end_dt"])&&$model->getEndDt()!=$data["end_dt"]){
+					$history = $history . " - verplaatsing einddatum huur";
+					if(!empty($model->getClosedForInvoice())){
+						$data['closed_for_invoice']=0;
+					}
 				}else{
 					$history = $history . " - verhuur is reeds beeindigd, andere bewerking";
 				}
@@ -220,9 +228,14 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			->addFieldToFilter( //end_dt null or after last invoice date which is -2 month
 					array('end_dt','end_dt','last_inv_dt'),
 					array(
-							//TODO check 'gt'=>'last_inv_dt' renders (end_dt > 'last_inv_dt') but should have ' ' 
 							array('gt'=>date('Y-m-d', strtotime('last day of -6 month'))),
 							array('null' => true),
+							array('null' => true))
+					)
+			->addFieldToFilter( 
+					array('closed_for_invoice','closed_for_invoice'),
+					array(
+							array('eq'	=>	0),
 							array('null' => true))
 					)
 			->addFieldToFilter(
@@ -246,15 +259,18 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
                     $product = null;
                     
 					if(Mage::getModel ( 'sales/order' )->load ( $rental->getOrigOrderId() )->getStatus() == 'canceled'){
-						Mage::log('skipping invoice for '.$rental->getEntityId().' as order '.$rental->getOrigOrderId ().' is cancelled');
+						Mage::log('Set closed for invoice - skipping invoice for '.$rental->getEntityId().' as order '.$rental->getOrigOrderId ().' is cancelled');
+						$rental->setClosedForInvoice(true)->save();
 						continue;
 					}
 					if($rental->getLastInvDt()!=null && $rental->getEndDt() != null && $rental->getLastInvDt() >= $rental->getEndDt()){
-						Mage::log('skipping invoice for '.$rental->getEntityId().' as lastinvdt('.$rental->getLastInvDt().') >= enddt ('.$rental->getEndDt().')');
+						Mage::log('Set closed for invoice - skipping invoice for '.$rental->getEntityId().' as lastinvdt('.$rental->getLastInvDt().') >= enddt ('.$rental->getEndDt().')');
+						$rental->setClosedForInvoice(true)->save();
 						continue;
 					}
 					if($rental->getEndDt() != null && $rental->getEndDt() <= $rental->getStartDt()){
-						Mage::log('skipping invoice for '.$rental->getEntityId().' as enddt('.$rental->getEndDt().') <= startdt('.$rental->getStartDt().')');
+						Mage::log('Set closed for invoice - skipping invoice for '.$rental->getEntityId().' as enddt('.$rental->getEndDt().') <= startdt('.$rental->getStartDt().')');
+						$rental->setClosedForInvoice(true)->save();
 						continue;
 					}
 					if($rentalToInvoice == null){
@@ -290,6 +306,8 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					}
 					if($rentalToInvoice->getEndDt() != null && $rentalToInvoice->getEndDt() < $invoiceDt){
 						$endrental = new DateTime($rentalToInvoice->getEndDt());
+						Mage::log('Process last invoice for rental '.$rentalToInvoice->getEntityId());
+						$rentalToInvoice->setClosedForInvoice(true);
 					}else{
 						$endrental = new DateTime($invoiceDt);
 					}			
@@ -307,14 +325,14 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
                         }else{
                             $intervalcmt = "maand";
                         }
-                        Mage::log('Rental invoice per month '.$rental->getQuantity()." x " . $product->getSku(). " - ".$qty_to_invoice." ".$intervalcmt." - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d"));
+                        Mage::log('Rental invoice per month '.$rentalToInvoice->getQuantity()." x " . $product->getSku(). " - ".$qty_to_invoice." ".$intervalcmt." - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d"));
                     }else{
                         $qty_to_invoice = 1 + $interval->days;
                     }
-					$comment = $comment . "<br>*".$rental->getQuantity()." x " . $product->getSku() 
+					$comment = $comment . "<br>*".$rentalToInvoice->getQuantity()." x " . $product->getSku() 
 					. " - ".$qty_to_invoice." ".$intervalcmt." - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d") ;
                     
-					$qty_to_invoice = $qty_to_invoice * $rental->getQuantity();
+					$qty_to_invoice = $qty_to_invoice * $rentalToInvoice->getQuantity();
 					
 					//set q to invoice for this item - set to 0 if you dont want to invoice this item
 					$qtys [$item->getId ()] = ($qty_to_invoice );
