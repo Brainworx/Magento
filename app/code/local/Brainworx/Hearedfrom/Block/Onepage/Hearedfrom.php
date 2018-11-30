@@ -12,9 +12,14 @@ class Brainworx_Hearedfrom_Block_Onepage_Hearedfrom extends Mage_Checkout_Block_
         $_options = array();
         array_push($_options,Mage::helper('checkout')->__('Select'));
         $collection = Mage::getModel("hearedfrom/salesForce")->getCollection();
+        $zorgpuntuser;
         foreach($collection as $salesForce){
-        	array_push($_options,$salesForce->getUserNameForSelect());
+        	if($salesForce->getUserNm()!="Zorgpunt")
+        		array_push($_options,$salesForce->getUserNameForSelect());
+        	else 
+        		$zorgpuntuser = $salesForce->getUserNameForSelect();
         }
+        array_splice( $_options, 1, 0, $zorgpuntuser );
         $this->setHearedFromValues($_options);
         $this->setSellerChangePossible(true);
         //set the current seller - can be based on customerID, set zorgpuntsessionid or mederi

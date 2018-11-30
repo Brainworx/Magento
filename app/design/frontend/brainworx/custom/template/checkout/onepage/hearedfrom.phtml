@@ -10,7 +10,7 @@
 	<br/>
 	
 	<p>
-	<label id="vlbl" for="getvoice"><?php echo $this->__('Who told you about us:'); ?></label><br/>
+	<label id="vlbl" for="getvoice"><?php echo $this->__('Who told you about us:').'<br>'.$this->__('(Select and enter the first 2 digits of your postal code)'); ?></label><br/>
 	<select id="getvoice" name="getvoice">
 	<?php if($this->getSellerChangePossible()){?>
 		<?php foreach($this->getHearedFromValues() as $_option): ?>

@@ -15,7 +15,7 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     	$username=$name;
     	//strip the zip and city from the name
     	if (($pos = strpos($name, "*")) !== FALSE) {
-    		$username = substr($name, $pos+1);
+    		$username = trim(substr($name, $pos+1));
     	}
     	return $this->_getResource()->loadByUsername($username);
     }
@@ -80,7 +80,7 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     public function loadSellerNameByZorgpuntID($sessionid){
     	$zorgpuntid;
     	if (($pos = strpos($sessionid, "x")) !== FALSE) {
-    		$zorgpuntid = substr($sessionid, $pos+1);
+    		$zorgpuntid = trim(substr($sessionid, $pos+1));
     	}
     	$seller = $this->load($zorgpuntid);
     	if(empty($seller)){

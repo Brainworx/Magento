@@ -20,15 +20,6 @@
 <div class="cart <?php echo $_priceDisplay; ?>">
     <div class="page-title title-buttons">
         <h1><?php echo $this->__('Shopping Cart') ?></h1>
-        <?php if(!$this->hasError()): ?>
-        <ul class="checkout-types top">
-        <?php foreach ($this->getMethods('top_methods') as $method): ?>
-            <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
-            <li><?php echo $methodHtml; ?></li>
-            <?php endif; ?>
-        <?php endforeach; ?>
-        </ul>
-        <?php endif; ?>
     </div>
     <?php echo $this->getMessagesBlock()->toHtml() ?>
     <?php echo $this->getChildHtml('form_before') ?>
@@ -88,18 +79,17 @@
             </thead>
             <tfoot>
                 <tr>
-                    <td colspan="50" class="a-right cart-footer-actions">
-
-                        <!-- Make this button the first responder rather than empty cart -->
-                        <button type="submit" style="visibility:hidden;" name="update_cart_action" value="update_qty" title="<?php echo $this->__('Update Shopping Cart'); ?>" class="button2 btn-update"><span><span><?php echo $this->__('Update Shopping Cart'); ?></span></span></button>
+                	<td colspan="3" class="a-left cart-footer-actions">
 
                         
                         <?php if($this->getContinueShoppingUrl()): ?>
-                            <button type="button" title="<?php echo $this->__('Continue Shopping') ?>" class="button2 btn-continue" onclick="setLocation('<?php echo $this->getContinueShoppingUrl() ?>')"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+                            <button type="button" title="<?php echo $this->__('Continue Shopping') ?>" class="button btn-proceed-checkout btn-continue" onclick="setLocation('<?php echo $this->getContinueShoppingUrl() ?>')"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
                         <?php endif; ?>
-                        <span class="or">-<?php echo $this->__('or'); ?>-</span>
+                     </td>
+                    <td colspan="3" class="a-right cart-footer-actions">
+
                         
-                        <button type="button" title="<?php echo $this->__('Proceed to Checkout') ?>" class="button2 btn-proceed-checkout btn-checkout" onclick="window.location='<?php echo $this->getCheckoutUrl() ?>';"><span><span><?php echo $this->__('Proceed to Checkout') ?></span></span></button>
+                        <button type="button" title="<?php echo $this->__('Proceed to Checkout') ?>" class="button btn-proceed-checkout btn-checkout" onclick="window.location='<?php echo $this->getCheckoutUrl() ?>';"><span><span><?php echo $this->__('Proceed to Checkout') ?></span></span></button>
                         
                         <!--[if lt IE 8]>
                         <input type="hidden" id="update_cart_action_container" />

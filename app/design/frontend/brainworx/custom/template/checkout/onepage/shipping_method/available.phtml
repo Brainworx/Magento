@@ -32,6 +32,7 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
             	$showcheckboxfor = $code;
             }else{
             	$showcheckboxfor = null;
+            	$hidecheckboxfor = $code;
             }
             $_sole = $_sole && count($_rates) == 1; 
             foreach ($_rates as $_rate): ?>
@@ -88,13 +89,9 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
      			</li>
      		</ul>
      	</div>
+        <?php else: ?>
+        	<input type="hidden" name=<?php echo $hidecheckboxfor.'_use_for_shipping';?> id="billing:use_for_shipping" value="1" />
         <?php endif;?>
-        
-        <?php if ($code == "tablerate" && $delivery): ?>
-        <div><p class="shipmentinfo">
-        <?php echo $this->__('Deze transportprijs betaalt u eenmalig en omvat: levering en installatie, ophaling en professionele reiniging en een snelle hersteldienst. Voor onze AD matras is er een extra eindreiniging inbegrepen.') ?>
-        </p></div>
-        <?php endif; ?>
      
     <?php endforeach; ?>
     </dl>

@@ -1,0 +1,25 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var $this Mage_Tax_Block_Checkout_Shipping
+ * @see Mage_Tax_Block_Checkout_Shipping
+ */
+?>
+<tr>
+    <td><h3 class="product-name"><?php echo $this->getTotal()->getTitle() ?></h3></td>
+    <td class="a-center">1</td>
+    <td class="a-right">
+            <span class="cart-price"><?php echo $this->helper('checkout')->formatPrice($this->getShippingIncludeTax())  ?></span>
+     </td>
+</tr>
+

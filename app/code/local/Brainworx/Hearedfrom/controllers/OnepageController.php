@@ -274,6 +274,10 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		//delivery before is the date generated after picking or 24hrs or within 3 days
     		if(!empty($method))
     			$_delivery_before = $this->getRequest()->getPost($method.'_delrange');
+    		if(empty($_delivery_before)){
+    			$_delivery_before=(date('d-m-Y', strtotime('+1 weekday')));
+    			Mage::log('Set delivery date to next weekday as no input from frontend.');
+    		}
     		//set preferred delivery day with selection as made in radio buttons
     		Mage::getSingleton('core/session')->setPreferredDeliveryDate($_delivery_before);
     		Mage::getSingleton('core/session')->setDeliveryBefore($_delivery_before);

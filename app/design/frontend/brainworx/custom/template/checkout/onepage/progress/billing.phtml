@@ -11,13 +11,13 @@
 ?>
 <?php if ($this->getCheckout()->getStepData('billing', 'complete')): ?>
 <dt class="complete">
-    <?php echo $this->__('Billing Address') ?>
+    <?php echo $this->__('Billing Information') ?>
 </dt>
 <dd class="complete">
     <address><?php echo $this->getBilling()->format('html') ?></address>
 </dd>
 <?php else: ?>
 <dt>
-    <?php echo $this->__('Billing Address') ?>
+    <?php echo $this->__('Billing Information') ?>
 </dt>
 <?php endif; ?>

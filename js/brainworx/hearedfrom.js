@@ -52,7 +52,7 @@ $j(function() {
 		$j("#tablerate_weekend_deldate").prop('readonly', true);
 		/*pickup = next day, not sunday*/
 		$j( "#freeshipping_freeshipping_deldate" ).datepicker({ 
-	     	minDate: 0, dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	     	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
 	       		return [day != 0 && checkHoliday(date.getDate(),date.getMonth()+1,date.getFullYear())!=true,''];

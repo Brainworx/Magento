@@ -72,7 +72,11 @@
                                  $info = $this->__(' Per item');
 						         if(!empty($_item->getRentalitem())):
 						          	$_incl = $_item->getOriginalPrice()*(1+$_item->getTaxPercent()/100);
-						         	$info = $this->__(' Per day');
+									if(!empty($_item->getRentalinterval())):
+						         		$info = $this->__(' Per ').$_item->getRentalinterval();
+						         	else:
+						         		$info = $this->__(' Per day');
+						         	endif;
 						         elseif(!empty($_item->getSupplierinvoice())):
 						         	$_incl = $_item->getOriginalPrice()*(1+$_item->getTaxPercent()/100);
 						         else:

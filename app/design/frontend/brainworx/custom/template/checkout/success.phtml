@@ -19,9 +19,9 @@
 <?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) :?>
     <p>
         <?php echo $this->__('Klik <a href="%s" onclick="this.target=\'_blank\'">hier</a> om een kopie van je bestelling te printen.', $this->getPrintUrl()) ?>
-        <?php echo $this->__('In case you have chosen for home delivery, you will be contacted by us.')?>
+        <?php echo $this->__('In case you have chosen for home delivery, you will be contacted by us.')?><br>
         <?php echo $this->__('We thank you for placing this order.')?>
-        <?php echo $this->getChildHtml() ?>
+        <?php /* echo $this->getChildHtml()*/ ?>
     </p>
 <?php endif;?>
 <?php endif;?>
