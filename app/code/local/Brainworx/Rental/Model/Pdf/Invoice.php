@@ -69,7 +69,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			$order = $invoice->getOrder();
 			$orderComment = null;
 			if(!empty($order->getPatientName()))
-				$orderComment = Mage::helper('sales')->__('Patient information').': '. $order->getPatientFirstname().' '.$order->getPatientName() . "<br>";
+				$orderComment ='Patiëntgegevens'.': '. $order->getPatientFirstname().' '.$order->getPatientName() . "<br>";
 			if(!empty($order->getPatientBirthDate())){
 				$birthdatetext = Mage::helper('sales')->__('BirthDate Patient:').Mage::helper('core')->formatDate($order->getPatientBirthDate(), 'medium', false);
 				$orderComment = $orderComment.$birthdatetext.'<br>';
