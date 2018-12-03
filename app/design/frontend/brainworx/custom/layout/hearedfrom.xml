@@ -3,8 +3,14 @@
 <layout version="0.1.0">
 	
 	<checkout_onepage_index>
+		<reference name="checkout.progress">
+			<block type="checkout/onepage_progress" name="patient.progress" 
+			after="billing.progress" template="checkout/onepage/progress/patient.phtml"/>	
+		</reference>
 		<reference name="checkout.onepage">
 			<!-- Extra step added to OnePage Checkout -->
+			<block type="hearedfrom/onepage_patient" name="checkout.onepage.patient" 
+			as="patient" after="checkout.onepage.login" template="checkout/onepage/patient.phtml"/>	
 			<block type="hearedfrom/onepage_hearedfrom" name="checkout.onepage.hearedfrom" 
 			as="hearedfrom" after="checkout.onepage.billing" template="checkout/onepage/hearedfrom.phtml"/>	
 		</reference>
@@ -93,5 +99,14 @@
 			<action method="addItem"><type>js</type><name>brainworx/stock.js?ver=1.1</name></action>	
 		</reference>
    	</customer_account>
+   	<checkout_onepage_progress_patient>
+        <!-- Mage_Checkout -->
+        <remove name="right"/>
+        <remove name="left"/>
+
+        <block type="checkout/onepage_progress" name="root" output="toHtml" template="checkout/onepage/progress/patient.phtml">
+            <action method="setInfoTemplate"><method></method><template></template></action>
+        </block>
+    </checkout_onepage_progress_patient>
    
 </layout>

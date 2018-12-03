@@ -68,6 +68,12 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.25));//0.25
 			$order = $invoice->getOrder();
 			$orderComment = null;
+			if(!empty($order->getPatientName()))
+				$orderComment = Mage::helper('sales')->__('Patient information').': '. $order->getPatientFirstname().' '.$order->getPatientName() . "<br>";
+			if(!empty($order->getPatientBirthDate())){
+				$birthdatetext = Mage::helper('sales')->__('BirthDate Patient:').Mage::helper('core')->formatDate($order->getPatientBirthDate(), 'medium', false);
+				$orderComment = $orderComment.$birthdatetext.'<br>';
+			}
 			foreach ($invoice->getCommentsCollection() as $comment) {
 				$orderComment = $orderComment . $comment->getComment();
 				$orderComment = $orderComment . "<br>";
@@ -430,11 +436,11 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			}
 		}
 		//draw patient birth date if available
-		if(!empty($patientBirthdate)){
-			$birthdatetext = Mage::helper('sales')->__('BirthDate Patient:').Mage::helper('core')->formatDate($patientBirthdate, 'medium', false);
-			$page->drawText(strip_tags(ltrim(utf8_encode($birthdatetext))), 285, $this->y, 'UTF-8');
-			$this->y -= 15;
-		}
+// 		if(!empty($patientBirthdate)){
+// 			$birthdatetext = Mage::helper('sales')->__('BirthDate Patient:').Mage::helper('core')->formatDate($patientBirthdate, 'medium', false);
+// 			$page->drawText(strip_tags(ltrim(utf8_encode($birthdatetext))), 285, $this->y, 'UTF-8');
+// 			$this->y -= 15;
+// 		}
 	
 		$addressesEndY = $this->y;
 	

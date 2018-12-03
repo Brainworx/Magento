@@ -9,7 +9,7 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
         if (is_array($checkout->getStepData())) {
             foreach ($checkout->getStepData() as $step=>$data) {
                 if (!($step==='login'
-                    || Mage::getSingleton('customer/session')->isLoggedIn() && $step==='billing')) {
+                    || Mage::getSingleton('customer/session')->isLoggedIn() && $step==='patient')) {
                     $checkout->setStepData($step, 'allow', false);
                 }
             }

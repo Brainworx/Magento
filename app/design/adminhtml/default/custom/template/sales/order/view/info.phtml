@@ -130,7 +130,65 @@ if(!empty($_order->getPatientBirthDate())){
         </div>
     </div>
 </div>
-
+<div class="clear"></div>
+<div class="box-left">
+    <!--Brainworx Module Placeholder - patient info-->
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-hearedfrom"><?php echo Mage::helper('sales')->__('Patient information') ?></h4>
+        	<div class="tooltip"><a href="#" onclick="loadPatientEdit()"><?php echo $this->__('MageWorx_OrdersEdit::Change') ?></a></div>
+        </div>
+         <fieldset>
+         <div id="patient_block">
+	    		<div id="patientblock" class="">
+	    		<p>
+	    			<span class="field-row">
+			        <label class="normal" for="patientFirstName"><?php echo Mage::helper('sales')->__('Patient Firstname').': ' ?></label>
+			        <?php echo $_order->getPatientFirstname(); ?>
+			    	</span>
+	    			<span class="field-row">
+			        <label class="normal" for="patientName"><?php echo Mage::helper('sales')->__('Patient Name').': ' ?></label>
+			        <?php echo $_order->getPatientName(); ?>
+			    	</span>
+			    	<span class="field-row">
+			        <label class="normal" for="patientBirthDate"><?php echo Mage::helper('checkout')->__('Birth Date Patient: ') ?></label>
+			        <?php if($_birthdate != null){echo $this->formatDate($_birthdate, 'medium');}
+			        else{echo Mage::helper('checkout')->__('Not provided'); }?>
+			    	</span>
+	    		</p>
+	    		</div>
+	    		<!-- Brainworx: make seller editable -->
+				  <div id="patientblockedit" class="hidden">
+				  	<span class="field-row">
+				  	  <input type="hidden" id="ooid" value="<?php echo$_order->getIncrementId()?>"/>
+					  <label class="normal" for="patientFirstname"><?php echo Mage::helper('sales')->__('Patient Firstname').': ' ?></label>
+			          <input id="patientFirstname" name="patientFirstname" value='<?php echo $_order->getPatientFirstname();?>'></input>
+					  <br>
+					  <label class="normal" for="patientName"><?php echo Mage::helper('sales')->__('Patient Name').': ' ?></label>
+			          <input id="patientName" name="patientName" value='<?php echo $_order->getPatientName();?>'></input>
+					  <br>
+					  <label class="normal" for="patientBirthDate"><?php echo Mage::helper('checkout')->__('Birth Date Patient').': ' ?></label>
+			          <input id="patientBirthDate" name="patientBirthDate" value='<?php echo date("d-m-Y", strtotime($_birthdate));?>'></input>
+					  <br>
+					  <br><br>
+					  <span class="left">
+					  <button class="f-right" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Change') ?>" 
+					   onclick="loadPatientDefault()" >
+					        <span><span><?php echo $this->__('MageWorx_OrdersEdit::Cancel') ?></span></span>
+					   </button>
+					   </span>
+					   <span class="right">
+					   <button type="submit" class="f-right" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Change') ?>" 
+					   onclick="updatePatient('<?php echo Mage::helper("adminhtml")->getUrl('adminhtml/hearedfrom/updatePatient');?>')" >
+					        <span><span><?php echo $this->__('MageWorx_OrdersEdit::Submit') ?></span></span>
+					    </button>
+					    </span>
+					    <br><br>
+				  </div>
+	    	</div>	    	
+		</fieldset>
+    </div>
+</div>
 
 <div class="box-right">
     <!--Brainworx Module Placeholder - Where did you hear about us -->
@@ -191,38 +249,6 @@ if(!empty($_order->getPatientBirthDate())){
 			        <textarea id="myCustomerOrderComment" name="myCustomerOrderComment" style="height:6em; width:99%;" disabled><?php echo $_comment;?></textarea>
 			    	</span>
 		    	</p>
-	    	</div>
-	    	<div id="birthdate_block">
-	    		<div id="birthdateblock" class="">
-	    		<p>
-	    			<span class="field-row">
-			        <label class="normal" for="patientBirthDate"><?php echo Mage::helper('checkout')->__('Birth Date Patient: ') ?></label>
-			        <?php if($_birthdate != null){echo $this->formatDate($_birthdate, 'medium');}
-			        else{echo Mage::helper('checkout')->__('Not provided'); }?>
-			    	</span>
-	    		</p>
-	    		</div>
-	    		<!-- Brainworx: make seller editable -->
-				  <div id="birthdateblockedit" class="hidden">
-				  	<span class="field-row">
-				  	  <input type="hidden" id="ooid" value="<?php echo$_order->getIncrementId()?>"/>
-					  <label class="normal" for="patientBirthDate"><?php echo Mage::helper('checkout')->__('Birth Date Patient: ') ?></label>
-			          <input id="patientBirthDate" name="patientBirthDate" value='<?php echo date("d-m-Y", strtotime($_birthdate));?>'></input>
-					  <br><br>
-					  <span class="left">
-					  <button class="f-right" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Change') ?>" 
-					   onclick="loadHearedfromDefault()" >
-					        <span><span><?php echo $this->__('MageWorx_OrdersEdit::Cancel') ?></span></span>
-					   </button>
-					   </span>
-					   <span class="right">
-					   <button type="submit" class="f-right" type="button" title="<?php echo $this->__('MageWorx_OrdersEdit::Change') ?>" 
-					   onclick="updateBirthdate('<?php echo Mage::helper("adminhtml")->getUrl('adminhtml/hearedfrom/updateBirthDate');?>')" >
-					        <span><span><?php echo $this->__('MageWorx_OrdersEdit::Submit') ?></span></span>
-					    </button>
-					    </span>
-					    <br><br>
-				  </div>
 	    	</div>
 	    	<div id="vaph_block">
 	    		<div id="vaphblock" class="">

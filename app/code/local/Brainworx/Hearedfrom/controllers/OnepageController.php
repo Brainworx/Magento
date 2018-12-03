@@ -87,6 +87,45 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     	return false;
     }
     /**
+     * Our custom hearedfrom save + route to next action
+     */
+    public function savePatientAction()
+    {
+    	$this->_expireAjax();
+    	if ($this->getRequest()->isPost()) {
+    		$data = $this->getRequest()->getPost('patient', array());
+    		if(!isset($data['name'])||
+    				!isset($data['firstname'])||
+    				!isset($data['day'])||!isset($data['month'])||
+    						!isset($data['year'])
+    				){
+    			$this->loadLayout('checkout_onepage_hearedfrom');
+    			$result['error'] = $this->__('Please complete all fields.');
+    			$result['goto_section'] = 'patient';
+    
+    			$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    		}
+    		
+    		//birthdate patient
+    		Mage::getSingleton('core/session')->setPatientBirthDate($data['dob']);
+    		Mage::getSingleton('core/session')->setPatientName($data['name']);
+    		Mage::getSingleton('core/session')->setPatientFirstname($data['firstname']);
+    		
+    		$this->getOnepage()->getCheckout()->setStepData('patient', 'complete', true);
+    			
+    
+    		$result = array();
+    		$result['goto_section'] = 'billing';
+    			
+//     		$result['update_section'] = array(
+//     				'name' => 'patient',
+//     				'html' => $this->_getPatientHtml()
+//     		);
+    
+    		$this->getResponse()->setBody(Zend_Json::encode($result));
+    	}
+    }
+    /**
      * Save checkout billing address
      */
     public function saveBillingAction()
@@ -106,10 +145,10 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		}
     		$result = $this->getOnepage()->saveBilling($data, $customerAddressId);
     		
-    		//birthdate patient
-    		if (isset($data['day'])) {
-    			Mage::getSingleton('core/session')->setPatientBirthDate($data['day']."-".$data['month']."-".$data['year']);
-    		}    		
+//     		//birthdate patient
+//     		if (isset($data['day'])) {
+//     			Mage::getSingleton('core/session')->setPatientBirthDate($data['day']."-".$data['month']."-".$data['year']);
+//     		}    		
     		
     		$error = $this->determineDeliveryOptions($customerAddressId);
     		if($error){

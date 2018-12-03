@@ -41,7 +41,6 @@
 
 <script type="text/javascript">
 //<![CDATA[
-
 var Hearedfrom = Class.create();
 Hearedfrom.prototype = {
     initialize: function(form, saveUrl){
@@ -94,8 +93,8 @@ Hearedfrom.prototype = {
             if ((typeof response.message) == 'string') {
                 alert(response.message);
             } else {
-                if (window.billingRegionUpdater) {
-                    billingRegionUpdater.update();
+                if (window.hearedfromRegionUpdater) {
+                    hearedfromRegionUpdater.update();
                 }
 
                 alert(response.message.join("\n"));
@@ -107,7 +106,6 @@ Hearedfrom.prototype = {
         checkout.setStepResponse(response);
     }    
 }
-
 var hearedfrom = new Hearedfrom('co-hearedfrom-form', '<?php echo $this->getUrl('checkout/onepage/saveHearedfrom') ?>');
 
 //]]>

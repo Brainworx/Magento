@@ -157,15 +157,19 @@ class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controlle
 		
 	}
 	/**
-	 * Action to update the patients birth date for an order
+	 * Action to update the patients birth date and patient name for an order
 	 */
-	public function updateBirthDateAction(){
+	public function updatePatientAction(){
 		$birthdate = $this->getRequest()->getParam('patientBirthDate');
+		$name = $this->getRequest()->getParam('patientName');
+		$firstname = $this->getRequest()->getParam('patientFirstname');
 		$orderIncrementId = $this->getRequest()->getParam('ooid');
 		$order = Mage::getModel('sales/order')->loadByIncrementId($orderIncrementId);
 		$order->setPatientBirthDate($birthdate);
+		$order->setPatientName($name);
+		$order->setPatientFirstname($firstname);
 		$order->save();
-		Mage::log('update order '.$orderIncrementId.' birthdate patient to '.$birthdate);	
+		Mage::log('update order '.$orderIncrementId.' birthdate patient to '.$birthdate.' name: '.$firstname.' '.$name);	
 	}
 	/**
 	 * Action to update the vaph doc nr for an order

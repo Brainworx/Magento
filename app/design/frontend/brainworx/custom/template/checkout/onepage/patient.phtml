@@ -1,0 +1,48 @@
+
+<form id="co-patient-form" action="">
+	<div class="fieldset">
+    <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+    <ul class="form-list">
+    	<li class="wide">
+        	<label for="patient:firstname" class="required"><em>*</em><?php echo $this->__('Patient Firstname') ?></label>
+            <div class="input-box">
+            	<input type="text" title="<?php echo $this->__('Firstname') ?>" name="patient[firstname]" id="patient:firstname" value="<?php echo $this->escapeHtml($this->getPatientFirstname()) ?>" maxlength="255" class="input-text required-entry"/>
+            </div>
+        </li>
+        <li class="wide">
+        	<label for="patient:name" class="required"><em>*</em><?php echo $this->__('Patient Name') ?></label>
+            <div class="input-box">
+            	<input type="text" title="<?php echo $this->__('Name') ?>" name="patient[name]" id="patient:name" value="<?php echo $this->escapeHtml($this->getPatientName()) ?>" maxlength="255" class="input-text required-entry"/>
+            </div>
+        </li>
+        <?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+        <li class="fields">
+        	<div class="field">
+            	<?php echo $_dob->setDate($this->getPatientBirthdate())->setFieldIdFormat('patient:%s')->setFieldNameFormat('patient[%s]')->toHtml() ?>
+             </div>
+	     </li>
+	     <li class="control">
+         	<input type="checkbox" name="patient[use_for_billing]" value="1" title="<?php echo $this->__('Use for billing') ?>" id="patient:use_for_billing" onchange="patient.setUseForBilling();" checked="checked" class="checkbox" />
+         	<label for="patient:use_for_billing"><?php echo $this->__('Use for billing') ?></label>
+         </li>
+                
+    </ul>
+
+	<div class="buttons-set" id="patient-buttons-container">
+        <button type="button" class="button" title="<?php echo $this->__('Continue') ?>" onclick="patient.save()"><span><span><?php echo $this->__('Continue') ?></span></span></button>
+        <span id="patient-please-wait" class="please-wait" style="display:none;">
+            <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Loading next step...') ?>" title="<?php echo $this->__('Loading next step...') ?>" class="v-middle" /> <?php echo $this->__('Loading next step...') ?>
+		</span>
+    </div>
+
+</form>
+
+
+<script type="text/javascript">
+//<![CDATA[
+
+var patient = new Patient('co-patient-form', '<?php echo $this->getUrl('checkout/onepage/savePatient') ?>');
+
+
+//]]>
+</script>

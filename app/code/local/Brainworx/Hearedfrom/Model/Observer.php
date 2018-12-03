@@ -293,6 +293,8 @@ class Brainworx_Hearedfrom_Model_Observer
 		if(!empty($birthdate)){
 			$order->setPatientBirthDate($birthdate);
 		}
+		$order->setPatientName(Mage::getSingleton('core/session')->getPatientName());
+		$order->setPatientFirstname(Mage::getSingleton('core/session')->getPatientFirstname());
 		$order->setVaphDocNr(Mage::getSingleton('core/session')->getVaphDocNr());
 		$order->save();		
 	}

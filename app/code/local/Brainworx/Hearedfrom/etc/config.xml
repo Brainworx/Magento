@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Brainworx_Hearedfrom>
-			<version>0.2.9</version>    <!-- Version number of your module -->
+			<version>0.3.0</version>    <!-- Version number of your module -->
 			<depends>Braiworx_Rental</depends>
 		</Brainworx_Hearedfrom>
 	</modules>
@@ -103,6 +103,7 @@
 				<rewrite>
 					<onepage_billing>Brainworx_Hearedfrom_Block_Onepage_Billing</onepage_billing>
 					<onepage_shipping>Brainworx_Hearedfrom_Block_Onepage_Shipping</onepage_shipping>
+					<onepage_progress>Brainworx_Hearedfrom_Block_Onepage_Progress</onepage_progress>
 				</rewrite>
 			</checkout>
 

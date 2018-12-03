@@ -64,6 +64,14 @@
                 </tr>
             </table>
             {{/if}}
+            {{if order.getPatienName()}}
+            <table cellspacing="0" cellpadding="0" class="message-container">
+                <tr>
+                    <td><h6>Pati&euml;nt gegevens:</h6>
+                    <p>{{var order.getPatientFirstname()}} {{var order.getPatientName()}}<br>Geboortedatum {{var order.getPatientBirthDate()}}</p></td>
+                </tr>
+            </table>
+            {{/if}}
             {{if order.getCommentToZorgpunt()}}
             <table cellspacing="0" cellpadding="0" class="message-container">
                 <tr>

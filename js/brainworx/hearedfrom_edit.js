@@ -11,12 +11,14 @@ function updateHearedfrom(url)
         }
     }); 
 }
-function updateBirthdate(url)
+function updatePatient(url)
 {
-	if($j('#patientBirthDate').val() != ''){
+	if($j('#patientBirthDate').val() != ''||$j('#patientName').val() != ''||$j('#patientFirstname').val() != ''){
 	    new Ajax.Request(url, {
 	        method:'post',
 	        parameters: { patientBirthDate: $j('#patientBirthDate').val()  ,
+	        	patientName: $j('#patientName').val(),
+	        	patientFirstname: $j('#patientFirstname').val(),
 	        	ooid: $j("#ooid").val()}
 	        , requestHeaders: {Accept: 'application/json'},
 	        onSuccess: function() {
@@ -24,7 +26,7 @@ function updateBirthdate(url)
 	        }
 	    }); 
 	}else{
-		alert("Gelieve een datum te selecteren.");
+		alert("Gelieve patientgegevens in te voeren.");
 	}
 }
 function updateVaphDocnr(url)
@@ -44,6 +46,15 @@ function updateVaphDocnr(url)
 	}
 }
 function loadHearedfromEdit(){
+	
+	document.getElementById("sellerblock").className += " hidden";
+	document.getElementById("sellerblockedit").className = " ";
+
+	document.getElementById("vaphblock").className += " hidden";
+	document.getElementById("vaphblockedit").className = " ";
+	
+}
+function loadPatientEdit(){
 	$j("#patientBirthDate").prop('readonly', true);
 	$j('#patientBirthDate').datepicker({
 	 changeMonth: true,
@@ -52,23 +63,18 @@ function loadHearedfromEdit(){
 	 yearRange: (new Date().getFullYear()-115)+':'+new Date().getFullYear()
 	});
 	
-	document.getElementById("sellerblock").className += " hidden";
-	document.getElementById("sellerblockedit").className = " ";
-	
-	document.getElementById("birthdateblock").className += " hidden";
-	document.getElementById("birthdateblockedit").className = " ";
-
-	document.getElementById("vaphblock").className += " hidden";
-	document.getElementById("vaphblockedit").className = " ";
+	document.getElementById("patientblock").className += " hidden";
+	document.getElementById("patientblockedit").className = " ";
 	
 }
 function loadHearedfromDefault(){
 	document.getElementById("sellerblockedit").className += " hidden";
 	document.getElementById("sellerblock").className = " ";
 
-	document.getElementById("birthdateblock").className = " ";
-	document.getElementById("birthdateblockedit").className += " hidden";
-
 	document.getElementById("vaphblock").className = " ";
 	document.getElementById("vaphblockedit").className += " hidden";
+}
+function loadPatientDefault(){
+	document.getElementById("patientblock").className = " ";
+	document.getElementById("patientblockedit").className += " hidden";
 }

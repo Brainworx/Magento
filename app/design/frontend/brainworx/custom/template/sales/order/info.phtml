@@ -50,7 +50,41 @@ if(!empty($_order->getPatientBirthDate())){
 </dl>
 <p class="order-date"><?php echo $this->__('Order Date: %s', $this->formatDate($_order->getCreatedAtStoreDate(), 'long')) ?></p>
 <?php if (!$_order->getIsVirtual()): ?>
+<div class="box">
+	<div class="box-title">
+		<br><h2><?php echo $this->__('Patient information') ?></h2>
+	</div>
+	<div class="box-content">
+	<p>
+	 		<label class="normal" ><?php echo Mage::helper('checkout')->__('Patient Firstname').": " ?></label>
+	   		<?php echo $_order->getPatientFirstname()?><br>
+	  		<label class="normal" ><?php echo Mage::helper('checkout')->__('Patient Name').": "  ?></label>
+	 		<?php echo $_order->getPatientName()?><br>
+	   		<label class="normal" ><?php echo Mage::helper('checkout')->__('Birth Date Patient').": " ?></label>
+	   		<?php echo $_birthdate?>		       		
+	</p>
+	</div>
+</div>
 <div class="col2-set order-info-box">
+		<div class="col-1">
+		        
+		    </div>
+		    <?php if(!empty($_order->getVaphDocNr())){?>
+		       	
+		    <div class="col-2">
+		        <div class="box">
+		            <div class="box-title">
+		                <h2><?php echo $this->__('VAPH') ?></h2>
+		            </div>
+		            <div class="box-content">
+		                <p>
+				    		<label class="normal" ><?php echo Mage::helper('checkout')->__('VAPH documentnr.: ') ?></label>
+				       		<strong><?php echo $_order->getVaphDocNr()?></strong>
+				       	</p>
+		            </div>
+		        </div>
+	    	</div>
+		  <?php }?>
     <div class="col-1">
         <div class="box">
             <div class="box-title">
@@ -115,17 +149,6 @@ if(!empty($_order->getPatientBirthDate())){
 			        <label class="normal" for="”myCustomerOrderComment”"><?php echo Mage::helper('sales')->__('Comment for Zorgpunt:') ?></label>
 			        <textarea id="myCustomerOrderComment" name="myCustomerOrderComment" style="height:6em; width:99%;" disabled><?php echo $_comment;?></textarea>
 		    	</p>
-		    	<br>
-		    	<p>
-		    		<label class="normal" ><?php echo Mage::helper('checkout')->__('Birth Date Patient: ') ?></label>
-		       		<strong><?php echo $_birthdate?></strong>
-		       	</p>
-		       	<?php if(!empty($_order->getVaphDocNr())){?>
-		       	<p>
-		    		<label class="normal" ><?php echo Mage::helper('checkout')->__('VAPH documentnr.: ') ?></label>
-		       		<strong><?php echo $_order->getVaphDocNr()?></strong>
-		       	</p>
-		       	<?php }?>
 		  	</div>		  	
         </div>
     </div>

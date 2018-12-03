@@ -1,6 +1,18 @@
 <?php
 class Brainworx_Hearedfrom_Block_Onepage_Billing extends Mage_Checkout_Block_Onepage_Billing
 {
+	protected function _construct()
+	{
+		$this->getCheckout()->setStepData('billing', array(
+				'label'     => Mage::helper('checkout')->__('Billing Information'),
+				'is_show'   => $this->isShow()
+		));
+		
+		$this->getCheckout()->setStepData('billing', 'allow', false);
+	
+		parent::_construct();
+	}
+	
 	public function getAddressesHtmlSelect($type)
 	{
 		if($type == "billing"){

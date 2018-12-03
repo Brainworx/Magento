@@ -1,0 +1,15 @@
+<?php
+
+?>
+<?php if ($this->getCheckout()->getStepData('patient', 'complete')): ?>
+<dt class="complete">
+    <?php echo $this->__('Patient information') ?>
+</dt>
+<dd class="complete">
+    <?php echo $this->getPatient() ?>
+</dd>
+<?php else: ?>
+<dt>
+    <?php echo $this->__('Patient information') ?>
+</dt>
+<?php endif; ?>

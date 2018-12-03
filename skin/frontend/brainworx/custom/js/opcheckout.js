@@ -36,13 +36,15 @@ Checkout.prototype = {
         this.method = '';
         this.payment = '';
         this.loadWaiting = false;
-        this.steps = ['login', 'billing', 'shipping_method','shipping','hearedfrom', 'payment', 'review'];
-        //We use billing as beginning step since progress bar tracks from billing
-        this.currentStep = 'billing';
+        this.steps = ['login','patient', 'billing', 'shipping_method','shipping','hearedfrom', 'payment', 'review'];
+        //We use patient as beginning step since progress bar tracks from billing
+        this.currentStep = 'patient';
 
         this.accordion.sections.each(function(section) {
             Event.observe($(section).down('.step-title'), 'click', this._onSectionClick.bindAsEventListener(this));
         }.bind(this));
+        
+        $('opc-billing').removeClassName('allow');
 
         this.accordion.disallowAccessToNextSections = true;
     },
@@ -171,7 +173,7 @@ Checkout.prototype = {
                 {method: 'post', onFailure: this.ajaxFailure.bind(this), parameters: {method:'guest'}}
             );
             Element.hide('register-customer-password');
-            this.gotoSection('billing', true);
+            this.gotoSection('patient', true);
         }
         else if($('login:register') && ($('login:register').checked || $('login:register').type == 'hidden')) {
             this.method = 'register';
@@ -180,13 +182,17 @@ Checkout.prototype = {
                 {method: 'post', onFailure: this.ajaxFailure.bind(this), parameters: {method:'register'}}
             );
             Element.show('register-customer-password');
-            this.gotoSection('billing', true);
+            this.gotoSection('patient', true);
         }
         else{
             alert(Translator.translate('Please choose to register or to checkout as a guest').stripTags());
             return false;
         }
         document.body.fire('login:setMethod', {method : this.method});
+    },
+    
+    setPatient: function(){
+    	this.gotoSection('billing',true);
     },
 
     setBilling: function() {
@@ -292,7 +298,82 @@ Checkout.prototype = {
         return false;
     }
 }
+// patient
+var Patient = Class.create();
+Patient.prototype = {
+    initialize: function(form, saveUrl){
+        this.form = form;
+        if ($(this.form)) {
+            $(this.form).observe('submit', function(event){this.save();Event.stop(event);}.bind(this));
+        }
+        this.saveUrl = saveUrl;
+        this.onSave = this.nextStep.bindAsEventListener(this);
+        this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
+    },
 
+    save: function(){
+        if (checkout.loadWaiting!=false) return;
+
+        var validator = new Validation(this.form);
+        if (validator.validate()) {
+
+            checkout.setLoadWaiting('patient');
+
+
+            var request = new Ajax.Request(
+                this.saveUrl,
+                {
+                    method: 'post',
+                    onComplete: this.onComplete,
+                    onSuccess: this.onSave,
+                    onFailure: checkout.ajaxFailure.bind(checkout),
+                    parameters: Form.serialize(this.form)
+                }
+            );
+        }
+    },
+    setUseForBilling: function() {
+         
+        if($('patient:use_for_billing').checked){
+        	$('billing:firstname').value = $('patient:firstname').value;
+        	$('billing:lastname').value = $('patient:name').value;
+        	$('billing_name').hide();
+        }else{
+        	$('billing_name').show();
+        }
+    },
+
+    resetLoadWaiting: function(transport){
+        checkout.setLoadWaiting(false);
+    },
+
+    nextStep: function(transport){
+        if (transport && transport.responseText){
+            try{
+                response = eval('(' + transport.responseText + ')');
+            }
+            catch (e) {
+                response = {};
+            }
+        }
+
+        if (response.error){
+            if ((typeof response.message) == 'string') {
+                alert(response.message);
+            } else {
+                if (window.patientRegionUpdater) {
+                    patientRegionUpdater.update();
+                }
+
+                alert(response.message.join("\n"));
+            }
+
+            return false;
+        }
+
+        checkout.setStepResponse(response);
+    }    
+}
 // billing
 var Billing = Class.create();
 Billing.prototype = {
@@ -306,6 +387,11 @@ Billing.prototype = {
         this.onAddressLoad = this.fillForm.bindAsEventListener(this);
         this.onSave = this.nextStep.bindAsEventListener(this);
         this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
+        if($('patient:use_for_billing').checked){
+        	$('billing:firstname').value = $('patient:firstname').value;
+        	$('billing:lastname').value = $('patient:name').value;
+        	$('billing_name').hide();
+        }
     },
 
     setAddress: function(addressId){
@@ -703,40 +789,23 @@ Hearedfrom.prototype = {
             $(this.form).observe('submit', function(event){this.save();Event.stop(event);}.bind(this));
         }
         this.saveUrl = saveUrl;
-        this.validator = new Validation(this.form);
         this.onSave = this.nextStep.bindAsEventListener(this);
         this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
     },
 
-    validate: function() {
-        var methods = document.getElementsByName('hearedfrom');
-        if (methods.length==0) {
-            alert(Translator.translate('Your order cannot be completed at this time. Please make necessary changes in your extra information.').stripTags());
-            return false;
-        }
-
-        if(!this.validator.validate()) {
-            return false;
-        }
-
-//        for (var i=0; i<methods.length; i++) {
-//            if (methods[i].checked) {
-//                return true;
-//            }
-//        }
-//        alert(Translator.translate('Please specify all extra information.').stripTags());
-        return false;
-    },
-
     save: function(){
-
         if (checkout.loadWaiting!=false) return;
-        if (this.validate()) {
-            checkout.setLoadWaiting('shipping-method');
+
+        var validator = new Validation(this.form);
+        if (validator.validate()) {
+
+            checkout.setLoadWaiting('hearedfrom');
+
+
             var request = new Ajax.Request(
                 this.saveUrl,
                 {
-                    method:'post',
+                    method: 'post',
                     onComplete: this.onComplete,
                     onSuccess: this.onSave,
                     onFailure: checkout.ajaxFailure.bind(checkout),
@@ -760,32 +829,23 @@ Hearedfrom.prototype = {
             }
         }
 
-        if (response.error) {
-            alert(response.message);
+        if (response.error){
+            if ((typeof response.message) == 'string') {
+                alert(response.message);
+            } else {
+                if (window.hearedfromRegionUpdater) {
+                    hearedfromRegionUpdater.update();
+                }
+
+                alert(response.message.join("\n"));
+            }
+
             return false;
         }
 
-        if (response.update_section) {
-            $('checkout-'+response.update_section.name+'-load').update(response.update_section.html);
-        }
-
-        payment.initWhatIsCvvListeners();
-
-        if (response.goto_section) {
-            checkout.gotoSection(response.goto_section, true);
-            checkout.reloadProgressBlock();
-            return;
-        }
-
-        if (response.payment_methods_html) {
-            $('checkout-payment-method-load').update(response.payment_methods_html);
-        }
-
-        checkout.setShippingMethod();
-    }
+        checkout.setStepResponse(response);
+    }    
 }
-
-
 
 // payment
 var Payment = Class.create();

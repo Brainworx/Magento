@@ -378,6 +378,7 @@ One page checkout main layout
 
         <block type="checkout/onepage_progress" name="root" output="toHtml" template="checkout/onepage/progress.phtml">
             <action method="setInfoTemplate"><method></method><template></template></action>
+             
             <block type="checkout/onepage_progress" name="billing.progress" template="checkout/onepage/progress/billing.phtml"></block>
             <block type="checkout/onepage_progress" name="shipping.progress" template="checkout/onepage/progress/shipping.phtml"></block>
             <block type="checkout/onepage_progress" name="shippingmethod.progress" template="checkout/onepage/progress/shipping_method.phtml"></block>
@@ -386,6 +387,8 @@ One page checkout main layout
     </checkout_onepage_progress>
 
     <!-- Individual blocks for Progress steps begins -->
+     
+    
     <checkout_onepage_progress_billing>
         <!-- Mage_Checkout -->
         <remove name="right"/>
