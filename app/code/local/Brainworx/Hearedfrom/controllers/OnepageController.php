@@ -94,17 +94,18 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     	$this->_expireAjax();
     	if ($this->getRequest()->isPost()) {
     		$data = $this->getRequest()->getPost('patient', array());
-    		if(!isset($data['name'])||
-    				!isset($data['firstname'])||
-    				!isset($data['day'])||!isset($data['month'])||
-    						!isset($data['year'])
-    				){
-    			$this->loadLayout('checkout_onepage_hearedfrom');
-    			$result['error'] = $this->__('Please complete all fields.');
-    			$result['goto_section'] = 'patient';
-    
-    			$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    		
+            $customerAddressId = $this->getRequest()->getPost('patient_address_id', false);
+            
+            if (isset($data['email'])) {
+    			$data['email'] = trim($data['email']);
     		}
+    		if (isset($data['email2'])) {
+    			$data['fax'] = trim($data['email2']);
+    		}
+            
+            $result = $this->getOnepage()->savePatient($data, $customerAddressId);
+    
     		
     		//birthdate patient
     		Mage::getSingleton('core/session')->setPatientBirthDate($data['dob']);
