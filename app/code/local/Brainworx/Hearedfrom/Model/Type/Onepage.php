@@ -32,6 +32,149 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
         return $this;
     }
     /**
+     * Save patient address information to quote
+     * This method is called by One Page Checkout.
+     *
+     * @param   array $data
+     * @param   int $customerAddressId
+     * @return  Mage_Checkout_Model_Type_Onepage
+     */
+    public function savePatient($data, $customerAddressId)
+    {
+    	if (empty($data)) {
+    		return array('error' => -1, 'message' => Mage::helper('checkout')->__('Invalid data.'));
+    	}
+    
+    	$address = $this->getQuote()->getPatientAddress();
+    	/* @var $addressForm Mage_Customer_Model_Form */
+    	$addressForm = Mage::getModel('customer/form');
+    	$addressForm->setFormCode('customer_address_edit')
+    	->setEntityType('customer_address')
+    	->setIsAjaxRequest(Mage::app()->getRequest()->isAjax());
+    
+    	if (!empty($customerAddressId)) {
+    		$customerAddress = Mage::getModel('customer/address')->load($customerAddressId);
+    		if ($customerAddress->getId()) {
+    			if ($customerAddress->getCustomerId() != $this->getQuote()->getCustomerId()) {
+    				return array('error' => 1,
+    						'message' => Mage::helper('checkout')->__('Customer Address is not valid.')
+    				);
+    			}
+    
+    			$address->importCustomerAddress($customerAddress)->setSaveInAddressBook(0);
+    			$addressForm->setEntity($address);
+    			$addressErrors  = $addressForm->validateData($address->getData());
+    			if ($addressErrors !== true) {
+    				return array('error' => 1, 'message' => $addressErrors);
+    			}
+    		}
+    	} else {
+    		$addressForm->setEntity($address);
+    		// emulate request object
+    		$addressData    = $addressForm->extractData($addressForm->prepareRequest($data));
+    		$addressErrors  = $addressForm->validateData($addressData);
+    		if ($addressErrors !== true) {
+    			return array('error' => 1, 'message' => array_values($addressErrors));
+    		}
+    		$addressForm->compactData($addressData);
+    		//unset address attributes which were not shown in form
+    		foreach ($addressForm->getAttributes() as $attribute) {
+    			if (!isset($data[$attribute->getAttributeCode()])) {
+    				$address->setData($attribute->getAttributeCode(), NULL);
+    			}
+    		}
+    		$address->setCustomerAddressId(null);
+    		// Additional form data, not fetched by extractData (as it fetches only attributes)
+    		$address->setSaveInAddressBook(empty($data['save_in_address_book']) ? 0 : 1);
+    	}
+    
+    	// set email for newly created user
+    	if (!$address->getEmail() && $this->getQuote()->getCustomerEmail()) {
+    		$address->setEmail($this->getQuote()->getCustomerEmail());
+    	}
+    
+    	// validate address
+    	if (($validateRes = $address->validate()) !== true) {
+    		return array('error' => 1, 'message' => $validateRes);
+    	}
+    
+    	$address->implodeStreetAddress();
+    
+    	if (true !== ($result = $this->_validateCustomerData($data))) {
+    		return $result;
+    	}
+    
+    	if (!$this->getQuote()->getCustomerId() && self::METHOD_REGISTER == $this->getQuote()->getCheckoutMethod()) {
+    		if ($this->_customerEmailExists($address->getEmail(), Mage::app()->getWebsite()->getId())) {
+    			return array('error' => 1, 'message' => $this->_customerEmailExistsMessage);
+    		}
+    	}   
+        if($this->getCheckout()->getStepData('billing', 'complete') != true){
+    		$patient = clone $address;
+    		$patient->unsAddressId()->unsAddressType();
+    		$billing = $this->getQuote()->getBillingAddress();
+    		
+    		// Patient address properties that must be always copied to billing address
+    		$requiredPatientAttributes = array('customer_address_id');
+    		
+    		// don't reset original billing data, if it was not changed by customer
+    		foreach ($billing>getData() as $billingKey => $billingValue) {
+    			if (!is_null($billingValue) && !is_null($patient->getData($billingKey))
+    					&& !isset($data[$billingKey]) && !in_array($billingKey, $requiredPatientAttributes)
+    			) {
+    				$billing->unsetData($billingKey);
+    			}
+    		}
+    		$billing->addData($patient->getData())
+    		->setSameAsPatient(1)
+    		->setSaveInAddressBook(0)
+    		->setCollectShippingRates(true);
+    		$this->getCheckout()->setStepData('billing', 'complete', true);
+    	}
+    	
+    	if($this->getCheckout()->getStepData('shipping', 'complete') != true){
+    		$patient = clone $address;
+    		$patient->unsAddressId()->unsAddressType();
+    		$shipping = $this->getQuote()->getShippingAddress();
+    		$shippingMethod = $shipping->getShippingMethod();
+    		
+    		// Billing address properties that must be always copied to shipping address
+    		$requiredPatientAttributes = array('customer_address_id');
+    		
+    		// don't reset original shipping data, if it was not changed by customer
+    		foreach ($shipping->getData() as $shippingKey => $shippingValue) {
+    			if (!is_null($shippingValue) && !is_null($billing->getData($shippingKey))
+    					&& !isset($data[$shippingKey]) && !in_array($shippingKey, $requiredPatientAttributes)
+    			) {
+    				$billing->unsetData($shippingKey);
+    			}
+    		}
+    		$shipping->addData($patient->getData())
+    		->setSameAsBilling(1)
+    		->setSaveInAddressBook(0)
+    		->setShippingMethod($shippingMethod)
+    		->setCollectShippingRates(true);
+    		$this->getCheckout()->setStepData('shipping', 'complete', true);
+    	}
+    
+    	$this->getQuote()->collectTotals();
+    	$this->getQuote()->save();
+    
+    	if (!$this->getQuote()->isVirtual()){// && $this->getCheckout()->getStepData('shipping', 'complete') == true) {
+    		//Recollect Shipping rates for shipping methods
+    		$this->getQuote()->getShippingAddress()->setCollectShippingRates(true);
+    	}
+    
+    	$this->getCheckout()
+        ->setStepData('patient', 'allow', true)            
+    	->setStepData('patient', 'complete', true)
+    	->setStepData('billing', 'allow', true)
+    	->setStepData('shipping', 'allow', true)
+    	->setStepData('shipping_method', 'allow', true); //she added
+    
+    	return array();
+    }
+    /**
      * Save billing address information to quote
      * This method is called by One Page Checkout JS (AJAX) while saving the billing information.
      *
