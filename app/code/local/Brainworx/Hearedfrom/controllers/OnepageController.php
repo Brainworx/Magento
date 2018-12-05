@@ -105,23 +105,32 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		}
             
             $result = $this->getOnepage()->savePatient($data, $customerAddressId);
+            
+            $error = $this->determineDeliveryOptions($customerAddressId);
+            if($error){
+            	$result['error']=$error;
+            }
     
     		
     		//birthdate patient
     		Mage::getSingleton('core/session')->setPatientBirthDate($data['dob']);
-    		Mage::getSingleton('core/session')->setPatientName($data['name']);
+    		Mage::getSingleton('core/session')->setPatientName($data['lastname']);
     		Mage::getSingleton('core/session')->setPatientFirstname($data['firstname']);
     		
     		$this->getOnepage()->getCheckout()->setStepData('patient', 'complete', true);
-    			
-    
-    		$result = array();
-    		$result['goto_section'] = 'billing';
-    			
-//     		$result['update_section'] = array(
-//     				'name' => 'patient',
-//     				'html' => $this->_getPatientHtml()
-//     		);
+    		
+    		
+    		if (!isset($result['error'])) {
+    			if(empty($data['use_for_billing'])){
+    				$result['goto_section'] = 'billing';
+    			}else{
+    				$result['goto_section'] = 'shipping_method';
+    				$result['update_section'] = array(
+    						'name' => 'shipping-method',
+    						'html' => $this->_getShippingMethodsHtml()
+    				);
+    			}
+    		}
     
     		$this->getResponse()->setBody(Zend_Json::encode($result));
     	}
@@ -151,10 +160,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 //     			Mage::getSingleton('core/session')->setPatientBirthDate($data['day']."-".$data['month']."-".$data['year']);
 //     		}    		
     		
-    		$error = $this->determineDeliveryOptions($customerAddressId);
-    		if($error){
-    			$result['error']=$error;
-    		}
+    		
     		
     
     		if (!isset($result['error'])) {

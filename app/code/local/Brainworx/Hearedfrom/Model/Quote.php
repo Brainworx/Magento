@@ -64,13 +64,13 @@ class Brainworx_Hearedfrom_Model_Quote extends Mage_Sales_Model_Quote
     }
 
     /**
-     * Retrieve quote billing address
+     * Retrieve quote patient address
      *
      * @return Mage_Sales_Model_Quote_Address
      */
     public function getPatientAddress()
     {
-        return $this->_getAddressByType(Mage_Sales_Model_Quote_Address::TYPE_PATIENT);
+        return $this->_getAddressByType('patient');
     }
 
     /**

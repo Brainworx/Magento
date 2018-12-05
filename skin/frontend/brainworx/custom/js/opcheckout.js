@@ -31,6 +31,7 @@ Checkout.prototype = {
         this.saveMethodUrl = urls.saveMethod;
         this.failureUrl = urls.failure;
         this.billingForm = false;
+        this.patientForm = false;
         this.shippingForm= false;
         this.syncBillingShipping = false;
         this.method = '';
@@ -192,7 +193,17 @@ Checkout.prototype = {
     },
     
     setPatient: function(){
-    	this.gotoSection('billing',true);
+    	if (($('patient:use_for_billing_yes')) && ($('patient:use_for_billing_yes').checked)) {
+            billing.syncWithPatient();
+            $('opc-billing').addClassName('allow');
+            this.gotoSection('shipping_method', true);
+        } else if (($('patient:use_for_billing_no')) && ($('patient:use_for_billing_no').checked)){
+        	$('patient:same_as_billing').checked = false;
+            this.gotoSection('billing', true);
+    	} else {
+            $('shipping:same_as_billing').checked = true;
+            this.gotoSection('billing', true);
+        }
     },
 
     setBilling: function() {
@@ -310,7 +321,57 @@ Patient.prototype = {
         this.onSave = this.nextStep.bindAsEventListener(this);
         this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
     },
+    setAddress: function(addressId){
+        if (addressId) {
+            request = new Ajax.Request(
+                this.addressUrl+addressId,
+                {method:'get', onSuccess: this.onAddressLoad, onFailure: checkout.ajaxFailure.bind(checkout)}
+            );
+        }
+        else {
+            this.fillForm(false);
+        }
+    },
+    fillForm: function(transport){
+        var elementValues = {};
+        if (transport && transport.responseText){
+            try{
+                elementValues = eval('(' + transport.responseText + ')');
+            }
+            catch (e) {
+                elementValues = {};
+            }
+        }
+        else{
+            this.resetSelectedAddress();
+        }
+        arrElements = Form.getElements(this.form);
+        for (var elemIndex in arrElements) {
+            if (arrElements[elemIndex].id) {
+                var fieldName = arrElements[elemIndex].id.replace(/^billing:/, '');
+                arrElements[elemIndex].value = elementValues[fieldName] ? elementValues[fieldName] : '';
+                if (fieldName == 'country_id' && billingForm){
+                    billingForm.elementChildLoad(arrElements[elemIndex]);
+                }
+            }
+        }
+    },
+    newAddress: function(isNew){
+        if (isNew) {
+            this.resetSelectedAddress();
+            Element.show('patient-new-address-form');
+        } else {
+            Element.hide('patient-new-address-form');
+        }
+        billing.setSameAsPatient(false);
+    },
 
+    resetSelectedAddress: function(){
+        var selectElement = $('patient-address-select')
+        if (selectElement) {
+            selectElement.value='';
+        }
+    },
     save: function(){
         if (checkout.loadWaiting!=false) return;
 
@@ -459,6 +520,38 @@ Billing.prototype = {
     setUseForShipping: function(flag) {
         $('shipping:same_as_billing').checked = flag;
     },
+    setSameAsPatient: function(flag) {
+        $('patient:same_as_billing').checked = flag;
+// #5599. Also it hangs up, if the flag is not false
+//        $('billing:use_for_shipping_yes').checked = flag;
+        if (flag) {
+            this.syncWithPatient();
+        }
+    },
+
+    syncWithPatient: function () {
+        $('patient-address-select') && this.newAddress(!$('patient-address-select').value);
+        $('patient:same_as_billing').checked = true;
+        if (!$('patient-address-select') || !$('patient-address-select').value) {
+            arrElements = Form.getElements(this.form);
+            for (var elemIndex in arrElements) {
+                if (arrElements[elemIndex].id) {
+                    var sourceField = $(arrElements[elemIndex].id.replace(/^billing:/, 'patient:'));
+                    if (sourceField){
+                        arrElements[elemIndex].value = sourceField.value;
+                    }
+                }
+            }
+            //$('shipping:country_id').value = $('billing:country_id').value;
+//            shippingRegionUpdater.update();
+//            $('shipping:region_id').value = $('billing:region_id').value;
+//            $('shipping:region').value = $('billing:region').value;
+            //shippingForm.elementChildLoad($('shipping:country_id'), this.setRegionValue.bind(this));
+        } else {
+            $('billing-address-select').value = $('patient-address-select').value;
+        }
+    },
+
 
     save: function(){
         if (checkout.loadWaiting!=false) return;

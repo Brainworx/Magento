@@ -118,7 +118,7 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     		$requiredPatientAttributes = array('customer_address_id');
     		
     		// don't reset original billing data, if it was not changed by customer
-    		foreach ($billing>getData() as $billingKey => $billingValue) {
+    		foreach ($billing->getData() as $billingKey => $billingValue) {
     			if (!is_null($billingValue) && !is_null($patient->getData($billingKey))
     					&& !isset($data[$billingKey]) && !in_array($billingKey, $requiredPatientAttributes)
     			) {

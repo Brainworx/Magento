@@ -68,6 +68,11 @@
 					<type_onepage>Brainworx_Hearedfrom_Model_Type_Onepage</type_onepage>
 				</rewrite>
 			</checkout>
+			<sales>
+				<rewrite>
+				<quote>Brainworx_Hearedfrom_Model_Quote</quote>
+				</rewrite>
+			</sales>
 
 			<brainworxadminthemecontroller>
 				<class>Brainworx_Hearedfrom_Controller</class>
