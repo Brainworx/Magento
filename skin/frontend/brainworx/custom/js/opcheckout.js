@@ -388,9 +388,7 @@ Billing.prototype = {
         this.onSave = this.nextStep.bindAsEventListener(this);
         this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
         if($('patient:use_for_billing').checked){
-        	$('billing:firstname').value = $('patient:firstname').value;
-        	$('billing:lastname').value = $('patient:name').value;
-        	$('billing_name').hide();
+        	
         }
     },
 
