@@ -113,7 +113,11 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     
     		
     		//birthdate patient
-    		Mage::getSingleton('core/session')->setPatientBirthDate($data['dob']);
+    		if(empty($data['dob'])){
+    			Mage::getSingleton('core/session')->setPatientBirthDate((new Datetime($this->getOnepage()->getQuote()->getCustomerDob()))->format("d-m-Y"));
+    		}else{
+    			Mage::getSingleton('core/session')->setPatientBirthDate($data['dob']);
+    		}
     		Mage::getSingleton('core/session')->setPatientName($data['lastname']);
     		Mage::getSingleton('core/session')->setPatientFirstname($data['firstname']);
     		
@@ -125,6 +129,8 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     				$result['goto_section'] = 'billing';
     			}else{
     				$result['goto_section'] = 'shipping_method';
+    				$result['duplicatePatientInfo'] = 'true';
+    				$result['allow_sections'] = array('billing');
     				$result['update_section'] = array(
     						'name' => 'shipping-method',
     						'html' => $this->_getShippingMethodsHtml()
@@ -288,11 +294,12 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		$method = $this->getRequest()->getPost('shipping_method', '');
     		
     		$shipping = explode("_",$method);
-    		$_usebillingaddress = $this->getRequest()->getPost($shipping[0].'_use_for_shipping');
+    		$_usepatientaddress = $this->getRequest()->getPost($shipping[0].'_use_for_shipping');
+    		$_sameasBillingaddress = $this->getRequest()->getPost('shipping_same_as_billing');
     		
     		Mage::getSingleton('customer/session')->setSeletedShipping($method);
     		
-    		$result = $this->getOnepage()->saveShippingMethod($method,$_usebillingaddress);
+    		$result = $this->getOnepage()->saveShippingMethod($method,$_usepatientaddress,$_sameasBillingaddress);
     		
     		if (!$result) {
     			Mage::dispatchEvent(
@@ -304,11 +311,11 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     			$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
     			
     			
-    			if (isset($_usebillingaddress) && $_usebillingaddress == 1){
+    			if (isset($_usepatientaddress) && $_usepatientaddress == 1){
     				$this->loadLayout('checkout_onepage_hearedfrom');  
     				$result['goto_section'] = 'hearedfrom';
     				$result['allow_sections'] = array('shipping'); //used in oppcheckout.js from skin folder
-    				$result['duplicateBillingInfo'] = 'true';
+    				$result['shippingDuplicatePatientInfo'] = 'true';
     			}else{
     				$result['goto_section'] = 'shipping';
     				

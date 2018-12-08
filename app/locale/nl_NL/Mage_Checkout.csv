@@ -387,6 +387,7 @@
 "Delivered between %s and %s","Levering tussen %s en %s"
 "Delivery on %s","Levering op %s"
 "Birth Date Patient","Geboortedatum pati&#235;nt"
+"Birth Date","Geboortedatum"
 "Not provided","Niet ingevoerd"
 "VAPH documentnr.: ","VAPH Dossiernr.: "
 "Select a delivery date:","- Selecteer de leverdatum:"

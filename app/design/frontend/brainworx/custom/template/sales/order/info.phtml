@@ -24,7 +24,8 @@ if(!empty($_order->getPatientBirthDate())){
 	$_birthdate = $this->formatDate($_order->getPatientBirthDate(), 'medium');
 }else{
 	$_birthdate = Mage::helper('checkout')->__('Not provided'); 
-}		  
+}	
+$patient = $_order->getPatientAddress();	  
 ?>
 <input id="realorderid" type="hidden" value="<?php echo $_order->getRealOrderId()?>" />
 <div class="page-title title-buttons">
@@ -50,21 +51,6 @@ if(!empty($_order->getPatientBirthDate())){
 </dl>
 <p class="order-date"><?php echo $this->__('Order Date: %s', $this->formatDate($_order->getCreatedAtStoreDate(), 'long')) ?></p>
 <?php if (!$_order->getIsVirtual()): ?>
-<div class="box">
-	<div class="box-title">
-		<br><h2><?php echo $this->__('Patient information') ?></h2>
-	</div>
-	<div class="box-content">
-	<p>
-	 		<label class="normal" ><?php echo Mage::helper('checkout')->__('Patient Firstname').": " ?></label>
-	   		<?php echo $_order->getPatientFirstname()?><br>
-	  		<label class="normal" ><?php echo Mage::helper('checkout')->__('Patient Name').": "  ?></label>
-	 		<?php echo $_order->getPatientName()?><br>
-	   		<label class="normal" ><?php echo Mage::helper('checkout')->__('Birth Date Patient').": " ?></label>
-	   		<?php echo $_birthdate?>		       		
-	</p>
-	</div>
-</div>
 <div class="col2-set order-info-box">
 		<div class="col-1">
 		        
@@ -85,6 +71,34 @@ if(!empty($_order->getPatientBirthDate())){
 		        </div>
 	    	</div>
 		  <?php }?>
+    <div class="col-1">
+        <div class="box">
+            <div class="box-title">
+                <h2><?php echo $this->__('Patient Information') ?></h2>
+            </div>
+            <div class="box-content">
+                <address><?php if($patient):
+                			echo $_order->getPatientAddress()->format('html');
+                elseif(!empty($_order->getPatientName())):
+                		echo $_order->getPatientFirstname().'<br>'.$_order->getPatientName();
+                else:
+                		 echo $this->__('Not provided'); 
+                endif;?></address>
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="box">
+            <div class="box-title">
+                <h2><?php echo Mage::helper('checkout')->__('Birth Date') ?></h2>
+            </div>
+            <div class="box-content">
+                <?php echo $_birthdate?>	
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col2-set order-info-box">
     <div class="col-1">
         <div class="box">
             <div class="box-title">

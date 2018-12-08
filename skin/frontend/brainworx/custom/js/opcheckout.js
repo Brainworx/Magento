@@ -34,6 +34,8 @@ Checkout.prototype = {
         this.patientForm = false;
         this.shippingForm= false;
         this.syncBillingShipping = false;
+        this.syncPatientBilling = false;
+        this.syncPatientShipping = false;
         this.method = '';
         this.payment = '';
         this.loadWaiting = false;
@@ -70,8 +72,16 @@ Checkout.prototype = {
 
     reloadProgressBlock: function(toStep) {
         this.reloadStep(toStep);
-        if (this.syncBillingShipping) {
-            this.syncBillingShipping = false;
+//        if (this.syncBillingShipping) {
+//            this.syncBillingShipping = false;
+//            this.reloadStep('shipping');
+//        }
+        if (this.syncPatientBilling) {
+            this.syncPatientBilling = false;
+            this.reloadStep('billing');
+        }
+        if (this.syncPatientShipping) {
+            this.syncPatientShipping = false;
             this.reloadStep('shipping');
         }
     },
@@ -193,17 +203,14 @@ Checkout.prototype = {
     },
     
     setPatient: function(){
-    	if (($('patient:use_for_billing_yes')) && ($('patient:use_for_billing_yes').checked)) {
+    	if (($('patient:use_for_billing')) && ($('patient:use_for_billing').checked)) {
             billing.syncWithPatient();
             $('opc-billing').addClassName('allow');
             this.gotoSection('shipping_method', true);
-        } else if (($('patient:use_for_billing_no')) && ($('patient:use_for_billing_no').checked)){
+        } else {
         	$('patient:same_as_billing').checked = false;
             this.gotoSection('billing', true);
-    	} else {
-            $('shipping:same_as_billing').checked = true;
-            this.gotoSection('billing', true);
-        }
+    	} 
     },
 
     setBilling: function() {
@@ -213,7 +220,7 @@ Checkout.prototype = {
 
         // this refreshes the checkout progress column
 
-//        if ($('billing:use_for_shipping') && $('billing:use_for_shipping').checked){
+//        if ($('patient:use_for_shipping') && $('patient:use_for_shipping').checked){
 //            shipping.syncWithBilling();
 //            //this.setShipping();
 //            //shipping.save();
@@ -235,15 +242,12 @@ Checkout.prototype = {
 
     setShippingMethod: function() {
         
-        if (($('billing:use_for_shipping_yes')) && ($('billing:use_for_shipping_yes').checked)) {
+        if (($('patient:use_for_shipping')) && ($('patient:use_for_shipping').checked)) {
             shipping.syncWithBilling();
             $('opc-shipping').addClassName('allow');
             this.gotoSection('shipping_method', true);
-        } else if (($('billing:use_for_shipping_no')) && ($('billing:use_for_shipping_no').checked)) {
-            $('shipping:same_as_billing').checked = false;
-            this.gotoSection('shipping', true);
         } else {
-            $('shipping:same_as_billing').checked = true;
+            $('shipping:same_as_billing').checked = false;
             this.gotoSection('shipping', true);
         }
     },
@@ -291,12 +295,22 @@ Checkout.prototype = {
                 $('opc-'+e).addClassName('allow');
             });
         }
-
-        if(response.duplicateBillingInfo)
+        if(response.duplicatePatientInfo)
         {
-            this.syncBillingShipping = true;
-            shipping.setSameAsBilling(true);
+            this.syncPatientBilling = true;
+            billing.setSameAsPatient(true);
         }
+        if(response.shippingDuplicatePatientInfo)
+        {
+            this.syncPatientShipping = true;
+            shipping.setSameAsPatient(true);
+        }
+
+//        if(response.duplicateBillingInfo)
+//        {
+//            this.syncBillingShipping = true;
+//            shipping.setSameAsBilling(true);
+//        }
 
         if (response.goto_section) {
             this.gotoSection(response.goto_section, true);
@@ -393,16 +407,6 @@ Patient.prototype = {
             );
         }
     },
-    setUseForBilling: function() {
-         
-        if($('patient:use_for_billing').checked){
-        	$('billing:firstname').value = $('patient:firstname').value;
-        	$('billing:lastname').value = $('patient:name').value;
-        	$('billing_name').hide();
-        }else{
-        	$('billing_name').show();
-        }
-    },
 
     resetLoadWaiting: function(transport){
         checkout.setLoadWaiting(false);
@@ -448,9 +452,7 @@ Billing.prototype = {
         this.onAddressLoad = this.fillForm.bindAsEventListener(this);
         this.onSave = this.nextStep.bindAsEventListener(this);
         this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
-        if($('patient:use_for_billing').checked){
-        	
-        }
+        
     },
 
     setAddress: function(addressId){
@@ -466,6 +468,10 @@ Billing.prototype = {
     },
 
     newAddress: function(isNew){
+    	var element = $('shipping:same_as_billing');
+    	if(element){
+    		$('shipping:same_as_billing').checked = false;
+    	}
         if (isNew) {
             this.resetSelectedAddress();
             Element.show('billing-new-address-form');
@@ -517,21 +523,21 @@ Billing.prototype = {
         }
     },
 
-    setUseForShipping: function(flag) {
-        $('shipping:same_as_billing').checked = flag;
-    },
+//    setUseForShipping: function(flag) {
+//        $('shipping:same_as_billing').checked = flag;
+//    },
     setSameAsPatient: function(flag) {
-        $('patient:same_as_billing').checked = flag;
-// #5599. Also it hangs up, if the flag is not false
-//        $('billing:use_for_shipping_yes').checked = flag;
+//        $('patient:use_for_billing').checked = flag;
+//    	$('shipping:same_as_billing').checked = flag;
         if (flag) {
             this.syncWithPatient();
         }
     },
 
     syncWithPatient: function () {
+//    	$('shipping:same_as_billing').checked = true;
         $('patient-address-select') && this.newAddress(!$('patient-address-select').value);
-        $('patient:same_as_billing').checked = true;
+//        $('patient:use_for_billing').checked = true;
         if (!$('patient-address-select') || !$('patient-address-select').value) {
             arrElements = Form.getElements(this.form);
             for (var elemIndex in arrElements) {
@@ -559,10 +565,6 @@ Billing.prototype = {
         var validator = new Validation(this.form);
         if (validator.validate()) {
             checkout.setLoadWaiting('billing');
-
-//            if ($('billing:use_for_shipping') && $('billing:use_for_shipping').checked) {
-//                $('billing:use_for_shipping').value=1;
-//            }
 
             var request = new Ajax.Request(
                 this.saveUrl,
@@ -648,19 +650,30 @@ Shipping.prototype = {
     },
 
     newAddress: function(isNew){
+    	if($('shipping:same_as_billing')){
+    		$('shipping:same_as_billing').checked = false;
+    	}
         if (isNew) {
             this.resetSelectedAddress();
             Element.show('shipping-new-address-form');
         } else {
             Element.hide('shipping-new-address-form');
         }
-        shipping.setSameAsBilling(false);
+        //shipping.setSameAsBilling(false);
     },
 
     resetSelectedAddress: function(){
         var selectElement = $('shipping-address-select')
         if (selectElement) {
             selectElement.value='';
+            Field.clear('shipping:firstname');
+            Field.clear('shipping:lastname');
+            Field.clear('shipping:address_id');  
+            Field.clear('shipping:company');
+            Field.clear('shipping:street1');
+            Field.clear('shipping:city');
+            Field.clear('shipping:postcode');
+            Field.clear('shipping:telephone');
         }
     },
 
@@ -689,37 +702,66 @@ Shipping.prototype = {
         }
     },
 
-    setSameAsBilling: function(flag) {
-        $('shipping:same_as_billing').checked = flag;
-// #5599. Also it hangs up, if the flag is not false
-//        $('billing:use_for_shipping_yes').checked = flag;
+//    setSameAsBilling: function(flag) {
+//        $('shipping:same_as_billing').checked = flag;
+//        if (flag) {
+//            this.syncWithBilling();
+//        }
+//    },
+    setSameAsPatient: function(flag) {    	
         if (flag) {
-            this.syncWithBilling();
+            this.syncWithPatient();
+        }else{
+        	//shipping addres not same as patient -> shipping will be different from billing
+        	$('shipping:same_as_billing').checked = false;
         }
     },
-
-    syncWithBilling: function () {
-        $('billing-address-select') && this.newAddress(!$('billing-address-select').value);
-        $('shipping:same_as_billing').checked = true;
-        if (!$('billing-address-select') || !$('billing-address-select').value) {
+    syncWithPatient: function () {
+        $('patient-address-select') && this.newAddress(!$('patient-address-select').value);
+        $('patient:use_for_shipping').checked = true;
+        if (!$('patient-address-select') || !$('patient-address-select').value) {
             arrElements = Form.getElements(this.form);
             for (var elemIndex in arrElements) {
                 if (arrElements[elemIndex].id) {
-                    var sourceField = $(arrElements[elemIndex].id.replace(/^shipping:/, 'billing:'));
+                    var sourceField = $(arrElements[elemIndex].id.replace(/^shipping:/, 'patient:'));
                     if (sourceField){
                         arrElements[elemIndex].value = sourceField.value;
                     }
                 }
             }
             //$('shipping:country_id').value = $('billing:country_id').value;
-            shippingRegionUpdater.update();
-            $('shipping:region_id').value = $('billing:region_id').value;
-            $('shipping:region').value = $('billing:region').value;
+//            shippingRegionUpdater.update();
+//            $('shipping:region_id').value = $('billing:region_id').value;
+//            $('shipping:region').value = $('billing:region').value;
             //shippingForm.elementChildLoad($('shipping:country_id'), this.setRegionValue.bind(this));
         } else {
-            $('shipping-address-select').value = $('billing-address-select').value;
+            $('shipping-address-select').value = $('patient-address-select').value;
         }
     },
+
+
+//    syncWithBilling: function () {
+//        $('billing-address-select') && this.newAddress(!$('billing-address-select').value);
+//        $('shipping:same_as_billing').checked = true;
+//        if (!$('billing-address-select') || !$('billing-address-select').value) {
+//            arrElements = Form.getElements(this.form);
+//            for (var elemIndex in arrElements) {
+//                if (arrElements[elemIndex].id) {
+//                    var sourceField = $(arrElements[elemIndex].id.replace(/^shipping:/, 'billing:'));
+//                    if (sourceField){
+//                        arrElements[elemIndex].value = sourceField.value;
+//                    }
+//                }
+//            }
+//            //$('shipping:country_id').value = $('billing:country_id').value;
+//            shippingRegionUpdater.update();
+//            $('shipping:region_id').value = $('billing:region_id').value;
+//            $('shipping:region').value = $('billing:region').value;
+//            //shippingForm.elementChildLoad($('shipping:country_id'), this.setRegionValue.bind(this));
+//        } else {
+//            $('shipping-address-select').value = $('billing-address-select').value;
+//        }
+//    },
 
     setRegionValue: function(){
         $('shipping:region').value = $('billing:region').value;

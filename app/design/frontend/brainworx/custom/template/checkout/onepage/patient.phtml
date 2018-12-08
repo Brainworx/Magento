@@ -122,6 +122,28 @@
 		         </div>
 		    <?php endif ?>
 		</li>
+		<?php if(!$this->isCustomerLoggedIn()): ?>
+
+	            	<?php if ($this->isTaxvatEnabled()):?>
+	               		<li><?php echo $this->getTaxvatHtml() ?></li>
+	            	<?php endif; ?>
+	
+	                <li class="fields" id="register-customer-password">
+	                    <div class="field">
+	                        <label for="patient:customer_password" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
+	                        <div class="input-box">
+	                            <input type="password" name="patient[customer_password]" id="patient:customer_password" title="<?php echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
+	                        </div>
+	                    </div>
+	                    <div class="field">
+	                        <label for="patient:confirm_password" class="required"><em>*</em><?php echo $this->__('Confirm Password') ?></label>
+	                        <div class="input-box">
+	                            <input type="password" name="patient[confirm_password]" title="<?php echo $this->__('Confirm Password') ?>" id="patient:confirm_password" class="input-text required-entry validate-cpassword" />
+	                        </div>
+	                    </div>
+	                </li>
+	                <?php echo $this->getChildHtml('persistent.remember.me'); ?>
+                <?php endif; ?>
 		 <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()):?>
 		<li class="control">
 	    	<input type="checkbox" name="patient[save_in_address_book]" value="1" title="<?php echo $this->__('Save in address book') ?>" id="patient:save_in_address_book" onchange="if(window.billing) billing.setSameAsPatient(false);"<?php if ($this->getAddress()->getSaveInAddressBook()):?> checked="checked"<?php endif;?> class="checkbox" />

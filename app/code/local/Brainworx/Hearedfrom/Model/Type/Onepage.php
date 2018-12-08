@@ -109,7 +109,7 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     			return array('error' => 1, 'message' => $this->_customerEmailExistsMessage);
     		}
     	}   
-        if($this->getCheckout()->getStepData('billing', 'complete') != true){
+        if($this->getCheckout()->getStepData('billing', 'complete') != true || !empty($data['use_for_billing'])){
     		$patient = clone $address;
     		$patient->unsAddressId()->unsAddressType();
     		$billing = $this->getQuote()->getBillingAddress();
@@ -243,9 +243,9 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     
     	$address->implodeStreetAddress();
     
-    	if (true !== ($result = $this->_validateCustomerData($data))) {
-    		return $result;
-    	}
+//     	if (true !== ($result = $this->_validateCustomerData($data))) {
+//     		return $result;
+//     	}
     
     	if (!$this->getQuote()->getCustomerId() && self::METHOD_REGISTER == $this->getQuote()->getCheckoutMethod()) {
     		if ($this->_customerEmailExists($address->getEmail(), Mage::app()->getWebsite()->getId())) {
@@ -253,30 +253,30 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     		}
     	}   
     	
-    	if($this->getCheckout()->getStepData('shipping', 'complete') != true){
-    		$billing = clone $address;
-    		$billing->unsAddressId()->unsAddressType();
-    		$shipping = $this->getQuote()->getShippingAddress();
-    		$shippingMethod = $shipping->getShippingMethod();
+//     	if($this->getCheckout()->getStepData('shipping', 'complete') != true){
+//     		$billing = clone $address;
+//     		$billing->unsAddressId()->unsAddressType();
+//     		$shipping = $this->getQuote()->getShippingAddress();
+//     		$shippingMethod = $shipping->getShippingMethod();
     		
-    		// Billing address properties that must be always copied to shipping address
-    		$requiredBillingAttributes = array('customer_address_id');
+//     		// Billing address properties that must be always copied to shipping address
+//     		$requiredBillingAttributes = array('customer_address_id');
     		
-    		// don't reset original shipping data, if it was not changed by customer
-    		foreach ($shipping->getData() as $shippingKey => $shippingValue) {
-    			if (!is_null($shippingValue) && !is_null($billing->getData($shippingKey))
-    					&& !isset($data[$shippingKey]) && !in_array($shippingKey, $requiredBillingAttributes)
-    			) {
-    				$billing->unsetData($shippingKey);
-    			}
-    		}
-    		$shipping->addData($billing->getData())
-    		->setSameAsBilling(1)
-    		->setSaveInAddressBook(0)
-    		->setShippingMethod($shippingMethod)
-    		->setCollectShippingRates(true);
-    		$this->getCheckout()->setStepData('shipping', 'complete', true);
-    	}
+//     		// don't reset original shipping data, if it was not changed by customer
+//     		foreach ($shipping->getData() as $shippingKey => $shippingValue) {
+//     			if (!is_null($shippingValue) && !is_null($billing->getData($shippingKey))
+//     					&& !isset($data[$shippingKey]) && !in_array($shippingKey, $requiredBillingAttributes)
+//     			) {
+//     				$billing->unsetData($shippingKey);
+//     			}
+//     		}
+//     		$shipping->addData($billing->getData())
+//     		->setSameAsBilling(1)
+//     		->setSaveInAddressBook(0)
+//     		->setShippingMethod($shippingMethod)
+//     		->setCollectShippingRates(true);
+//     		$this->getCheckout()->setStepData('shipping', 'complete', true);
+//     	}
     
     	$this->getQuote()->collectTotals();
     	$this->getQuote()->save();
@@ -300,7 +300,7 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
      * @param   string $shippingMethod
      * @return  array
      */
-    public function saveShippingMethod($shippingMethod,$_usebillingaddress=0)
+    public function saveShippingMethod($shippingMethod,$_usepatientaddress=0,$_sameasBillingaddress=0)
     {
     	if (empty($shippingMethod)) {
     		return array('error' => -1, 'message' => Mage::helper('checkout')->__('Invalid shipping method.'));
@@ -316,31 +316,31 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     		 * Billing address using otions
     		 */
     	
-    		switch ($_usebillingaddress) {
+    		switch ($_usepatientaddress) {
     			case 0:
     				$shipping = $this->getQuote()->getShippingAddress();
     				$shipping->setSameAsBilling(0);
     				$shipping->setShippingMethod($shippingMethod);
     				break;
     			case 1:
-    				$address = $this->getQuote()->getBillingAddress();
-    				$billing = clone $address;
-    				$billing->unsAddressId()->unsAddressType();
+    				$address = $this->getQuote()->getPatientAddress();
+    				$patient = clone $address;
+    				$patient->unsAddressId()->unsAddressType();
     				$shipping = $this->getQuote()->getShippingAddress();
     	
     				// Billing address properties that must be always copied to shipping address
-    				$requiredBillingAttributes = array('customer_address_id','firstname','lastname','company','street','city','postcode','country_id','telephone','fax');
+    				$requiredPatientAttributes = array('customer_address_id','firstname','lastname','company','street','city','postcode','country_id','telephone','fax');
     	
     				// don't reset original shipping data, if it was not changed by customer
     				foreach ($shipping->getData() as $shippingKey => $shippingValue) {
-    					if (!is_null($shippingValue) && !is_null($billing->getData($shippingKey))
-    							&& !isset($data[$shippingKey]) && !in_array($shippingKey, $requiredBillingAttributes)
+    					if (!is_null($shippingValue) && !is_null($patient->getData($shippingKey))
+    							&& !isset($data[$shippingKey]) && !in_array($shippingKey, $requiredPatientAttributes)
     					) {
-    						$billing->unsetData($shippingKey);
+    						$patient->unsetData($shippingKey);
     					}
     				}
-    				$shipping->addData($billing->getData())
-    				->setSameAsBilling(1)
+    				$shipping->addData($patient->getData())
+    				->setSameAsBilling($_sameasBillingaddress)
     				->setSaveInAddressBook(0)
     				->setShippingMethod($shippingMethod)
     				->setCollectShippingRates(true);

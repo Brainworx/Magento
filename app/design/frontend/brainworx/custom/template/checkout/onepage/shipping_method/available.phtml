@@ -85,15 +85,16 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
      	<div id="onepage-checkout-shipping-method-address">
      		<ul class="form-list">
      			<li class="control">
-     				<input type="checkbox" name=<?php echo $showcheckboxfor.'_use_for_shipping';?> id="billing:use_for_shipping" value="1" checked="checked" title="<?php echo  $this->__('Ship to billing address') ?>" class="checkbox" /><label for="use_for_shipping"><?php echo  $this->__('Ship to billing address') ?></label>
+     				<input type="checkbox" name=<?php echo $showcheckboxfor.'_use_for_shipping';?> id="patient:use_for_shipping" value="1" checked="checked" title="<?php echo  $this->__('Ship to billing address') ?>" class="checkbox" /><label for="use_for_shipping"><?php echo  $this->__('Ship to billing address') ?></label>
      			</li>
      		</ul>
      	</div>
         <?php else: ?>
-        	<input type="hidden" name=<?php echo $hidecheckboxfor.'_use_for_shipping';?> id="billing:use_for_shipping" value="1" />
+        <input type="hidden" name=<?php echo $hidecheckboxfor.'_use_for_shipping';?> id="patient:use_for_shipping" value="1" />
         <?php endif;?>
-     
     <?php endforeach; ?>
+    
+     	<input type="hidden" name='shipping[same_as_billing]' id="shipping:same_as_billing" value="1" />
     </dl>
     
      

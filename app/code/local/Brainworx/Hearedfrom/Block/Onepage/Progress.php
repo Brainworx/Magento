@@ -20,10 +20,18 @@ class Brainworx_Hearedfrom_Block_Onepage_Progress extends Mage_Checkout_Block_On
 {
 	public function getPatient()
 	{
-		$text = Mage::getSingleton('core/session')->getPatientFirstname()
-		.' '.Mage::getSingleton('core/session')->getPatientName()
-		.'<br>'.Mage::getSingleton('core/session')->getPatientBirthDate();
+// 		$text = Mage::getSingleton('core/session')->getPatientFirstname()
+// 		.' '.Mage::getSingleton('core/session')->getPatientName()
+// 		.'<br>'.Mage::getSingleton('core/session')->getPatientBirthDate();
 		
-		return $text;
+		return $this->getQuote()->getPatientAddress();;
+	}
+	public function getPatientBirthDate()
+	{
+		// 		$text = Mage::getSingleton('core/session')->getPatientFirstname()
+		// 		.' '.Mage::getSingleton('core/session')->getPatientName()
+		// 		.'<br>'.Mage::getSingleton('core/session')->getPatientBirthDate();
+	
+		return Mage::getSingleton('core/session')->getPatientBirthDate();
 	}
 }

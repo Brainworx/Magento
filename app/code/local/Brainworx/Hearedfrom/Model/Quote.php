@@ -72,6 +72,17 @@ class Brainworx_Hearedfrom_Model_Quote extends Mage_Sales_Model_Quote
     {
         return $this->_getAddressByType('patient');
     }
+    public function setPatientAddress(Mage_Sales_Model_Quote_Address $address)
+    {
+    	$old = $this->getPatientAddress();
+    
+    	if (!empty($old)) {
+    		$old->addData($address->getData());
+    	} else {
+    		$this->addAddress($address->setAddressType('patient'));
+    	}
+    	return $this;
+    }
 
     /**
      * Merge quotes

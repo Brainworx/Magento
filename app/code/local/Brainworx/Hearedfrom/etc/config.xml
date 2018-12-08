@@ -70,7 +70,9 @@
 			</checkout>
 			<sales>
 				<rewrite>
-				<quote>Brainworx_Hearedfrom_Model_Quote</quote>
+					<quote>Brainworx_Hearedfrom_Model_Quote</quote>
+					<order>Brainworx_Hearedfrom_Model_Order</order>
+					<service_quote>Brainworx_Hearedfrom_Model_Service_Quote</service_quote>
 				</rewrite>
 			</sales>
 

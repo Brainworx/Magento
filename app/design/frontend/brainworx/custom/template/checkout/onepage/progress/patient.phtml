@@ -6,7 +6,8 @@
     <?php echo $this->__('Patient information') ?>
 </dt>
 <dd class="complete">
-    <?php echo $this->getPatient() ?>
+    <address><?php echo $this->getPatient()->format('html') ?></address>
+    <?php echo  $this->__('Birth Date Patient') .': '.$this->getPatientBirthDate();?>
 </dd>
 <?php else: ?>
 <dt>
