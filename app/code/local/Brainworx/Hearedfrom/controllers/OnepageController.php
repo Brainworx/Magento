@@ -95,6 +95,21 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     	if ($this->getRequest()->isPost()) {
     		$data = $this->getRequest()->getPost('patient', array());
     		
+    		//Grab the submited value heared from who and comment value
+    		$_brainworx_hearedfrom = $this->getRequest()->getPost('getvoice');
+    		//set Zorgpunt as default if no selection was made
+    		if($_brainworx_hearedfrom == Mage::helper('checkout')->__('Select')){
+    			$_brainworx_hearedfrom = "Zorgpunt";
+    		}
+    		//Add the seller and comment to the session
+    		$seller = Mage::getModel("hearedfrom/salesForce")->loadByUsername($_brainworx_hearedfrom);
+    		Mage::getSingleton('core/session')->setBrainworxHearedfrom($seller);
+    		 
+    		//for VAPH optional input
+    		$_vaph_nr = $this->getRequest()->getPost('vaph_doc_nr');
+    		if(isset($_vaph_nr))
+    			Mage::getSingleton('core/session')->setVaphDocNr($_vaph_nr);
+    		
             $customerAddressId = $this->getRequest()->getPost('patient_address_id', false);
             
             if (isset($data['email'])) {
@@ -166,15 +181,23 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 //     			Mage::getSingleton('core/session')->setPatientBirthDate($data['day']."-".$data['month']."-".$data['year']);
 //     		}    		
     		
-    		
+    		//set payment info -- always payment[method]=free
+    		$paymentdata[][]= array('method'=>'free');
+    		$result = $this->getOnepage()->savePayment($paymentdata);
     		
     
     		if (!isset($result['error'])) {
     			if ($this->getOnepage()->getQuote()->isVirtual()) {
-    				$result['goto_section'] = 'payment';
+//     				$result['goto_section'] = 'payment';
+//     				$result['update_section'] = array(
+//     						'name' => 'payment-method',
+//     						'html' => $this->_getPaymentMethodsHtml()
+//     				);
+    				$this->loadLayout('checkout_onepage_review');
+    				$result['goto_section'] = 'review';
     				$result['update_section'] = array(
-    						'name' => 'payment-method',
-    						'html' => $this->_getPaymentMethodsHtml()
+    						'name' => 'review',
+    						'html' => $this->_getReviewHtml()
     				);
     			} else {
     				$result['goto_section'] = 'shipping_method';
@@ -234,13 +257,25 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 //     			}else{
 // 	    			$result['goto_section'] = 'shipping_method';
     			//}
-    			$this->loadLayout('checkout_onepage_hearedfrom');
-    			$result['goto_section'] = 'hearedfrom';
+//     			$this->loadLayout('checkout_onepage_hearedfrom');
+//     			$result['goto_section'] = 'hearedfrom';
     			
 //     			$result['update_section'] = array(
 //     					'name' => 'shipping-method',
 //     					'html' => $this->_getShippingMethodsHtml()
 //     			);
+//     			$this->loadLayout('checkout_onepage_payment');
+//     			$result['goto_section'] = 'payment';
+//     			$result['update_section'] = array(
+// 	            	'name' => 'payment-method',
+// 	                'html' => $this->_getPaymentMethodsHtml()
+// 	            );
+    			$this->loadLayout('checkout_onepage_review');
+    			$result['goto_section'] = 'review';
+    			$result['update_section'] = array(
+    					'name' => 'review',
+    					'html' => $this->_getReviewHtml()
+    			);
     		}
     		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
     	}
@@ -291,6 +326,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		return;
     	}
     	if ($this->getRequest()->isPost()) {
+    		
     		$method = $this->getRequest()->getPost('shipping_method', '');
     		
     		$shipping = explode("_",$method);
@@ -312,8 +348,18 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     			
     			
     			if (isset($_usepatientaddress) && $_usepatientaddress == 1){
-    				$this->loadLayout('checkout_onepage_hearedfrom');  
-    				$result['goto_section'] = 'hearedfrom';
+//     				$this->loadLayout('checkout_onepage_payment');
+//     				$result['goto_section'] = 'payment';
+//     				$result['update_section'] = array(
+// 		            	'name' => 'payment-method',
+// 		                'html' => $this->_getPaymentMethodsHtml()
+// 		            );
+    				$this->loadLayout('checkout_onepage_review');
+    				$result['goto_section'] = 'review';
+    				$result['update_section'] = array(
+    						'name' => 'review',
+    						'html' => $this->_getReviewHtml()
+    				);
     				$result['allow_sections'] = array('shipping'); //used in oppcheckout.js from skin folder
     				$result['shippingDuplicatePatientInfo'] = 'true';
     			}else{
@@ -326,11 +372,30 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		//$_preferred_delivery_date = $this->getRequest()->getPost('pddate');
     		//delivery before is the date generated after picking or 24hrs or within 3 days
     		if(!empty($method))
-    			$_delivery_before = $this->getRequest()->getPost($method.'_delrange');
-    		if(empty($_delivery_before)){
-    			$_delivery_before=(date('d-m-Y', strtotime('+1 weekday')));
-    			Mage::log('Set delivery date to next weekday as no input from frontend.');
+    			$_delivery_before = $this->getRequest()->getPost($method.'_delrange');  		
+    		$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
+    		$_vaph_nr = Mage::getSingleton('core/session')->getVaphDocNr();
+    		$cmt = false;
+    		if(!isset($_vaph_nr)){
+    			if(!empty($_delivery_before)){
+    				if(!empty($_comment_tozorgpunt)){
+    					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
+    					$cmt = $_comment_tozorgpunt;
+    				}else{
+    					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt('');
+    				}
+    				$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivery on %s',$_delivery_before);
+    				if(!empty($cmt)){
+    					$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
+    				}
+    			}else{
+    				//default delivery date = next day
+    				Mage::log("DELIVERY NOT SET in frontend ".$_comment_tozorgpunt);
+    				$_delivery_before=date('d-m-Y', strtotime('+1 weekday'));
+    			}
     		}
+    		
+    		Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
     		//set preferred delivery day with selection as made in radio buttons
     		Mage::getSingleton('core/session')->setPreferredDeliveryDate($_delivery_before);
     		Mage::getSingleton('core/session')->setDeliveryBefore($_delivery_before);
@@ -388,56 +453,46 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     {
         $this->_expireAjax();
         if ($this->getRequest()->isPost()) {
-        	if(empty($this->getRequest()->getPost('getvoice'))||
-		   ((!empty($this->getRequest()->getPost('vaph_order_id')) && $this->getRequest()->getPost('vaph_order_id')!=1)
-		     && empty($this->getRequest()->getPost('delrange')))){
-        		//	empty($this->getRequest()->getPost('pddate')||
-        		//			empty($this->getRequest()->getPost('delrange'))){
-        		$this->loadLayout('checkout_onepage_hearedfrom');
-        		$result['error'] = $this->__('Please complete all fields.');
-        		$result['goto_section'] = 'hearedfrom';
+//         	if(empty($this->getRequest()->getPost('getvoice'))||
+// 		   ((!empty($this->getRequest()->getPost('vaph_order_id')) && $this->getRequest()->getPost('vaph_order_id')!=1)
+// 		     && empty($this->getRequest()->getPost('delrange')))){
+//         		//	empty($this->getRequest()->getPost('pddate')||
+//         		//			empty($this->getRequest()->getPost('delrange'))){
+//         		$this->loadLayout('checkout_onepage_hearedfrom');
+//         		$result['error'] = $this->__('Please complete all fields.');
+//         		$result['goto_section'] = 'hearedfrom';
         		
-        		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
-        	}
+//         		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+//         	}
             
-        	//Grab the submited value heared from who and comment value
-        	$_brainworx_hearedfrom = $this->getRequest()->getPost('getvoice');
-        	//set Zorgpunt as default if no selection was made
-        	if($_brainworx_hearedfrom == Mage::helper('checkout')->__('Select')){
-        		$_brainworx_hearedfrom = "Zorgpunt";
-        	}
         	
-        	//for VAPH optional input
-        	$_vaph_nr = $this->getRequest()->getPost('vaph_doc_nr');
-        	Mage::getSingleton('core/session')->setVaphDocNr($_vaph_nr);
         	
-        	$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
-        	//Add the seller and comment to the session
-        	$seller = Mage::getModel("hearedfrom/salesForce")->loadByUsername($_brainworx_hearedfrom);
-			Mage::getSingleton('core/session')->setBrainworxHearedfrom($seller);
-			$cmt = false;
-			$_delivery_before = Mage::getSingleton('core/session')->getDeliveryBefore();
-			if(empty($_vaph_nr)){				
-				if(!empty($_delivery_before)){
-					if(!empty($_comment_tozorgpunt)){
-						Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
-						$cmt = $_comment_tozorgpunt;
-					}else{
-						Mage::getSingleton('core/session')->setOrigCommentToZorgpunt('');						
-					}
-					$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivery on %s',$_delivery_before);
-					if(!empty($cmt)){
-							$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
-					}
-				}else{
-					//default delivery date = next day
-					Mage::log("ERROR -- DELIVERY NOT SET".$_comment_tozorgpunt);
-					Mage::getSingleton('core/session')->setDeliveryBefore(date('d-m-Y', strtotime('+1 weekday')));
-					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
-				}
-			}
-			
-			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
+//         	$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
+        	
+// 			$cmt = false;
+// 			$_delivery_before = Mage::getSingleton('core/session')->getDeliveryBefore();
+// 			if(empty($_vaph_nr)){				
+// 				if(!empty($_delivery_before)){
+// 					if(!empty($_comment_tozorgpunt)){
+// 						Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
+// 						$cmt = $_comment_tozorgpunt;
+// 					}else{
+// 						Mage::getSingleton('core/session')->setOrigCommentToZorgpunt('');						
+// 					}
+// 					$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivery on %s',$_delivery_before);
+// 					if(!empty($cmt)){
+// 							$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
+// 					}
+// 				}else{
+// 					//default delivery date = next day
+// 					Mage::log("ERROR -- DELIVERY NOT SET".$_comment_tozorgpunt);
+// 					Mage::getSingleton('core/session')->setDeliveryBefore(date('d-m-Y', strtotime('+1 weekday')));
+// 					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
+// 				}
+// 			}
+// 			$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
+			 
+// 			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
 			
 
 			$result = array();
@@ -451,4 +506,100 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
             $this->getResponse()->setBody(Zend_Json::encode($result));
         }
     }    
+    /**
+     * Create order action
+     */
+    public function saveOrderAction()
+    {
+    	if (!$this->_validateFormKey()) {
+    		$this->_redirect('*/*');
+    		return;
+    	}
+    
+    	if ($this->_expireAjax()) {
+    		return;
+    	}
+    
+    	$result = array();
+    	try {
+    		 
+    		$requiredAgreements = Mage::helper('checkout')->getRequiredAgreementIds();
+    		if ($requiredAgreements) {
+    			$postedAgreements = array_keys($this->getRequest()->getPost('agreement', array()));
+    			$diff = array_diff($requiredAgreements, $postedAgreements);
+    			if ($diff) {
+    				$result['success'] = false;
+    				$result['error'] = true;
+    				$result['error_messages'] = $this->__('Please agree to all the terms and conditions before placing the order.');
+    				$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    				return;
+    			}
+    		}
+    
+    		$data = $this->getRequest()->getPost('payment', array());
+    		if ($data) {
+    			$data['checks'] = Mage_Payment_Model_Method_Abstract::CHECK_USE_CHECKOUT
+    			| Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_COUNTRY
+    			| Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_CURRENCY
+    			| Mage_Payment_Model_Method_Abstract::CHECK_ORDER_TOTAL_MIN_MAX
+    			| Mage_Payment_Model_Method_Abstract::CHECK_ZERO_TOTAL;
+    			$this->getOnepage()->getQuote()->getPayment()->importData($data);
+    		}
+    
+    		$this->getOnepage()->saveOrder();
+    
+    		$redirectUrl = $this->getOnepage()->getCheckout()->getRedirectUrl();
+    		$result['success'] = true;
+    		$result['error']   = false;
+    	} catch (Mage_Payment_Model_Info_Exception $e) {
+    		$message = $e->getMessage();
+    		if (!empty($message)) {
+    			$result['error_messages'] = $message;
+    		}
+    		$result['goto_section'] = 'payment';
+    		$result['update_section'] = array(
+    				'name' => 'payment-method',
+    				'html' => $this->_getPaymentMethodsHtml()
+    		);
+    	} catch (Mage_Core_Exception $e) {
+    		Mage::logException($e);
+    		Mage::helper('checkout')->sendPaymentFailedEmail($this->getOnepage()->getQuote(), $e->getMessage());
+    		$result['success'] = false;
+    		$result['error'] = true;
+    		$result['error_messages'] = $e->getMessage();
+    
+    		$gotoSection = $this->getOnepage()->getCheckout()->getGotoSection();
+    		if ($gotoSection) {
+    			$result['goto_section'] = $gotoSection;
+    			$this->getOnepage()->getCheckout()->setGotoSection(null);
+    		}
+    		$updateSection = $this->getOnepage()->getCheckout()->getUpdateSection();
+    		if ($updateSection) {
+    			if (isset($this->_sectionUpdateFunctions[$updateSection])) {
+    				$updateSectionFunction = $this->_sectionUpdateFunctions[$updateSection];
+    				$result['update_section'] = array(
+    						'name' => $updateSection,
+    						'html' => $this->$updateSectionFunction()
+    				);
+    			}
+    			$this->getOnepage()->getCheckout()->setUpdateSection(null);
+    		}
+    	} catch (Exception $e) {
+    		Mage::logException($e);
+    		Mage::helper('checkout')->sendPaymentFailedEmail($this->getOnepage()->getQuote(), $e->getMessage());
+    		$result['success']  = false;
+    		$result['error']    = true;
+    		$result['error_messages'] = $this->__('There was an error processing your order. Please contact us or try again later.');
+    	}
+    	$this->getOnepage()->getQuote()->save();
+    	/**
+    	 * when there is redirect to third party, we don't want to save order yet.
+    	 * we will save the order in return action.
+    	*/
+    	if (isset($redirectUrl)) {
+    		$result['redirect'] = $redirectUrl;
+    	}
+    
+    	$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    }
 }

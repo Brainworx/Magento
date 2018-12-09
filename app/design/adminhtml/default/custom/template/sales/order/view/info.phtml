@@ -141,6 +141,9 @@ if(!empty($_order->getPatientBirthDate())){
          <fieldset>
          <div id="patient_block">
 	    		<div id="patientblock" class="">
+	    		<?php if($_order->getPatientAddress()):?>
+	    		<address><?php echo $_order->getPatientAddress()->getFormated(true) ?></address>
+	    		<?php else:?>
 	    		<p>
 	    			<span class="field-row">
 			        <label class="normal" for="patientFirstName"><?php echo Mage::helper('sales')->__('Patient Firstname').': ' ?></label>
@@ -156,6 +159,7 @@ if(!empty($_order->getPatientBirthDate())){
 			        else{echo Mage::helper('checkout')->__('Not provided'); }?>
 			    	</span>
 	    		</p>
+	    		<?php endif;?>
 	    		</div>
 	    		<!-- Brainworx: make seller editable -->
 				  <div id="patientblockedit" class="hidden">

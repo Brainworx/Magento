@@ -96,6 +96,12 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
     
      	<input type="hidden" name='shipping[same_as_billing]' id="shipping:same_as_billing" value="1" />
     </dl>
+    <p><label for="myCustomerOrderComment"><?php echo $this->__('Add comment for Zorgpunt (optional):'); ?></label></p>
+	<textarea name="myCustomerOrderComment" id="myCustomerOrderComment" style="width:450px;height:100px;"></textarea>
+	
+	
+</div>
+	
     
      
 <script type="text/javascript">

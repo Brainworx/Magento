@@ -15,7 +15,7 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
             }
         }
 
-        $checkout->setStepData('hearedfrom', 'allow', true);
+//         $checkout->setStepData('hearedfrom', 'allow', true);
 
         /*
         * want to laod the correct customer information by assiging to address

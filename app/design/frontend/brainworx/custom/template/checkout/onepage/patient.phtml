@@ -3,6 +3,39 @@
 	<div class="fieldset">
     <p class="required"><?php echo $this->__('* Required Fields') ?></p>
     <ul class="form-list">
+    <li id="" class="scaffold-form">
+        <div class="fieldset">
+	    <input id="vaph_order_id"  type="hidden" value="<?php echo $this->getVaphOrder() ?>"/>
+		 
+		<?php if($this->getVaphOrder()){?>
+		<p>
+			<label id="bdoptiontext" class="elong"><?php echo $this->__('VAPH documentnr.: ') ?><input class="input-text" type="text" name="vaph_doc_nr" id="vaph_doc_nr" value=""/></label>
+		</p>
+		<?php }?> 
+		 
+		</div>
+	</li>
+	<li id="" class="scaffold-form">
+		<div class="fieldset">
+		<p>
+		<label id="vlbl" for="getvoice"><?php echo $this->__('Who told you about us:') ?></label>
+		<?php echo '<br>'.$this->__('(Select and enter the first 2 digits of your postal code)');?><br/>
+		<select id="getvoice" name="getvoice">
+		<?php if($this->getSellerChangePossible()){?>
+			<?php foreach($this->getHearedFromValues() as $_option): ?>
+				<option value="<?php echo $_option ?>"
+				<?php if((!empty($this->getSellerValue()) && $_option == $this->getSellerValue())
+				|| ((empty($this->getSellerValue()) && $_option == $this->__('Select')))){
+						echo 'selected';
+				}?>
+				><?php echo $_option ?></option>
+			<?php endforeach; ?>
+			<?php }else{ ?><option value="<?php echo $this->getSellerValue() ?>" selected><?php echo $this->getSellerValue() ?></option><?php }?>
+		</select>
+		<br>
+		</p>
+		</div>
+	</li>
 	<?php if ($this->customerHasAddresses()): ?>
         <li class="wide">
             <label for="patient-address-select"><?php echo $this->__('Select a patient or enter a new patient.') ?></label>
@@ -123,10 +156,6 @@
 		    <?php endif ?>
 		</li>
 		<?php if(!$this->isCustomerLoggedIn()): ?>
-
-	            	<?php if ($this->isTaxvatEnabled()):?>
-	               		<li><?php echo $this->getTaxvatHtml() ?></li>
-	            	<?php endif; ?>
 	
 	                <li class="fields" id="register-customer-password">
 	                    <div class="field">
