@@ -39,7 +39,7 @@ Checkout.prototype = {
         this.method = '';
         this.payment = '';
         this.loadWaiting = false;
-        this.steps = ['login','patient', 'billing', 'shipping_method','shipping','hearedfrom', 'payment', 'review'];
+        this.steps = ['login','patient', 'billing', 'shipping_method','shipping','review'];
         //We use patient as beginning step since progress bar tracks from billing
         this.currentStep = 'patient';
 
@@ -236,7 +236,8 @@ Checkout.prototype = {
 
     setShipping: function() {
         //this.nextStep();
-        this.gotoSection('hearedfrom', true);
+//        this.gotoSection('payment', true);
+    	this.gotoSection('review', true);
         //this.accordion.openNextSection(true);
     },
 
@@ -245,19 +246,20 @@ Checkout.prototype = {
         if (($('patient:use_for_shipping')) && ($('patient:use_for_shipping').checked)) {
             shipping.syncWithBilling();
             $('opc-shipping').addClassName('allow');
-            this.gotoSection('shipping_method', true);
+//            this.gotoSection('payment', true);
+            this.gotoSection('review', true);
         } else {
             $('shipping:same_as_billing').checked = false;
             this.gotoSection('shipping', true);
         }
     },
     
-    setHearedfrom: function() {
-        //this.nextStep();
-        this.gotoSection('payment', true);
-        //this.accordion.openNextSection(true);
-    },
-
+//    setHearedfrom: function() {
+//        //this.nextStep();
+//        this.gotoSection('payment', true);
+//        //this.accordion.openNextSection(true);
+//    },
+//
     setPayment: function() {
         //this.nextStep();
         this.gotoSection('review', true);
@@ -899,7 +901,7 @@ ShippingMethod.prototype = {
             $('checkout-'+response.update_section.name+'-load').update(response.update_section.html);
         }
 
-        payment.initWhatIsCvvListeners();
+//        payment.initWhatIsCvvListeners();
         
         checkout.setStepResponse(response);
 
@@ -914,72 +916,72 @@ ShippingMethod.prototype = {
     }
 }
 //hearedfrom
-var Hearedfrom = Class.create();
-Hearedfrom.prototype = {
-    initialize: function(form, saveUrl){
-        this.form = form;
-        if ($(this.form)) {
-            $(this.form).observe('submit', function(event){this.save();Event.stop(event);}.bind(this));
-        }
-        this.saveUrl = saveUrl;
-        this.onSave = this.nextStep.bindAsEventListener(this);
-        this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
-    },
-
-    save: function(){
-        if (checkout.loadWaiting!=false) return;
-
-        var validator = new Validation(this.form);
-        if (validator.validate()) {
-
-            checkout.setLoadWaiting('hearedfrom');
-
-
-            var request = new Ajax.Request(
-                this.saveUrl,
-                {
-                    method: 'post',
-                    onComplete: this.onComplete,
-                    onSuccess: this.onSave,
-                    onFailure: checkout.ajaxFailure.bind(checkout),
-                    parameters: Form.serialize(this.form)
-                }
-            );
-        }
-    },
-
-    resetLoadWaiting: function(transport){
-        checkout.setLoadWaiting(false);
-    },
-
-    nextStep: function(transport){
-        if (transport && transport.responseText){
-            try{
-                response = eval('(' + transport.responseText + ')');
-            }
-            catch (e) {
-                response = {};
-            }
-        }
-
-        if (response.error){
-            if ((typeof response.message) == 'string') {
-                alert(response.message);
-            } else {
-                if (window.hearedfromRegionUpdater) {
-                    hearedfromRegionUpdater.update();
-                }
-
-                alert(response.message.join("\n"));
-            }
-
-            return false;
-        }
-
-        checkout.setStepResponse(response);
-    }    
-}
-
+//var Hearedfrom = Class.create();
+//Hearedfrom.prototype = {
+//    initialize: function(form, saveUrl){
+//        this.form = form;
+//        if ($(this.form)) {
+//            $(this.form).observe('submit', function(event){this.save();Event.stop(event);}.bind(this));
+//        }
+//        this.saveUrl = saveUrl;
+//        this.onSave = this.nextStep.bindAsEventListener(this);
+//        this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
+//    },
+//
+//    save: function(){
+//        if (checkout.loadWaiting!=false) return;
+//
+//        var validator = new Validation(this.form);
+//        if (validator.validate()) {
+//
+//            checkout.setLoadWaiting('hearedfrom');
+//
+//
+//            var request = new Ajax.Request(
+//                this.saveUrl,
+//                {
+//                    method: 'post',
+//                    onComplete: this.onComplete,
+//                    onSuccess: this.onSave,
+//                    onFailure: checkout.ajaxFailure.bind(checkout),
+//                    parameters: Form.serialize(this.form)
+//                }
+//            );
+//        }
+//    },
+//
+//    resetLoadWaiting: function(transport){
+//        checkout.setLoadWaiting(false);
+//    },
+//
+//    nextStep: function(transport){
+//        if (transport && transport.responseText){
+//            try{
+//                response = eval('(' + transport.responseText + ')');
+//            }
+//            catch (e) {
+//                response = {};
+//            }
+//        }
+//
+//        if (response.error){
+//            if ((typeof response.message) == 'string') {
+//                alert(response.message);
+//            } else {
+//                if (window.hearedfromRegionUpdater) {
+//                    hearedfromRegionUpdater.update();
+//                }
+//
+//                alert(response.message.join("\n"));
+//            }
+//
+//            return false;
+//        }
+//
+//        checkout.setStepResponse(response);
+//    }    
+//}
+//
 // payment
 var Payment = Class.create();
 Payment.prototype = {
