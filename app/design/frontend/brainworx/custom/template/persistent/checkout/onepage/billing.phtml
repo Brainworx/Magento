@@ -21,16 +21,6 @@
             <input type="hidden" name="billing[address_id]" value="<?php echo $this->getAddress()->getId() ?>" id="billing:address_id" />
             <ul>
                 <li id="billing_name" class="fields"><?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getAddress()->getFirstname() ? $this->getAddress() : $this->getQuote()->getCustomer())->setForceUseCustomerRequiredAttributes(!$this->isCustomerLoggedIn())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?></li>
-                <li class="fields">
-        <?php if(!$this->isCustomerLoggedIn()): ?>
-                    <div class="field">
-                        <label for="billing:email" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>
-                        <div class="input-box">
-                            <input type="email" autocapitalize="off" autocorrect="off" spellcheck="false" name="billing[email]" id="billing:email" value="<?php echo $this->escapeHtml($this->getAddress()->getEmail()) ?>" title="<?php echo $this->__('Email Address') ?>" class="input-text validate-email required-entry" />
-                        </div>
-                    </div>
-        <?php endif; ?>
-                </li>
         <?php $_streetValidationClass = $this->helper('customer/address')->getAttributeValidationClass('street'); ?>
                 <li class="wide">
                     <label for="billing:street1" class="required"><em>*</em><?php echo $this->__('Address') ?></label>
@@ -119,28 +109,6 @@
                 </li>
                 <?php endif; ?>
 
-            	<?php if(!$this->isCustomerLoggedIn()): ?>
-
-	            	<?php if ($this->isTaxvatEnabled()):?>
-	               		<li><?php echo $this->getTaxvatHtml() ?></li>
-	            	<?php endif; ?>
-	
-	                <li class="fields" id="register-customer-password">
-	                    <div class="field">
-	                        <label for="billing:customer_password" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
-	                        <div class="input-box">
-	                            <input type="password" name="billing[customer_password]" id="billing:customer_password" title="<?php echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
-	                        </div>
-	                    </div>
-	                    <div class="field">
-	                        <label for="billing:confirm_password" class="required"><em>*</em><?php echo $this->__('Confirm Password') ?></label>
-	                        <div class="input-box">
-	                            <input type="password" name="billing[confirm_password]" title="<?php echo $this->__('Confirm Password') ?>" id="billing:confirm_password" class="input-text required-entry validate-cpassword" />
-	                        </div>
-	                    </div>
-	                </li>
-	                <?php echo $this->getChildHtml('persistent.remember.me'); ?>
-                <?php endif; ?>
                 <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()):?>
                     <li class="control">
                         <input type="checkbox" name="billing[save_in_address_book]" value="1" title="<?php echo $this->__('Save in address book') ?>" id="billing:save_in_address_book" onchange="if(window.shipping) shipping.setSameAsBilling(false);"<?php if ($this->getAddress()->getSaveInAddressBook()):?> checked="checked"<?php endif;?> class="checkbox" /><label for="billing:save_in_address_book"><?php echo $this->__('Save in address book') ?></label>
@@ -150,7 +118,6 @@
                 <?php endif; ?>
                 <?php echo $this->getChildHtml('form.additional.info'); ?>
             </ul>
-            <?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
         </div>
      </li>
     </ul>
@@ -173,17 +140,6 @@
     $('billing-address-select') && billing.newAddress(!$('billing-address-select').value);
 
     var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'billing:postcode');
-    if ($('onepage-guest-register-button')) {
-        Event.observe($('onepage-guest-register-button'), 'click', function(event) {
-            var billingRememberMe = $('co-billing-form').select('#remember-me-box');
-            if (billingRememberMe.length > 0) {
-                if ($('login:guest') && $('login:guest').checked) {
-                    billingRememberMe[0].hide();
-                } else if ($('login:register') && ($('login:register').checked || $('login:register').type == 'hidden')) {
-                    billingRememberMe[0].show();
-                }
-            }
-        });
-    }
+    
 //]]>
 </script>

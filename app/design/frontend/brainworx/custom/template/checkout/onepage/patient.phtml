@@ -207,5 +207,17 @@
 
 var patient = new Patient('co-patient-form', '<?php echo $this->getUrl('checkout/onepage/savePatient') ?>');
 var patientForm = new VarienForm('co-patient-form');
+if ($('onepage-guest-register-button')) {
+    Event.observe($('onepage-guest-register-button'), 'click', function(event) {
+        var patientRememberMe = $('co-billing-form').select('#remember-me-box');
+        if (patientRememberMe.length > 0) {
+            if ($('login:guest') && $('login:guest').checked) {
+            	patientRememberMe[0].hide();
+            } else if ($('login:register') && ($('login:register').checked || $('login:register').type == 'hidden')) {
+            	patientRememberMe[0].show();
+            }
+        }
+    });
+}
 //]]>
 </script>

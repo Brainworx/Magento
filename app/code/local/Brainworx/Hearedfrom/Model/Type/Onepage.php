@@ -232,9 +232,9 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     	}
     
     	// set email for newly created user
-    	if (!$address->getEmail() && $this->getQuote()->getCustomerEmail()) {
-    		$address->setEmail($this->getQuote()->getCustomerEmail());
-    	}
+//     	if (!$address->getEmail() && $this->getQuote()->getCustomerEmail()) {
+//     		$address->setEmail($this->getQuote()->getCustomerEmail());
+//     	}
     
     	// validate billing address
     	if (($validateRes = $address->validate()) !== true) {
@@ -247,11 +247,11 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
 //     		return $result;
 //     	}
     
-    	if (!$this->getQuote()->getCustomerId() && self::METHOD_REGISTER == $this->getQuote()->getCheckoutMethod()) {
-    		if ($this->_customerEmailExists($address->getEmail(), Mage::app()->getWebsite()->getId())) {
-    			return array('error' => 1, 'message' => $this->_customerEmailExistsMessage);
-    		}
-    	}   
+//     	if (!$this->getQuote()->getCustomerId() && self::METHOD_REGISTER == $this->getQuote()->getCheckoutMethod()) {
+//     		if ($this->_customerEmailExists($address->getEmail(), Mage::app()->getWebsite()->getId())) {
+//     			return array('error' => 1, 'message' => $this->_customerEmailExistsMessage);
+//     		}
+//     	}   
     	
 //     	if($this->getCheckout()->getStepData('shipping', 'complete') != true){
 //     		$billing = clone $address;
