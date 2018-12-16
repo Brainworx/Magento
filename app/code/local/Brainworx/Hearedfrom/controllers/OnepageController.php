@@ -182,8 +182,8 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 //     		}    		
     		
     		//set payment info -- always payment[method]=free
-    		$paymentdata[][]= array('method'=>'free');
-    		$result = $this->getOnepage()->savePayment($paymentdata);
+//     		$paymentdata[][]= array('method'=>'free');
+//     		$result = $this->getOnepage()->savePayment($paymentdata);
     		
     
     		if (!isset($result['error'])) {
@@ -338,13 +338,48 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		$result = $this->getOnepage()->saveShippingMethod($method,$_usepatientaddress,$_sameasBillingaddress);
     		
     		if (!$result) {
+    			//preferred delivery date is selected from datepicker
+    			//$_preferred_delivery_date = $this->getRequest()->getPost('pddate');
+    			//delivery before is the date generated after picking or 24hrs or within 3 days
+    			if(!empty($method))
+    				$_delivery_before = $this->getRequest()->getPost($method.'_delrange');
+    			$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
+    			$_vaph_nr = Mage::getSingleton('core/session')->getVaphDocNr();
+    			$cmt = false;
+    			if(!isset($_vaph_nr)){
+    				if(!empty($_delivery_before)){
+    					if(!empty($_comment_tozorgpunt)){
+    						Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
+    						$cmt = $_comment_tozorgpunt;
+    					}else{
+    						Mage::getSingleton('core/session')->setOrigCommentToZorgpunt('');
+    					}
+    					$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivery on %s',$_delivery_before);
+    					if(!empty($cmt)){
+    						$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
+    					}
+    				}else{
+    					//default delivery date = next day
+    					Mage::log("DELIVERY NOT SET in frontend ".$_comment_tozorgpunt);
+    					$_delivery_before=date('d-m-Y', strtotime('+1 weekday'));
+    				}
+    			}
+    			
+    			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
+    			//set preferred delivery day with selection as made in radio buttons
+    			Mage::getSingleton('core/session')->setPreferredDeliveryDate($_delivery_before);
+    			Mage::getSingleton('core/session')->setDeliveryBefore($_delivery_before);
+    			
+    			$paymentdata= array('method'=>'free');
+    			$result = $this->getOnepage()->savePayment($paymentdata);
+    			
     			Mage::dispatchEvent(
     			'checkout_controller_onepage_save_shipping_method',
     			array(
     			'request' => $this->getRequest(),
     			'quote'   => $this->getOnepage()->getQuote()));
+    			
     			$this->getOnepage()->getQuote()->collectTotals();
-    			$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
     			
     			
     			if (isset($_usepatientaddress) && $_usepatientaddress == 1){
@@ -366,42 +401,9 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     				$result['goto_section'] = 'shipping';
     				
     			}
-    		}
-    		
-    		//preferred delivery date is selected from datepicker
-    		//$_preferred_delivery_date = $this->getRequest()->getPost('pddate');
-    		//delivery before is the date generated after picking or 24hrs or within 3 days
-    		if(!empty($method))
-    			$_delivery_before = $this->getRequest()->getPost($method.'_delrange');  		
-    		$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
-    		$_vaph_nr = Mage::getSingleton('core/session')->getVaphDocNr();
-    		$cmt = false;
-    		if(!isset($_vaph_nr)){
-    			if(!empty($_delivery_before)){
-    				if(!empty($_comment_tozorgpunt)){
-    					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
-    					$cmt = $_comment_tozorgpunt;
-    				}else{
-    					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt('');
-    				}
-    				$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivery on %s',$_delivery_before);
-    				if(!empty($cmt)){
-    					$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
-    				}
-    			}else{
-    				//default delivery date = next day
-    				Mage::log("DELIVERY NOT SET in frontend ".$_comment_tozorgpunt);
-    				$_delivery_before=date('d-m-Y', strtotime('+1 weekday'));
-    			}
-    		}
-    		
-    		Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
-    		//set preferred delivery day with selection as made in radio buttons
-    		Mage::getSingleton('core/session')->setPreferredDeliveryDate($_delivery_before);
-    		Mage::getSingleton('core/session')->setDeliveryBefore($_delivery_before);
-    		
-    		$this->getOnepage()->getQuote()->collectTotals()->save();
-    		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+
+    			$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    		}    		
     	}
     }
     
@@ -535,16 +537,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     				return;
     			}
     		}
-    
-    		$data = $this->getRequest()->getPost('payment', array());
-    		if ($data) {
-    			$data['checks'] = Mage_Payment_Model_Method_Abstract::CHECK_USE_CHECKOUT
-    			| Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_COUNTRY
-    			| Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_CURRENCY
-    			| Mage_Payment_Model_Method_Abstract::CHECK_ORDER_TOTAL_MIN_MAX
-    			| Mage_Payment_Model_Method_Abstract::CHECK_ZERO_TOTAL;
-    			$this->getOnepage()->getQuote()->getPayment()->importData($data);
-    		}
+    		$this->getOnepage()->getQuote()->setTotalsCollectedFlag(true);
     
     		$this->getOnepage()->saveOrder();
     
