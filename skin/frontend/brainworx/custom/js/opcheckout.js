@@ -364,7 +364,7 @@ Patient.prototype = {
         arrElements = Form.getElements(this.form);
         for (var elemIndex in arrElements) {
             if (arrElements[elemIndex].id) {
-                var fieldName = arrElements[elemIndex].id.replace(/^billing:/, '');
+                var fieldName = arrElements[elemIndex].id.replace(/^patient:/, '');
                 arrElements[elemIndex].value = elementValues[fieldName] ? elementValues[fieldName] : '';
                 if (fieldName == 'country_id' && billingForm){
                     billingForm.elementChildLoad(arrElements[elemIndex]);
@@ -386,6 +386,15 @@ Patient.prototype = {
         var selectElement = $('patient-address-select')
         if (selectElement) {
             selectElement.value='';
+            //SHE added clear billing address fields when reset is called
+            Field.clear('patient:firstname');
+            Field.clear('patient:lastname');
+            Field.clear('patient:address_id');  
+            Field.clear('patient:email');
+            Field.clear('patient:street1');
+            Field.clear('patient:city');
+            Field.clear('patient:postcode');
+            Field.clear('patient:telephone');
         }
     },
     save: function(){

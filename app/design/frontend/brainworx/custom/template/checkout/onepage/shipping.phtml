@@ -92,12 +92,7 @@
                             </div>
                         </div>
                     </li>
-                <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()):?>
-                    <li class="control">
-                        <input type="checkbox" name="shipping[save_in_address_book]" value="1" title="<?php echo $this->__('Save in address book') ?>" id="shipping:save_in_address_book" onchange="shipping.setSameAsPatient(false);"<?php if ($this->getAddress()->getSaveInAddressBook()):?> checked="checked"<?php endif;?> class="checkbox" /><label for="shipping:save_in_address_book"><?php echo $this->__('Save in address book') ?></label></li>
-                <?php else:?>
-                    <li class="no-display"><input type="hidden" name="shipping[save_in_address_book]" value="1" /></li>
-                <?php endif;?>
+                    <li class="no-display"><input type="hidden" name="shipping[save_in_address_book]" value="0" /></li>
                 </ul>
             </div>
         </li>
