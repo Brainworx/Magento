@@ -46,7 +46,8 @@ class Brainworx_Hearedfrom_Block_Account_Dashboard extends Mage_Customer_Block_A
 						Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId())['entity_id']);
 				//fiter out cancelled orders
 				$collection->addFieldToFilter('status', array('nlike' => 'canceled'));
-				$collection->setPageSize(50)->setCurPage(1);
+				//$collection->setPageSize(50)->setCurPage(1);
+				$collection->addFieldToFilter('updated_at', array('gt' => Mage::getModel('core/date')->date('Y-m-d H:i:s', strtotime('-3 months'))));
 	
 				$collection->setOrder('increment_id');
 			}else{
@@ -58,7 +59,9 @@ class Brainworx_Hearedfrom_Block_Account_Dashboard extends Mage_Customer_Block_A
 				->addFieldToFilter('state', array('in' => Mage::getSingleton('sales/order_config')->getVisibleOnFrontStates()))
 				->setOrder('created_at', 'desc')
 				;
-				$collection->setPageSize(50)->setCurPage(1);
+				//$collection->setPageSize(50)->setCurPage(1);
+				$collection->addFieldToFilter('updated_at', array('gt' => Mage::getModel('core/date')->date('Y-m-d H:i:s', strtotime('-3 months'))));
+				
 			}
 		}
 		return $collection;
