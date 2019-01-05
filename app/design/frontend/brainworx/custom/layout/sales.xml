@@ -20,7 +20,7 @@ Customer account pages, rendered for all tabs in dashboard
 
     <customer_logged_in>
         <reference name="right">
-            <block type="sales/reorder_sidebar" name="sale.reorder.sidebar" as="reorder" template="sales/reorder/sidebar.phtml"/>
+            <!-- <block type="sales/reorder_sidebar" name="sale.reorder.sidebar" as="reorder" template="sales/reorder/sidebar.phtml"/>-->
         </reference>
     </customer_logged_in>
     <checkout_onepage_index>
@@ -38,7 +38,7 @@ Customer account pages, rendered for all tabs in dashboard
             <action method="addLink" translate="label" module="sales"><name>orders</name><path>sales/order/history/</path><label>My Orders</label></action>
         </reference>
         <reference name="left">
-            <block type="sales/reorder_sidebar" name="sale.reorder.sidebar" as="reorder" template="sales/reorder/sidebar.phtml"/>
+            <!-- <block type="sales/reorder_sidebar" name="sale.reorder.sidebar" as="reorder" template="sales/reorder/sidebar.phtml"/>-->
         </reference>
 
     </customer_account>
@@ -184,7 +184,7 @@ Customer account home dashboard layout
     <sales_order_reorder>
         <update handle="customer_account"/>
         <reference name="content">
-            <block type="sales/order_view" name="sales.order.view"/>
+            <!-- <block type="sales/order_view" name="sales.order.view"/>-->
         </reference>
     </sales_order_reorder>
 
@@ -445,7 +445,7 @@ Guest
             <action method="setTemplate"><template>page/1column.phtml</template></action>
         </reference>
         <reference name="content">
-            <block type="sales/order_view" name="sales.order.view"/>
+            <!-- <block type="sales/order_view" name="sales.order.view"/>-->
         </reference>
     </sales_guest_reorder>
 

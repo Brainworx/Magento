@@ -30,11 +30,11 @@ Default layout, loads most of the pages
     <default>
         <!-- Mage_Customer -->
         <reference name="top.links">
-            <!-- <action method="addLink" translate="label title" module="customer"><label>My Account</label><url helper="customer/getAccountUrl"/><title>My Account</title><prepare/><urlParams/><position>10</position></action>-->
+            <action method="addLink" translate="label title" module="customer"><label>My Account</label><url helper="customer/getAccountUrl"/><title>My Account</title><prepare/><urlParams/><position>10</position></action>
             <action method="addLink" translate="label title before_text" module="customer"><label>Register</label><url helper="customer/getRegisterUrl" /><title>Register</title><prepare/><urlParams/><position>100</position><li/><a/></action>
         </reference>
         <reference name="footer_links2">
-            <!-- <action method="addLink" translate="label title" module="catalog"><label>My Account</label><url helper="customer/getAccountUrl" /><title>My Account</title></action>-->
+            <action method="addLink" translate="label title" module="catalog"><label>My Account</label><url helper="customer/getAccountUrl" /><title>My Account</title></action>
         </reference>
     </default>
 

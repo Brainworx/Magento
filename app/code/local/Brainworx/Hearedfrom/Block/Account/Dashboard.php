@@ -13,6 +13,16 @@
  */
 class Brainworx_Hearedfrom_Block_Account_Dashboard extends Mage_Customer_Block_Account_Dashboard
 {
+	protected function _prepareLayout()
+	{
+		parent::_prepareLayout();
+	
+		$pager = $this->getLayout()->createBlock('page/html_pager', 'sales.order.history.pager')
+		->setCollection($this->getOrders());
+		$this->setChild('pager', $pager);
+		$this->getOrders()->load();
+		return $this;
+	}
 	function getOrders(){
 		/*query
 		 * */
@@ -50,5 +60,9 @@ class Brainworx_Hearedfrom_Block_Account_Dashboard extends Mage_Customer_Block_A
 			}
 		}
 		return $collection;
+	}
+	public function getPagerHtml()
+	{
+		return $this->getChildHtml('pager');
 	}
 }
