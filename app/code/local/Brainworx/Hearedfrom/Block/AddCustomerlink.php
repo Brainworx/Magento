@@ -10,6 +10,7 @@ class Brainworx_Hearedfrom_Block_AddCustomerlink extends Mage_Customer_Block_Acc
 		if(!empty($customer)){
 			$salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
 			if(!empty($salesforce)){
+				//for sellers (apo's)
 				$this->addLink(
 						Mage::helper('customer')->__('Ristorno'),
 						"customer/ristornopage/",
@@ -31,22 +32,7 @@ class Brainworx_Hearedfrom_Block_AddCustomerlink extends Mage_Customer_Block_Acc
 				);
 		}
 	}
-	/**
-	 * Add link to deliveries for salesforce members
-	 */
-	public function addLinkToPatientOrdersNav() {
-		$customer = Mage::getSingleton('customer/session')->getCustomer();
-		if(!empty($customer)){
-			$salesforce = Mage::getModel('hearedfrom/salesForce')->loadByCustid($customer->getEntityId());
-			if(!empty($salesforce)){
-				$this->addLink(
-						Mage::helper('customer')->__('All Orders'),
-						"customer/patientorderpage/",
-						Mage::helper('customer')->__('All Orders')
-				);
-			}
-		}
-	}
+	
 	/**
 	 * Add link to invoices for everyone
 	 */

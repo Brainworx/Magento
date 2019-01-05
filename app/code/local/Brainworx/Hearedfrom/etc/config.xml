@@ -170,6 +170,7 @@
             <customer>
                 <rewrite>
                     <account_navigation>Brainworx_Hearedfrom_Block_AddCustomerlink</account_navigation>
+                    <account_dashboard>Brainworx_Hearedfrom_Block_Account_Dashboard</account_dashboard>
                 </rewrite>
             </customer>
             <!-- leave out cancelled order in the my account view -->
