@@ -16,9 +16,13 @@ function updatePatient(url)
 	if($j('#patientBirthDate').val() != ''||$j('#patientName').val() != ''||$j('#patientFirstname').val() != ''){
 	    new Ajax.Request(url, {
 	        method:'post',
-	        parameters: { patientBirthDate: $j('#patientBirthDate').val()  ,
+	        parameters: { 
+	        	patientBirthDate: $j('#patientBirthDate').val()  ,
 	        	patientName: $j('#patientName').val(),
 	        	patientFirstname: $j('#patientFirstname').val(),
+	        	patientStreet: $j('#patientStreet').val(),
+	        	patientZip: $j('#patientZip').val(),
+	        	patientCity: $j('#patientCity').val(),
 	        	ooid: $j("#ooid").val()}
 	        , requestHeaders: {Accept: 'application/json'},
 	        onSuccess: function() {

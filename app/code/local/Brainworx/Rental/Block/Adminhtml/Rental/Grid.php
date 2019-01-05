@@ -32,12 +32,7 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
 			$select->join(
 					array('order' => $resource->getTableName('sales/order')),
 					'main_table.orig_order_id = order.entity_id',
-					array('customer_id','customer_lastname','customer_firstname','increment_id')
-			);
-			$select->join(
-					array('billingaddress' => $resource->getTableName('sales/order_address')),
-					'order.billing_address_id = billingaddress.entity_id',
-					array('firstname','lastname')
+					array('customer_id','customer_lastname','customer_firstname','increment_id','patient_name','patient_firstname')
 			);
 			$select->join(
 					array('shippingaddress' => $resource->getTableName('sales/order_address')),
@@ -84,14 +79,6 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
         	'filter_index' => 'main_table.entity_id'
         ));
         
-//         $this->addColumn('orig_order_id', array(
-//         		'header'    => Mage::helper('rental')->__('Original Order Id'),
-//         		'align'     =>'left',
-//         	    'width'     => '50px',
-//         		'index'     => 'orig_order_id',
-//         		'type'  => 'options',
-//         		'options'	=>  Mage::getModel('rental/rentedItem')->getOrderIds(),
-//         ));
         $this->addColumn('increment_id', array(
         		'header'    => Mage::helper('rental')->__('Bestelling #'),
         		'align'     =>'left',
@@ -110,20 +97,20 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
         	'filter_index' => 'order.customer_id',
         ));
         
-        $this->addColumn('customer_lastname', array(
-        		'header'    => Mage::helper('rental')->__('Customer Lastname'),
-        		'align'     =>'left',
-        		'index'     => 'customer_lastname',
-        		'filter_index' => 'order.customer_lastname'
-        ));
-        $this->addColumn('lastname', array(
+        $this->addColumn('patient_name', array(
         		'header'    => Mage::helper('rental')->__('Patient Lastname'),
         		'align'     =>'left',
-        		'index'     => 'lastname',
-        		'filter_index' => 'billingaddress.lastname'
+        		'index'     => 'patient_name',
+        		'filter_index' => 'order.patient_name'
+        ));
+        $this->addColumn('patient_firstname', array(
+        		'header'    => Mage::helper('rental')->__('Patient Firstname'),
+        		'align'     =>'left',
+        		'index'     => 'patient_firstname',
+        		'filter_index' => 'order.patient_firstname'
         ));
         $this->addColumn('street', array(
-        		'header'    => Mage::helper('rental')->__('Street'),
+        		'header'    => Mage::helper('rental')->__('Delivery Street'),
         		'align'     =>'left',
         		'index'     => 'street',
         		'filter_index' => 'shippingaddress.street'
@@ -140,20 +127,6 @@ class Brainworx_Rental_Block_Adminhtml_Rental_Grid extends Mage_Adminhtml_Block_
         		'index'     => 'city',
         		'filter_index' => 'shippingaddress.city'
         ));
-//         $this->addColumn('customer_firstname', array(
-//         		'header'    => Mage::helper('rental')->__('Customer Firstname'),
-//         		'align'     =>'left',
-//         		'index'     => 'customer_firstname',
-//         		'filter_index' => 'order.customer_firstname'
-//         ));
- 
-//         $this->addColumn('sku', array(
-//             'header'    => Mage::helper('rental')->__('SKU'),
-//             'align'     =>'right',
-//             'width'     => '50px',
-//             'index'     => 'sku',
-//         	'filter_index' => 'item.sku'
-//         ));
         $this->addColumn('product', array(
         		'header'    => Mage::helper('rental')->__('Product'),
         		'align'     =>'left',

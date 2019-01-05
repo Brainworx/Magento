@@ -163,8 +163,21 @@ class Brainworx_Hearedfrom_HearedfromController extends Mage_Adminhtml_Controlle
 		$birthdate = $this->getRequest()->getParam('patientBirthDate');
 		$name = $this->getRequest()->getParam('patientName');
 		$firstname = $this->getRequest()->getParam('patientFirstname');
+		$street = $this->getRequest()->getParam('patientStreet');
+		$zip = $this->getRequest()->getParam('patientZip');
+		$city = $this->getRequest()->getParam('patientCity');
 		$orderIncrementId = $this->getRequest()->getParam('ooid');
 		$order = Mage::getModel('sales/order')->loadByIncrementId($orderIncrementId);
+		
+		if(!$order->getPatientAddress()){
+			$patient = clone $order->getShippingAddress();
+			$patient->unsAddressId()->unsAddressType();
+			$order->setPatientAddress($patient);
+		}
+		$order->getPatientAddress()->setFirstname($firstname);
+		$order->getPatientAddress()->setLastname($name);
+		$order->getPatientAddress()->setStreet($street);
+		$order->getPatientAddress()->setCity($city);
 		$order->setPatientBirthDate($birthdate);
 		$order->setPatientName($name);
 		$order->setPatientFirstname($firstname);
