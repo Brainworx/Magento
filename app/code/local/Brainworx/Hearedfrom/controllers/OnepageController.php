@@ -370,7 +370,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     			Mage::getSingleton('core/session')->setPreferredDeliveryDate($_delivery_before);
     			Mage::getSingleton('core/session')->setDeliveryBefore($_delivery_before);
     			
-    			$paymentdata= array('method'=>'free');
+    			$paymentdata= array('method'=>'banktransfer');
     			$result = $this->getOnepage()->savePayment($paymentdata);
     			
     			Mage::dispatchEvent(
