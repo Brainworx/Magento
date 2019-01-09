@@ -60,7 +60,8 @@ class Brainworx_Hearedfrom_Block_Account_Dashboard extends Mage_Customer_Block_A
 				->setOrder('created_at', 'desc')
 				;
 				//$collection->setPageSize(50)->setCurPage(1);
-				$collection->addFieldToFilter('created_at', array('gt' => Mage::getModel('core/date')->date('Y-m-d H:i:s', strtotime('-3 months'))));
+				//updated_at or created_at
+				$collection->addFieldToFilter('updated_at', array('gt' => Mage::getModel('core/date')->date('Y-m-d H:i:s', strtotime('-3 months'))));
 				
 			}
 		}
@@ -69,5 +70,9 @@ class Brainworx_Hearedfrom_Block_Account_Dashboard extends Mage_Customer_Block_A
 	public function getPagerHtml()
 	{
 		return $this->getChildHtml('pager');
+	}
+	public function getViewOrderUrl($order)
+	{
+		return $this->getUrl('sales/order/view', array('order_id' => $order->getId()));
 	}
 }
