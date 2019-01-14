@@ -47,7 +47,8 @@ class Brainworx_Hearedfrom_Block_Account_Dashboard extends Mage_Customer_Block_A
 				//fiter out cancelled orders
 				$collection->addFieldToFilter('status', array('nlike' => 'canceled'));
 				//$collection->setPageSize(50)->setCurPage(1);
-				$collection->addFieldToFilter('created_at', array('gt' => Mage::getModel('core/date')->date('Y-m-d H:i:s', strtotime('-3 months'))));
+				//updated_at or created_at
+				$collection->addFieldToFilter('updated_at', array('gt' => Mage::getModel('core/date')->date('Y-m-d H:i:s', strtotime('-3 months'))));
 	
 				$collection->setOrder('increment_id');
 			}else{
