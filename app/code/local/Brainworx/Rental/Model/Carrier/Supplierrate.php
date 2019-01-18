@@ -54,7 +54,7 @@ class Brainworx_Rental_Model_Carrier_Supplierrate
     	$catdel = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_SUPPL_DEL')->getValue('text');
     	 
     	if (!empty($catdel)) {
-    		// check items for rental - if 1 rental in basket --> Supplierrate not allowed
+    		// check items for items delivered by supplier, if 1 other --> Supplierrate not allowed
     		$items = $request->getAllItems();
     		foreach($items as $item){
 	    		if(!in_array($catdel,$item->getProduct()->getCategoryIds())){

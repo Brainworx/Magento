@@ -67,6 +67,25 @@ class Brainworx_Rental_Model_Carrier_Salesrate
             return false;
         }
         
+        //check basket for items delivered by supplier 
+        $catdel = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_SUPPL_DEL')->getValue('text');
+   
+        if (!empty($catdel)) {
+        	// check items for items delivered by supplier, if 1 only by supplier --> Salesrate not allowed
+        	$items = $request->getAllItems();
+        	foreach($items as $item){
+        		if(in_array($catdel,$item->getProduct()->getCategoryIds())){
+        			$allowed = false;
+        		}else{
+        			$allowed = true;
+        			break;
+        		}
+        	}
+        }
+        if (!$allowed) {
+        	return false;
+        }
+        
 
         $result = $this->_getModel('shipping/rate_result');
 
