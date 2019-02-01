@@ -176,6 +176,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		}
     		$result = $this->getOnepage()->saveBilling($data, $customerAddressId);
     		
+    		
 //     		//birthdate patient
 //     		if (isset($data['day'])) {
 //     			Mage::getSingleton('core/session')->setPatientBirthDate($data['day']."-".$data['month']."-".$data['year']);
@@ -537,6 +538,8 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     				return;
     			}
     		}
+    		$this->getOnepage()->getQuote()->collectTotals();
+    		
     		$this->getOnepage()->getQuote()->setTotalsCollectedFlag(true);
     
     		$this->getOnepage()->saveOrder();

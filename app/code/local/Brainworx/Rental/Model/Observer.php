@@ -73,7 +73,7 @@ class Brainworx_Rental_Model_Observer
 						//old rule: start verhuur bij levering is leverdatum, bij afhaling ingave order
 						//ticket 144 new rule: always delivery date
 						$start_date = Mage::getSingleton('core/session')->getDeliveryBefore();
-						if(! isset($start_date)){
+						if(! isset($start_date) || $start_date=='1970-01-01'){
 							$start_date = date("Y-m-d");
 							Mage::log('Startdate set to today as delivery date was empty! '.$order->getIncrementId());
 						}
