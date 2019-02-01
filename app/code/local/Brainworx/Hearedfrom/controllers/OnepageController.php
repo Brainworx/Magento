@@ -345,15 +345,17 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     			if(!empty($method))
     				$_delivery_before = $this->getRequest()->getPost($method.'_delrange');
     			$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
+				if(!empty($_comment_tozorgpunt)){
+					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
+				}else{
+					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt('');
+				}
     			$_vaph_nr = Mage::getSingleton('core/session')->getVaphDocNr();
     			$cmt = false;
     			if(!isset($_vaph_nr)){
     				if(!empty($_delivery_before)){
     					if(!empty($_comment_tozorgpunt)){
-    						Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);
     						$cmt = $_comment_tozorgpunt;
-    					}else{
-    						Mage::getSingleton('core/session')->setOrigCommentToZorgpunt('');
     					}
     					$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivery on %s',$_delivery_before);
     					if(!empty($cmt)){
