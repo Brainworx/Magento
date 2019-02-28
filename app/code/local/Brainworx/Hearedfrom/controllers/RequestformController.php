@@ -34,7 +34,7 @@ class Brainworx_Hearedfrom_RequestformController extends Mage_Core_Controller_Fr
                 
                 //BOTTRAP: check bot submit
                 $_bot = $this->getRequest()->getPost('terms');
-                if($_bot){
+                if(isset($_bot)){
                     Mage::getSingleton('customer/session')->addSuccess(Mage::helper('contacts')->__('Your inquiry was submitted.'));
                     Mage::log("Bot Trap");
                     $this->_redirectSuccess(Mage::getUrl('', array('_secure'=>true)));
