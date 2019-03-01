@@ -197,6 +197,13 @@
 					will be "translated" to "app/code/local/Brainworx/Hearedfrom/controllers/Checkout/OnepageController.php" -->
 				<to>/hearedfrom/onepage/</to>
 			</brainworx_hearedfrom_onepage>
+			<brainworx_hearedfrom_contacts>
+				<from><![CDATA[#^/contacts/index/#]]></from>
+				<!-- - mymodule matches the router frontname below - matches the path 
+					to your controller Considering the router below, "/customonepage/index/" 
+					will be "translated" to "app/code/local/Brainworx/Hearedfrom/controllers/ContactsController.php" -->
+				<to>/hearedfrom/contacts/</to>
+			</brainworx_hearedfrom_contacts>			
 		</rewrite>
 		<!-- <resources> <hearedfrom_setup> <setup> <module>Brainworx_Hearedfrom</module> 
 			<class>Mage_Catalog_Model_Resource_Eav_Mysql4_Setup</class> </setup> <connection> 
@@ -408,6 +415,15 @@
 					</modules>
 				</args>
 			</sales>
+			<!-- override mage_contacts of core to add some custom controller-->
+			<contacts>
+                <args>
+                    <modules>
+                        <!--name / before: change existing -->
+                        <hearedfromcontacts before="Mage_Contacts">Brainworx_Hearedfrom</hearedfromcontacts>
+                    </modules>
+                </args>
+            </contacts>
 		</routers>
 
 		<events>
