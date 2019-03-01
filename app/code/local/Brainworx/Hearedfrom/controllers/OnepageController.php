@@ -353,7 +353,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     			$_vaph_nr = Mage::getSingleton('core/session')->getVaphDocNr();
     			$cmt = false;
     			if(!isset($_vaph_nr)){
-    				if(!empty($_delivery_before)){
+    				if(!empty($_delivery_before) && strpos($_delivery_before, 'NaN') === false){
     					if(!empty($_comment_tozorgpunt)){
     						$cmt = $_comment_tozorgpunt;
     					}
