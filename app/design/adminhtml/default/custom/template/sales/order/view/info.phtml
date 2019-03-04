@@ -172,7 +172,7 @@ if(!empty($_order->getPatientBirthDate())){
 			          <input id="patientName" name="patientName" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getLastname(); else echo $_order->getPatientName();?>'></input>
 					  <br>
 					  <label class="normal" for="patientStreet"><?php echo Mage::helper('sales')->__('Street Address').': ' ?></label>
-			          <input id="patientStreet" name="patientStreet" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getStreet(1); else echo $_order->getShippingAddress()->getStreet();?>'></input>
+			          <input id="patientStreet" name="patientStreet" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getStreet(1); else echo $_order->getShippingAddress()->getStreet(1);?>'></input>
 					  <br>
 					  <label class="normal" for="patientZip"><?php echo Mage::helper('sales')->__('ZIP Code').': ' ?></label>
 			          <input id="patientZip" name="patientZip" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getPostcode(); else echo $_order->getShippingAddress()->getPostcode();?>'></input>
