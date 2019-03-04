@@ -434,6 +434,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			//Set qty 0 for items we do not want ot invoice
 			$items = $order->getItemsCollection ();
 			$non_rental_subtotal = 0;
+			$non_rental_total = 0;
 			foreach ( $items as $oitem ) {
 				//Add 0 or uninvoiced quantity for other items
 				if(!isset($qtys[$oitem->getId()])) {
@@ -444,6 +445,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					}else{
 						//amount must be taken into account for check
 						$non_rental_subtotal+=$oitem->getPrice()*$qtys [$oitem->getId ()];
+						$non_rental_total+=$oitem->getPriceInclTax()*$qtys [$oitem->getId ()];
 					}
                 }
 			}
@@ -478,9 +480,12 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			$order->setBaseTotalPaid($order->getBaseTotalPaid()-$invoice->getBaseGrandTotal());
 			
 			//FIX ticket 159 tickets wrong invoice: Check subtotal generated invoice to prevent issue with amount CN
-			if($invoice->getSubtotal()<>$grandTotal+$non_rental_subtotal){
+			if($invoice->getSubtotal()<>$grandTotal+$non_rental_subtotal 
+			   && ($invoice->getSubtotal()-($grandTotal+$non_rental_subtotal))>0.01){
+				$grandTotal+=$non_rental_subtotal;
+				$grandTotalInclTax+=$non_rental_total;
 				$correction = $invoice->getSubtotal()-$grandTotal;
-				Mage::log('Invoice subtotal wrong '.$order->getIncrementId().' amount '.$invoice->getSubtotal().' should be '.$grandTotal.' correction '.$correction);
+				//Mage::log('Invoice subtotal wrong '.$order->getIncrementId().' amount '.$invoice->getSubtotal().' should be '.$grandTotal.' correction '.$correction);
 				$invoice->setSubtotal($grandTotal);
 				$invoice->setBaseSubtotal($grandTotal);
 				$invoice->setSubtotalInclTax($grandTotalInclTax);
