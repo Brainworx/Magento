@@ -214,6 +214,9 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 	 */
 	public function createInvoicesAction() {
 		try{
+			//set the time limit for this operation
+			set_time_limit(300);
+			
 			$invoiceDt  = date('Y-m-d', strtotime('last day of -1 month'));
 			$count = 0;
 			Mage::Log ( "creating invoices - " . $invoiceDt );
@@ -325,7 +328,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
                         }else{
                             $intervalcmt = "maand";
                         }
-                        Mage::log('Rental invoice per month '.$rentalToInvoice->getQuantity()." x " . $product->getSku(). " - ".$qty_to_invoice." ".$intervalcmt." - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d"));
+                        //Mage::log('Rental invoice per month '.$rentalToInvoice->getQuantity()." x " . $product->getSku(). " - ".$qty_to_invoice." ".$intervalcmt." - van " . $startrental->format("Y-m-d") . " tot " . $endrental->format("Y-m-d"));
                     }else{
                         $qty_to_invoice = 1 + $interval->days;
                     }
