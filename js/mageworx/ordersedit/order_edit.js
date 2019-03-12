@@ -82,6 +82,10 @@ OrdersEditEdit.prototype = {
                 parent.currentBlock = blockId;
             }
         });
+        if(blockId == "billing_address" || blockId == 'shipping_address'){
+            //user timeout to be sure the form has been loaded
+            setTimeout(function(){$$('#ordersedit_edit_form input[type=text]').each(function(e){e.addEventListener('blur', function(){this.value =this.value.charAt(0).toUpperCase() + this.value.slice(1);});})},500);
+        }
     },
 
     cancel : function() {
