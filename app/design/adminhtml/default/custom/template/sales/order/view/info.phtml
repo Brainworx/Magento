@@ -166,22 +166,22 @@ if(!empty($_order->getPatientBirthDate())){
 				  	<span class="field-row">
 				  	  <input type="hidden" id="ooid" value="<?php echo$_order->getIncrementId()?>"/>
 					  <label class="normal" for="patientFirstname"><?php echo Mage::helper('sales')->__('Patient Firstname').': ' ?></label>
-			          <input id="patientFirstname" name="patientFirstname" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getFirstname(); else echo $_order->getPatientFirstname();?>'></input>
+			          <input onblur="upperCaseF(this)" id="patientFirstname" name="patientFirstname" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getFirstname(); else echo $_order->getPatientFirstname();?>'></input>
 					  <br>
 					  <label class="normal" for="patientName"><?php echo Mage::helper('sales')->__('Patient Name').': ' ?></label>
-			          <input id="patientName" name="patientName" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getLastname(); else echo $_order->getPatientName();?>'></input>
+			          <input onblur="upperCaseF(this)" id="patientName" name="patientName" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getLastname(); else echo $_order->getPatientName();?>'></input>
 					  <br>
 					  <label class="normal" for="patientStreet"><?php echo Mage::helper('sales')->__('Street Address').': ' ?></label>
-			          <input id="patientStreet" name="patientStreet" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getStreet(1); else echo $_order->getShippingAddress()->getStreet(1);?>'></input>
+			          <input onblur="upperCaseF(this)" id="patientStreet" name="patientStreet" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getStreet(1); else echo $_order->getShippingAddress()->getStreet(1);?>'></input>
 					  <br>
 					  <label class="normal" for="patientZip"><?php echo Mage::helper('sales')->__('ZIP Code').': ' ?></label>
-			          <input id="patientZip" name="patientZip" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getPostcode(); else echo $_order->getShippingAddress()->getPostcode();?>'></input>
+			          <input onblur="upperCaseF(this)" id="patientZip" name="patientZip" value='<?php if($_order->getPatientAddress())echo $_order->getPatientAddress()->getPostcode(); else echo $_order->getShippingAddress()->getPostcode();?>'></input>
 					  <br>
 					  <label class="normal" for="patientCity"><?php echo Mage::helper('sales')->__('City').': ' ?></label>
-			          <input id="patientCity" name="patientCity" value='<?php  if($_order->getPatientAddress())echo $_order->getPatientAddress()->getCity(); else echo $_order->getShippingAddress()->getCity();?>'></input>
+			          <input onblur="upperCaseF(this)" id="patientCity" name="patientCity" value='<?php  if($_order->getPatientAddress())echo $_order->getPatientAddress()->getCity(); else echo $_order->getShippingAddress()->getCity();?>'></input>
 					  <br>
 					  <label class="normal" for="patientBirthDate"><?php echo Mage::helper('checkout')->__('Birth Date Patient').': ' ?></label>
-			          <input id="patientBirthDate" name="patientBirthDate" value='<?php echo date("d-m-Y", strtotime($_birthdate));?>'></input>
+			          <input onblur="upperCaseF(this)" id="patientBirthDate" name="patientBirthDate" value='<?php echo date("d-m-Y", strtotime($_birthdate));?>'></input>
 					  <br>
 					  <br><br>
 					  <span class="left">
