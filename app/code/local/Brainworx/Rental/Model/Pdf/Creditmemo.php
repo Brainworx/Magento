@@ -391,7 +391,7 @@ class Brainworx_Rental_Model_Pdf_Creditmemo extends Mage_Sales_Model_Order_Pdf_C
     	$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.25));//0.25
     	
     	$this->_setFontBold($page,10);
-    	$linesContent[]='Het saldo storten we terug op je bankrekening.';
+    	$linesContent[]='';//Het saldo storten we terug op je bankrekening.';
     	
     	//write first block
     	foreach($linesContent as $c){
