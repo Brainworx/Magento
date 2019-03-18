@@ -18,7 +18,7 @@
 			<action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name><params/></action>
 			<action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
 			<action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
-			<action method="addItem"><type>js</type><name>brainworx/hearedfrom.js?ver=2.7</name></action>
+			<action method="addItem"><type>js</type><name>brainworx/hearedfrom.js?ver=2.8</name></action>
 			<action method="addItem"><type>js</type><name>lib/jqueryUI/jquery-ui.js</name></action>	
 			<action method="addItem"><type>js_css</type><name>lib/jqueryUI/jquery-ui.css</name></action>	
 			<action method="addItem"><type>js_css</type><name>lib/jqueryUI/jquery-ui.structure.css</name></action>	
