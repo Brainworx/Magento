@@ -16,6 +16,9 @@ $j(function() {
 	$j('#shipping-method-buttons-container button').click(validateshippingandresethearedfrom);
 	$j('#hearedfrom-buttons-container button').click(validate);
 	
+	//Make sure all input text is with capital
+    	$j('input[type=text]').blur(function(){this.value =this.value.charAt(0).toUpperCase() + this.value.slice(1);})
+	
 	$j('#checkout-shipping-method-load').change(function(changes, observer) {
 		
 		/*express*/
