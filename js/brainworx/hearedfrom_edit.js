@@ -82,3 +82,6 @@ function loadPatientDefault(){
 	document.getElementById("patientblock").className = " ";
 	document.getElementById("patientblockedit").className += " hidden";
 }
+function upperCaseF(word){
+       word.value = word.value.charAt(0).toUpperCase() + word.value.slice(1);
+}
