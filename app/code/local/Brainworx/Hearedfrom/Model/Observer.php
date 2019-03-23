@@ -70,6 +70,7 @@ class Brainworx_Hearedfrom_Model_Observer
 		//check shipment method
 		//helpers for shipping lists
 		$deliveryBefore=Mage::getSingleton('core/session')->getDeliveryBefore();
+		
 		$comment=Mage::getSingleton('core/session')->getOrigCommentToZorgpunt();
 		$shippinglist = array();
 		//$order->getShippingInclTax()>0
@@ -77,14 +78,21 @@ class Brainworx_Hearedfrom_Model_Observer
 				||  $order->getShippingMethod()=='tablerate_express'
 				||  $order->getShippingMethod()=='tablerate_weekend'
 				||  $order->getShippingMethod()=='specialrate_flatrate'
-				||  $order->getShippingMethod()=='specialrate_free'							
+				||  $order->getShippingMethod()=='specialrate_free'	
+				||  $order->getShippingMethod()=='specialrate_urgent1'
+				||  $order->getShippingMethod()=='specialrate_weekend'
+				||  $order->getShippingMethod()=='specialrate_standard'				
 				||  $order->getShippingMethod()=='specialrate_urgent'		
 				||  $order->getShippingMethod()=='salesrate_flatrate'	
 				||  $order->getShippingMethod()=='flatrate_flatrate'){
 			//need to create excel to send to external delivery party
 			$delivery_to_report = true;
+			if(new DateTime() > DateTime::createFromFormat('d-m-Y', $deliveryBefore)){
+				Mage::log('Order '.$order->getIncrementId().' Delivery date in past - not reporting shipping to external - '.$deliveryBefore);
+				$delivery_to_report = false;
+			}
 		}
-		 
+		
 		//TODO add to transaction
 		//save commission for articles invoiced and delivered by the supplier - marked invoiced false
 		$items = $order->getAllItems();
@@ -385,7 +393,10 @@ class Brainworx_Hearedfrom_Model_Observer
 					||  $order->getShippingMethod()=='tablerate_express'
 					||  $order->getShippingMethod()=='tablerate_weekend'
 					||  $order->getShippingMethod()=='specialrate_flatrate'
-					||  $order->getShippingMethod()=='specialrate_free'						
+					||  $order->getShippingMethod()=='specialrate_free'	
+					||  $order->getShippingMethod()=='specialrate_urgent1'
+					||  $order->getShippingMethod()=='specialrate_weekend'
+					||  $order->getShippingMethod()=='specialrate_standard'						
 					||  $order->getShippingMethod()=='specialrate_urgent'			
 					||  $order->getShippingMethod()=='salesrate_flatrate'	
 					||  $order->getShippingMethod()=='flatrate_flatrate'

@@ -76,8 +76,36 @@ $j(function() {
 	       		$j("#s_method_salesrate_flatrate").prop('checked', true);
 	    }});
 		$j("#salesrate_flatrate_deldate").prop('readonly', true);
+		$j("#specialrate_flatrate_deldate" ).datepicker({ 
+			dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	       	onSelect: function(dateText, inst) {
+	       		$j("#s_method_specialrate_flatrate").prop('checked', true);
+	    }});
+		$j("#specialrate_flatrate_deldate").prop('readonly', true);
+		$j("#specialrate_urgent1_deldate" ).datepicker({ 
+			dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	       	onSelect: function(dateText, inst) {
+	       		$j("#s_method_specialrate_urgent1").prop('checked', true);
+	    }});
+		$j("#specialrate_urgent1_deldate").prop('readonly', true);
+		$j("#specialrate_weekend_deldate" ).datepicker({ 
+			dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+			beforeShowDay: function(date) {
+	      		var day = date.getDay();
+	       		return [day == 6 ,''];
+	       		},
+	       	onSelect: function(dateText, inst) {
+	       		$j("#s_method_specialrate_weekend").prop('checked', true);
+	    }});
+		$j("#specialrate_weekend_deldate").prop('readonly', true);
+		$j("#specialrate_standard_deldate" ).datepicker({ 
+			dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	       	onSelect: function(dateText, inst) {
+	       		$j("#s_method_specialrate_standard").prop('checked', true);
+	    }});
+		$j("#specialrate_standard_deldate").prop('readonly', true);
 		$j("#specialrate_urgent_deldate" ).datepicker({ 
-			minDate:0,	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+			dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 	      		var day = date.getDay();
 	       		return [day != 0 && checkHoliday(date.getDate(),date.getMonth()+1,date.getFullYear())!=true,''];

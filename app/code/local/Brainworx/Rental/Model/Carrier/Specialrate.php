@@ -63,7 +63,7 @@ class Brainworx_Rental_Model_Carrier_Specialrate
 
         $result = $this->_getModel('shipping/rate_result');
 
-        //option1
+        //option1: nalevering niet-dringend 30 = 24.79
         $method = $this->_getModel('shipping/rate_result_method');
 
         $method->setCarrier('specialrate');
@@ -77,7 +77,7 @@ class Brainworx_Rental_Model_Carrier_Specialrate
 
         $result->append($method);
         
-        //option2
+        //option2: gratis
         if($this->getConfigFlag('freeoption')){
 	        $method = $this->_getModel('shipping/rate_result_method');
 	        
@@ -92,7 +92,52 @@ class Brainworx_Rental_Model_Carrier_Specialrate
 	        
 	        $result->append($method);
         }
-        //option3
+        //option3: dringend 2 - 50 = 41.32
+        if($this->getConfigFlag('urgent1option')){
+        	$method = $this->_getModel('shipping/rate_result_method');
+        
+        	$method->setCarrier('specialrate');
+        	$method->setCarrierTitle($this->getConfigData('title'));
+        
+        	$method->setMethod('urgent1');
+        
+        	$method->setMethodTitle($this->getConfigData('urgent1title'));
+        	$method->setPrice($this->getConfigData('urgent1price'));
+        	$method->setCost(0);
+        
+        	$result->append($method);
+        }
+        //option4: weekend - 70 = 57.85
+        if($this->getConfigFlag('weekendoption')){
+        	$method = $this->_getModel('shipping/rate_result_method');
+        
+        	$method->setCarrier('specialrate');
+        	$method->setCarrierTitle($this->getConfigData('title'));
+        
+        	$method->setMethod('weekend');
+        
+        	$method->setMethodTitle($this->getConfigData('weekendtitle'));
+        	$method->setPrice($this->getConfigData('weekendprice'));
+        	$method->setCost(0);
+        
+        	$result->append($method);
+        }
+        //option5: standard 55,37 = 67
+        if($this->getConfigFlag('standardoption')){
+        	$method = $this->_getModel('shipping/rate_result_method');
+        
+        	$method->setCarrier('specialrate');
+        	$method->setCarrierTitle($this->getConfigData('title'));
+        
+        	$method->setMethod('standard');
+        
+        	$method->setMethodTitle($this->getConfigData('standardtitle'));
+        	$method->setPrice($this->getConfigData('standardprice'));
+        	$method->setCost(0);
+        
+        	$result->append($method);
+        }
+        //option6: dringend weekend 80,17 = 97
         if($this->getConfigFlag('urgentoption')){
         	$method = $this->_getModel('shipping/rate_result_method');
         	 
