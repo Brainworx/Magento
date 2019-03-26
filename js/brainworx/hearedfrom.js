@@ -92,7 +92,7 @@ $j(function() {
 			dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 			beforeShowDay: function(date) {
 	      		var day = date.getDay();
-	       		return [day == 6 ,''];
+	       		return [day == 6 || day == 0,''];
 	       		},
 	       	onSelect: function(dateText, inst) {
 	       		$j("#s_method_specialrate_weekend").prop('checked', true);
@@ -106,10 +106,6 @@ $j(function() {
 		$j("#specialrate_standard_deldate").prop('readonly', true);
 		$j("#specialrate_urgent_deldate" ).datepicker({ 
 			dateFormat: 'dd-mm-yy', selectOtherMonths: true,
-	      	beforeShowDay: function(date) {
-	      		var day = date.getDay();
-	       		return [day != 0 && checkHoliday(date.getDate(),date.getMonth()+1,date.getFullYear())!=true,''];
-	       		},
 	       	onSelect: function(dateText, inst) {
 	       		$j("#s_method_specialrate_urgent").prop('checked', true);
 	    }});
