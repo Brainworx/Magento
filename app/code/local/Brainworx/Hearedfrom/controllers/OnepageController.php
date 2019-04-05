@@ -344,6 +344,12 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     			//delivery before is the date generated after picking or 24hrs or within 3 days
     			if(!empty($method))
     				$_delivery_before = $this->getRequest()->getPost($method.'_delrange');
+    			
+    			if(!empty($_delivery_before) && strpos ($deliveryBefore,'/')>0){
+    				$_delivery_before = str_replace('/', '-', $_delivery_before);
+    				Mage::log('fixed delivery date format to '.$_delivery_before);
+    			}
+    			
     			$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
 				if(!empty($_comment_tozorgpunt)){
 					Mage::getSingleton('core/session')->setOrigCommentToZorgpunt($_comment_tozorgpunt);

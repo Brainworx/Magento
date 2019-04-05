@@ -87,6 +87,10 @@ class Brainworx_Hearedfrom_Model_Observer
 				||  $order->getShippingMethod()=='flatrate_flatrate'){
 			//need to create excel to send to external delivery party
 			$delivery_to_report = true;
+			if(strpos ($deliveryBefore,'/')>0){
+				$deliveryBefore = str_replace('/', '-', $deliveryBefore);
+				Mage::log('fixed delivery date format for '.$order->getIncrementId(). ' to '.$deliveryBefore);
+			}
 			if(new DateTime() > DateTime::createFromFormat('d-m-Y', $deliveryBefore)){
 				Mage::log('Order '.$order->getIncrementId().' Delivery date in past - not reporting shipping to external - '.$deliveryBefore);
 				$delivery_to_report = false;
