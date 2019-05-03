@@ -178,7 +178,7 @@ class Brainworx_Rental_Model_Observer
 				try{
 					$sellerName = $seller['user_nm'];
 					if($sellerName != null && $sellerName != 'Zorgpunt' && $sellerName != ''&& $sellerName != 'Selecteer'){//add translation
-						$sellerName = 'Zorgpunt '.$sellerName.'.';
+						$sellerName = 'Zorgpunt '.$seller['zip_cd'].' '.$eller['city'].' * '.$seller['user_nm'].'.';
 					}else{
 						$sellerName = 'Zorgpunt';
 					}
