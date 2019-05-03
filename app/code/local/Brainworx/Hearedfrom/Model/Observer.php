@@ -111,7 +111,7 @@ class Brainworx_Hearedfrom_Model_Observer
 				try{
 					$sellerName = $seller['user_nm'];
 					if($sellerName != null && $sellerName != 'Zorgpunt' && $sellerName != ''&& $sellerName != 'Selecteer'){//add translation
-						$sellerName = 'Zorgpunt '.$seller['zip_cd'].' '.$eller['city'].' * '.$seller['user_nm'].'.';
+						$sellerName = 'Zorgpunt '.$seller['zip_cd'].' '.$seller['city'].' * '.$seller['user_nm'].'.';
 					}else{
 						$sellerName = 'Zorgpunt';
 					}
@@ -136,7 +136,7 @@ class Brainworx_Hearedfrom_Model_Observer
 				try{
 					$sellerName = $seller['user_nm'];
 					if($sellerName != null && $sellerName != 'Zorgpunt' && $sellerName != ''&& $sellerName != 'Selecteer'){//add translation
-						$sellerName = 'Zorgpunt '.$seller['zip_cd'].' '.$eller['city'].' * '.$seller['user_nm'];
+						$sellerName = 'Zorgpunt '.$seller['zip_cd'].' '.$seller['city'].' * '.$seller['user_nm'];
 					}else{
 						$sellerName = 'Zorgpunt';
 					}
