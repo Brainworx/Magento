@@ -345,7 +345,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     			if(!empty($method))
     				$_delivery_before = $this->getRequest()->getPost($method.'_delrange');
     			
-    			if(!empty($_delivery_before) && strpos ($deliveryBefore,'/')>0){
+    			if(!empty($_delivery_before) && strpos ($_delivery_before,'/')>0){
     				$_delivery_before = str_replace('/', '-', $_delivery_before);
     				Mage::log('fixed delivery date format to '.$_delivery_before);
     			}
