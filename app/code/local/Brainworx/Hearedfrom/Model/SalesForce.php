@@ -86,7 +86,7 @@ class Brainworx_Hearedfrom_Model_SalesForce extends Mage_Core_Model_Abstract
     	if(empty($seller)){
     		return null;
     	}else {
-    		return $seller['zip_cd'].' '.$eller['city'].' * '.$seller['user_nm'];
+    		return $seller['zip_cd'].' '.$seller['city'].' * '.$seller['user_nm'];
     	}
     }
     public function getUsernameForSelect(){
