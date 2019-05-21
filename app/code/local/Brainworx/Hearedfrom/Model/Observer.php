@@ -84,7 +84,8 @@ class Brainworx_Hearedfrom_Model_Observer
 				||  $order->getShippingMethod()=='specialrate_standard'				
 				||  $order->getShippingMethod()=='specialrate_urgent'		
 				||  $order->getShippingMethod()=='salesrate_flatrate'	
-				||  $order->getShippingMethod()=='flatrate_flatrate'){
+				||  $order->getShippingMethod()=='flatrate_flatrate'
+				||  $order->getShippingMethod()=='normalrate2_flatrate'){
 			//need to create excel to send to external delivery party
 			$delivery_to_report = true;
 			if(strpos ($deliveryBefore,'/')>0){
@@ -404,6 +405,7 @@ class Brainworx_Hearedfrom_Model_Observer
 					||  $order->getShippingMethod()=='specialrate_urgent'			
 					||  $order->getShippingMethod()=='salesrate_flatrate'	
 					||  $order->getShippingMethod()=='flatrate_flatrate'
+					||  $order->getShippingMethod()=='normalrate2_flatrate'
 					||  $order->getShippingInclTax()>0){
 				Mage::log("items delivered at home so never stockupdate. ".$order->getIncrementId());
 				return;

@@ -305,6 +305,13 @@
                 <name>Standaard</name>
                 <title>Bezorgd door leverancier</title>
             </supplierrate>
+            <normalrate2>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>rental/carrier_normalrate2</model>
+                <name>Standaard</name>
+                <title>Bezorging aan huis T2</title>
+            </normalrate2>
         </carriers>
 	</default>
 	 <adminhtml>

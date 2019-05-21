@@ -45,6 +45,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 						||  $orderModel->getShippingMethod()=='specialrate_urgent'				
 						||  $orderModel->getShippingMethod()=='salesrate_flatrate'	
 						||  $orderModel->getShippingMethod()=='flatrate_flatrate'
+						||  $orderModel->getShippingMethod()=='normalrate2_flatrate'
 						|| $orderModel->getShippingInclTax()>0){ //from other rates or earlier orders flatrate_flatrate can be found with shipping cost so pickup required
 					//check seller 
 					$seller = Mage::getModel('hearedfrom/salesSeller')->loadByOrderId($orderModel->getIncrementId());
@@ -149,6 +150,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 					||  $order->getShippingMethod()=='specialrate_urgent'			
 					||  $order->getShippingMethod()=='salesrate_flatrate'	
 					||  $order->getShippingMethod()=='flatrate_flatrate'
+					||  $order->getShippingMethod()=='normalrate2_flatrate'
 					||  $order->getShippingInclTax()>0)){
 				Mage::log("items delivered at home so never stockupdate. ".$order->getIncrementId());
 				return;
