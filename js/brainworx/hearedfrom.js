@@ -42,6 +42,18 @@ $j(function() {
 	       		$j("#s_method_tablerate_bestway").prop('checked', true);
 	    }});
 		$j("#tablerate_bestway_deldate").prop('readonly', true);
+		/*standard2= +2werkdagen + voor 15u + niet op zat of zon*/
+		$j("#normalrate2_flatrate_deldate" ).datepicker({ 
+	     	minDate: determineMinDaysNormal(),
+	     	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	      	beforeShowDay: function(date) {
+	      		var day = date.getDay();
+	       		return [day != 0 && day !=6 && checkHoliday(date.getDate(),date.getMonth()+1,date.getFullYear())!=true,''];
+	       		},
+	       	onSelect: function(dateText, inst) {
+	       		$j("#s_method_normalrate2_flatrate").prop('checked', true);
+	    }});
+		$j("#normalrate2_flatrate_deldate").prop('readonly', true);
 		/*weekend= zaterdag indien vrijdag voor 15u*/
 		$j("#tablerate_weekend_deldate" ).datepicker({ 
 	     	minDate: (new Date().getHours()<15?1:2), dateFormat: 'dd-mm-yy', selectOtherMonths: true,
@@ -64,7 +76,7 @@ $j(function() {
 	       		$j("#s_method_freeshipping_freeshipping").prop('checked', true);
 	    }});
 		$j("#freeshipping_freeshipping_deldate").prop('readonly', true);
-		/*sales delivery any day*/
+		/*sales delivery any day, except sunday and holidays*/
 		$j("#salesrate_flatrate_deldate" ).datepicker({ 
 			minDate:determineMinDaysNormal(),
 	     	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
@@ -76,6 +88,18 @@ $j(function() {
 	       		$j("#s_method_salesrate_flatrate").prop('checked', true);
 	    }});
 		$j("#salesrate_flatrate_deldate").prop('readonly', true);
+		/*suppplier delivery any day, except sunday and holidays*/
+		$j("#supplierrate_flatrate_deldate" ).datepicker({ 
+			minDate:determineMinDaysNormal(),
+	     	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+	      	beforeShowDay: function(date) {
+	      		var day = date.getDay();
+	       		return [day != 0 && checkHoliday(date.getDate(),date.getMonth()+1,date.getFullYear())!=true,''];
+	       		},
+	       	onSelect: function(dateText, inst) {
+	       		$j("#s_method_supplierrate_flatrate").prop('checked', true);
+	    }});
+		$j("#supplierrate_flatrate_deldate").prop('readonly', true);
 		$j("#specialrate_flatrate_deldate" ).datepicker({ 
 			dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	       	onSelect: function(dateText, inst) {

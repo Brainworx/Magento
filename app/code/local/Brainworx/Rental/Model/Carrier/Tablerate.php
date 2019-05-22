@@ -78,16 +78,29 @@ class Brainworx_Rental_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carri
     public function collectRates(Mage_Shipping_Model_Rate_Request $request)
     {
     	$allowed = false;
+    	$catdelallowed = true;
+    	$catdelfound = false;
     	
     	$catrental = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
-    	
+    	$catdel = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_NORM2_DEL')->getValue('text');
+    	 
     	if (!empty($catrental)) {
     		// Load items, check extra rate for specific sku + allow option only for rental
     		$items = $request->getAllItems();
     		foreach($items as $item){
 	    		if(in_array($catrental,$item->getProduct()->getCategoryIds())){
-				$allowed = true;
-			}    			
+					$allowed = true;
+				} 
+				if(!empty($catdel) && in_array($catdel,$item->getProduct()->getCategoryIds())){
+					$catdelfound = true;
+				}
+				if(!empty($catdel) && !in_array($catdel,$item->getProduct()->getCategoryIds())){
+					$catdelallowed = false;
+					break;
+				}   			
+    		}
+    		if(!empty($catdel) && $catdelallowed && $catdelfound){
+    			return false;
     		}
     	}
     	if (!$allowed || !$this->getConfigFlag('active')) {

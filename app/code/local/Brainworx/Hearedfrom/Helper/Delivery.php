@@ -177,7 +177,13 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 	
 			// Who were sending to...
 			if($to_external){
-				$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
+				
+				//check who is shipping the order
+				if( $order->getShippingMethod()=='normalrate2_flatrate'){
+					$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_NORMAL2_EMAIL')->getValue('text');
+				}else{
+					$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
+				}
 				$email_to = explode(",",$emails);
 				//check external shipment or Bruno
 				if($seller!=null){

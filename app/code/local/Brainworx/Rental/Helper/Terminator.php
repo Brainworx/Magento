@@ -15,6 +15,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 		$shippinglistZP = array();
 		$shippinglistEXT = array();
 		$shippinglistEXT2 = array();
+		$shippinglistEXT3 = array();
 		$shippinglistSupplier = array();
 		$error = false;
 		$sellerids = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_SPECIALSELLER')->getValue('text');
@@ -47,12 +48,16 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 						||  $orderModel->getShippingMethod()=='flatrate_flatrate'
 						||  $orderModel->getShippingMethod()=='normalrate2_flatrate'
 						|| $orderModel->getShippingInclTax()>0){ //from other rates or earlier orders flatrate_flatrate can be found with shipping cost so pickup required
-					//check seller 
-					$seller = Mage::getModel('hearedfrom/salesSeller')->loadByOrderId($orderModel->getIncrementId());
-					if(isset($seller) && $seller != false && in_array($seller['user_id'],$specialsellerids)){
-						$shippinglistEXT2[]=$shippingitem;
+					if($orderModel->getShippingMethod()=='normalrate2_flatrate'){
+						$shippinglistEXT3[]=$shippingitem;
 					}else{
-						$shippinglistEXT[]=$shippingitem;
+						//check seller 
+						$seller = Mage::getModel('hearedfrom/salesSeller')->loadByOrderId($orderModel->getIncrementId());
+						if(isset($seller) && $seller != false && in_array($seller['user_id'],$specialsellerids)){
+							$shippinglistEXT2[]=$shippingitem;
+						}else{
+							$shippinglistEXT[]=$shippingitem;
+						}
 					}
 				}else{
 					$shippinglistZP[]=$shippingitem;
@@ -84,6 +89,11 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 			//need to create excel to send to external delivery party
 			$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_SPECIAL_EMAIL')->getValue('text');
 			self::createPickupShipmentsExcel($shippinglistEXT2,true,$emails);
+		}
+		if(!empty($shippinglistEXT3)){
+			//need to create excel to send to external delivery party
+			$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_NORMAL2_EMAIL')->getValue('text');
+			self::createPickupShipmentsExcel($shippinglistEXT3,true,$emails);
 		}
 		return !$error;
 	}
@@ -265,7 +275,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 			//send new shipment email to supplier
 	
 			// Who were sending to...
-			if($to_external){
+			if($to_external){				
 				$email_to = explode(",",$emails);
 			}else{
 				$email_to = Mage::getStoreConfig('trans_email/ident_general/email');

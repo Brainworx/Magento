@@ -23,12 +23,13 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
     foreach ($_shippingRateGroups as $code => $_rates): ?>
         <dt><?php if($code == "freeshipping" && !$pickup ){continue;} 
         	else if($code == "tablerate" &&!$delivery ){continue;}
+        	else if($code == "normalrate2" &&!$delivery ){continue;}
             else if($code == "salesrate" &&!$delivery ){continue;}
         	else echo $this->escapeHtml($this->getCarrierName($code)); ?></dt>
         <dd>
             <ul>
             <?php 
-            if($code == "tablerate" || $code=="salesrate" || $code=="specialrate"){
+            if($code == "tablerate" || $code=="salesrate" || $code=="specialrate"|| $code=="normalrate2"){
             	$showcheckboxfor = $code;
             }else{
             	$showcheckboxfor = null;
@@ -63,7 +64,7 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
                             (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
                         <?php endif; ?>
                         <?php echo $this->escapeHtml($_rate->getMethodTitle()) ?>
-                        <?php if ($_rate->getCode() === "tablerate_bestway" || $_rate->getCode() === "tablerate_weekend"): ?>
+                        <?php if ($_rate->getCode() === "tablerate_bestway" || $_rate->getCode() === "tablerate_weekend"|| $_rate->getCode() === "normalrate2_flatrate"|| $_rate->getCode() === "supplierrate_flatrate"): ?>
                        		<?php echo '<br>'.$this->__('Select a delivery date:') ?>
                        		<input class="tsmall labeldt" type="text" name="<?php echo $_rate->getCode() ?>_delrange" id="<?php echo $_rate->getCode() ?>_deldate" value="" />  
                          <?php elseif ($_rate->getCode() === "salesrate_flatrate" || $_rate->getCode() === "specialrate_urgent"|| $_rate->getCode() === "specialrate_urgent1"

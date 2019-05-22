@@ -54,7 +54,7 @@ class Brainworx_Rental_Model_Carrier_Normalrate2
     	$catdel = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_NORM2_DEL')->getValue('text');
     	 
     	if (!empty($catdel)) {
-    		// check items for items delivered by supplier, if 1 other --> Normalrate2 not allowed
+    		// check items for items delivered by second supplier, if 1 other --> Normalrate2 not allowed
     		$items = $request->getAllItems();
     		foreach($items as $item){
 	    		if(!in_array($catdel,$item->getProduct()->getCategoryIds())){
