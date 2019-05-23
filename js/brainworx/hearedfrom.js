@@ -178,7 +178,7 @@ $j(function() {
 
 		$j("#salesrate_flatrate_deldate").prop('readonly', true);
 
-		$j("#specialrate_flatrate_free" ).datepicker({ 
+		$j("#specialrate_free_deldate" ).datepicker({ 
 
 			dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 
