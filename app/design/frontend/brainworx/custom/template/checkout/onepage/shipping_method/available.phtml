@@ -64,11 +64,11 @@ $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
                             (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
                         <?php endif; ?>
                         <?php echo $this->escapeHtml($_rate->getMethodTitle()) ?>
-                        <?php if ($_rate->getCode() === "tablerate_bestway" || $_rate->getCode() === "tablerate_weekend"|| $_rate->getCode() === "normalrate2_flatrate"|| $_rate->getCode() === "supplierrate_flatrate"): ?>
+                        <?php if ($_rate->getCode() === "tablerate_bestway" || $_rate->getCode() === "tablerate_weekend"|| $_rate->getCode() === "normalrate2_flatrate"): ?>
                        		<?php echo '<br>'.$this->__('Select a delivery date:') ?>
                        		<input class="tsmall labeldt" type="text" name="<?php echo $_rate->getCode() ?>_delrange" id="<?php echo $_rate->getCode() ?>_deldate" value="" />  
                          <?php elseif ($_rate->getCode() === "salesrate_flatrate" || $_rate->getCode() === "specialrate_urgent"|| $_rate->getCode() === "specialrate_urgent1"
-                            || $_rate->getCode() === "specialrate_weekend"|| $_rate->getCode() === "specialrate_standard"|| $_rate->getCode() === "specialrate_flatrate"): ?>
+                            || $_rate->getCode() === "specialrate_weekend"|| $_rate->getCode() === "specialrate_standard"|| $_rate->getCode() === "specialrate_flatrate"|| $_rate->getCode() === "specialrate_free"): ?>
                        		<?php echo $this->__('Select a delivery date:') ?>
                        		<input class="tsmall labeldt" type="text" name="<?php echo $_rate->getCode() ?>_delrange" id="<?php echo $_rate->getCode() ?>_deldate" value="" />  
                          <?php elseif ($_rate->getCode() === "tablerate_express"): ?>
