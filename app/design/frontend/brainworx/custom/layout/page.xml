@@ -54,7 +54,7 @@ SHE: added facebook sharing on top
                 <!-- Add stylesheets with media queries for use by modern browsers -->
                 <action method="addItem"><type>skin_css</type><name>css/styles_v7.css</name><params/><if><![CDATA[<!--[if (gte IE 9) | (IEMobile)]><!-->]]></if></action>
 				<action method="addItem"><type>skin_css</type><name>css/extrastyle.css</name><params/></action>
-				<action method="addItem"><type>skin_css</type><name>css/custom_v4.css</name><params/></action>
+				<action method="addItem"><type>skin_css</type><name>css/custom_v5.css</name><params/></action>
                 
                 <!-- Sets viewport meta tag using text block -->
                 <block type="core/text" name="head.viewport">
@@ -66,6 +66,9 @@ SHE: added facebook sharing on top
                 <label>Page Top</label>
                 <!--Brainworx Moved cookie notice to top -->
                 <block type="page/html_cookieNotice" name="global_cookie_notice" as ="global_cookie_notice" template="page/html/cookienotice.phtml" before="-" />
+            	<block type="cms/block" name="promo" before="-">
+					<action method="setBlockId"><block_id>promotional-banner</block_id></action>
+				</block>
             </block>
 
             <block type="page/html_notices" name="global_notices" as="global_notices" template="page/html/notices.phtml" />
