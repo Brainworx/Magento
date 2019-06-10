@@ -183,6 +183,11 @@
             <requestform>
             	<class>Brainworx_Hearedfrom_Block</class>
             </requestform>
+            <adminhtml>
+			    <rewrite>
+			         <sales_invoice_grid>Brainworx_Hearedfrom_Block_Adminhtml_Block_Sales_Invoice_Grid</sales_invoice_grid>
+			    </rewrite>
+			 </adminhtml>
 		</blocks>
 
 		<!-- Here we modify the checkout to our custom one -->
