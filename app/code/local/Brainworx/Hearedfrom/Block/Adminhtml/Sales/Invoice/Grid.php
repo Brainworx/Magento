@@ -15,8 +15,25 @@
  *
  * @author      Magento Core Team <core@magentocommerce.com>
  */
-class Brainworx_Hearedfrom_Block_Adminhtml_Block_Sales_Invoice_Grid extends Mage_Adminhtml_Block_Sales_Invoice_Grid
+class Brainworx_Hearedfrom_Block_Adminhtml_Sales_Invoice_Grid extends Mage_Adminhtml_Block_Sales_Invoice_Grid
 {    
+	protected function _prepareCollection()
+	{
+		$collection = Mage::getResourceModel($this->_getCollectionClass());
+		// add joined data to the collection
+			
+// 		$select = $collection->getSelect();
+// 		$resource = Mage::getSingleton('core/resource');
+// 		$select->join(
+// 				array('invoice' => $resource->getTableName('sales/invoice')),
+// 				'main_table.entity_id = invoice.entity_id',
+// 				array('ogm')
+// 		);
+		
+		$this->setCollection($collection);
+		return parent::_prepareCollection();
+	}
+	
     //Added OGM
     protected function _prepareColumns()
     {

@@ -185,7 +185,7 @@
             </requestform>
             <adminhtml>
 			    <rewrite>
-			         <sales_invoice_grid>Brainworx_Hearedfrom_Block_Adminhtml_Block_Sales_Invoice_Grid</sales_invoice_grid>
+			         <sales_invoice_grid>Brainworx_Hearedfrom_Block_Adminhtml_Sales_Invoice_Grid</sales_invoice_grid>
 			    </rewrite>
 			 </adminhtml>
 		</blocks>
