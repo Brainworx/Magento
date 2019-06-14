@@ -86,7 +86,7 @@
     </td>
     <?php endif; ?>
     <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
-    <td class="a-right">
+    <td colspan="2" class="a-right">
         <?php        
          $info = $this->__(' Per item');
          if(!empty($_item->getRentalitem())):
