@@ -462,4 +462,44 @@ class Brainworx_Hearedfrom_Model_Observer
 			die;
 		}
 	}
+    /**
+	 * Hook to sales_order_creditmemo_save_after  
+	 *
+	 * Save ristorno as negative amount 
+	 *
+	 * Magento passes a Varien_Event_Observer object as
+	 * the first parameter of dispatched events.
+	 */
+	public function hookToCreditmemoSaveEvent(Varien_Event_Observer $observer)
+	{
+		try{
+			
+			$creditmemo = $observer->getEvent()->getCreditmemo();   
+			$orderid = $creditmemo->getOrderId();
+            
+            $order = Mage::getModel('sales/order')->load($orderid);  
+            
+            $seller = Mage::getModel('hearedfrom/salesSeller')->loadByOrderId($order->getIncrementId());
+            
+            if(isset($seller) && $seller != false){
+                
+                $sales_force = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id']);
+                $orderitem;
+                $cmitems = $creditmemo->getAllItems();
+
+                foreach($cmitems as $item){
+                    $comm = Mage::getModel('hearedfrom/salesCommission')->loadByLastCommission($orderid,$item->getOrderItemId());
+                    $orderitem = Mage::getModel('sales/order_item')->load($item->getOrderItemId());    
+                    self::saveCommission($sales_force,$orderid,$item->getOrderItemId(),$comm['type'],$item->getRowTotal()*(-1),
+                            $item->getRowTotalInclTax()*(-1),$orderitem->getRistorno()*$item->getQty()*(-1),true,$seller['seller_cust_id'],$orderitem->getDiscountPercent() );
+                }
+            }
+            
+            }catch(Exception $e){
+                Mage::log($e->getMessage());
+                //set error message in session
+                Mage::getSingleton('core/session')->addError('Sorry, er gebeurde een fout tijdens het wegschrijven van je credit nota.');
+                die;
+		}
+	}
 }
