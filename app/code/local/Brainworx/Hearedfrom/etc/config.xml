@@ -266,6 +266,16 @@
                     </hooksystem_invoice>
                 </observers>
             </sales_order_invoice_register>
+            
+             <sales_order_creditmemo_save_after>
+			    <observers>
+			        <hooksysstem_creditmemo>
+			            <class>hearedfrom/observer</class>
+			            <method>hookToCreditmemoSaveEvent</method>
+			        </hooksysstem_creditmemo>
+			    </observers>
+			</sales_order_creditmemo_save_after>
+            
             <!--convert product attribute to quote item through event observer-->
             <sales_quote_item_set_product>
 			    <observers>
