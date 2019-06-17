@@ -29,4 +29,13 @@ class Brainworx_Hearedfrom_Model_SalesCommission extends Mage_Core_Model_Abstrac
     	$currency = Mage::getModel('directory/currency')->load(Mage::app()->getStore()->getCurrentCurrencyCode());
     	return $currency->formatPrecision($price, $precision, array(), true, $addBrackets);
     }
+    /*
+    * Optional method to load 1 entity by parameters
+    * @param int $id
+    * @return multitype:salescommission  array of salescommission data with column as keys
+    */
+    public function loadByLastCommission($order_id,$item_id)
+    {
+        return $this->_getResource()->loadByLastCommission($order_id,$item_id);
+    }
 }
