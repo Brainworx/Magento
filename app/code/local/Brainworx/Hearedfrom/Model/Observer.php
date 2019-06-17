@@ -166,7 +166,7 @@ class Brainworx_Hearedfrom_Model_Observer
 					self::saveCommission($_hearedfrom_salesforce,$order->getEntityId(),$item->getItemId(),
 					$type,($item->getOriginalPrice()*$item->getQtyOrdered()),
 							($item->getOriginalPrice()*$item->getQtyOrdered()*(1+$item->getTaxPercent()/100))
-							,$item->getRistorno()*$item->getQtyOrdered(),false,$seller_custid);
+							,$item->getRistorno()*$item->getQtyOrdered(),false,$seller_custid,$item->getDiscountPercent());
 				}elseif (!empty($item->getSupplierneworderemail())){
 					Mage::log("No need to send shipment exl as shipment done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
 				}elseif($item->getSku()=='ADM-rein'){
@@ -276,7 +276,7 @@ class Brainworx_Hearedfrom_Model_Observer
 						$sales_force = Mage::getModel("hearedfrom/salesForce")->load($seller['user_id']);
 						self::saveCommission($sales_force,$order->getEntityId(),
 						$item->getOrderItemId(),$type,$item->getRowTotal(),
-						$item->getRowTotalInclTax(),$orderitem->getRistorno()*$item->getQty(),true,$seller['seller_cust_id']);
+						$item->getRowTotalInclTax(),$orderitem->getRistorno()*$item->getQty(),true,$seller['seller_cust_id'],$orderitem->getDiscountPercent());
 						
 					}
 				}		
@@ -311,7 +311,11 @@ class Brainworx_Hearedfrom_Model_Observer
 		$order->setVaphDocNr(Mage::getSingleton('core/session')->getVaphDocNr());
 		$order->save();		
 	}
-	private function saveCommission($seller,$orderid,$orderitemid,$type,$netamt,$brutamt,$rst,$invoiced,$sellercustid ){
+	private function saveCommission($seller,$orderid,$orderitemid,$type,$netamt,$brutamt,$rst,$invoiced,$sellercustid,$discountpercent=0 ){
+        $percenttokeep = 1;
+        if($discountpercent > 0){
+            $percenttokeep = 1 - ($discountpercent/100);
+        }
 		$sellerid = $seller["entity_id"];
 		$linkedtosellerid = $seller['linked_to'];
 		$_perc = $seller['ristorno_split_perc'];			
@@ -337,7 +341,7 @@ class Brainworx_Hearedfrom_Model_Observer
 			$newsalescomm->setData('type',$type);
 			$newsalescomm->setData('net_amount',$netamt);
 			$newsalescomm->setData('brut_amount',$brutamt);
-			$newsalescomm->setData('ristorno',$ristorno2);
+			$newsalescomm->setData('ristorno',$ristorno2*$percenttokeep);
 			$newsalescomm->setData('invoiced',$invoiced);
 			if(!empty($sellerdetails)){
 				$newsalescomm->setData('sold_by',$sellerdetails);
@@ -353,7 +357,7 @@ class Brainworx_Hearedfrom_Model_Observer
 		$newsalescomm->setData('type',$type);
 		$newsalescomm->setData('net_amount',$netamt);
 		$newsalescomm->setData('brut_amount',$brutamt);
-		$newsalescomm->setData('ristorno',$ristorno);
+		$newsalescomm->setData('ristorno',$ristorno*$percenttokeep);
 		$newsalescomm->setData('invoiced',$invoiced);
 		if(!empty($sellerdetails)){
 			$newsalescomm->setData('sold_by',$sellerdetails);
