@@ -150,6 +150,8 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 					$label = $totalData['label'];
 					if($label == "Subtotaal:"){
 						$label = Mage::helper('Sales')->__('SubTotal (Excl. Tax):');
+					}elseif ($label=="Verzending:"){
+						$label = $order->getShippingDescription().':';
 					}
 					$this->totalsh += 15;
 					$lineBlock['lines'][] = array(
