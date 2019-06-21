@@ -19,7 +19,7 @@
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @copyright   Copyright (c) 2006-2019 Magento, Inc. (http://www.magento.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 var varienForm = new Class.create();
@@ -107,7 +107,7 @@ varienForm.prototype = {
         }
         $form.submit();
     }
-}
+};
 
 /**
  * redeclare Validation.isVisible function
@@ -124,7 +124,7 @@ Validation.isVisible = function(elm){
         elm = elm.parentNode;
     }
     return true;
-}
+};
 
 /**
  *  Additional elements methods
@@ -135,7 +135,7 @@ var varienElementMethods = {
         var elm = element;
         while(elm && elm.tagName != 'BODY') {
             if(elm.statusBar)
-                Element.addClassName($(elm.statusBar), 'changed')
+                Element.addClassName($(elm.statusBar), 'changed');
             elm = elm.parentNode;
         }
     },
@@ -154,14 +154,14 @@ var varienElementMethods = {
                     form.errorSections.set(elm.statusBar.id, flag);
                 }
                 else if(!form.errorSections.get(elm.statusBar.id)){
-                    Element.removeClassName($(elm.statusBar), 'error')
+                    Element.removeClassName($(elm.statusBar), 'error');
                 }
             }
             elm = elm.parentNode;
         }
         this.canShowElement = false;
     }
-}
+};
 
 Element.addMethods(varienElementMethods);
 
@@ -275,7 +275,7 @@ RegionUpdater.prototype = {
 //                Element.insert(this.regionTextEl, {after : this.tpl.evaluate(this._regionSelectEl)});
 //                this.regionSelectEl = $(this._regionSelectEl.id);
 //            }
-            if (this.lastCountryId!=this.countryEl.value) {
+            if (this.lastCountryId != this.countryEl.value) {
                 var i, option, region, def;
 
                 def = this.regionSelectEl.getAttribute('defaultValue');
@@ -301,20 +301,20 @@ RegionUpdater.prototype = {
                         this.regionSelectEl.appendChild(option);
                     }
 
-                    if (regionId==def || region.name.toLowerCase()==def || region.code.toLowerCase()==def) {
+                    if (regionId == def || region.name.toLowerCase() == def || region.code.toLowerCase() == def) {
                         this.regionSelectEl.value = regionId;
                     }
                 }
             }
-
-            if (this.disableAction=='hide') {
+            this.sortSelect();
+            if (this.disableAction == 'hide') {
                 if (this.regionTextEl) {
                     this.regionTextEl.style.display = 'none';
                     this.regionTextEl.style.disabled = true;
                 }
                 this.regionSelectEl.style.display = '';
                 this.regionSelectEl.disabled = false;
-            } else if (this.disableAction=='disable') {
+            } else if (this.disableAction == 'disable') {
                 if (this.regionTextEl) {
                     this.regionTextEl.disabled = true;
                 }
@@ -324,14 +324,15 @@ RegionUpdater.prototype = {
 
             this.lastCountryId = this.countryEl.value;
         } else {
-            if (this.disableAction=='hide') {
+            this.sortSelect();
+            if (this.disableAction == 'hide') {
                 if (this.regionTextEl) {
                     this.regionTextEl.style.display = '';
                     this.regionTextEl.style.disabled = false;
                 }
                 this.regionSelectEl.style.display = 'none';
                 this.regionSelectEl.disabled = true;
-            } else if (this.disableAction=='disable') {
+            } else if (this.disableAction == 'disable') {
                 if (this.regionTextEl) {
                     this.regionTextEl.disabled = false;
                 }
@@ -339,7 +340,7 @@ RegionUpdater.prototype = {
                 if (this.clearRegionValueOnDisable) {
                     this.regionSelectEl.value = '';
                 }
-            } else if (this.disableAction=='nullify') {
+            } else if (this.disableAction == 'nullify') {
                 this.regionSelectEl.options.length = 1;
                 this.regionSelectEl.value = '';
                 this.regionSelectEl.selectedIndex = 0;
@@ -366,8 +367,28 @@ RegionUpdater.prototype = {
                 display ? marks[0].show() : marks[0].hide();
             }
         }
+    },
+    sortSelect : function () {
+        var elem = this.regionSelectEl;
+        var tmpArray = new Array();
+        var currentVal = $(elem).value;
+        for (var i = 0; i < $(elem).options.length; i++) {
+            if (i == 0) {
+                continue;
+            }
+            tmpArray[i-1] = new Array();
+            tmpArray[i-1][0] = $(elem).options[i].text;
+            tmpArray[i-1][1] = $(elem).options[i].value;
+        }
+        tmpArray.sort();
+        for (var i = 1; i <= tmpArray.length; i++) {
+            var op = new Option(tmpArray[i-1][0], tmpArray[i-1][1]);
+            $(elem).options[i] = op;
+        }
+        $(elem).value = currentVal;
+        return;
     }
-}
+};
 
 regionUpdater = RegionUpdater;
 
@@ -381,7 +402,7 @@ Event.pointerX = function(event){
     catch(e){
 
     }
-}
+};
 Event.pointerY = function(event){
     try{
         return event.pageY || (event.clientY +(document.documentElement.scrollTop || document.body.scrollTop));
@@ -389,7 +410,7 @@ Event.pointerY = function(event){
     catch(e){
 
     }
-}
+};
 
 SelectUpdater = Class.create();
 SelectUpdater.prototype = {
@@ -444,7 +465,7 @@ SelectUpdater.prototype = {
             select.appendChild(option);
         }
     }
-}
+};
 
 
 /**
@@ -540,4 +561,4 @@ FormElementDependenceController.prototype = {
             $(idTo).up(this._config.levels_up).hide();
         }
     }
-}
+};

@@ -115,11 +115,7 @@
 
     Options +FollowSymLinks
     RewriteEngine on
- #   RewriteCond %{HTTP:X-Forwarded-Proto} !https
- #   RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
 
-############### rewrite /home to root
-    RewriteRule ^home / [L,R=301]
 ############################################
 ## you can put here your magento root folder
 ## path relative to web root
@@ -147,6 +143,21 @@
 
     RewriteCond %{REQUEST_METHOD} ^TRAC[EK]
     RewriteRule .* - [L,R=405]
+
+<IfModule mod_setenvif.c>
+    <IfModule mod_headers.c>
+
+        ############################################
+        # X-Content-Type-Options: nosniff disable content-type sniffing on some browsers.
+        Header set X-Content-Type-Options: nosniff
+
+        ############################################
+        # This header forces to enables the Cross-site scripting (XSS) filter in browsers (if disabled)
+        BrowserMatch \bMSIE\s8 ie8
+        Header set X-XSS-Protection: "1; mode=block" env=!ie8
+
+    </IfModule>
+</IfModule>
 
 ############################################
 ## redirect for mobile user agents
@@ -211,6 +222,28 @@
 ## http://developer.yahoo.com/performance/rules.html#etags
 
     #FileETag none
-#stijn
-#RewriteCond %{HTTP_HOST} ^zorgpunt.eu$ [NC]
-#RewriteRule ^(.*)$ http://www.zorgpunt.eu/$1 [R=301,L]
+
+###########################################
+## Deny access to cron.php
+    <Files cron.php>
+
+############################################
+## uncomment next lines to enable cron access with base HTTP authorization
+## http://httpd.apache.org/docs/2.2/howto/auth.html
+##
+## Warning: .htpasswd file should be placed somewhere not accessible from the web.
+## This is so that folks cannot download the password file.
+## For example, if your documents are served out of /usr/local/apache/htdocs
+## you might want to put the password file(s) in /usr/local/apache/.
+
+        #AuthName "Cron auth"
+        #AuthUserFile ../.htpasswd
+        #AuthType basic
+        #Require valid-user
+
+############################################
+
+        Order allow,deny
+        Deny from all
+
+    </Files>

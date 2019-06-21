@@ -1,3 +1,5 @@
 /var/
 /lib/
 /downloader/
+/errors/
+/shell/

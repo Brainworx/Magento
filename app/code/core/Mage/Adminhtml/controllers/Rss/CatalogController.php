@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright  Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @copyright  Copyright (c) 2006-2019 Magento, Inc. (http://www.magento.com)
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -32,32 +32,38 @@
  * @author     Magento Core Team <core@magentocommerce.com>
  */
 
-class Mage_Adminhtml_Rss_CatalogController extends Mage_Adminhtml_Controller_Action
+class Mage_Adminhtml_Rss_CatalogController extends Mage_Adminhtml_Controller_Rss_Abstract
 {
-    public function preDispatch()
+    /**
+     * Check is allowed access to action
+     *
+     * @return bool
+     */
+    protected function _isAllowed()
     {
         $path = '';
-        if ($this->getRequest()->getActionName() == 'review') {
+        $action = strtolower($this->getRequest()->getActionName());
+        if ($action == 'review') {
             $path = 'catalog/reviews_ratings';
-        } elseif ($this->getRequest()->getActionName() == 'notifystock') {
+        } elseif ($action == 'notifystock') {
             $path = 'catalog/products';
         }
-        Mage::helper('adminhtml/rss')->authAdmin($path);
-        parent::preDispatch();
-        return $this;
+        return Mage::getSingleton('admin/session')->isAllowed($path);
     }
 
     public function notifystockAction()
     {
-        $this->getResponse()->setHeader('Content-type', 'text/xml; charset=UTF-8');
-        $this->loadLayout(false);
-        $this->renderLayout();
+        if ($this->checkFeedEnable('admin_catalog/notifystock')) {
+            $this->loadLayout(false);
+            $this->renderLayout();
+        }
     }
 
     public function reviewAction()
     {
-        $this->getResponse()->setHeader('Content-type', 'text/xml; charset=UTF-8');
-        $this->loadLayout(false);
-        $this->renderLayout();
+        if ($this->checkFeedEnable('admin_catalog/review')) {
+            $this->loadLayout(false);
+            $this->renderLayout();
+        }
     }
 }

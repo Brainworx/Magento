@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Sales
- * @copyright  Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @copyright  Copyright (c) 2006-2019 Magento, Inc. (http://www.magento.com)
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -229,10 +229,10 @@
  * @method Mage_Sales_Model_Order setCustomerEmail(string $value)
  * @method string getCustomerFirstname()
  * @method Mage_Sales_Model_Order setCustomerFirstname(string $value)
- * @method string getCustomerLastname()
- * @method Mage_Sales_Model_Order setCustomerLastname(string $value)
  * @method string getCustomerMiddlename()
  * @method Mage_Sales_Model_Order setCustomerMiddlename(string $value)
+ * @method string getCustomerLastname()
+ * @method Mage_Sales_Model_Order setCustomerLastname(string $value)
  * @method string getCustomerPrefix()
  * @method Mage_Sales_Model_Order setCustomerPrefix(string $value)
  * @method string getCustomerSuffix()
@@ -1255,7 +1255,11 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
         if (!$asObject) {
             return $shippingMethod;
         } else {
-            list($carrierCode, $method) = explode('_', $shippingMethod, 2);
+            $segments = explode('_', $shippingMethod, 2);
+            if (!isset($segments[1])) {
+                $segments[1] = $segments[0];
+            }
+            list($carrierCode, $method) = $segments;
             return new Varien_Object(array(
                 'carrier_code' => $carrierCode,
                 'method'       => $method
@@ -2021,7 +2025,12 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
      */
     public function hasShipments()
     {
-        return $this->getShipmentsCollection()->count();
+        $result = false;
+        $shipmentsCollection = $this->getShipmentsCollection();
+        if ($shipmentsCollection) {
+            $result = (bool)$shipmentsCollection->count();
+        }
+        return $result;
     }
 
     /**
@@ -2031,7 +2040,12 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
      */
     public function hasCreditmemos()
     {
-        return $this->getCreditmemosCollection()->count();
+        $result = false;
+        $creditmemosCollection = $this->getCreditmemosCollection();
+        if ($creditmemosCollection) {
+            $result = (bool)$creditmemosCollection->count();
+        }
+        return $result;
     }
 
 
@@ -2047,12 +2061,16 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
         return $this->_relatedObjects;
     }
 
+    /**
+     * Retrieve customer name
+     *
+     * @return string
+     */
     public function getCustomerName()
     {
         if ($this->getCustomerFirstname()) {
-            $customerName = $this->getCustomerFirstname() . ' ' . $this->getCustomerLastname();
-        }
-        else {
+            $customerName = Mage::helper('customer')->getFullCustomerName($this);
+        } else {
             $customerName = Mage::helper('sales')->__('Guest');
         }
         return $customerName;

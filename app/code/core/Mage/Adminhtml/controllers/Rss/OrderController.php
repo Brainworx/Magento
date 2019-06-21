@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright  Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @copyright  Copyright (c) 2006-2019 Magento, Inc. (http://www.magento.com)
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -32,20 +32,24 @@
  * @author      Magento Core Team <core@magentocommerce.com>
  */
 
-class Mage_Adminhtml_Rss_OrderController extends Mage_Adminhtml_Controller_Action
+class Mage_Adminhtml_Rss_OrderController extends Mage_Adminhtml_Controller_Rss_Abstract
 {
-    public function preDispatch()
-    {
-        Mage::helper('adminhtml/rss')->authAdmin('catalog/reviews_ratings');
-        parent::preDispatch();
-        return $this;
-    }
 
     public function newAction()
     {
-        Mage::helper('rss')->authAdmin('sales/order');
-        $this->getResponse()->setHeader('Content-type', 'text/xml; charset=UTF-8');
-        $this->loadLayout(false);
-        $this->renderLayout();
+        if ($this->checkFeedEnable('order/new')) {
+            $this->loadLayout(false);
+            $this->renderLayout();
+        }
+    }
+
+    /**
+     * Check is allowed access to action
+     *
+     * @return bool
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/view');
     }
 }

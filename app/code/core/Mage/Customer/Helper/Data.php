@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Customer
- * @copyright  Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @copyright  Copyright (c) 2006-2019 Magento, Inc. (http://www.magento.com)
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -86,6 +86,13 @@ class Mage_Customer_Helper_Data extends Mage_Core_Helper_Abstract
         = 'customer/password/require_admin_user_to_change_user_password';
 
     /**
+     * Configuration path to password forgotten flow change
+     */
+    const XML_PATH_CUSTOMER_FORGOT_PASSWORD_FLOW_SECURE = 'admin/security/forgot_password_flow_secure';
+    const XML_PATH_CUSTOMER_FORGOT_PASSWORD_EMAIL_TIMES = 'admin/security/forgot_password_email_times';
+    const XML_PATH_CUSTOMER_FORGOT_PASSWORD_IP_TIMES    = 'admin/security/forgot_password_ip_times';
+
+    /**
      * VAT class constants
      */
     const VAT_CLASS_DOMESTIC    = 'domestic';
@@ -146,6 +153,67 @@ class Mage_Customer_Helper_Data extends Mage_Core_Helper_Abstract
     public function getCurrentCustomer()
     {
         return $this->getCustomer();
+    }
+
+    /**
+     * Retrieve full customer name from provided object
+     *
+     * @param Varien_Object $object
+     * @return string
+     */
+    public function getFullCustomerName($object = null)
+    {
+        $name = '';
+        if (is_null($object)) {
+            $name = $this->getCustomerName();
+        } else {
+            $config = Mage::getSingleton('eav/config');
+
+            if (
+                $config->getAttribute('customer', 'prefix')->getIsVisible()
+                && (
+                    $object->getPrefix()
+                    || $object->getCustomerPrefix()
+                    )
+                ) {
+                    $name .= ($object->getPrefix() ? $object->getPrefix() : $object->getCustomerPrefix()) . ' ';
+            }
+
+            $name .= $object->getFirstname() ? $object->getFirstname() : $object->getCustomerFirstname();
+
+            if ($config->getAttribute('customer', 'middlename')->getIsVisible()
+                && (
+                    $object->getMiddlename()
+                    || $object->getCustomerMiddlename()
+                    )
+                ) {
+                    $name .= ' ' . (
+                        $object->getMiddlename()
+                        ? $object->getMiddlename()
+                        : $object->getCustomerMiddlename()
+                    );
+            }
+
+            $name .= ' ' . (
+                $object->getLastname()
+                ? $object->getLastname()
+                : $object->getCustomerLastname()
+            );
+
+            if ($config->getAttribute('customer', 'suffix')->getIsVisible()
+                && (
+                    $object->getSuffix()
+                    || $object->getCustomerSuffix()
+                    )
+                ) {
+                    $name .= ' ' . (
+                        $object->getSuffix()
+                        ? $object->getSuffix()
+                        : $object->getCustomerSuffix()
+                    );
+            }
+        }
+        return $name;
     }
 
     /**
@@ -392,6 +460,17 @@ class Mage_Customer_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Generate unique token based on customer Id for reset password confirmation link
+     *
+     * @param $customerId
+     * @return string
+     */
+    public function generateResetPasswordLinkCustomerId($customerId)
+    {
+        return md5(uniqid($customerId . microtime() . mt_rand(), true));
+    }
+
+    /**
      * Retrieve customer reset password link expiration period in days
      *
      * @return int
@@ -420,6 +499,36 @@ class Mage_Customer_Helper_Data extends Mage_Core_Helper_Abstract
     public function getDefaultCustomerGroupId($store = null)
     {
         return (int)Mage::getStoreConfig(Mage_Customer_Model_Group::XML_PATH_DEFAULT_ID, $store);
+    }
+
+    /**
+     * Retrieve forgot password flow secure type
+     *
+     * @return int
+     */
+    public function getCustomerForgotPasswordFlowSecure()
+    {
+        return (int)Mage::getStoreConfig(self::XML_PATH_CUSTOMER_FORGOT_PASSWORD_FLOW_SECURE);
+    }
+
+    /**
+     * Retrieve forgot password requests to times per 24 hours from 1 e-mail
+     *
+     * @return int
+     */
+    public function getCustomerForgotPasswordEmailTimes()
+    {
+        return (int)Mage::getStoreConfig(self::XML_PATH_CUSTOMER_FORGOT_PASSWORD_EMAIL_TIMES);
+    }
+
+    /**
+     * Retrieve forgot password requests to times per hour from 1 IP
+     *
+     * @return int
+     */
+    public function getCustomerForgotPasswordIpTimes()
+    {
+        return (int)Mage::getStoreConfig(self::XML_PATH_CUSTOMER_FORGOT_PASSWORD_IP_TIMES);
     }
 
     /**
@@ -622,6 +731,23 @@ class Mage_Customer_Helper_Data extends Mage_Core_Helper_Abstract
         $validationMessageEnvelope->setIsError($isError);
 
         return $validationMessageEnvelope;
+    }
+
+    /**
+     * Get customer password creation timestamp or customer account creation timestamp
+     *
+     * @param $customerId
+     * @return int
+     */
+    public function getPasswordTimestamp($customerId)
+    {
+        /** @var $customer Mage_Customer_Model_Customer */
+        $customer = Mage::getModel('customer/customer')
+            ->setWebsiteId(Mage::app()->getStore()->getWebsiteId())
+            ->load((int)$customerId);
+        $passwordCreatedAt = $customer->getPasswordCreatedAt();
+
+        return is_null($passwordCreatedAt) ? $customer->getCreatedAtTimestamp() : $passwordCreatedAt;
     }
 
     /**

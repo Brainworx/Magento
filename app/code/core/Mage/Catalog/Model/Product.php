@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright  Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @copyright  Copyright (c) 2006-2019 Magento, Inc. (http://www.magento.com)
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -460,6 +460,8 @@ class Mage_Catalog_Model_Product extends Mage_Catalog_Model_Abstract
 
     /**
      * Check product options and type options and save them, too
+     *
+     * @throws Mage_Core_Exception
      */
     protected function _beforeSave()
     {
@@ -485,6 +487,12 @@ class Mage_Catalog_Model_Product extends Mage_Catalog_Model_Abstract
                 foreach ($this->getProductOptions() as $option) {
                     $this->getOptionInstance()->addOption($option);
                     if ((!isset($option['is_delete'])) || $option['is_delete'] != '1') {
+                        if (!empty($option['file_extension'])) {
+                            $fileExtension = $option['file_extension'];
+                            if (0 !== strcmp($fileExtension, Mage::helper('core')->removeTags($fileExtension))) {
+                                Mage::throwException(Mage::helper('catalog')->__('Invalid custom option(s).'));
+                            }
+                        }
                         $hasOptions = true;
                     }
                 }
@@ -1889,17 +1897,28 @@ class Mage_Catalog_Model_Product extends Mage_Catalog_Model_Abstract
      *
      * @return array
      */
-    public function getCacheIdTags()
+    public function getCacheIdTagsWithCategories()
     {
-        $tags = parent::getCacheIdTags();
-        $affectedCategoryIds = $this->getAffectedCategoryIds();
-        if (!$affectedCategoryIds) {
-            $affectedCategoryIds = $this->getCategoryIds();
-        }
+        $tags = $this->getCacheTags();
+        $affectedCategoryIds = $this->_getResource()->getCategoryIdsWithAnchors($this);
         foreach ($affectedCategoryIds as $categoryId) {
             $tags[] = Mage_Catalog_Model_Category::CACHE_TAG.'_'.$categoryId;
         }
         return $tags;
+    }
+
+    /**
+     * Remove model onject related cache
+     *
+     * @return Mage_Core_Model_Abstract
+     */
+    public function cleanModelCache()
+    {
+        $tags = $this->getCacheIdTagsWithCategories();
+        if ($tags !== false) {
+            Mage::app()->cleanCache($tags);
+        }
+        return $this;
     }
 
     /**
@@ -2076,5 +2095,20 @@ class Mage_Catalog_Model_Product extends Mage_Catalog_Model_Abstract
         $indexer->processEntityAction($this, self::ENTITY, Mage_Index_Model_Event::TYPE_SAVE);
 
         return $this;
+    }
+
+    /**
+     *  Checks event attribute for initialization as an event object
+     *
+     * @return bool | Enterprise_CatalogEvent_Model_Event
+     */
+    public function getEvent()
+    {
+        $event = parent::getEvent();
+        if (is_string($event)) {
+            $event = false;
+        }
+
+        return $event;
     }
 }
