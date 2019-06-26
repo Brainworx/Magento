@@ -35,6 +35,8 @@ if (!Mage::isInstalled()) {
     exit;
 }
 
+echo ('Starting cron @ '.date("m-d-Y H:i:s")." -- ");
+
 // Only for urls
 // Don't remove this
 $_SERVER['SCRIPT_NAME'] = str_replace(basename(__FILE__), 'index.php', $_SERVER['SCRIPT_NAME']);
@@ -81,8 +83,11 @@ try {
         Mage::dispatchEvent('default');
     } else {
         Mage::dispatchEvent($cronMode);
+        echo ('-'.$cronMode.'-');
     }
 } catch (Exception $e) {
     Mage::printException($e);
     exit(1);
 }
+
+echo ('Ending cron @ '.date("m-d-Y H:i:s")."\r\n");
