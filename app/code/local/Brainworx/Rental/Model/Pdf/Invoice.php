@@ -149,7 +149,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 					}
 					$label = $totalData['label'];
 					if($label == "Subtotaal:"){
-						$label = Mage::helper('Sales')->__('SubTotal (Excl. Tax):');
+						continue;
 					}elseif ($label=="Verzending:"){
 						$label = $order->getShippingDescription().':';
 					}
@@ -251,50 +251,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$page = $this->drawLineBlocks($page, array($flineBlock));
 		//end footnote
 		
-		// write first column second block********************************************************
-		//init
-		$flineBlock = array(
-				'lines'  => array(),
-				'height' => 15
-		);
-		$linesContent = array();
-		//end init
-		$linesContent[]=$name;
-		$linesContent[]=Mage::getStoreConfig('general/store_information/address');
-		$linesContent[]='BTW '.Mage::getStoreConfig('general/store_information/merchant_vat_number');
-		//write first column second block *********************************************
-		foreach($linesContent as $c){
-			$flineBlock['lines'][] = array(array('text'      => $c,
-					'feed'      => 50,
-					'align'     => 'left')
-			);
-		}
-		$this->y -= 10;
-		$page = $this->drawLineBlocks($page, array($flineBlock));
-	
-		// Column 2 second block *******************************************************
-		//init
-		$this->y += 65;
 		
-		$flineBlock = array(
-				'lines'  => array(),
-				'height' => 15
-		);
-		$linesContent = array();
-		//end init
-		$linesContent[] = Mage::getStoreConfig('general/store_information/phone');
-		$linesContent[] = Mage::getStoreConfig('trans_email/ident_general/email');
-		$linesContent[] = Mage::getStoreConfig('web/secure/base_url');
-		
-		//write
-		foreach($linesContent as $c){
-			$flineBlock['lines'][] = array(array('text'      => $c,
-					'feed'      => 350,
-					'align'     => 'left')
-			);
-		}
-		$this->y -= 20;
-		$page = $this->drawLineBlocks($page, array($flineBlock));
 		
 		//legal footnote *******************************************************************
 		// update 3/5/2017
@@ -322,6 +279,51 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			)
 			);
 		}
+		$page = $this->drawLineBlocks($page, array($flineBlock));
+		
+		// write first column second block********************************************************
+		//init
+		$flineBlock = array(
+				'lines'  => array(),
+				'height' => 15
+		);
+		$linesContent = array();
+		//end init
+		$linesContent[]=$name;
+		$linesContent[]=Mage::getStoreConfig('general/store_information/address');
+		$linesContent[]='BTW '.Mage::getStoreConfig('general/store_information/merchant_vat_number');
+		//write first column second block *********************************************
+		foreach($linesContent as $c){
+			$flineBlock['lines'][] = array(array('text'      => $c,
+					'feed'      => 100,
+					'align'     => 'left')
+			);
+		}
+		$this->y =75;//Draw in footer space
+		$page = $this->drawLineBlocks($page, array($flineBlock));
+		
+		// Column 2 second block *******************************************************
+		//init
+		$this->y += 65; //reset from previous write 
+		
+		$flineBlock = array(
+				'lines'  => array(),
+				'height' => 15
+		);
+		$linesContent = array();
+		//end init
+		$linesContent[] = Mage::getStoreConfig('general/store_information/phone');
+		$linesContent[] = Mage::getStoreConfig('trans_email/ident_general/email');
+		$linesContent[] = Mage::getStoreConfig('web/secure/base_url');
+		
+		//write
+		foreach($linesContent as $c){
+			$flineBlock['lines'][] = array(array('text'      => $c,
+					'feed'      => 350,
+					'align'     => 'left')
+			);
+		}
+		$this->y -= 20;
 		$page = $this->drawLineBlocks($page, array($flineBlock));
 		//end footnote
 		
@@ -675,7 +677,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		);
 	
 		$lines[0][] = array(
-				'text'  => Mage::helper('sales')->__('SubTotal Excl. Tax'),//Subtotal
+				'text'  => Mage::helper('sales')->__('Subtotal'),//Subtotal
 				'feed'  => 565,
 				'align' => 'right'
 		);
