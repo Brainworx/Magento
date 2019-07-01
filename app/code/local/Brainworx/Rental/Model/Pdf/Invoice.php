@@ -551,7 +551,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$image = Mage::getBaseDir('media') . '/sales/store/logo/footer_invoice_zorgpunt.png';
 		if (is_file($image)) {
 			$image       = Zend_Pdf_Image::imageWithPath($image);
-			$top         = 90; //bottom border of the page
+			$top         = 50; //bottom border of the page
 			$widthLimit  = 494; //SHE update so logo is smaller and invoice address get higher
 			$heightLimit = 36; //SHE update so logo is smaller and invoice address get higher
 			$width       = $image->getPixelWidth();
