@@ -3,7 +3,7 @@
 	<menu>
         <rental translate="title" module="rental">
             <title>Rental</title>
-            <sort_order>10</sort_order>
+            <sort_order>2</sort_order>
             <!--action>adminhtml/rental</action-->
             <depends>
                 <module>Brainworx_Rental</module>
