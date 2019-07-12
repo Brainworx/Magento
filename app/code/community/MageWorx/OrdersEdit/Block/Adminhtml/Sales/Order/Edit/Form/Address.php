@@ -25,13 +25,13 @@ class MageWorx_OrdersEdit_Block_Adminhtml_Sales_Order_Edit_Form_Address extends 
         /** @var Mage_Sales_Model_Order $order */
         $order = $this->getOrder();
         /** @var Mage_Sales_Model_Quote $quote */
-        $quote = Mage::getSingleton('mageworx_ordersedit/edit')->getQuoteByOrder($order);
+       // $quote = Mage::getSingleton('mageworx_ordersedit/edit')->getQuoteByOrder($order);
 
         $blockId = Mage::app()->getRequest()->getParam('block_id');
         if ($blockId == 'billing_address') {
-            return $quote->getBillingAddress();
+            return $order->getBillingAddress();
         } else {
-            return $quote->getShippingAddress();
+            return $order->getShippingAddress();
         }
     }
 
