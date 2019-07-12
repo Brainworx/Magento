@@ -33,6 +33,14 @@ class Brainworx_Hearedfrom_Model_Observer
 		$incrementId = Mage::getSingleton('checkout/session')->getLastRealOrderId();
 		$order->loadByIncrementId($incrementId);
 		
+		//now order has been saved, the quote can be deactivated
+		$quoteId = $order->getQuoteId();
+		$quote = Mage::getModel('sales/quote')->load($quoteId);
+		if(isset($quote)){
+			$quote->setData('is_active',0);
+			$quote->save();
+		}
+		
 		//For a mederi user, commission goes to him/her
 		$groupId = explode(",",Mage::getSingleton('customer/session')->getCustomerGroupId());
 		$seller_custid = 0;
