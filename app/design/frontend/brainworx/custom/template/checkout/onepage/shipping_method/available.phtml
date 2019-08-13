@@ -12,6 +12,7 @@
 <?php $_shippingRateGroups = $this->getShippingRates(); 
 $pickup = Mage::getSingleton('core/session')->getPickupPossible();
 $delivery = Mage::getSingleton('core/session')->getDeliveryPossible();
+if(!$pickup && !$delivery){$delivery=true;}
 ?>
 <?php ?>
 <?php if (!$_shippingRateGroups): ?>
