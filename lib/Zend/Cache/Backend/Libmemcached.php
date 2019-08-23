@@ -388,11 +388,21 @@ class Zend_Cache_Backend_Libmemcached extends Zend_Cache_Backend implements Zend
             $memUsed += $eachUsed;
         }
 
-        if ($memSize === null || $memUsed === null) {
-            Zend_Cache::throwException('Can\'t get filling percentage');
-        }
+//         if ($memSize === null || $memUsed === null) {
+//             Zend_Cache::throwException('Can\'t get filling percentage');
+//         }
 
-        return ((int) (100. * ($memUsed / $memSize)));
+//         return ((int) (100. * ($memUsed / $memSize)));
+        if ($memSize === null or $memUsed === null) {
+        	$mem = $this->_memcache->getstats();
+        	if (isset($mem['bytes']) and $mem['limit_maxbytes'] > 0) {
+        		return ((int) (100 * ($mem['bytes'] / $mem['limit_maxbytes'])));
+        	}
+        } else {
+        	return ((int) (100. * ($memUsed / $memSize)));
+        }
+        
+        return 100;
     }
 
     /**

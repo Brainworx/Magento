@@ -2,3 +2,5 @@
 /local.xml
 /local.xml.additional
 /local.xml.template
+/server/
+/memcached.xml.disabled
