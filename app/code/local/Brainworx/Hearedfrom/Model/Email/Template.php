@@ -112,9 +112,13 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
 				}
 				$sellercust = Mage::getModel('customer/customer')->load($seller_custid);
 				$selleremail = $sellercust->getEmail();
-				if(!empty($selleremail) && strpos($selleremail,"zorgpunt")===FALSE && !in_array($selleremail,$emails)){
-					$bcc[]=$selleremail;
-					Mage::log('Added zorgpunter in bcc: '.$selleremail, null, 'email.log');
+				if(strpos($selleremail,"zorgpunt")===FALSE && !in_array($selleremail,$emails)){
+					if(empty($selleremail){
+						Mage::log('Zorgpunter could not be added in bcc, no mail for '.$seller_custid);
+					}else{
+						$bcc[]=$selleremail;
+						Mage::log('Added zorgpunter in bcc: '.$selleremail, null, 'email.log');
+					}
 				}
 			}
 		
