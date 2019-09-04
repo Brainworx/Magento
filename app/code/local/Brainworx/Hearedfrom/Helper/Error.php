@@ -26,7 +26,7 @@ class Brainworx_Hearedfrom_Helper_Error extends Mage_Core_Helper_Abstract{
 			$email_template->setSenderEmail($sender_email);
 		
 			//Send the email!
-			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Deliveries'), $email_template_variables);
+			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Technicalsupport'), $email_template_variables);
 				
 		}catch(Exception $e){
 			Mage::log('fout bij verzenden problem mail: '.$e->getMessage());
