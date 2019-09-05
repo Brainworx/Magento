@@ -112,7 +112,7 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
 				$sellercust = Mage::getModel('customer/customer')->load($seller_custid);
 				$selleremail = $sellercust->getEmail();
 				if(strpos($selleremail,"zorgpunt")===FALSE && !in_array($selleremail,$emails)){
-					if(empty($selleremail){
+					if(empty($selleremail)){
 						Mage::log('Zorgpunter could not be added in bcc, no mail for '.$seller_custid);
 					}else{
 						$bcc[]=$selleremail;
@@ -217,7 +217,7 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
     public function send($email, $name = null, array $variables = array())
     {
 		$errormail = 0;
-		if(isset($name) && $name == "Technicalsupport"){
+		if(isset($name) && !is_array($name) && $name == "Technicalsupport"){
 			$errormail = 1;    
 		}
 		if (!$this->isValidForSend()) {
@@ -237,16 +237,16 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
 	        
 	        if(!$result){
 	        	Mage::log('All Mail attempt failed ', null, 'email.log');
-			if($errormail==0){
-	        		Mage::helper("hearedfrom/error")->sendErrorMail('Probleem versturen mail - retry failed');
-			}else{
-				Mage::log('Sending error mail failed');
-				Mage::log('Mail error failed '.$e->getMessage(), null, 'email.log');
-			}
+				if($errormail==0){
+		        		Mage::helper("hearedfrom/error")->sendErrorMail('Probleem versturen mail - retry failed');
+				}else{
+					Mage::log('Sending error mail failed');
+					Mage::log('Mail error failed '.$e->getMessage(), null, 'email.log');
+				}
 	        }
 	        
 	        return $result;
-        	}catch (Exception $e) {
+        }catch (Exception $e) {
 			$this->_mail = null;
 			Mage::logException($e);
 			if($errormail==0){
