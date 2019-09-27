@@ -256,26 +256,29 @@ class Brainworx_Hearedfrom_Model_Observer
 			
 			$invitems = $invoice->getItemsCollection();
 			
+			$typeSale = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
+			$typeRent = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_RENT')->getValue('text');
+			$catRent = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text');
+			
 			foreach($invitems as $item){
 				if($item->getPrice() > 0){
 					$seller = Mage::getModel('hearedfrom/salesSeller')->loadByOrderId($order->getIncrementId());
 					if(isset($seller) && $seller != false){
 						//Create new salesCommission
-						$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
+						$type = $typeSale;
 						$orderitem = Mage::getModel('sales/order_item')->load($item->getOrderItemId());
 						//rentalitems attribute on order set when adding quote item
 						if(!empty($orderitem->getRentalitem())&& $orderitem->getRentalitem()==true){
-							$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_RENT')->getValue('text');
+							$type = $typeRent;
 						}else{	
 							//TODO remove this check as not needed		
 							//check for orders made before storing rentalitem on orderitems
 							$product = Mage::getModel('catalog/product')->load($item->getProductId());
 							foreach($product->getCategoryIds() as $cat){
-								if($cat == 
-								Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_RENT')->getValue('text')){
+								if($cat == $catRent){
 									Mage::Log("Hooktoinvoice found rental cat for line without rentalitem identifier:" .$cat);
 									$orderitem->setRentalitem(true);//update item for next time
-									$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_RENT')->getValue('text');
+									$type = $typeRent;
 									break;
 								}
 							}
@@ -288,9 +291,7 @@ class Brainworx_Hearedfrom_Model_Observer
 						
 					}
 				}		
-			
 			}
-			
 		}catch(Exception $e){
 			Mage::log($e->getMessage());
 			//set error message in session
