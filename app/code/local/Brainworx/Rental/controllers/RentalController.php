@@ -258,21 +258,23 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				$grandTotal = 0;
 				$grandTotalInclTax = 0;
 				$tax = 0; 
+				$custTaxClassID = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CUST_TAX_ID')->getValue('text');	
+				$sendInvoiceEmailAuto = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('ASEND_INV_ML')->getValue('text');
 				foreach ( $rentalsToInvoice as $rental ) {
                     $product = null;
                     
 					if(Mage::getModel ( 'sales/order' )->load ( $rental->getOrigOrderId() )->getStatus() == 'canceled'){
-						Mage::log('Set closed for invoice - skipping invoice for '.$rental->getEntityId().' as order '.$rental->getOrigOrderId ().' is cancelled');
+						//Mage::log('Set closed for invoice - skipping invoice for '.$rental->getEntityId().' as order '.$rental->getOrigOrderId ().' is cancelled');
 						$rental->setClosedForInvoice(true)->save();
 						continue;
 					}
 					if($rental->getLastInvDt()!=null && $rental->getEndDt() != null && $rental->getLastInvDt() >= $rental->getEndDt()){
-						Mage::log('Set closed for invoice - skipping invoice for '.$rental->getEntityId().' as lastinvdt('.$rental->getLastInvDt().') >= enddt ('.$rental->getEndDt().')');
+						//Mage::log('Set closed for invoice - skipping invoice for '.$rental->getEntityId().' as lastinvdt('.$rental->getLastInvDt().') >= enddt ('.$rental->getEndDt().')');
 						$rental->setClosedForInvoice(true)->save();
 						continue;
 					}
 					if($rental->getEndDt() != null && $rental->getEndDt() <= $rental->getStartDt()){
-						Mage::log('Set closed for invoice - skipping invoice for '.$rental->getEntityId().' as enddt('.$rental->getEndDt().') <= startdt('.$rental->getStartDt().')');
+						//Mage::log('Set closed for invoice - skipping invoice for '.$rental->getEntityId().' as enddt('.$rental->getEndDt().') <= startdt('.$rental->getStartDt().')');
 						$rental->setClosedForInvoice(true)->save();
 						continue;
 					}
@@ -282,7 +284,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					
 					if ($rentalToInvoice->getOrigOrderId() != $rental->getOrigOrderId()) {
 						
-						$this->createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt);
+						$this->createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt,$sendInvoiceEmailAuto);
 						//reset data for next rental
 						$qtys = array (); // this will be used for processing the invoice
 						$comment = "Verhuurperiode details:";
@@ -377,7 +379,6 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 							'main_table.tax_calculation_rate_id = rate.tax_calculation_rate_id',
 							array('code')
 					);
-					$custTaxClassID = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CUST_TAX_ID')->getValue('text');
 						
 					$taxCollection->addFieldToFilter(
 							array('customer_tax_class_id'),
@@ -413,7 +414,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				}
 				//last rental invoice - only invoice when there is an amount
 				if($grandTotal > 0)
-					$this->createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt);		
+					$this->createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt,$sendInvoiceEmailAuto);		
 				
 				Mage::Log("Invoices processed : " .  count($rentalsToInvoice) . " rentalitems.");
 			}else{
@@ -430,7 +431,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 		$this->_redirect ( '*/*/' );
 		
 	}
-	private function createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt){
+	private function createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt,$sendInvoiceEmailAuto='F'){
 		try{
 			// all items processed - create and send invoice
 			$order = Mage::getModel ( 'sales/order' )->load ( $rentalToInvoice->getOrigOrderId () );
@@ -451,8 +452,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 						$non_rental_total+=$oitem->getPriceInclTax()*$qtys [$oitem->getId ()];
 					}
                 }
-			}
-			
+			}		
 			//set totals on the order - add them to previous set totals
 			$order->setSubtotal($order->getSubtotal() + $grandTotal);
 			$order->setSubtotalInclTax($order->getSubtotalInclTax() + $grandTotalInclTax);
@@ -464,20 +464,16 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			$order->setBaseSubtotalInclTax($order->getSubtotalInclTax());
 			$order->setBaseTaxAmount($order->getTaxAmount());
 			$order->setBaseGrandTotal($order->getGrandTotal());
-			
 			//TODO set payment transation pending (ispaymenttransactionpending)
 			//prepare invoice for the quantities we want to invoice
 			$invoice = Mage::getModel ( 'sales/service_order', $order )->prepareInvoice ( $qtys );
 			//TODO add Mage::getModel('sales/order_payment_transaction')
 			//$invoice->getOrder()->getPayment()->setCanCapture(true);
 			
-			
-			
 			$invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_OFFLINE);
 			
 			//register invoice to update order totals and invoiced quantities
 			$invoice->register();
-			
 			// remove invoice grand total from order paid amount as they where added during register
 			$order->setTotalPaid($order->getTotalPaid()-$invoice->getGrandTotal());
 			$order->setBaseTotalPaid($order->getBaseTotalPaid()-$invoice->getBaseGrandTotal());
@@ -507,8 +503,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				$payment->setAmountPaid($order->getGrandTotal());
 				$payment->setBaseAmountPaid($order->getGrandTotal());
 				$payment->save();
-			}
-						
+			}		
 			//add note to invoice about invoiced period
 			$invoice->addComment($comment);
 			//$invoice->register ()->pay ();
@@ -522,9 +517,6 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					. ' automatisch verwerkt.', false );
 				
 			$history->setIsCustomerNotified ( true );
-			
-			$sendInvoiceEmailAuto = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('ASEND_INV_ML')->getValue('text');
-				
 			if($sendInvoiceEmailAuto == 'Y'){
 				// set this to false to not send the invoice via email
 				// remark: invoice cc email addresses in config will receive email
@@ -538,7 +530,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 			->addObject($invoice)
 			->addObject($invoice->getOrder());
 				
-			$transactionSave->save();		
+			$transactionSave->save();	
 		
 		}catch (Exception $e){
 			Mage::Log("Error while processing invoice for order ".$rentalToInvoice->getOrigOrderId()
