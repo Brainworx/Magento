@@ -7,6 +7,9 @@ class Brainworx_hearedfrom_Block_Adminhtml_Invoicesview_Grid extends Mage_Adminh
         parent::__construct();
 
         $this->setId('invoicesview_grid');
+
+        $this->setDefaultSort('Id');
+        $this->setDefaultDir('desc');
     }
  
     /**

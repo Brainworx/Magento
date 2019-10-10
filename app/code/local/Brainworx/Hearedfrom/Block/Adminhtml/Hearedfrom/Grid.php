@@ -8,7 +8,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
 
         $this->setId('salescommission_grid');
         $this->setDefaultSort('entity_id');
-        $this->setDefaultDir('asc');
+        $this->setDefaultDir('desc');
         $this->setSaveParametersInSession(true);
         
         //$this->setDefaultFilter( Mage::registry('preparedFilter') );

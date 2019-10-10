@@ -7,8 +7,8 @@ class Brainworx_hearedfrom_Block_Adminhtml_Financialssupplier_Grid extends Mage_
         parent::__construct();
 
         $this->setId('financialssupplier_grid');
-        $this->setDefaultSort('entity_id');
-        $this->setDefaultDir('asc');
+        $this->setDefaultSort('date');
+        $this->setDefaultDir('desc');
        // $this->setSaveParametersInSession(true);
         
         //$this->setDefaultFilter( Mage::registry('preparedFilter') );

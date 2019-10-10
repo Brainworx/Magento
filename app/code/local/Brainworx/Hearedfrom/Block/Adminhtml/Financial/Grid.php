@@ -7,8 +7,8 @@ class Brainworx_hearedfrom_Block_Adminhtml_Financial_Grid extends Mage_Adminhtml
         parent::__construct();
 
         $this->setId('financial_grid');
-        $this->setDefaultSort('entity_id');
-        $this->setDefaultDir('asc');
+        $this->setDefaultSort('date');
+        $this->setDefaultDir('desc');
        // $this->setSaveParametersInSession(true);
         
         //$this->setDefaultFilter( Mage::registry('preparedFilter') );

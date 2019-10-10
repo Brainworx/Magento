@@ -8,7 +8,7 @@ class Brainworx_Hearedfrom_Block_Adminhtml_Salesforcestock_Grid extends Mage_Adm
 
         $this->setId('salesforcestock_grid');
         $this->setDefaultSort('entity_id');
-        $this->setDefaultDir('asc');
+        $this->setDefaultDir('desc');
         $this->setSaveParametersInSession(true);
         
         //$this->setDefaultFilter( Mage::registry('preparedFilter') );

@@ -7,6 +7,8 @@ class Brainworx_hearedfrom_Block_Adminhtml_Creditnotesview_Grid extends Mage_Adm
         parent::__construct();
 
         $this->setId('creditnotesview_grid');
+        $this->setDefaultSort('Id');
+        $this->setDefaultDir('desc');
     }
  
     /**
