@@ -85,7 +85,7 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     		}
     		$address->setCustomerAddressId(null);
     		// Additional form data, not fetched by extractData (as it fetches only attributes)
-    		$address->setSaveInAddressBook(empty($data['save_in_address_book']) ? 0 : 1);
+    		$address->setSaveInAddressBook(empty($data['save_in_address_book']) ? 0 : 1); //- fix: save as billing address
     	}
     
     	// set email for newly created user
@@ -127,7 +127,7 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     		}
     		$billing->addData($patient->getData())
     		->setSameAsPatient(1)
-    		->setSaveInAddressBook(0)
+    		->setSaveInAddressBook(0)//empty($data['save_in_address_book']) ? 0 : 1) //test was 0
     		->setCollectShippingRates(true);
     		$this->getCheckout()->setStepData('billing', 'complete', true);
     	}
@@ -357,5 +357,45 @@ class Brainworx_Hearedfrom_Model_Type_Onepage extends Mage_Checkout_Model_Type_O
     
     	return array();
     }
+    /**
+     * Prepare quote for customer order submit
+     * -- add storing patient address in addressbook if required
+     *
+     * @return Mage_Checkout_Model_Type_Onepage
+     */
+    protected function _prepareCustomerQuote()
+    {
+    	$quote      = $this->getQuote();
+    	$billing    = $quote->getBillingAddress();
+    	$patient	= $quote->getPatientAddress();
+    	$shipping   = $quote->isVirtual() ? null : $quote->getShippingAddress();
     
+    	$customer = $this->getCustomerSession()->getCustomer();
+    	if (!$patient->getCustomerId() || $patient->getSaveInAddressBook()) {
+    		$customerPatient = $patient->exportCustomerAddress();
+    		$customer->addAddress($customerPatient);
+    		$patient->setCustomerAddress($customerPatient);
+    	}
+    	if (!$billing->getCustomerId() || $billing->getSaveInAddressBook()) {
+    		$customerBilling = $billing->exportCustomerAddress();
+    		$customer->addAddress($customerBilling);
+    		$billing->setCustomerAddress($customerBilling);
+    	}
+    	if ($shipping && !$shipping->getSameAsBilling() &&
+    			(!$shipping->getCustomerId() || $shipping->getSaveInAddressBook())) {
+    				$customerShipping = $shipping->exportCustomerAddress();
+    				$customer->addAddress($customerShipping);
+    				$shipping->setCustomerAddress($customerShipping);
+    			}
+    
+    			if (isset($customerBilling) && !$customer->getDefaultBilling()) {
+    				$customerBilling->setIsDefaultBilling(true);
+    			}
+    			if ($shipping && isset($customerShipping) && !$customer->getDefaultShipping()) {
+    				$customerShipping->setIsDefaultShipping(true);
+    			} else if (isset($customerBilling) && !$customer->getDefaultShipping()) {
+    				$customerBilling->setIsDefaultShipping(true);
+    			}
+    			$quote->setCustomer($customer);
+    }
 }
