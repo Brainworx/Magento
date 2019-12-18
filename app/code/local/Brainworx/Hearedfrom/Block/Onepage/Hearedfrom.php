@@ -12,6 +12,12 @@ class Brainworx_Hearedfrom_Block_Onepage_Hearedfrom extends Mage_Checkout_Block_
         $_options = array();
         array_push($_options,Mage::helper('checkout')->__('Select'));
         $collection = Mage::getModel("hearedfrom/salesForce")->getCollection();
+        $collection->addFieldToFilter( //last inv dt null or end_dt > today
+			array('end_dt','end_dt'),
+			array(
+					array('gt'=>date('Y-m-d', strtotime('now'))),
+					array('null' => true))
+		);
         $zorgpuntuser;
         foreach($collection as $salesForce){
         	if($salesForce->getUserNm()!="Zorgpunt")
