@@ -44,7 +44,7 @@ class Brainworx_hearedfrom_Block_Adminhtml_Hearedfrom_Grid extends Mage_Adminhtm
 					'main_table.order_item_id = item.item_id',
 					array('product' => 'name', 'sku')
 			);
-			$collection->addFieldToFilter('main_table.ristorno',array('gt'=>0));
+			$collection->addFieldToFilter('main_table.ristorno',array('neq'=>0));
 			
 			$this->setCollection($collection);
 	        
