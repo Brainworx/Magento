@@ -337,6 +337,7 @@ class Brainworx_Rental_Model_Pdf_Creditmemo extends Mage_Sales_Model_Order_Pdf_C
      */
     protected function insertLogo(&$page, $store = null)
     {
+		/*
     	$this->y = $this->y ? $this->y : 815;
     	$image = Mage::getStoreConfig('sales/identity/logo', $store);
     	if ($image) {
@@ -373,6 +374,7 @@ class Brainworx_Rental_Model_Pdf_Creditmemo extends Mage_Sales_Model_Order_Pdf_C
     			$this->y = $y1 - 10;
     		}
     	}
+		*/
     }
     /**
      * Insert footer
@@ -425,6 +427,7 @@ class Brainworx_Rental_Model_Pdf_Creditmemo extends Mage_Sales_Model_Order_Pdf_C
     
     	// write first column second block********************************************************
     	//init
+		/*
     	$flineBlock = array(
     			'lines'  => array(),
     			'height' => 15
@@ -467,6 +470,49 @@ class Brainworx_Rental_Model_Pdf_Creditmemo extends Mage_Sales_Model_Order_Pdf_C
     	}
     	$this->y -= 20;
     	$page = $this->drawLineBlocks($page, array($flineBlock));
+		*/
+		
+		$this->insertFooterLogo($page);
+		
     
     }
+	/**
+	 * Insert footer logo to pdf page
+	 *
+	 * @param Zend_Pdf_Page $page
+	 * @param null $store
+	 */
+	protected function insertFooterLogo(&$page)
+	{
+		
+		$image = Mage::getBaseDir('media') . '/sales/store/logo/footer_invoice_zorgpunt.png';
+		if (is_file($image)) {
+			$image       = Zend_Pdf_Image::imageWithPath($image);
+			$top         = 125; //bottom border of the page 
+			$widthLimit  = 494; //SHE update so logo is smaller and invoice address get higher
+			$heightLimit = 36; //SHE update so logo is smaller and invoice address get higher
+			$width       = $image->getPixelWidth();
+			$height      = $image->getPixelHeight();
+
+			//preserving aspect ratio (proportions)
+			$ratio = $width / $height;
+			if ($ratio > 1 && $width > $widthLimit) {
+				$width  = $widthLimit;
+				$height = $width / $ratio;
+			} elseif ($ratio < 1 && $height > $heightLimit) {
+				$height = $heightLimit;
+				$width  = $height * $ratio;
+			} elseif ($ratio == 1 && $height > $heightLimit) {
+				$height = $heightLimit;
+				$width  = $widthLimit;
+			}
+			$y1 = $top - $height;
+			$y2 = $top;
+			$x1 = 50;
+			$x2 = $x1 + $width;
+
+			//coordinates after transformation are rounded by Zend
+			$page->drawImage($image, $x1, $y1, $x2, $y2);
+		}
+	}
 }
