@@ -262,7 +262,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		//legal footnote *******************************************************************
 		// update 3/5/2017
 		//$this->y -= 25;
-		$this->y = 140;
+		$this->y = 190;
 		
 		$flineBlock = array(
 				'lines'  => array(),
@@ -556,6 +556,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 	 */
 	protected function insertLogo(&$page, $store = null)
 	{
+		/*
 		$this->y = $this->y ? $this->y : 815;
 		$image = Mage::getStoreConfig('sales/identity/logo', $store);
 		if ($image) {
@@ -592,6 +593,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 				$this->y = $y1 - 10;
 			}
 		}
+		*/
 	}
 	/**
 	 * Draw header for item table
@@ -667,7 +669,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$image = Mage::getBaseDir('media') . '/sales/store/logo/footer_invoice_zorgpunt.png';
 		if (is_file($image)) {
 			$image       = Zend_Pdf_Image::imageWithPath($image);
-			$top         = 75; //bottom border of the page 
+			$top         = 125; //bottom border of the page 
 			$widthLimit  = 494; //SHE update so logo is smaller and invoice address get higher
 			$heightLimit = 36; //SHE update so logo is smaller and invoice address get higher
 			$width       = $image->getPixelWidth();
