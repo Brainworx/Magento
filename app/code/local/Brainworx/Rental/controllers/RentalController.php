@@ -215,7 +215,14 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 	public function createInvoicesAction() {
 		try{
 			//set the time limit for this operation
-			set_time_limit(300);
+			//set_time_limit(300);
+			
+			//start timecount
+			$startInvoicing = microtime(TRUE);
+			$maxinvoicetime = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('INVOICE_RUNTIME_SECONDS')->getValue('text');	;
+			$timeout = false;
+			$rentalcounter = 0;
+			$invoicecounter = 0;
 			
 			$invoiceDt  = date('Y-m-d', strtotime('last day of -1 month'));
 			$count = 0;
@@ -280,11 +287,13 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					}
 					if($rentalToInvoice == null){
 						$rentalToInvoice = $rental;
+						$rentalcounter++;
 					}
 					
 					if ($rentalToInvoice->getOrigOrderId() != $rental->getOrigOrderId()) {
 						
 						$this->createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt,$sendInvoiceEmailAuto);
+						$invoicecounter++;
 						//reset data for next rental
 						$qtys = array (); // this will be used for processing the invoice
 						$comment = "Verhuurperiode details:";
@@ -292,6 +301,12 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 						$grandTotalInclTax = 0;
 						$tax = 0;
 						$transactionSave = Mage::getModel('core/resource_transaction');
+						//check timing, continue to next or return to user
+						$now = microtime(TRUE);
+						if(($now-$startInvoicing)>$maxinvoicetime){
+							$timeout = true;
+							break;
+						}
 					}
 					$rentalToInvoice = $rental;
 		
@@ -413,10 +428,18 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					
 				}
 				//last rental invoice - only invoice when there is an amount
-				if($grandTotal > 0)
-					$this->createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt,$sendInvoiceEmailAuto);		
+				if($grandTotal > 0){
+					$this->createInvoice($rentalToInvoice,$comment,$grandTotal,$grandTotalInclTax,$tax,$qtys,$invoiceDt,$sendInvoiceEmailAuto);	
+					$invoicecounter++;
+				}	
 				
-				Mage::Log("Invoices processed : " .  count($rentalsToInvoice) . " rentalitems.");
+				Mage::Log("Invoices processed : " .  $rentalcounter . " rentalitems in ".$invoicecounter." invoices. (timeout:".$timeout.')');
+				
+				if($timeout){
+					Mage::getSingleton('core/session')->addWarning('We verwerkten reeds '.$rentalcounter.' verhuuritems in '.$invoicecounter.' facturen. Maar er zijn nog meer facturen te maken, klik nog een keer op "Maak maandfacturen"');
+				}else{
+					Mage::getSingleton('core/session')->addSuccess('Alle '.$rentalcounter.' verhuuritems zijn verwerkt in '.$invoicecounter.' facturen (indien meerdere runs: op te tellen bij voorgaande aantallen).');
+				}
 			}else{
 				Mage::Log("No rentals to be invoiced.");
 				Mage::getSingleton('core/session')->addWarning('Sorry, er zijn geen facturen te maken voor '.$invoiceDt.'.');
