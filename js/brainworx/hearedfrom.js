@@ -32,44 +32,32 @@ $j(function() {
 
 	$j('#hearedfrom-buttons-container button').click(validate);
 
-	
-
 	//Make sure all input text is with capital
 
-    	$j('input[type=text]').blur(function(){this.value =this.value.charAt(0).toUpperCase() + this.value.slice(1);})
-
+    $j('input[type=text]').blur(function(){this.value =this.value.charAt(0).toUpperCase() + this.value.slice(1);})
 	
 
 	$j('#checkout-shipping-method-load').change(function(changes, observer) {
 
 		
-
 		/*express*/
 
-		$j("#tablerate_express_deldate").val(dateToText(determineExpressDeliveryDay()));
+	$j("#tablerate_express_deldate").val(dateToText(determineExpressDeliveryDay()));
+	$j("#tablerate_express_deldate").prop('readonly', true);
+	$j("#salesrate_urgent_deldate").val(dateToText(determineExpressDeliveryDay()));
+	$j("#salesrate_urgent_deldate").prop('readonly', true);	
 
-		$j("#tablerate_express_deldate").prop('readonly', true);
+	//set default
 
-		//$j("#tablerate_express_deldate").prop('disabled', true);	
+	$j("#s_method_tablerate_bestway").prop('checked', true);
+	$j("#s_method_salesrate_flatrate").prop('checked', true);
 
-		
+	/*standard= +2werkdagen + voor 15u + niet op zat of zon*/
 
-		//set default
+	$j("#tablerate_bestway_deldate" ).datepicker({ 
 
-		$j("#s_method_tablerate_bestway").prop('checked', true);
-
-		$j("#s_method_salesrate_flatrate").prop('checked', true);
-
-
-
-		/*standard= +2werkdagen + voor 15u + niet op zat of zon*/
-
-		$j("#tablerate_bestway_deldate" ).datepicker({ 
-
-	     	minDate: determineMinDaysNormal(),
-
-	     	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
-
+	   	minDate: determineMinDaysNormal(),
+	   	dateFormat: 'dd-mm-yy', selectOtherMonths: true,
 	      	beforeShowDay: function(date) {
 
 	      		var day = date.getDay();
@@ -154,7 +142,7 @@ $j(function() {
 
 		$j("#freeshipping_freeshipping_deldate").prop('readonly', true);
 
-		/*sales delivery any day, except sunday and holidays*/
+		/*sales delivery any day (+2d), except sunday and holidays*/
 
 		$j("#salesrate_flatrate_deldate" ).datepicker({ 
 
@@ -177,6 +165,7 @@ $j(function() {
 	    }});
 
 		$j("#salesrate_flatrate_deldate").prop('readonly', true);
+		
 
 		$j("#specialrate_free_deldate" ).datepicker({ 
 
@@ -371,7 +360,6 @@ $j(function() {
 	 return min;
 
  }
-
 
 
  function validateshippingandresethearedfrom(){	 

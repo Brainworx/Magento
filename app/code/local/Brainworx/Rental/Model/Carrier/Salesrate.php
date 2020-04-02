@@ -109,7 +109,23 @@ class Brainworx_Rental_Model_Carrier_Salesrate
         
         $method->setCost(0);
 
-        $result->append($method);        
+        $result->append($method); 
+        
+        //option2: dringend 2 - 50 = 41.32
+        if($this->getConfigFlag('urgentoption')){
+        	$method = $this->_getModel('shipping/rate_result_method');
+        
+        	$method->setCarrier('salesrate');
+        	$method->setCarrierTitle($this->getConfigData('title'));
+        
+        	$method->setMethod('urgent');
+        
+        	$method->setMethodTitle($this->getConfigData('urgenttitle'));
+        	$method->setPrice($this->getConfigData('urgentprice'));
+        	$method->setCost(0);
+        
+        	$result->append($method);
+        }       
 
         return $result;
     }

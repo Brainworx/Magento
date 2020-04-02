@@ -91,7 +91,8 @@ class Brainworx_Hearedfrom_Model_Observer
 				||  $order->getShippingMethod()=='specialrate_weekend'
 				||  $order->getShippingMethod()=='specialrate_standard'				
 				||  $order->getShippingMethod()=='specialrate_urgent'		
-				||  $order->getShippingMethod()=='salesrate_flatrate'	
+				||  $order->getShippingMethod()=='salesrate_flatrate'								
+				||  $order->getShippingMethod()=='salesrate_urgent'		
 				||  $order->getShippingMethod()=='flatrate_flatrate'
 				||  $order->getShippingMethod()=='normalrate2_flatrate'){
 			//need to create excel to send to external delivery party
@@ -416,7 +417,8 @@ class Brainworx_Hearedfrom_Model_Observer
 					||  $order->getShippingMethod()=='specialrate_weekend'
 					||  $order->getShippingMethod()=='specialrate_standard'						
 					||  $order->getShippingMethod()=='specialrate_urgent'			
-					||  $order->getShippingMethod()=='salesrate_flatrate'	
+					||  $order->getShippingMethod()=='salesrate_flatrate'								
+					||  $order->getShippingMethod()=='salesrate_urgent'	
 					||  $order->getShippingMethod()=='flatrate_flatrate'
 					||  $order->getShippingMethod()=='normalrate2_flatrate'
 					||  $order->getShippingInclTax()>0){
