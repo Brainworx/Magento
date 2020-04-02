@@ -385,7 +385,12 @@
                     <label>Contact request form</label>
                     <file>contact_requestform.html</file>
                     <type>html</type>
-                </contact_requestform>
+                </contact_requestform>                
+                <supplier_new_shipment_simple>
+                    <label>Zorgpunt levernota</label>
+                    <file>supplier_new_shipment_simple.html</file>
+                    <type>text</type>
+                </supplier_new_shipment_simple>
             </email>
         </template>
 	   <page>

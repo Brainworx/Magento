@@ -1,0 +1,24 @@
+<!--@subject Levernota @-->
+<!--@vars
+{
+"var order.increment_id":"Order Id",
+"var order.getCreatedAtFormated('long')":"Order Created At (datetime)",
+"var order.getShippingDescription()":"Shipping Description",
+"var order.getShippingInclTax()":"Shipping Cost",
+"var deliverydate":"Delivery date",
+"var deliveryaddress":"Delivery address",
+"var items":"Items to deliver",
+"var seller":"Zorgpunt",
+"var extrainfo":"Extra info aan zorgpunt"
+}@-->
+Bestelling #{{var order.increment_id}} geplaatst op {{var order.getCreatedAtFormated('long')}}
+
+Leverdatum {{var deliverydate}} 
+Levering: {{var order.getShippingDescription()}}
+Leverkost: {{var order.getShippingInclTax()}}
+Leveradres: {{var deliveryaddress}}
+
+Materialen
+{{var items}}
+Zorgpunt {{var seller}}
+Extra info aan Zorgpunt: {{var extrainfo}}

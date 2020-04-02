@@ -206,7 +206,7 @@ class Brainworx_Hearedfrom_Model_Observer
 			}
 		}
 		if(!empty($shippinglist)){
-			Mage::helper("hearedfrom/delivery")->createShipmentsExcel($shippinglist,$order,$delivery_to_report,$_hearedfrom_salesforce["entity_id"]);
+			Mage::helper("hearedfrom/delivery")->createShipmentsReport($shippinglist,$order,$delivery_to_report,$_hearedfrom_salesforce["entity_id"],$sellerName);
 		}	
 		
 	}
