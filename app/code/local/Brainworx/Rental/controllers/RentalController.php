@@ -287,7 +287,6 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					}
 					if($rentalToInvoice == null){
 						$rentalToInvoice = $rental;
-						$rentalcounter++;
 					}
 					
 					if ($rentalToInvoice->getOrigOrderId() != $rental->getOrigOrderId()) {
@@ -309,6 +308,8 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 						}
 					}
 					$rentalToInvoice = $rental;
+
+					$rentalcounter++;
 		
 					$item = Mage::getModel ( 'sales/order_item' )->load($rentalToInvoice->getOrderItemId());
 					$qty_to_invoice = 0;
