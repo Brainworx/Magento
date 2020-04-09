@@ -247,6 +247,8 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 	public function createShipmentsSimpleReport($list,$order,$to_external,$seller=null)
 	{
 		try{
+			$sellername="";
+			$phone="";
 			if(!empty($seller)){
 				$salesforce = Mage::getModel('hearedfrom/salesForce')->load($seller);
 				$sellername = $salesforce["user_nm"];
@@ -261,6 +263,7 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 			foreach($list as $item){
 				$deliverydate = $item['Leverdatum'];
 				$deliveryaddress = $item['Naam'].', '.$item['Adres (straat + nr)'].', '.$item['Postcode'].' '.$item['Gemeente'];
+				$phone=$item['Telefoon'];
 				$extrainfo = $item['Info aan Zorgpunt'];
 				$items=$items.$line.".".$item['Type'].": ".$item['Aantal']." x ".$item['Artikel']." (".$item['Artikelnr.'].")\r\n";
 				$line +=1;
@@ -303,6 +306,7 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 					'order'        => $order,
 					'deliverydate' => $deliverydate,
 					'deliveryaddress' => $deliveryaddress,
+					'phone' => $phone,
 					'items' => $items,
 					'seller' => $sellername,
 					'extrainfo' => $extrainfo
