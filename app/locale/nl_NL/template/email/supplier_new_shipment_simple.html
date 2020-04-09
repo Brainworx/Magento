@@ -7,6 +7,7 @@
 "var order.getShippingInclTax()":"Shipping Cost",
 "var deliverydate":"Delivery date",
 "var deliveryaddress":"Delivery address",
+"var name":"Name",
 "var phone":"Phone",
 "var items":"Items to deliver",
 "var seller":"Zorgpunt",
@@ -17,6 +18,7 @@ Bestelling #{{var order.increment_id}} geplaatst op {{var order.getCreatedAtForm
 Leverdatum {{var deliverydate}} 
 Levering: {{var order.getShippingDescription()}}
 Leverkost: {{var order.getShippingInclTax()}}
+Levering aan: {{var name}}
 Leveradres: {{var deliveryaddress}}
 Telefoon: {{var phone}}
 

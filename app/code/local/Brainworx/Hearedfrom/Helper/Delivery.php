@@ -249,6 +249,7 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 		try{
 			$sellername="";
 			$phone="";
+			$customername="";
 			if(!empty($seller)){
 				$salesforce = Mage::getModel('hearedfrom/salesForce')->load($seller);
 				$sellername = $salesforce["user_nm"];
@@ -264,6 +265,7 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 				$deliverydate = $item['Leverdatum'];
 				$deliveryaddress = $item['Naam'].', '.$item['Adres (straat + nr)'].', '.$item['Postcode'].' '.$item['Gemeente'];
 				$phone=$item['Telefoon'];
+				$customername=$item['Naam'];
 				$extrainfo = $item['Info aan Zorgpunt'];
 				$items=$items.$line.".".$item['Type'].": ".$item['Aantal']." x ".$item['Artikel']." (".$item['Artikelnr.'].")\r\n";
 				$line +=1;
@@ -305,6 +307,7 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 			$email_template_variables = array(
 					'order'        => $order,
 					'deliverydate' => $deliverydate,
+					'name'	=> $customername,
 					'deliveryaddress' => $deliveryaddress,
 					'phone' => $phone,
 					'items' => $items,
