@@ -241,7 +241,7 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
 		        		Mage::helper("hearedfrom/error")->sendErrorMail('Probleem versturen mail - retry failed');
 				}else{
 					Mage::log('Sending error mail failed');
-					Mage::log('Mail error failed '.$e->getMessage(), null, 'email.log');
+					Mage::log('Mail error failed ', null, 'email.log');
 				}
 	        }
 	        
