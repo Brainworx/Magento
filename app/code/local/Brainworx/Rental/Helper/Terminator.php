@@ -350,7 +350,9 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 					$order = $item['Bestelling #'];
 					$pickupdt = $item['Ophaaldatum'];
 					$items .= "\r\n"."Bestelling #".$item['Bestelling #']."\r\n";
-					$items .= $item['Naam']." (tel:".$item['Telefoon']."): ".$item['Adres (straat + nr)'].", ".$item['Postcode']." ".$item['Gemeente']."\r\n";
+					$items .= $item['Naam'].":\r\n";
+					$items .= $item['Adres (straat + nr)'].", ".$item['Postcode']." ".$item['Gemeente']."\r\n";
+					$items .= "Tel: ".$item['Telefoon']."\r\n\r\n";
 				}				
 				$items .= $line.". ".$item['Aantal']." x ".$item['Artikel']."(".$item['Artikelnr.'].")\r\n";
 				
