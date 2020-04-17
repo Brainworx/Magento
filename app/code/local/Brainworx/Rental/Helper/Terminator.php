@@ -76,7 +76,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 		//send mail with excel
 		foreach ($shippinglistSupplier as $supplier => $list){
 			$email = $supplier;
-			self::createPickupShipments($list, true,$email);
+			self::createPickupShipmentsExcel($list, true,$email);
 		}
 		if(!empty($shippinglistEXT)){
 			//need to create excel to send to external delivery party
