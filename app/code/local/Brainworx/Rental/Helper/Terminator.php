@@ -76,25 +76,25 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 		//send mail with excel
 		foreach ($shippinglistSupplier as $supplier => $list){
 			$email = $supplier;
-			self::createPickupShipmentsExcel($list, true,$email);
+			self::createPickupShipments($list, true,$email);
 		}
 		if(!empty($shippinglistEXT)){
 			//need to create excel to send to external delivery party
 			$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
-			self::createPickupShipmentsExcel($shippinglistEXT,true,$emails);
+			self::createPickupShipments($shippinglistEXT,true,$emails);
 		}
 		if(!empty($shippinglistZP)){
-			self::createPickupShipmentsExcel($shippinglistZP,false);
+			self::createPickupShipments($shippinglistZP,false);
 		}
 		if(!empty($shippinglistEXT2)){
 			//need to create excel to send to external delivery party
 			$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_SPECIAL_EMAIL')->getValue('text');
-			self::createPickupShipmentsExcel($shippinglistEXT2,true,$emails);
+			self::createPickupShipments($shippinglistEXT2,true,$emails);
 		}
 		if(!empty($shippinglistEXT3)){
 			//need to create excel to send to external delivery party
 			$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_NORMAL2_EMAIL')->getValue('text');
-			self::createPickupShipmentsExcel($shippinglistEXT3,true,$emails);
+			self::createPickupShipments($shippinglistEXT3,true,$emails);
 		}
 		return !$error;
 	}
@@ -203,6 +203,15 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 			Mage::log('error while updated salesforcestock after return for '.$order->getIncrementId());
 			self::sendErrorMail('Probleem update stock record '.$order->getIncrementId() .' - '.$e->getMessage());
 			
+		}
+	}
+	private function createPickupShipments($list,$to_external,$emails=null)
+	{
+		$reportexcel = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DeliveryReport_excel')->getValue('text');
+		if(empty($reportexcel)||$reportexcel == 'Y'){
+			self::createPickupShipmentsExcel($list,$to_external,$emails);
+		}else{
+			self::createPickupShipmentsReport($list,$to_external,$emails);
 		}
 	}
 	/**
@@ -317,6 +326,82 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 				
 			self::sendErrorMail('Probleem creatie ophaal excel '.$filename.' - '.$e->getMessage());
 				
+		}
+	}
+	/**
+	 * private functions
+	 * Create an excel with items to be shipped + send it to transporter via email
+	 * @param array with pickuplines $list
+	 * @param boolean $to_external (send to emails in DELIVERY_EMAIL)
+	 */
+	private function createPickupShipmentsReport($list,$to_external,$emails=null)
+	{
+		try{
+			
+			$items="";
+			$line = 0;
+			$order = "";
+			$pickupdt = "";
+	
+			//lines
+			foreach($list as $item){
+				$line +=1;
+				if($order != $item['Bestelling #']){
+					$order = $item['Bestelling #'];
+					$pickupdt = $item['Ophaaldatum'];
+					$items .= "\r\n"."Bestelling #".$item['Bestelling #']."\r\n";
+					$items .= $item['Naam']." (tel:".$item['Telefoon']."): ".$item['Adres (straat + nr)'].", ".$item['Postcode']." ".$item['Gemeente']."\r\n";
+				}				
+				$items .= $line.". ".$item['Aantal']." x ".$item['Artikel']."(".$item['Artikelnr.'].")\r\n";
+				
+			}
+	
+			//send email
+			// This is the template name from your etc/config.xml
+			$template_id = 'supplier_new_pickup_simple';
+			$storeId = Mage::app()->getStore()->getId();
+	
+			//send new shipment email to supplier
+	
+			// Who were sending to...
+			if($to_external){
+				$email_to = explode(",",$emails);
+			}else{
+				$email_to = Mage::getStoreConfig('trans_email/ident_general/email');
+			}
+			// Load our template by template_id
+			$email_template  = Mage::getModel('core/email_template')->loadDefault($template_id);
+	
+			// Here is where we can define custom variables to go in our email template!
+			$email_template_variables = array(
+					'pickupdate' => $pickupdt,
+					'items' => $items,
+					'count' => $line
+			);
+	
+			// I'm using the Store Name as sender name here.
+			$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);
+			// I'm using the general store contact here as the sender email.
+			$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
+			$email_template->setSenderName($sender_name);
+			$email_template->setSenderEmail($sender_email);
+			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_custom1/email'));
+			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_general/email'));
+			$extramail =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('EXTRA_MAIL')->getValue('text');
+			if(!empty($extramail)){
+				$email_template->addBcc($extramail);
+			}
+	
+			//Send the email!
+			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Retrieval'), $email_template_variables);
+	
+			Mage::log('Email with ophaalnota sent', null, 'email.log');
+	
+		}catch(Exception $e){
+			Mage::log('Fout create ophaal nota: ' . $e->getMessage());
+	
+			self::sendErrorMail('Probleem creatie ophaal nota - '.$e->getMessage());
+	
 		}
 	}
 	/**
