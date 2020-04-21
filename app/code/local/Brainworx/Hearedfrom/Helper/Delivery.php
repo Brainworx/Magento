@@ -105,6 +105,84 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 		}
 	}
 	/**
+	 * Create an mail with items to be shipped + send it to transporter via email
+	 */
+	public function createStockShipmentsSimpleReport($list,$stockrequestids)
+	{
+		try{
+			$items="";
+			$deliverydate ="";
+			$deliveryaddress="";
+			$phone="";
+			
+			//header
+			$line=1;
+			//lines
+			foreach($list as $item){
+				$deliverydate = $item['Leverdatum'];
+				$deliveryaddress = $item['Naam'].', '.$item['Adres (straat + nr)'].', '.$item['Postcode'].' '.$item['Gemeente'];
+				$phone=$item['Telefoon'];
+				$items=$items.$line.".".$item['Type'].": ".$item['Aantal']." x ".$item['Artikel']." (".$item['Artikelnr.'].")\r\n";
+				$line +=1;
+			}
+	
+			//send email
+			// This is the template name from your etc/config.xml
+			$template_id = 'supplier_new_stockshipment_simple';
+			$storeId = Mage::app()->getStore()->getId();
+	
+			//send new shipment email to supplier
+	
+			// Who were sending to...
+			$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
+			$email_to = explode(",",$emails);
+	
+			// Load our template by template_id
+			$email_template  = Mage::getModel('core/email_template')->loadDefault($template_id);
+	
+			// Here is where we can define custom variables to go in our email template!
+			$email_template_variables = array(
+					'stockrequest'        => $stockrequestids,
+					'deliverydate' => $deliverydate,
+					'deliveryaddress' => $deliveryaddress,
+					'phone' => $phone,
+					'items' => $items
+			);
+	
+			// I'm using the Store Name as sender name here.
+			$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);
+			// I'm using the general store contact here as the sender email.
+			$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
+			$email_template->setSenderName($sender_name);
+			$email_template->setSenderEmail($sender_email);
+			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_general/email'));
+			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_custom1/email'));
+	
+			//Send the email!
+			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Deliveries'), $email_template_variables);
+	
+			Mage::log('Email for stockdelivery levernota sent from '.$sender_email.' ('.$sender_name.')', null, 'email.log');
+	
+	
+		}catch(Exception $e){
+			Mage::log('Fout create stocklever nota: ' . $e->getMessage());
+	
+			Mage::helper("hearedfrom/error")->sendErrorMail('Probleem creatie stock lever nota '.$stockrequestids.' - '.$e->getMessage());
+		}
+	}
+	/**
+	 * Create an report with items to be shipped + send it to transporter via email
+	 */
+	public function createStockShipmentsReport($list,$stockrequestids)
+	{
+		$reportexcel = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DeliveryReport_excel')->getValue('text');
+		if(empty($reportexcel)||$reportexcel == 'Y'){
+			self::createStockShipmentsExcel($list, $stockrequestids);
+		}else{
+			self::createStockShipmentsSimpleReport($list,$stockrequestids);
+		}
+	}
+	/**
 	 * Create an report with items to be shipped + send it to transporter via email
 	 */
 	public function createShipmentsReport($list,$order,$to_external,$seller=null)
@@ -256,6 +334,9 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 				$sellername = "Zorgpunt";
 			}
 			$items="";
+			$deliverydate ="";
+			$deliveryaddress="";
+			$phone="";
 	
 			//header
 			$line=1;

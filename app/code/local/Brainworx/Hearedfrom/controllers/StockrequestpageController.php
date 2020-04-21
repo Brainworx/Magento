@@ -132,8 +132,7 @@ class Brainworx_Hearedfrom_StockrequestpageController extends Mage_Core_Controll
 	    			}
 	    		}
 	    		
-	    		$deliveryhelper->createStockShipmentsExcel($shippinglist,$stockrequestids);
-	    		
+	    		$deliveryhelper->createStockShipmentsReport($shippinglist,$stockrequestids);
 	    		
 	    		//$this->_getSession()->addSuccess($this->__('The request has been saved.'));
 	    		$this->_redirectSuccess(Mage::getUrl('*/stockrequestpage/', array('_secure'=>true)));
@@ -265,7 +264,7 @@ class Brainworx_Hearedfrom_StockrequestpageController extends Mage_Core_Controll
     				}
     			}
     	   
-    			$deliveryhelper->createStockShipmentsExcel($shippinglist,$stockrequestids);
+    			$deliveryhelper->createStockShipmentsReport($shippinglist,$stockrequestids);
     			 
     		} catch (Mage_Core_Exception $e) {
     			$this->_getSession()->addException($e, $this->__('Cannot save stock.'));
