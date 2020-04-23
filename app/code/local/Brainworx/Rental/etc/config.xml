@@ -293,7 +293,7 @@
                 <active>1</active>
                 <sallowspecific>0</sallowspecific>
                 <model>rental/carrier_specialrate</model>
-                <name>Tarief</name>
+                <name>Standaard nalevering met installatie</name>
                 <title>Speciaal - Bezorging aan huis</title>
             </specialrate>
              <salesrate>
