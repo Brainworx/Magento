@@ -246,6 +246,29 @@ $j(function() {
 	    }});
 
 		$j("#specialrate_urgent_deldate").prop('readonly', true);
+		$j("#specialrate_standard1_deldate" ).datepicker({ 
+
+			dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+
+	       	onSelect: function(dateText, inst) {
+
+	       		$j("#s_method_specialrate_standard1").prop('checked', true);
+
+	    }});
+
+		$j("#specialrate_standard1_deldate").prop('readonly', true);
+
+		$j("#specialrate_urgent2_deldate" ).datepicker({ 
+
+			dateFormat: 'dd-mm-yy', selectOtherMonths: true,
+
+	       	onSelect: function(dateText, inst) {
+
+	       		$j("#s_method_specialrate_urgent2").prop('checked', true);
+
+	    }});
+
+		$j("#specialrate_urgent2_deldate").prop('readonly', true);
 
 	});
 

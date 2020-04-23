@@ -69,7 +69,8 @@ if(!$pickup && !$delivery){$delivery=true;}
                        		<?php echo '<br>'.$this->__('Select a delivery date:') ?>
                        		<input class="tsmall labeldt" type="text" name="<?php echo $_rate->getCode() ?>_delrange" id="<?php echo $_rate->getCode() ?>_deldate" value="" />  
                          <?php elseif ($_rate->getCode() === "salesrate_flatrate" ||$_rate->getCode() === "specialrate_urgent"|| $_rate->getCode() === "specialrate_urgent1"
-                            || $_rate->getCode() === "specialrate_weekend"|| $_rate->getCode() === "specialrate_standard"|| $_rate->getCode() === "specialrate_flatrate"|| $_rate->getCode() === "specialrate_free"): ?>
+                            || $_rate->getCode() === "specialrate_weekend"|| $_rate->getCode() === "specialrate_standard"|| $_rate->getCode() === "specialrate_flatrate"
+                         		|| $_rate->getCode() === "specialrate_free" || $_rate->getCode() === "specialrate_standard1"|| $_rate->getCode() === "specialrate_urgent2"): ?>
                        		<?php echo $this->__('Select a delivery date:') ?>
                        		<input class="tsmall labeldt" type="text" name="<?php echo $_rate->getCode() ?>_delrange" id="<?php echo $_rate->getCode() ?>_deldate" value="" />  
                          <?php elseif ($_rate->getCode() === "tablerate_express"): ?>

@@ -92,6 +92,36 @@ class Brainworx_Rental_Model_Carrier_Specialrate
 	        
 	        $result->append($method);
         }
+        //option7: standaard verkoop
+        if($this->getConfigFlag('standard1option')){
+        	$method = $this->_getModel('shipping/rate_result_method');
+        
+        	$method->setCarrier('specialrate');
+        	$method->setCarrierTitle($this->getConfigData('title'));
+        
+        	$method->setMethod('standard1');
+        
+        	$method->setMethodTitle($this->getConfigData('standard1title'));
+        	$method->setPrice($this->getConfigData('standard1price'));
+        	$method->setCost(0);
+        
+        	$result->append($method);
+        }
+        //option8: dringend verkoop 55,37 = 67
+        if($this->getConfigFlag('urgent2option')){
+        	$method = $this->_getModel('shipping/rate_result_method');
+        
+        	$method->setCarrier('specialrate');
+        	$method->setCarrierTitle($this->getConfigData('title'));
+        
+        	$method->setMethod('urgent2');
+        
+        	$method->setMethodTitle($this->getConfigData('urgent2title'));
+        	$method->setPrice($this->getConfigData('urgent2price'));
+        	$method->setCost(0);
+        
+        	$result->append($method);
+        }
         //option3: dringend 2 - 50 = 41.32
         if($this->getConfigFlag('urgent1option')){
         	$method = $this->_getModel('shipping/rate_result_method');
@@ -151,7 +181,7 @@ class Brainworx_Rental_Model_Carrier_Specialrate
         	$method->setCost(0);
         	 
         	$result->append($method);
-        }
+        }        
 
         return $result;
     }
