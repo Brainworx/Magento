@@ -81,6 +81,7 @@ class Brainworx_Hearedfrom_Helper_Mailer extends Mage_Core_Helper_Abstract{
 	 * @param $entityobject (may be NULL or object to link email to)store in table core_email_queue
 	 * @param $eventtype (type of event to link email to example new_delivery, new_order,...) store in table core_email_queue
 	 * @param $emails_bcc (optional, komma separated list of email addresses to send to)
+	 * @param $errormail (optional, indicate this is an error mail to prevent error mail on failure)
 	 */
 	public function sendMailViaQueue($emails_to,$storeId,$template_id,$email_template_variables,$entity, $entityobject,$eventtype,$emails_bcc=null,$errormail=false){
 		try{
