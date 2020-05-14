@@ -1,6 +1,17 @@
 <?php
 class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 	/**
+	 * Identifier for history item
+	 */
+	const ENTITY_ORDER                              = 'order';
+	const ENTITY_STOCKREQ                          = 'stockrequest';
+	
+	/**
+	 * Event type names for order emails
+	 */
+	const EMAIL_EVENT_SHIPMENT    = 'new_shipment';
+	const EMAIL_EVENT_STOCKSHIPMENT = 'new_stock_shipment';
+	/**
 	 * Create an excel with items to be shipped + send it to transporter via email
 	 */
 	public function createStockShipmentsExcel($list,$stockrequestids)
@@ -137,9 +148,6 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 			$emails = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('DELIVERY_EMAIL')->getValue('text');
 			$email_to = explode(",",$emails);
 	
-			// Load our template by template_id
-			$email_template  = Mage::getModel('core/email_template')->loadDefault($template_id);
-	
 			// Here is where we can define custom variables to go in our email template!
 			$email_template_variables = array(
 					'stockrequest'        => $stockrequestids,
@@ -149,19 +157,9 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 					'items' => $items
 			);
 	
-			// I'm using the Store Name as sender name here.
-			$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);
-			// I'm using the general store contact here as the sender email.
-			$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
-			$email_template->setSenderName($sender_name);
-			$email_template->setSenderEmail($sender_email);
-			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_general/email'));
-			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_custom1/email'));
-	
-			//Send the email!
-			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Deliveries'), $email_template_variables);
-	
-			Mage::log('Email for stockdelivery levernota sent from '.$sender_email.' ('.$sender_name.')', null, 'email.log');
+			$emails_bcc = array(Mage::getStoreConfig('trans_email/ident_custom1/email'));
+			
+			Mage::helper("hearedfrom/mailer")->sendMailViaQueue($email_to,$storeId,$template_id,$email_template_variables,self::ENTITY_STOCKREQ, null,self::EMAIL_EVENT_STOCKSHIPMENT,$emails_bcc);
 	
 	
 		}catch(Exception $e){
@@ -376,12 +374,13 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 						$email_to = explode(",",$emails);
 					}
 				}
+				$emails_bcc = array(Mage::getStoreConfig('trans_email/ident_general/email'),
+						Mage::getStoreConfig('trans_email/ident_custom1/email'));
 			}else{
-				$email_to = Mage::getStoreConfig('trans_email/ident_general/email');
+				$email_to = array(Mage::getStoreConfig('trans_email/ident_general/email'));
+				$emails_bcc = array(Mage::getStoreConfig('trans_email/ident_custom1/email'));
 			}
-			// Load our template by template_id
-			$email_template  = Mage::getModel('core/email_template')->loadDefault($template_id);
-	
+			
 			// Here is where we can define custom variables to go in our email template!
 			$email_template_variables = array(
 					'order'        => $order,
@@ -392,20 +391,9 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 					'seller' => $sellername,
 					'extrainfo' => $extrainfo
 			);
-	
-			// I'm using the Store Name as sender name here.
-			$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);
-			// I'm using the general store contact here as the sender email.
-			$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
-			$email_template->setSenderName($sender_name);
-			$email_template->setSenderEmail($sender_email);
-			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_general/email'));
-			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_custom1/email'));
-	
-			//Send the email!
-			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Deliveries'), $email_template_variables);
-	
-			Mage::log('Simple Email for delivery sent: '.$order->getIncrementId().' from '.$sender_email.' ('.$sender_name.')', null, 'email.log');
+			
+			Mage::helper("hearedfrom/mailer")->sendMailViaQueue($email_to,$storeId,$template_id,$email_template_variables,self::ENTITY_ORDER, $order,self::EMAIL_EVENT_SHIPMENT,$emails_bcc);
+			
 	
 		}catch(Exception $e){
 			Mage::log('Fout create lever simple report: ' . $e->getMessage());
@@ -435,6 +423,5 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 		}
 		
 		return date('d-m-Y', strtotime('+'.$days.' day'));
-	}
-	
+	}	
 }

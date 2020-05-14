@@ -190,87 +190,24 @@ class Brainworx_Rental_Model_Observer
 					//send new order email to supplier
 					
 					// Who were sending to...
-					$email_to = $email;				
-					// Load our template by template_id
-					$email_template  = Mage::getModel('core/email_template')->loadDefault($template_id);
+					$email_to = array($email);						
 					
+					$emails_bcc = array(Mage::getStoreConfig('trans_email/ident_general/email'),
+							Mage::getStoreConfig('trans_email/ident_custom1/email'));
+					$extramail =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('EXTRA_MAIL')->getValue('text');
+					if(!empty($extramail)){
+						$emails_bcc[]=$extramail;
+					}
+						
 					// Here is where we can define custom variables to go in our email template!
 					$email_template_variables = array(
 							 'order'        => $order,
 							 'supplieremail'=> $email,
 							 'seller'		=> $sellerName
-							 //'companyname' 	=> $order->getBillingAddress()->getCompanyname()
-							// Other variables for our email template.
 					);
-					
-					// I'm using the Store Name as sender name here.
-					$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);
-					// I'm using the general store contact here as the sender email.
-					$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
-					$email_template->setSenderName($sender_name);
-					$email_template->setSenderEmail($sender_email);
-					$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_custom1/email'));
-					$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_general/email'));
-					$extramail =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('EXTRA_MAIL')->getValue('text');
-					if(!empty($extramail)){
-						$email_template->addBcc($extramail);
-					}
-					
-					//Send the email!
-					$email_template->send($email_to, Mage::helper('rental')->__('Supplier'), $email_template_variables);
-					
-					//via queu
-					
-					// Get the destination email addresses to send copies to
-					//$copyTo = array(Mage::getStoreConfig(self::XML_PATH_EMAIL_IDENTITY, $storeId));
-// 					$copyTo = array(Mage::getStoreConfig('trans_email/ident_general/email'));
-// 					$copyMethod = Mage::getStoreConfig(self::XML_PATH_EMAIL_COPY_METHOD, $storeId);
-										
-// 					/** @var $mailer Mage_Core_Model_Email_Template_Mailer */
-// 					$mailer = Mage::getModel('core/email_template_mailer');
-// 					/** @var $emailInfo Mage_Core_Model_Email_Info */
-// 					$emailInfo = Mage::getModel('core/email_info');
-// 					$emailInfo->addTo($email, Mage::helper('rental')->__('Supplier'));
-// 					if ($copyTo && $copyMethod == 'bcc') {
-// 						// Add bcc to customer email
-// 						foreach ($copyTo as $emailc) {
-// 							$emailInfo->addBcc($emailc);
-// 							Mage::log('copy email to '.$emailc);
-// 						}
-// 					}
-// 					$mailer->addEmailInfo($emailInfo);
-					
-					
-// 					// Email copies are sent as separated emails if their copy method is
-// 					// 'copy' or a customer should not be notified
-// 					if ($copyTo && ($copyMethod == 'copy')) {
-// 						foreach ($copyTo as $emailc) {
-// 							$emailInfo = Mage::getModel('core/email_info');
-// 							$emailInfo->addTo($emailc);
-// 							$mailer->addEmailInfo($emailInfo);
-// 							Mage::log('copy email to '.$emailc);
-// 						}
-// 					}
-					
-// 					// Set all required params and send emails
-// 					$mailer->setSender(Mage::getStoreConfig('trans_email/ident_general/email'));
-// 	       			$mailer->setStoreId($storeId);
-// 					$mailer->setTemplateId($template_id);
-// 					$mailer->setTemplateParams(array(
-// 							 'order'        => $order,
-// 							 'supplieremail'=> $email
-// 					)
-// 					);			
-// 					/** @var $emailQueue Mage_Core_Model_Email_Queue */
-// 					$emailQueue = Mage::getModel('core/email_queue');
-// 					$emailQueue->setEntityId($order->getEntityId())
-// 					->setEntityType('order')
-// 					->setEventType('new_supplier_order')
-// 					->setIsForceCheck(false);
-
-// 					$mailer->setQueue($emailQueue);
-// 					$mailer->send();
-					Mage::log('Email to supplier '.$email.' sent. order '.$order->getEntityId(), null, 'email.log');
+						
+					Mage::helper("hearedfrom/mailer")->sendMailViaQueue($email_to,$storeId,$template_id,$email_template_variables,'order', $order,'new_supplier_order',$emails_bcc);
+						
 				}
 			}		
 			Mage::Log("Sale done: nr rental items : " . $count . " for order ".$order->getEntityId());

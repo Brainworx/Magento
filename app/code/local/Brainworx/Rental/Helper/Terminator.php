@@ -1,6 +1,17 @@
 <?php
 class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	/**
+	 * Identifier for history item
+	 */
+	const ENTITY_ORDER                              = 'order';
+	const ENTITY_ERROR                              = 'error';
+	
+	/**
+	 * Event type names for order emails
+	 */
+	const EMAIL_EVENT_PICKUP    = 'new_pickup';
+	const EMAIL_EVENT_ERROR    = 'new_error';
+	/**
 	 * public function to end rentals provided
 	 * @param date (d-m-Y) $pickupDT
 	 * @param array $rentalids
@@ -341,7 +352,6 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	private function createPickupShipmentsReport($list,$to_external,$emails=null)
 	{
 		try{
-			
 			$items="";
 			$line = 0;
 			$order = "";
@@ -361,7 +371,9 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 				$items .= "\r\n".$line.". ".$item['Aantal']." x ".$item['Artikel']."(".$item['Artikelnr.'].")";
 				
 			}
-	
+
+			Mage::log('About to create pickup mail for : '.$order, null, 'email.log');
+			
 			//send email
 			// This is the template name from your etc/config.xml
 			$template_id = 'supplier_new_pickup_simple';
@@ -372,36 +384,25 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 			// Who were sending to...
 			if($to_external){
 				$email_to = explode(",",$emails);
+				$emails_bcc = array(Mage::getStoreConfig('trans_email/ident_general/email'),
+						Mage::getStoreConfig('trans_email/ident_custom1/email'));
 			}else{
-				$email_to = Mage::getStoreConfig('trans_email/ident_general/email');
+				$email_to = array(Mage::getStoreConfig('trans_email/ident_general/email'));
+				$emails_bcc = array(Mage::getStoreConfig('trans_email/ident_custom1/email'));
 			}
-			// Load our template by template_id
-			$email_template  = Mage::getModel('core/email_template')->loadDefault($template_id);
-	
+			if(!empty($extramail)){
+				$emails_bcc[]=$extramail;
+			}
+				
 			// Here is where we can define custom variables to go in our email template!
 			$email_template_variables = array(
 					'pickupdate' => $pickupdt,
 					'items' => $items,
 					'count' => $line
 			);
-	
-			// I'm using the Store Name as sender name here.
-			$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);
-			// I'm using the general store contact here as the sender email.
-			$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
-			$email_template->setSenderName($sender_name);
-			$email_template->setSenderEmail($sender_email);
-			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_custom1/email'));
-			$email_template->addBcc(Mage::getStoreConfig('trans_email/ident_general/email'));
-			$extramail =  Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('EXTRA_MAIL')->getValue('text');
-			if(!empty($extramail)){
-				$email_template->addBcc($extramail);
-			}
-	
-			//Send the email!
-			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Retrieval'), $email_template_variables);
-	
-			Mage::log('Email with ophaalnota sent', null, 'email.log');
+				
+			Mage::helper("hearedfrom/mailer")->sendMailViaQueue($email_to,$storeId,$template_id,$email_template_variables,self::ENTITY_ORDER, null,self::EMAIL_EVENT_PICKUP,$emails_bcc);
+				
 	
 		}catch(Exception $e){
 			Mage::log('Fout create ophaal nota: ' . $e->getMessage());
@@ -416,30 +417,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	 */
 	public function sendErrorMail($info){
 		try{
-			// This is the template name from your etc/config.xml
-			$template_id = 'problem_zorgpunt';
-			$storeId = Mage::app()->getStore()->getId();
-	
-			// Who were sending to...
-			$email_to = 'info@brainworx.be';
-			// Load our template by template_id
-			$email_template  = Mage::getModel('core/email_template')->loadDefault($template_id);
-	
-			// Here is where we can define custom variables to go in our email template!
-			$email_template_variables = array(
-					'info'        => $info
-			);
-	
-			// I'm using the Store Name as sender name here.
-			$sender_name = Mage::getStoreConfig(Mage_Core_Model_Store::XML_PATH_STORE_STORE_NAME);
-			// I'm using the general store contact here as the sender email.
-			$sender_email = Mage::getStoreConfig('trans_email/ident_sales/email');
-			$email_template->setSenderName($sender_name);
-			$email_template->setSenderEmail($sender_email);
-	
-			//Send the email!
-			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Problems Zorgpunt'), $email_template_variables);
-	
+			Mage::helper('rental/error')->sendErrorMail($info);	
 		}catch(Exception $e){
 			Mage::log('fout bij verzenden problem mail: '.$e->getMessage());
 		}

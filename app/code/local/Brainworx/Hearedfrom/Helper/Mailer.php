@@ -71,4 +71,79 @@ class Brainworx_Hearedfrom_Helper_Mailer extends Mage_Core_Helper_Abstract{
 			Mage::helper("hearedfrom/error")->sendErrorMail('Probleem creatie mail('.$template_id.' - '.$e->getMessage());
 		}
 	}
+	/**
+	 *
+	 * @param $emails_to (array of email addresses to send to)
+	 * @param $storeId 
+	 * @param $template_id (from etc/config.xml
+	 * @param $email_template_variables (array of variables as required for the template)
+	 * @param $entity (type of entity to link email to  example order)store in table core_email_queue
+	 * @param $entityobject (may be NULL or object to link email to)store in table core_email_queue
+	 * @param $eventtype (type of event to link email to example new_delivery, new_order,...) store in table core_email_queue
+	 * @param $emails_bcc (optional, komma separated list of email addresses to send to)
+	 */
+	public function sendMailViaQueue($emails_to,$storeId,$template_id,$email_template_variables,$entity, $entityobject,$eventtype,$emails_bcc=null,$errormail=false){
+		try{
+			$forceMode=false;
+			$log = 'Prepare '.$eventtype.': add email '.$template_id.' sent to '.implode(",",$emails_to).' to queue';
+			if(!empty($entityobject)){
+				$log.=' for '.$entity.' '.$entityobject->getId();
+			}
+			if(!empty($emails_bcc)){
+				$log = $log.' bcc '.$emails_bcc;
+			}
+			Mage::log($log, null, 'email.log');
+			
+			/** @var $mailer Mage_Core_Model_Email_Template_Mailer */
+			$mailer = Mage::getModel('core/email_template_mailer');
+			
+			$count = 0;
+			foreach ($emails_to as $email) {
+				$emailInfo = Mage::getModel('core/email_info');
+				$emailInfo->addTo($email);
+				if($count == 0){
+					//addd bcc with first email
+					if(!empty($emails_bcc)){
+						$bcc = is_array($emails_bcc) ? $emails_bcc : array($emails_bcc);					
+						foreach ($bcc as $emailcc) {
+		    				$emailInfo->addBcc($emailcc);
+		    			}
+					}
+				}
+				$mailer->addEmailInfo($emailInfo);
+				$count++;
+			}
+			
+			// Set all required params and send emails
+			$mailer->setSender(Mage::getStoreConfig('sales_email/order/identity', $storeId));
+			$mailer->setStoreId($storeId);
+			$mailer->setTemplateId($template_id);
+			$mailer->setTemplateParams($email_template_variables);
+			
+			/** @var $emailQueue Mage_Core_Model_Email_Queue */
+			$emailQueue = Mage::getModel('core/email_queue');
+			if(!empty($entityobject)){
+				$emailQueue->setEntityId($entityobject->getId());
+			}
+			$emailQueue->setEntityType($entity)
+			->setEventType($eventtype)
+			->setIsForceCheck(!$forceMode);
+			
+			$mailer->setQueue($emailQueue)->send();
+			
+			$log = 'Email '.$eventtype.' '.$template_id.' sent to '.implode(",",$emails_to).' added to queue';
+			if(!empty($entityobject)){
+				$log.=' for '.$entity.' '.$entityobject->getId();
+			}
+			if(!empty($emails_bcc)){
+				$log = $log.' - bcc '.$emails_bcc;
+			}
+			Mage::log($log, null, 'email.log');
+
+		}catch(Exception $e){
+			Mage::log('Fout create mail for '.$entity.' '.$entityobject->getId().': ' . $e->getMessage(), null, 'email.log');
+			if(!$errormail)			
+				Mage::helper("hearedfrom/error")->sendErrorMail('Probleem creatie mail for '.$entity.' ('.$template_id.' - '.$e->getMessage());
+		}
+	}
 }

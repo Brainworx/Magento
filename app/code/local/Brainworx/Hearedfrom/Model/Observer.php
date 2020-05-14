@@ -131,14 +131,16 @@ class Brainworx_Hearedfrom_Model_Observer
 					$sellerName = 'Zorgpunt';
 					Mage::log('No hearedfrom set when sending supplier order - exception on order '.$order->getId());
 				}
-				$emails_to = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('OUDERENZORG_MAILS')->getValue('text');	
+				$emails_to = explode(",",Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('OUDERENZORG_MAILS')->getValue('text'));	
 				$template_id = 'ouderenzorg_order_new';
 				
 				$email_template_variables= array(
 							 'order'        => $order,
 							 'seller'	=> $sellerName
 					);		
-				Mage::helper("hearedfrom/mailer")->sendMail($emails_to,$template_id,$email_template_variables);
+				$storeId = Mage::app()->getStore()->getId();
+				Mage::helper("hearedfrom/mailer")->sendMailViaQueue($emails_to,$storeId,$template_id,$email_template_variables,'order', $order,'new_ouderenzorg');
+					
 							
 			}
 			// Checking VAPH
@@ -156,7 +158,7 @@ class Brainworx_Hearedfrom_Model_Observer
 					$sellerName = 'Zorgpunt';
 					Mage::log('No hearedfrom set when sending supplier order - exception on order '.$order->getId());
 				}
-				$emails_to = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('VAPH_MAILS')->getValue('text');	
+				$emails_to = explode(",",Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('VAPH_MAILS')->getValue('text'));	
 				$template_id = 'vaph_order_new';
 				$vaph = $order->getVaphDocNr();
 				if(empty($vaph)){
@@ -167,7 +169,9 @@ class Brainworx_Hearedfrom_Model_Observer
 							 'seller'		=> $sellerName,
 							 'vaph_doc_nr'	=> $vaph
 					);		
-				Mage::helper("hearedfrom/mailer")->sendMail($emails_to,$template_id,$email_template_variables);
+				$storeId = Mage::app()->getStore()->getId();
+				Mage::helper("hearedfrom/mailer")->sendMailViaQueue($emails_to,$storeId,$template_id,$email_template_variables,'order', $order,'new_vaph');
+				
 							
 			}else{
 				if(!empty($item->getSupplierinvoice())&&$item->getSupplierinvoice()>0){

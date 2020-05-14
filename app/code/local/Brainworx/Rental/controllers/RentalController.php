@@ -80,7 +80,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 					if (!$pickupsuccess) {
 						Mage::log("ending rentals but some error occurred - rental ".$id);
 						try{
-							Mage::helper('rental/terminator')->sendErrorMail('Probleem end rental - edit renteditem '.$id);
+							Mage::helper('rental/error')->sendErrorMail('Probleem end rental - edit renteditem '.$id);
 						}catch (Exception $e){Mage::log("Error sending error mail - mass end rental");}
 						Mage::throwException ( Mage::helper('rental')->__('Er liep iets fout bij het be�indigen van de huur of maken van de excel.') );
 					}
@@ -202,7 +202,7 @@ class Brainworx_Rental_RentalController extends Mage_Adminhtml_Controller_Action
 				} catch ( Exception $e ) {
 				Mage::getSingleton ( 'adminhtml/session' )->addError ( $e->getMessage () );
 				try{
-					Mage::helper('rental/terminator')->sendErrorMail('Probleem mass end rental');
+					Mage::helper('rental/error')->sendErrorMail('Probleem mass end rental');
 				}catch (Exception $e){Mage::log("Error sending error mail - mass end rental");}
 			}
 		}
