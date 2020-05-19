@@ -331,8 +331,8 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 		$page->setFillColor(new Zend_Pdf_Color_Rgb(0.93, 0.92, 0.92));
 		$page->setLineColor(new Zend_Pdf_Color_GrayScale(0.5));
 		$page->setLineWidth(0.5);
-		$page->drawRectangle(25, $top, 275, ($top - 25));
-		$page->drawRectangle(275, $top, 570, ($top - 25));
+		$page->drawRectangle(25, $top, 355, ($top - 25)); //275
+		$page->drawRectangle(355, $top, 570, ($top - 25)); //570
 	
 		/* Calculate blocks info */
 		$patientBirthdate = $order->getPatientBirthDate();
@@ -362,8 +362,8 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 	
 		$page->setFillColor(new Zend_Pdf_Color_GrayScale(0));
 		$this->_setFontBold($page, 12);
-		//SHE override position of billingaddress to rigth
-		$page->drawText(Mage::helper('sales')->__('Sold to:'), 285, ($top - 15), 'UTF-8');
+		//SHE override position of billingaddress to rigth (285 -> 365) 
+		$page->drawText(Mage::helper('sales')->__('Sold to:'), 365, ($top - 15), 'UTF-8');
 	
 		if (!$order->getIsVirtual()) {
 			$page->drawText(Mage::helper('sales')->__('Ship to:'), 35, ($top - 15), 'UTF-8');
@@ -397,8 +397,8 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 					$text[] = $_value;
 				}
 				foreach ($text as $part) {
-					//switched postition on pdf from 35 to 285
-					$page->drawText(strip_tags(ltrim($part)), 285, $this->y, 'UTF-8');
+					//switched postition on pdf from 35 to 285 to 365
+					$page->drawText(strip_tags(ltrim($part)), 365, $this->y, 'UTF-8');
 					$this->y -= 15;
 				}
 			}
@@ -424,7 +424,7 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 						if($part == ','){
 							continue;
 						}
-						//switched postition on pdf from 285 to 35
+						//switched postition on pdf from 285 to 35 
 						$page->drawText(strip_tags(ltrim($part)), 35, $this->y, 'UTF-8');
 						$this->y -= 15;
 					}
