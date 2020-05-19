@@ -13,7 +13,7 @@ class Brainworx_Hearedfrom_Helper_Error extends Mage_Core_Helper_Abstract{
 		try{
 			// This is the template name from your etc/config.xml
 			$template_id = 'problem_zorgpunt';
-			$storeId = Mage::app()->getStore()->getId();
+			//$storeId = Mage::app()->getStore()->getId();
 		
 			// Who were sending to...
 			$email_to = array('info@brainworx.be');
@@ -23,7 +23,8 @@ class Brainworx_Hearedfrom_Helper_Error extends Mage_Core_Helper_Abstract{
 					'info'        => $info
 			);
 			
-			Mage::helper("hearedfrom/mailer")->sendMailViaQueue($email_to,$storeId,$template_id,$email_template_variables,self::ENTITY_ERROR, null,self::EMAIL_EVENT_ERROR,null,true);
+			//Mage::helper("hearedfrom/mailer")->sendMailViaQueue($email_to,$storeId,$template_id,$email_template_variables,self::ENTITY_ERROR, null,self::EMAIL_EVENT_ERROR,null,true);
+			Mage::helper("hearedfrom/mailer")->sendMail($email_to,$template_id,$email_template_variables);
 			
 				
 		}catch(Exception $e){
