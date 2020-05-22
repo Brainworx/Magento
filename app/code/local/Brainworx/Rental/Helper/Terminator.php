@@ -416,11 +416,7 @@ class Brainworx_Rental_Helper_Terminator extends Mage_Core_Helper_Abstract{
 	 * @param unknown $info
 	 */
 	public function sendErrorMail($info){
-		try{
 			Mage::helper('rental/error')->sendErrorMail($info);	
-		}catch(Exception $e){
-			Mage::log('fout bij verzenden problem mail: '.$e->getMessage());
-		}
 	}
 	
 }

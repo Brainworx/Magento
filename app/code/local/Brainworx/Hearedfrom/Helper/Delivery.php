@@ -103,7 +103,6 @@ class Brainworx_Hearedfrom_Helper_Delivery extends Mage_Core_Helper_Abstract{
 			$attachment = $email_template->getMail()->createAttachment($fileContents);
 			$attachment->filename = $filename;
 	
-			//Send the email!
 			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Deliveries'), $email_template_variables);
 	
 			Mage::log('Email for stockdelivery sent: '.$filename.' from '.$sender_email.' ('.$sender_name.')', null, 'email.log');

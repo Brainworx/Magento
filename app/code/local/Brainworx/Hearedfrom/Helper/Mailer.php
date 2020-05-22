@@ -2,7 +2,7 @@
 class Brainworx_Hearedfrom_Helper_Mailer extends Mage_Core_Helper_Abstract{
 	
 	/**
-	 * 
+	 * @return success
 	 * @param $emails_to (, separated list of email addresses to send to)
 	 * @param $names_to (, separated list of email addresses to send to - optional)
 	 * @param $template_id (from etc/config.xml
@@ -14,6 +14,7 @@ class Brainworx_Hearedfrom_Helper_Mailer extends Mage_Core_Helper_Abstract{
 	 * @param string $filename (optional to attache)
 	 */
 	public function sendMail($emails_to,$template_id,$email_template_variables,$names_to=null,$sender_name=null,$sender_email=null,$emails_bcc=null,$file = null, $filename=null){
+		$success = false;
 		try{
 			//send email
 			// This is the template name from your etc/config.xml
@@ -53,7 +54,7 @@ class Brainworx_Hearedfrom_Helper_Mailer extends Mage_Core_Helper_Abstract{
 			}
 			
 			//Send the email!
-			$email_template->send($email_to, $names_to, $email_template_variables);
+			$success = $email_template->send($email_to, $names_to, $email_template_variables);
 			
 			$log = 'Email '.$template_id.' sent: from '.$sender_email.' ('.$sender_name.') to '.$emails_to;
 			if(!empty($emails_bcc)){
@@ -62,14 +63,16 @@ class Brainworx_Hearedfrom_Helper_Mailer extends Mage_Core_Helper_Abstract{
 			if(!empty($file)){
 				$log = $log.' - with attachement '.$filename;
 			}
+			$log .= ' - success: '.$success;
 			Mage::log($log, null, 'email.log');
 		
 		
 		}catch(Exception $e){
-			Mage::log('Fout create mail: ' . $e->getMessage(), null, 'email.log');
-		
+			Mage::log('Fout create mail: ' . $e->getMessage(), null, 'email.log');		
 			Mage::helper("hearedfrom/error")->sendErrorMail('Probleem creatie mail('.$template_id.' - '.$e->getMessage());
 		}
+		
+		return $success;
 	}
 	/**
 	 *

@@ -216,10 +216,6 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
      **/
     public function send($email, $name = null, array $variables = array())
     {
-		$errormail = 0;
-		if(isset($name) && !is_array($name) && $name == "Technicalsupport"){
-			$errormail = 1;    
-		}
 		if (!$this->isValidForSend()) {
 		    Mage::logException(new Exception('This letter cannot be sent.')); // translation is intentionally omitted
 		    return false;
@@ -236,26 +232,15 @@ class Brainworx_Hearedfrom_Model_Email_Template extends Mage_Core_Model_Email_Te
 	        }while(!$result && $counter<4);
 	        
 	        if(!$result){
-	        	Mage::log('All Mail attempt failed ', null, 'email.log');
-				if($errormail==0){
-		        		Mage::helper("hearedfrom/error")->sendErrorMail('Probleem versturen mail - retry failed');
-				}else{
-					Mage::log('Sending error mail failed');
-					Mage::log('Mail error failed ', null, 'email.log');
-				}
+	        	Mage::log('Sending error mail failed');
+				Mage::log('Mail error failed ', null, 'email.log');
 	        }
 	        
 	        return $result;
         }catch (Exception $e) {
 			$this->_mail = null;
 			Mage::logException($e);
-			if($errormail==0){
-				Mage::helper("hearedfrom/error")->sendErrorMail('Algemeen Probleem versturen mail - '.$e->getMessage());
-				Mage::log('Mail error '.$e->getMessage(), null, 'email.log');
-			}else{
-				Mage::log('Sending error mail failed');
-				Mage::log('Mail error failed '.$e->getMessage(), null, 'email.log');
-			}
+			Mage::log('Mail error '.$e->getMessage(), null, 'email.log');
 		
 			return false;
 		}        
