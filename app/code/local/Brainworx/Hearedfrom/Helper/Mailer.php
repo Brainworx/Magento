@@ -3,7 +3,7 @@ class Brainworx_Hearedfrom_Helper_Mailer extends Mage_Core_Helper_Abstract{
 	
 	/**
 	 * @return success
-	 * @param $emails_to (, separated list of email addresses to send to)
+	 * @param $emails_to (string: komma(,) separated list of email addresses to send to)
 	 * @param $names_to (, separated list of email addresses to send to - optional)
 	 * @param $template_id (from etc/config.xml
 	 * @param $email_template_variables (array of variables as required for the template) 
