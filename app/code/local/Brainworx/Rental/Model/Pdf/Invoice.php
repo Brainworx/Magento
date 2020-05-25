@@ -68,12 +68,12 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.25));//0.25
 			$order = $invoice->getOrder();
 			$orderComment = null;
-			if(!empty($order->getPatientName()))
-				$orderComment ='Patiëntgegevens'.': '. $order->getPatientFirstname().' '.$order->getPatientName() . "<br>";
-			if(!empty($order->getPatientBirthDate())){
-				$birthdatetext = Mage::helper('sales')->__('BirthDate Patient:').Mage::helper('core')->formatDate($order->getPatientBirthDate(), 'medium', false);
-				$orderComment = $orderComment.$birthdatetext.'<br>';
-			}
+// 			if(!empty($order->getPatientName()))
+// 				$orderComment ='Patiëntgegevens'.': '. $order->getPatientFirstname().' '.$order->getPatientName() . "<br>";
+// 			if(!empty($order->getPatientBirthDate())){
+// 				$birthdatetext = Mage::helper('sales')->__('BirthDate Patient:').Mage::helper('core')->formatDate($order->getPatientBirthDate(), 'medium', false);
+// 				$orderComment = $orderComment.$birthdatetext.'<br>';
+// 			}
 			foreach ($invoice->getCommentsCollection() as $comment) {
 				$orderComment = $orderComment . $comment->getComment();
 				$orderComment = $orderComment . "<br>";
