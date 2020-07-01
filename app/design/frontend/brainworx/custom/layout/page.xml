@@ -13,6 +13,10 @@ SHE: added facebook sharing on top
         <block type="page/html" name="root" output="toHtml" template="page/3columns.phtml">
 
             <block type="page/html_head" name="head" as="head">
+                <!-- GTM block to add script-->
+            	<block type="cms/block" name="gtm" before="-">
+					<action method="setBlockId"><block_id>gtm-headscript</block_id></action>
+				</block>
                 <!-- 
                 <action method="addJs"><script>prototype/prototype.js</script></action>
                 <action method="addJs"><script>lib/ccard.js</script></action>
@@ -66,12 +70,17 @@ SHE: added facebook sharing on top
                 </block>
             </block>
 
+
             <block type="core/text_list" name="after_body_start" as="after_body_start" translate="label">
                 <label>Page Top</label>
                 <!--Brainworx Moved cookie notice to top -->
                 <block type="page/html_cookieNotice" name="global_cookie_notice" as ="global_cookie_notice" template="page/html/cookienotice.phtml" before="-" />
-            	<block type="cms/block" name="promo" before="-">
+                <block type="cms/block" name="promo" before="-">
 					<action method="setBlockId"><block_id>promotional-banner</block_id></action>
+				</block>
+                <!-- GTM block to add script-->
+            	<block type="cms/block" name="gtm" before="-">
+					<action method="setBlockId"><block_id>gtm-bodyscript</block_id></action>
 				</block>
             </block>
 
