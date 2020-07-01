@@ -60,7 +60,7 @@ if(Mage::getSingleton('customer/session')->isLoggedIn()){
 		$_ristorno = $_product->getRistorno();
 	}
 	$perc = Mage::getSingleton('customer/session')->getRistornoPerc();
-	if(!empty($perc)){
+	if(!empty($perc)and is_numeric($perc)){
 		$_ristorno *= ($perc / 100);
 	}
 }
