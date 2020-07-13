@@ -349,6 +349,11 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     				$_delivery_before = str_replace('/', '-', $_delivery_before);
     				Mage::log('fixed delivery date format to '.$_delivery_before);
     			}
+    			if(empty($_delivery_before) || strpos($_delivery_before, 'NaN') !== false){
+    				//default delivery date = next day
+    				Mage::log("DELIVERY NOT SET in frontend for method ".$method." comment ".$_comment_tozorgpunt);
+    				$_delivery_before=date('d-m-Y', strtotime('+1 weekday'));
+    			}
     			
     			$_comment_tozorgpunt = $this->getRequest()->getPost('myCustomerOrderComment');
 				if(!empty($_comment_tozorgpunt)){
@@ -358,22 +363,15 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
 				}
     			$_vaph_nr = Mage::getSingleton('core/session')->getVaphDocNr();
     			$cmt = false;
-    			if(!isset($_vaph_nr)){
-    				if(!empty($_delivery_before) && strpos($_delivery_before, 'NaN') === false){
-    					if(!empty($_comment_tozorgpunt)){
-    						$cmt = $_comment_tozorgpunt;
-    					}
-    					$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivery on %s',$_delivery_before);
-    					if(!empty($cmt)){
-    						$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
-    					}
-    				}else{
-    					//default delivery date = next day
-    					Mage::log("DELIVERY NOT SET in frontend ".$_comment_tozorgpunt);
-    					$_delivery_before=date('d-m-Y', strtotime('+1 weekday'));
+    			if(!isset($_vaph_nr) && $shipping[0] != 'supplierrate'){
+    				if(!empty($_comment_tozorgpunt)){
+    					$cmt = $_comment_tozorgpunt;
     				}
+    				$_comment_tozorgpunt = Mage::helper('checkout')->__('Delivery on %s',$_delivery_before);
+    				if(!empty($cmt)){
+    					$_comment_tozorgpunt = $_comment_tozorgpunt.' - '.$cmt;
+    				}    				
     			}
-    			
     			Mage::getSingleton('core/session')->setCommentToZorgpunt($_comment_tozorgpunt);
     			//set preferred delivery day with selection as made in radio buttons
     			Mage::getSingleton('core/session')->setPreferredDeliveryDate($_delivery_before);
