@@ -282,7 +282,7 @@
                  <supplier_new_pickup_simple>
                     <label>Zorgpunt ophaalnota</label>
                     <file>supplier_new_pickup_simple.html</file>
-                    <type>text</type>
+                    <type>html</type>
                 </supplier_new_pickup_simple>
             </email>
         </template>

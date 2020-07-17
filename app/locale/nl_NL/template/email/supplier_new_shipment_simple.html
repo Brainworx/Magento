@@ -12,15 +12,15 @@
 "var seller":"Zorgpunt",
 "var extrainfo":"Extra info aan zorgpunt"
 }@-->
-Bestelling #{{var order.increment_id}} geplaatst op {{var order.getCreatedAtFormated('long')}}
-
-Leverdatum {{var deliverydate}} 
-Levering: {{var order.getShippingDescription()}}
-Leverkost: {{var order.getShippingInclTax()}}
-Leveradres: {{var deliveryaddress}}
-Telefoon: {{var phone}}
-
-Materialen
-{{var items}}
-Zorgpunt {{var seller}}
+Bestelling #{{var order.increment_id}} geplaatst op {{var order.getCreatedAtFormated('long')}}<br>
+<br>
+Leverdatum {{var deliverydate}}<br>
+Levering: {{var order.getShippingDescription()}}<br>
+Leverkost: {{var order.getShippingInclTax()}}<br>
+Leveradres: {{var deliveryaddress}}<br>
+Telefoon: {{var phone}}<br>
+<br>
+Materialen<br>
+{{var items}}<br>
+Zorgpunt {{var seller}}<br>
 Extra info aan Zorgpunt: {{var extrainfo}}

@@ -389,12 +389,12 @@
                 <supplier_new_shipment_simple>
                     <label>Zorgpunt levernota</label>
                     <file>supplier_new_shipment_simple.html</file>
-                    <type>text</type>
+                    <type>html</type>
                 </supplier_new_shipment_simple>
                 <supplier_new_stockshipment_simple>
                     <label>Zorgpunt voorraad levernota</label>
                     <file>supplier_new_stockshipment_simple.html</file>
-                    <type>text</type>
+                    <type>html</type>
                 </supplier_new_stockshipment_simple>
             </email>
         </template>
