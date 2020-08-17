@@ -122,6 +122,7 @@ class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
                     Mage::log('Mailed via queue from: ' . $parameters->getFromEmail() . ' to:' . $to . ' ' .$parameters->getSubject(), null, 'email.log');
                 }
                 catch (Exception $e) {
+                	Mage::log('Mailed via queue error ', null, 'email.log');
                     unset($mailer);
                     $oldDevMode = Mage::getIsDeveloperMode();
                     Mage::setIsDeveloperMode(true);
@@ -129,7 +130,7 @@ class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
                     Mage::setIsDeveloperMode($oldDevMode);
 
                     Mage::helper("hearedfrom/error")->sendErrorMail('Probleem versturen mail van queue - '.$e->getMessage());
-                    Mage::log('Mailed via queue error ', null, 'email.log');
+                    
                      
                     return false;
                 }

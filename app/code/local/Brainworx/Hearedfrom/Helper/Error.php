@@ -40,7 +40,7 @@ class Brainworx_Hearedfrom_Helper_Error extends Mage_Core_Helper_Abstract{
 			$email_template->send($email_to, Mage::helper('hearedfrom')->__('Technicalsupport'), $email_template_variables);
 	
 		}catch(Exception $e){
-			Mage::log('fout bij verzenden problem mail: '.$e->getMessage(.' -info: '.$info));
+			Mage::log('fout bij verzenden problem mail: '.$e->getMessage().' -info: '.$info);
 		}
 	}
 }
