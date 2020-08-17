@@ -131,6 +131,12 @@ class Brainworx_Hearedfrom_Model_Email_Queue extends Mage_Core_Model_Email_Queue
 
                     Mage::helper("hearedfrom/error")->sendErrorMail('Probleem versturen mail van queue - '.$e->getMessage());
                     
+                    if (strpos($e->getMessage(), 'Recipient address rejected') !== false) {
+                    	$message->setProcessedAt(Varien_Date::formatDate(true));
+                    	$message->save();
+                    	Mage::log('QUEUED Mail surpressed from: ' . $parameters->getFromEmail() . ' to:' . $to . ' ' .$parameters->getSubject(), null, 'email.log');
+              
+                    }
                      
                     return false;
                 }
