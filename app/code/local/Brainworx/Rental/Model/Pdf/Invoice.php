@@ -75,6 +75,9 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 // 				$orderComment = $orderComment.$birthdatetext.'<br>';
 // 			}
 			foreach ($invoice->getCommentsCollection() as $comment) {
+				if (strpos($comment->getComment(), 'bedrag') !== false) {
+					continue;
+				}				
 				$orderComment = $orderComment . $comment->getComment();
 				$orderComment = $orderComment . "<br>";
 			}
