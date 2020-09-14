@@ -98,7 +98,7 @@ class Brainworx_Hearedfrom_OnepageController extends Mage_Checkout_OnepageContro
     		//Grab the submited value heared from who and comment value
     		$_brainworx_hearedfrom = $this->getRequest()->getPost('getvoice');
     		//set Zorgpunt as default if no selection was made
-    		if($_brainworx_hearedfrom == Mage::helper('checkout')->__('Select')){
+    		if($_brainworx_hearedfrom == Mage::helper('checkout')->__('Select') or empty($_brainworx_hearedfrom)){
     			$_brainworx_hearedfrom = "Zorgpunt";
     		}
     		//Add the seller and comment to the session

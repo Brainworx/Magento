@@ -52,6 +52,15 @@ class Brainworx_Hearedfrom_Model_Observer
 			//Fetch the data from select box and throw it here- added to session in OnePageController
 			$_hearedfrom_salesforce = null;
 			$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
+			if(empty($_hearedfrom_salesforce)){
+				//Add the seller and comment to the session
+				$_hearedfrom_salesforce = Mage::getModel("hearedfrom/salesForce")->loadByCustid(Mage::getSingleton('customer/session')->getCustomerId());
+				if(empty($_hearedfrom_salesforce)){
+					$_hearedfrom_salesforce = Mage::getModel("hearedfrom/salesForce")->loadByUsername("Zorgpunt");
+				}
+				Mage::getSingleton('core/session')->setBrainworxHearedfrom($_hearedfrom_salesforce);
+				Mage::log("Seller was empty - set to Zorgpunter for order ".$order->getIncrementId());
+			}
 			$seller_custid = $_hearedfrom_salesforce["cust_id"];
 		}
 
