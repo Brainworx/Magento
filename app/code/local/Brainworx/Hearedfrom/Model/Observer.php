@@ -33,197 +33,208 @@ class Brainworx_Hearedfrom_Model_Observer
 		$incrementId = Mage::getSingleton('checkout/session')->getLastRealOrderId();
 		$order->loadByIncrementId($incrementId);
 		
-		//now order has been saved, the quote can be deactivated
-		$quoteId = $order->getQuoteId();
-		$quote = Mage::getModel('sales/quote')->load($quoteId);
-		if(isset($quote)){
-			$quote->setData('is_active',0);
-			$quote->save();
+		try{
+			//now order has been saved, the quote can be deactivated
+			$quoteId = $order->getQuoteId();
+			$quote = Mage::getModel('sales/quote')->load($quoteId);
+			if(isset($quote)){
+				$quote->setData('is_active',0);
+				$quote->save();
+			}
+		}catch(Exception $e){
+			Mage::log('Quote could not be deactivated - exception on order '.$order->getId());
 		}
-		
-		//For a mederi user, commission goes to him/her
-		$groupId = explode(",",Mage::getSingleton('customer/session')->getCustomerGroupId());
-		$seller_custid = 0;
-		if(in_array(Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_GID')->getValue('text'),$groupId)) {
-			$mederisellerid = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_FORCE_ID')->getValue('text');
-			$_hearedfrom_salesforce = Mage::getModel('hearedfrom/salesForce')->load($mederisellerid);
-			$seller_custid = Mage::getSingleton('customer/session')->getCustomerId();
-		}else{		
-			//Fetch the data from select box and throw it here- added to session in OnePageController
-			$_hearedfrom_salesforce = null;
-			$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
-			if(empty($_hearedfrom_salesforce)){
-				//Add the seller and comment to the session
-				$_hearedfrom_salesforce = Mage::getModel("hearedfrom/salesForce")->loadByCustid(Mage::getSingleton('customer/session')->getCustomerId());
+		try{
+			//For a mederi user, commission goes to him/her
+			$groupId = explode(",",Mage::getSingleton('customer/session')->getCustomerGroupId());
+			$seller_custid = 0;
+			if(in_array(Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_GID')->getValue('text'),$groupId)) {
+				$mederisellerid = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('MEDERI_FORCE_ID')->getValue('text');
+				$_hearedfrom_salesforce = Mage::getModel('hearedfrom/salesForce')->load($mederisellerid);
+				$seller_custid = Mage::getSingleton('customer/session')->getCustomerId();
+			}else{		
+				//Fetch the data from select box and throw it here- added to session in OnePageController
+				$_hearedfrom_salesforce = null;
+				$_hearedfrom_salesforce = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
 				if(empty($_hearedfrom_salesforce)){
-					$_hearedfrom_salesforce = Mage::getModel("hearedfrom/salesForce")->loadByUsername("Zorgpunt");
-				}
-				Mage::getSingleton('core/session')->setBrainworxHearedfrom($_hearedfrom_salesforce);
-				Mage::log("Seller was empty - set to Zorgpunter for order ".$order->getIncrementId());
-			}
-			$seller_custid = $_hearedfrom_salesforce["cust_id"];
-		}
-
-		//Create new salesCommission		
-		$newsalesseller = Mage::getModel('hearedfrom/salesSeller');
-		$newsalesseller->setData("order_id",$order->getIncrementId());
-		$newsalesseller->setData("user_id",$_hearedfrom_salesforce["entity_id"]);
-		$newsalesseller->setData("seller_cust_id",$seller_custid);		
-		$newsalesseller->save();			
-		
-		$check = Mage::getModel('hearedfrom/salesSeller')->load($newsalesseller['entity_id']);
-		if($check->getSellerCustId() != $seller_custid){
-			Mage::log('seller cust not save correctly for '.$newsalesseller['entity_id'].'  - correcting to '.$seller_custid);
-			Mage::getModel('hearedfrom/salesSeller')->updateSellerDetails($newsalesseller['entity_id'],$seller_custid);
-		}else{
-			Mage::log('seller cust saved correctly for '.$newsalesseller['entity_id'].'  - to '.$seller_custid);
-		}
-		
-
-		$shippinglist = null;
-		$zorgpunt_shippinglist = null;
-		$delivery_to_report = false;
-		
-		//check shipment method
-		//helpers for shipping lists
-		$deliveryBefore=Mage::getSingleton('core/session')->getDeliveryBefore();
-		
-		$comment=Mage::getSingleton('core/session')->getOrigCommentToZorgpunt();
-		$shippinglist = array();
-		//$order->getShippingInclTax()>0
-		if(  $order->getShippingMethod()=='tablerate_bestway'
-				||  $order->getShippingMethod()=='tablerate_express'
-				||  $order->getShippingMethod()=='tablerate_weekend'
-				||  $order->getShippingMethod()=='specialrate_flatrate'
-				||  $order->getShippingMethod()=='specialrate_free'	
-				||  $order->getShippingMethod()=='specialrate_standard'			
-				||  $order->getShippingMethod()=='specialrate_standard1'				
-				||  $order->getShippingMethod()=='specialrate_urgent'	
-				||  $order->getShippingMethod()=='specialrate_urgent1'			
-				||  $order->getShippingMethod()=='specialrate_urgent2'	
-				||  $order->getShippingMethod()=='specialrate_weekend'		
-				||  $order->getShippingMethod()=='salesrate_flatrate'								
-				||  $order->getShippingMethod()=='salesrate_urgent'		
-				||  $order->getShippingMethod()=='flatrate_flatrate'
-				||  $order->getShippingMethod()=='normalrate2_flatrate'){
-			//need to create excel to send to external delivery party
-			$delivery_to_report = true;
-			if(strpos ($deliveryBefore,'/')>0){
-				$deliveryBefore = str_replace('/', '-', $deliveryBefore);
-				Mage::log('fixed delivery date format for '.$order->getIncrementId(). ' to '.$deliveryBefore);
-			}
-			if(new DateTime() > DateTime::createFromFormat('d-m-Y', $deliveryBefore)){
-				Mage::log('Order '.$order->getIncrementId().' Delivery date in past - not reporting shipping to external - '.$deliveryBefore);
-				$delivery_to_report = false;
-			}
-		}
-		
-		//TODO add to transaction
-		//save commission for articles invoiced and delivered by the supplier - marked invoiced false
-		$items = $order->getAllItems();
-		$catvaph = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_VAPH')->getValue('text');	
-		$catouderenzorg = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_OUDERENZORG')->getValue('text');	
-		
-		foreach($items as $item){
-			//Check request ouderenzorg
-			if(in_array($catouderenzorg,$item->getProduct()->getCategoryIds())){
-				//Load sellername
-				$seller = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
-				try{
-					$sellerName = $seller['user_nm'];
-					if($sellerName != null && $sellerName != 'Zorgpunt' && $sellerName != ''&& $sellerName != 'Selecteer'){//add translation
-						$sellerName = 'Zorgpunt '.$seller['zip_cd'].' '.$seller['city'].' * '.$seller['user_nm'].'.';
-					}else{
-						$sellerName = 'Zorgpunt';
+					//Add the seller and comment to the session
+					$_hearedfrom_salesforce = Mage::getModel("hearedfrom/salesForce")->loadByCustid(Mage::getSingleton('customer/session')->getCustomerId());
+					if(empty($_hearedfrom_salesforce)){
+						$_hearedfrom_salesforce = Mage::getModel("hearedfrom/salesForce")->loadByUsername("Zorgpunt");
 					}
-				}catch(Exception $e){
-					$sellerName = 'Zorgpunt';
-					Mage::log('No hearedfrom set when sending supplier order - exception on order '.$order->getId());
+					Mage::getSingleton('core/session')->setBrainworxHearedfrom($_hearedfrom_salesforce);
+					Mage::log("Seller was empty - set to Zorgpunter for order ".$order->getIncrementId());
 				}
-				$emails_to = explode(",",Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('OUDERENZORG_MAILS')->getValue('text'));	
-				$template_id = 'ouderenzorg_order_new';
-				
-				$email_template_variables= array(
-							 'order'        => $order,
-							 'seller'	=> $sellerName
-					);		
-				$storeId = Mage::app()->getStore()->getId();
-				Mage::helper("hearedfrom/mailer")->sendMailViaQueue($emails_to,$storeId,$template_id,$email_template_variables,'order', $order,'new_ouderenzorg');
-					
-							
+				$seller_custid = $_hearedfrom_salesforce["cust_id"];
 			}
-			// Checking VAPH
-			elseif(in_array($catvaph,$item->getProduct()->getCategoryIds())){
-				//Load sellername
-				$seller = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
-				try{
-					$sellerName = $seller['user_nm'];
-					if($sellerName != null && $sellerName != 'Zorgpunt' && $sellerName != ''&& $sellerName != 'Selecteer'){//add translation
-						$sellerName = 'Zorgpunt '.$seller['zip_cd'].' '.$seller['city'].' * '.$seller['user_nm'];
-					}else{
-						$sellerName = 'Zorgpunt';
-					}
-				}catch(Exception $e){
-					$sellerName = 'Zorgpunt';
-					Mage::log('No hearedfrom set when sending supplier order - exception on order '.$order->getId());
-				}
-				$emails_to = explode(",",Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('VAPH_MAILS')->getValue('text'));	
-				$template_id = 'vaph_order_new';
-				$vaph = $order->getVaphDocNr();
-				if(empty($vaph)){
-					$vaph=Mage::helper('checkout')->__('Not provided');
-				}
-				$email_template_variables= array(
-							 'order'        => $order,
-							 'seller'		=> $sellerName,
-							 'vaph_doc_nr'	=> $vaph
-					);		
-				$storeId = Mage::app()->getStore()->getId();
-				Mage::helper("hearedfrom/mailer")->sendMailViaQueue($emails_to,$storeId,$template_id,$email_template_variables,'order', $order,'new_vaph');
-				
-							
+	
+			//Create new salesCommission		
+			$newsalesseller = Mage::getModel('hearedfrom/salesSeller');
+			$newsalesseller->setData("order_id",$order->getIncrementId());
+			$newsalesseller->setData("user_id",$_hearedfrom_salesforce["entity_id"]);
+			$newsalesseller->setData("seller_cust_id",$seller_custid);		
+			$newsalesseller->save();			
+		
+			$check = Mage::getModel('hearedfrom/salesSeller')->load($newsalesseller['entity_id']);
+			if($check->getSellerCustId() != $seller_custid){
+				Mage::log('seller cust not save correctly for '.$newsalesseller['entity_id'].'  - correcting to '.$seller_custid);
+				Mage::getModel('hearedfrom/salesSeller')->updateSellerDetails($newsalesseller['entity_id'],$seller_custid);
 			}else{
-				if(!empty($item->getSupplierinvoice())&&$item->getSupplierinvoice()>0){
-					Mage::log("No need to send shipment exl as shipment + invoice done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
-					
-					$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
-					self::saveCommission($_hearedfrom_salesforce,$order->getEntityId(),$item->getItemId(),
-					$type,($item->getOriginalPrice()*$item->getQtyOrdered()),
-							($item->getOriginalPrice()*$item->getQtyOrdered()*(1+$item->getTaxPercent()/100))
-							,$item->getRistorno()*$item->getQtyOrdered(),false,$seller_custid,$item->getDiscountPercent());
-				}elseif (!empty($item->getSupplierneworderemail())){
-					Mage::log("No need to send shipment exl as shipment done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
-				}elseif($item->getSku()=='ADM-rein'){
-					Mage::log("No need to send shipment for cleaning item ".$order->getIncrementId().' item '.$item->getSku());
-				}
-				else{
-					$shippingitem = array();
-					//items not supplied by supplier
-					$shippingitem['Bestelling #']=$order->getIncrementId();
-					//Added in OnePageController
-					$shippingitem['Leverdatum']=$deliveryBefore; 
-					//$shippingitem['Leverdatum tot']=$deliveryBefore;
-					$shippingitem['Naam']=$order->getShippingAddress()->getFirstname().' '.$order->getShippingAddress()->getLastname();					
-					$shippingitem['Adres (straat + nr)']=$order->getShippingAddress()->getStreetFull();
-					$shippingitem['Gemeente']=$order->getShippingAddress()->getCity();
-					$shippingitem['Postcode']=$order->getShippingAddress()->getPostcode();
-					$shippingitem['Land']=$order->getShippingAddress()->getCountry();
-					$shippingitem['Telefoon']=$order->getShippingAddress()->getTelephone();
-					$shippingitem['Artikel']=$item->getName();
-					$shippingitem['Aantal']=$item->getQtyOrdered();
-					$shippingitem['Artikelnr.']=$item->getSku();
-					$shippingitem['Info aan Zorgpunt']=$comment;
-					$shippingitem['Gewicht']=$item->getWeight();
-					$shippingitem['Type']=(!empty($item->getRentalitem())&&$item->getRentalitem() == true)? Mage::helper('hearedfrom')->__('Verhuur'): Mage::helper('hearedfrom')->__('Verkoop');
-					$shippinglist[]=$shippingitem;
-					unset($shippingitem);
-				}		
+				Mage::log('seller cust saved correctly for '.$newsalesseller['entity_id'].'  - to '.$seller_custid);
 			}
+		}catch(Exception $e){
+			Mage::log('Seller could not be registered - exception on order '.$order->getId());
+			Mage::helper("hearedfrom/error")->sendErrorMail("Error saving the seller for order  '.$order->getId().' info: ". $e->getMessage());
 		}
-		if(!empty($shippinglist)){
-			Mage::helper("hearedfrom/delivery")->createShipmentsReport($shippinglist,$order,$delivery_to_report,$_hearedfrom_salesforce["entity_id"],$sellerName);
-		}	
-		
+
+		try{
+			$shippinglist = null;
+			$zorgpunt_shippinglist = null;
+			$delivery_to_report = false;
+			
+			//check shipment method
+			//helpers for shipping lists
+			$deliveryBefore=Mage::getSingleton('core/session')->getDeliveryBefore();
+			
+			$comment=Mage::getSingleton('core/session')->getOrigCommentToZorgpunt();
+			$shippinglist = array();
+			//$order->getShippingInclTax()>0
+			if(  $order->getShippingMethod()=='tablerate_bestway'
+					||  $order->getShippingMethod()=='tablerate_express'
+					||  $order->getShippingMethod()=='tablerate_weekend'
+					||  $order->getShippingMethod()=='specialrate_flatrate'
+					||  $order->getShippingMethod()=='specialrate_free'	
+					||  $order->getShippingMethod()=='specialrate_standard'			
+					||  $order->getShippingMethod()=='specialrate_standard1'				
+					||  $order->getShippingMethod()=='specialrate_urgent'	
+					||  $order->getShippingMethod()=='specialrate_urgent1'			
+					||  $order->getShippingMethod()=='specialrate_urgent2'	
+					||  $order->getShippingMethod()=='specialrate_weekend'		
+					||  $order->getShippingMethod()=='salesrate_flatrate'								
+					||  $order->getShippingMethod()=='salesrate_urgent'		
+					||  $order->getShippingMethod()=='flatrate_flatrate'
+					||  $order->getShippingMethod()=='normalrate2_flatrate'){
+				//need to create excel to send to external delivery party
+				$delivery_to_report = true;
+				if(strpos ($deliveryBefore,'/')>0){
+					$deliveryBefore = str_replace('/', '-', $deliveryBefore);
+					Mage::log('fixed delivery date format for '.$order->getIncrementId(). ' to '.$deliveryBefore);
+				}
+				if(new DateTime() > DateTime::createFromFormat('d-m-Y', $deliveryBefore)){
+					Mage::log('Order '.$order->getIncrementId().' Delivery date in past - not reporting shipping to external - '.$deliveryBefore);
+					$delivery_to_report = false;
+				}
+			}
+			
+			//TODO add to transaction
+			//save commission for articles invoiced and delivered by the supplier - marked invoiced false
+			$items = $order->getAllItems();
+			$catvaph = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_VAPH')->getValue('text');	
+			$catouderenzorg = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('CAT_OUDERENZORG')->getValue('text');	
+			
+			foreach($items as $item){
+				//Check request ouderenzorg
+				if(in_array($catouderenzorg,$item->getProduct()->getCategoryIds())){
+					//Load sellername
+					$seller = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
+					try{
+						$sellerName = $seller['user_nm'];
+						if($sellerName != null && $sellerName != 'Zorgpunt' && $sellerName != ''&& $sellerName != 'Selecteer'){//add translation
+							$sellerName = 'Zorgpunt '.$seller['zip_cd'].' '.$seller['city'].' * '.$seller['user_nm'].'.';
+						}else{
+							$sellerName = 'Zorgpunt';
+						}
+					}catch(Exception $e){
+						$sellerName = 'Zorgpunt';
+						Mage::log('No hearedfrom set when sending supplier order - exception on order '.$order->getId());
+					}
+					$emails_to = explode(",",Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('OUDERENZORG_MAILS')->getValue('text'));	
+					$template_id = 'ouderenzorg_order_new';
+					
+					$email_template_variables= array(
+								 'order'        => $order,
+								 'seller'	=> $sellerName
+						);		
+					$storeId = Mage::app()->getStore()->getId();
+					Mage::helper("hearedfrom/mailer")->sendMailViaQueue($emails_to,$storeId,$template_id,$email_template_variables,'order', $order,'new_ouderenzorg');
+						
+								
+				}
+				// Checking VAPH
+				elseif(in_array($catvaph,$item->getProduct()->getCategoryIds())){
+					//Load sellername
+					$seller = Mage::getSingleton('core/session')->getBrainworxHearedfrom();
+					try{
+						$sellerName = $seller['user_nm'];
+						if($sellerName != null && $sellerName != 'Zorgpunt' && $sellerName != ''&& $sellerName != 'Selecteer'){//add translation
+							$sellerName = 'Zorgpunt '.$seller['zip_cd'].' '.$seller['city'].' * '.$seller['user_nm'];
+						}else{
+							$sellerName = 'Zorgpunt';
+						}
+					}catch(Exception $e){
+						$sellerName = 'Zorgpunt';
+						Mage::log('No hearedfrom set when sending supplier order - exception on order '.$order->getId());
+					}
+					$emails_to = explode(",",Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('VAPH_MAILS')->getValue('text'));	
+					$template_id = 'vaph_order_new';
+					$vaph = $order->getVaphDocNr();
+					if(empty($vaph)){
+						$vaph=Mage::helper('checkout')->__('Not provided');
+					}
+					$email_template_variables= array(
+								 'order'        => $order,
+								 'seller'		=> $sellerName,
+								 'vaph_doc_nr'	=> $vaph
+						);		
+					$storeId = Mage::app()->getStore()->getId();
+					Mage::helper("hearedfrom/mailer")->sendMailViaQueue($emails_to,$storeId,$template_id,$email_template_variables,'order', $order,'new_vaph');
+					
+								
+				}else{
+					if(!empty($item->getSupplierinvoice())&&$item->getSupplierinvoice()>0){
+						Mage::log("No need to send shipment exl as shipment + invoice done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
+						
+						$type = Mage::getModel('core/variable')->setStoreId(Mage::app()->getStore()->getId())->loadByCode('TYPE_SALE')->getValue('text');
+						self::saveCommission($_hearedfrom_salesforce,$order->getEntityId(),$item->getItemId(),
+						$type,($item->getOriginalPrice()*$item->getQtyOrdered()),
+								($item->getOriginalPrice()*$item->getQtyOrdered()*(1+$item->getTaxPercent()/100))
+								,$item->getRistorno()*$item->getQtyOrdered(),false,$seller_custid,$item->getDiscountPercent());
+					}elseif (!empty($item->getSupplierneworderemail())){
+						Mage::log("No need to send shipment exl as shipment done by ".$item->getSupplierneworderemail().' for '.$order->getIncrementId().' item '.$item->getSku());
+					}elseif($item->getSku()=='ADM-rein'){
+						Mage::log("No need to send shipment for cleaning item ".$order->getIncrementId().' item '.$item->getSku());
+					}
+					else{
+						$shippingitem = array();
+						//items not supplied by supplier
+						$shippingitem['Bestelling #']=$order->getIncrementId();
+						//Added in OnePageController
+						$shippingitem['Leverdatum']=$deliveryBefore; 
+						//$shippingitem['Leverdatum tot']=$deliveryBefore;
+						$shippingitem['Naam']=$order->getShippingAddress()->getFirstname().' '.$order->getShippingAddress()->getLastname();					
+						$shippingitem['Adres (straat + nr)']=$order->getShippingAddress()->getStreetFull();
+						$shippingitem['Gemeente']=$order->getShippingAddress()->getCity();
+						$shippingitem['Postcode']=$order->getShippingAddress()->getPostcode();
+						$shippingitem['Land']=$order->getShippingAddress()->getCountry();
+						$shippingitem['Telefoon']=$order->getShippingAddress()->getTelephone();
+						$shippingitem['Artikel']=$item->getName();
+						$shippingitem['Aantal']=$item->getQtyOrdered();
+						$shippingitem['Artikelnr.']=$item->getSku();
+						$shippingitem['Info aan Zorgpunt']=$comment;
+						$shippingitem['Gewicht']=$item->getWeight();
+						$shippingitem['Type']=(!empty($item->getRentalitem())&&$item->getRentalitem() == true)? Mage::helper('hearedfrom')->__('Verhuur'): Mage::helper('hearedfrom')->__('Verkoop');
+						$shippinglist[]=$shippingitem;
+						unset($shippingitem);
+					}		
+				}
+			}
+			if(!empty($shippinglist)){
+				Mage::helper("hearedfrom/delivery")->createShipmentsReport($shippinglist,$order,$delivery_to_report,$_hearedfrom_salesforce["entity_id"],$sellerName);
+			}	
+		}catch(Exception $e){
+			Mage::log('Shipment could not be reported - exception on order '.$order->getId());
+			Mage::helper("hearedfrom/error")->sendErrorMail("Error sending shipment for order '.$order->getId().' info: ". $e->getMessage());
+		}
 	}
 	/**
 	 * Hook to sales_order_invoice_register
