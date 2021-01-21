@@ -89,12 +89,12 @@ class Brainworx_Rental_Model_Pdf_Invoice extends Mage_Sales_Model_Order_Pdf_Invo
 									'align'     => 'left')	
 					);
 				}		
-				//put comment on same heigth as totals
-				$this->y=$tempYstartTotals - 20;
+				//put comment on same heigth as second line of the totals
+				$this->y=$tempYstartTotals - 20 - 15;
 				$page = $this->drawLineBlocks($page, array($clineBlock));
 			}
 			//make sure the next block doesn't overlap totals or comments
-			// higher number is lower on the page
+			// higher number is higher on the page
 			if($tempYstopTotals < $this->y){
 				$this->y = $tempYstopTotals;
 				//move cursor under totals
