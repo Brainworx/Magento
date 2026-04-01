@@ -589,7 +589,7 @@ function loadDates(number){
 
     if(month>8){
 
-        url = 'https://holidayapi.com/v1/holidays?key=9bfb66db-d453-4ca1-8b2a-79f9053be8dd&country=BE&year='+(new Date().getFullYear()+1)+'&public=true';
+        url = 'https://holidayapi.com/v1/holidays?key=9999999-aaaaaa-dddddd&country=BE&year='+(new Date().getFullYear()+1)+'&public=true';
 
          $j.ajax({
 
